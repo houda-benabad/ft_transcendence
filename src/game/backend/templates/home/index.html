@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+
+</head>
+
+<body>
+
+    <main id="canva">
+
+        <h1 id='game'></h1>
+
+        <button id="VS">VS</button>
+        <button id="MULTI">MULTI</button>
+        <button id="RPS">RPS</button>
+        <button id="TOUR">TOURN</button>
+        <button id="LOCAL">LOCAL</button>
+        <div id="loader">
+        </div> 
+        <div id="blurryScreen" class="glass">
+            <h1>Waiting for others...</h1>
+            <button id="cancel">Cancel</button>
+        </div>
+
+    </main>
+    <script>
+        const imageUrl = "{% static 'img/background/popular.png' %}";
+    </script>
+    <script type="module" src="{% static 'js/home.js' %}"></script>
+
+
+</body>
+
+</html>
