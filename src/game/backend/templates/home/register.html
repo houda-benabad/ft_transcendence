@@ -1,0 +1,39 @@
+<div id="image-cover"></div>
+<div class="container">
+    <div id="register">
+        <form data-id="register">
+            <label for="username">Username</label>
+            <input id="username" required/>
+            <label for="country">Country</label>
+            <select id="country">
+                <option>Morocco</option>
+            </select>
+            <label for="birthday">Birthday</label>
+            <div class="month">
+                <select id="month">
+                    <option>April</option>
+                </select>
+                <select id="day">
+                    <option>02</option>
+                </select>
+                <select id="year">
+                    <option>2004</option>
+                </select>
+            </div>
+            <label for="gender">Gender</label>
+            <div id="gender">
+                <div class="gender-option" data-value="female">
+                    <div class="female"></div>
+                    <p>Female</p>
+                </div>
+                <div class="gender-option" data-value="male">
+                    <div class="male"></div>
+                    <p>Male</p>
+                </div>
+            </div>
+            <input type="hidden" id="selected-gender" value="">
+            <button type='submit' id="submit" data-link="/home" class="button-type1">Next</button>
+        </form>
+        <div id="error-message">Please complete all fields before submitting.</div>
+    </div>
+</div>

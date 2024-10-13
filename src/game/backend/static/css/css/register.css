@@ -1,0 +1,81 @@
+#register
+{
+    color: white;
+
+    form 
+    {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        input,select
+        {
+            background-color: var(--input-field);
+            color: white;
+            padding-left: 7px;
+            border : solid 1px var(--border);
+            border-radius: 12px;
+
+            width : 350px;
+            height: 55px;
+        }
+        label, p 
+        {
+            font-size: 0.8rem;
+        }
+        .month
+        {
+            display: flex;
+
+            gap: 10px;
+            width: 350px;
+        }
+        #gender
+        {
+            display: flex;
+            gap: 45px;
+
+            .female
+            {
+                background: var(--input-field) url(static/img/female.png) no-repeat -4px;
+                box-shadow: 4px 7px 7px rgba(0, 0, 0, 0.7);
+
+            }
+            .male
+            {
+                background: var(--input-field) url(static/img/male.png) no-repeat ;
+                box-shadow: 4px 7px 7px rgba(0, 0, 0, 0.7);
+
+            }
+            .female,.male
+            {
+                height:120px;
+                width:120px;
+                border-radius: 20px;
+                border: 1px solid var(--border);
+                cursor: pointer;
+                
+                &:hover
+                {
+                   background-color: var(--secondary);
+                }
+            }
+            p
+            {
+                text-align: center;
+                margin-top: 7px;
+            }
+            .gender-option.selected > div
+            {
+                background-color: var(--secondary);
+            }
+        }
+    }
+    #error-message 
+    {
+        color :#b56101;
+        font-size: 1.1rem;
+        font-weight:light;
+        display: none;
+    }
+}
