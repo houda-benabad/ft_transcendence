@@ -57,13 +57,13 @@ export class homeView extends HTMLElement
            </table>
        </div>
        `
-    //    const response = await fetch('../Apis/leaderboard.json')
+       const response = await fetch('../Apis/leaderboard.json')
        const responseText = await response.text()
 
        const tbody = document.querySelector('tbody')
        if (responseText)
        {
-        //    const response = JSON.parse(responseText)
+           const response = JSON.parse(responseText)
            const leaderBoard = response.leaderboard
            
            for (let i = 0; leaderBoard[i] ; i++)
