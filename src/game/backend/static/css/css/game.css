@@ -6,7 +6,8 @@ game-view
     border-radius: 35px;
     color: white;
     
-    > div 
+    
+    #game-settings
     {
         padding: 35px 100px 35px 35px;
         display: flex;

@@ -1,7 +1,6 @@
 import {loadPage} from './services/tools.js'
 import {waitForFormSubmit} from './services/tools.js'
 import router from './services/router.js'
-console.log("IM THERE")
 
 async function init()
 {

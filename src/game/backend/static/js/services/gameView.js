@@ -6,6 +6,7 @@ export class gameView extends HTMLElement
     }
     async connectedCallback()
     {
+        console.log("TEST")
         await this.addContent()
         this.eventListener()
     }
@@ -13,7 +14,7 @@ export class gameView extends HTMLElement
     {
         this.innerHTML = 
         `
-            <div>
+            <form id='game-settings'>
                 <h2>Game Settings</h2>
                 <div class="settings-row">
                     <p  class="settings-label">modes</p>
@@ -54,9 +55,9 @@ export class gameView extends HTMLElement
                     </div>
                 </div>
                 <div id="button">
-                    <button class="button-type4">start</button>
+                    <button class="button-type4" type='submit'>start</button>
                 </div>
-            </div>
+            </form>
         `
     }
     eventListener()

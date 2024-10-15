@@ -1,4 +1,6 @@
 import {tableLine} from './tools.js'
+import router from './router.js'
+import {start} from '../game.js'
 
 export class homeView extends HTMLElement
 {
@@ -135,7 +137,15 @@ export class homeView extends HTMLElement
         // here we gonna be adding the event listener that should be  removed later on
 
         document.querySelectorAll('.anchor-tmp').forEach(a => a.addEventListener('click' , () =>{
-            console.log(a.dataset.link)
+            //  MAIN CONTENT NEED TO BE EMPTY
+            switch (a.dataset.link) {
+                case 'one-vs-one':
+                    start('game')
+                    break;
+            
+                default:
+                    break;
+            }
         }))
     }
 }

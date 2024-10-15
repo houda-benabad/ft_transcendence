@@ -1,6 +1,7 @@
 // import {gameOptions} from './game.js'
 
 import { startGame } from "./game.js"
+import "./services/gameView.js"
 
 export function score(firstScore, secondScore) {
     let score = document.createElement('div')
@@ -229,129 +230,11 @@ function createOption(name ,value, id,labelId , checked=false){
 	}
 
 
-export function gameSettings(gameSocket) {
+export function gameSettings() {
+	const main = document.getElementById('main')
+	let mainContent = document.createElement('game-view')
 
-
-	let canva = document.getElementById('canva')
-	let form = document.createElement('form')
-	form.id = 'gameSettings-form'
-
-	const heading = document.createElement('h3')
-	heading.innerHTML = 'Game settings'
-	form.appendChild(heading)
-
-	const modesDiv = document.createElement('div') // DIV
-	modesDiv.className = 'modes'
-	form.appendChild(modesDiv)
-
-	const modesTitle = document.createElement('p')
-	modesTitle.className = 'title'
-	modesTitle.innerHTML = 'modes'
-	modesDiv.appendChild(modesTitle)
-
-	const modesOptions = document.createElement('div') // DIV 
-	modesOptions.className = 'options'
-	modesDiv.appendChild(modesOptions)
-
-
-	const modesScore = createRadioOption('mode', 'score', 'Score')
-	modesOptions.appendChild(modesScore)
-
-	const modesTime = createRadioOption('mode', 'time', 'Time',  true)
-	modesOptions.appendChild(modesTime)
-
-	// RANGE 
-	const rangeDiv = document.createElement('div') // div
-	rangeDiv.className = 'counts'
-
-	const rangeValue = document.createElement('span')
-	rangeValue.className = 'title'
-	rangeValue.id = 'count'
-	rangeValue.innerHTML= 'Score'
-	rangeDiv.appendChild(rangeValue)
-
-	const rangeOptions = document.createElement('div')
-	rangeOptions.className = 'options'
-
-
-	const rangeInput = document.createElement('input')
-	rangeInput.type = 'range'
-	rangeInput.name = 'range'
-	rangeInput.id = 'counts'
-	rangeInput.value = 15
-	rangeInput.onchange = (event) => rangeSlider(event.target.value);
-	rangeInput.min = 0
-	rangeInput.max = 100
-	rangeOptions.appendChild(rangeInput)
-
-	const rangeLabel = document.createElement('label')
-	rangeLabel.id = 'countLabel'
-	rangeLabel.innerHTML = '0'
-	rangeOptions.appendChild(rangeLabel)
-	rangeDiv.appendChild(rangeOptions)
-
-	form.appendChild(rangeDiv)
-
-	// TEXTURE 
-
-	const textureDiv = document.createElement('div')
-	textureDiv.className = 'texture'
-
-	const textureTitle = document.createElement('p')
-	textureTitle.innerHTML= 'Texture'
-	textureTitle.className= 'title'
-	
-	const textureOptions = document.createElement('div')
-	textureOptions.className = 'options'
-
-	textureOptions.appendChild(createOption('texture','default', 'default-tex', 'd-tex',true))
-	textureOptions.appendChild(createOption('texture','special', 'special-tex', 's-tex'))
-	textureOptions.appendChild(createOption('texture','popular', 'popular-tex', 'p-tex'))
-	textureDiv.appendChild(textureTitle)
-	textureDiv.appendChild(textureOptions)
-	form.appendChild(textureDiv)
-
-	// BACKGROUNG
-
-	const backgroundDiv = document.createElement('div')
-	backgroundDiv.className = 'background'
-
-	const backgroundTitle = document.createElement('p')
-	backgroundTitle.innerHTML= 'Background'
-	backgroundTitle.className= 'title'
-	
-	const backgroundOptions = document.createElement('div')
-	backgroundOptions.className = 'options'
-
-	backgroundOptions.appendChild(createOption('background', 'default', 'default-bac', 'd-bac',  true))
-	backgroundOptions.appendChild(createOption('background', 'special', 'special-bac', 's-bac'))
-	backgroundOptions.appendChild(createOption('background', 'popular', 'popular-bac', 'p-bac'))
-	backgroundDiv.appendChild(backgroundTitle)
-	backgroundDiv.appendChild(backgroundOptions)
-	form.appendChild(backgroundDiv)
-	
-	// SUBMIT BUTTON
-
-	const button = document.createElement('button')
-	button.id='start'
-	button.type='submit'
-	button.innerHTML='Start'
-	form.appendChild(button)
-
-	document.body.appendChild(form);
-	document.getElementById('score').addEventListener('click', () => {
-		document.getElementById('count').innerHTML = 'Score'
-	})
-	document.getElementById('time').addEventListener('click', () => {
-		document.getElementById('count').innerHTML = 'Seconds'
-	})
-
-	function rangeSlider(value) {
-		document.getElementById('countLabel').innerHTML = value
-
-	}
-
-	canva.append(form)
-	return form
+	main.innerHTML = ''
+	main.append(mainContent)
 }
 

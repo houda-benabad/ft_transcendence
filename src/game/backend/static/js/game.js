@@ -1,7 +1,7 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
 import {  match_making, update_match_making, score, updateScore, time, updateTime, updateEndGame, gameSettings } from './elements.js';
-
+import { gameView } from './services/gameView.js';
 
 
 const PLAYER_GEO = new THREE.BoxGeometry(1, .3, .3)
@@ -90,7 +90,8 @@ export function gameSetup(scene, camera, renderer, background) {
 }
 
 export function setup_canva() {
-	let canva = document.getElementById("canva");
+	let canva = document.getElementById("main");
+	// canva.innerHTML = ''
 	let scorePanel = score(0, 0)
 	let timePanel = time(0)
 	canva.append(scorePanel)
@@ -193,10 +194,6 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 const scene = new THREE.Scene();
 
-function handle_socket_msg(type, data){
-
-}
-
 export function start(mode) {
 
 	const gameSocket = socketSetup(mode)
@@ -205,21 +202,20 @@ export function start(mode) {
 	let gameObjects, gameOptions, started = false
 	renderer.setAnimationLoop(animation);
 
-	document.getElementById('cancel').addEventListener('click', ()=>{
-		console.log('CLICKED')
-		window.location.href = '/'
-	})
+	// document.getElementById('cancel').addEventListener('click', ()=>{
+	// 	window.location.href = '/'
+	// })
 	function animation() {
 		gameSocket.onmessage = (e) => {
 		    const { type, data } = JSON.parse(e.data)
 		    switch (type) {
-		        case "coordinates":
-					document.getElementById('loader').style.display = 'none'
-					document.getElementById('blurryScreen').style.transform = 'translate(-50%, -50%) scale(0)'
-					started = false
-		            update_coordinates(gameObjects, data, mode)
-		            updateScore(gameObjects, data, mode)
-		            break;
+		        // case "coordinates":
+				// 	document.getElementById('loader').style.display = 'none'
+				// 	document.getElementById('blurryScreen').style.transform = 'translate(-50%, -50%) scale(0)'
+				// 	started = false
+		        //     update_coordinates(gameObjects, data, mode)
+		        //     updateScore(gameObjects, data, mode)
+		        //     break;
 
 		        // case "endGame":
 
@@ -227,7 +223,9 @@ export function start(mode) {
 		        //     break;
 
 		        case 'gameInfo':
-		            let form = gameSettings(gameSocket)
+		            gameSettings()
+
+					let form = document.getElementById('game-settings')
 					form.addEventListener('submit', (e) => {
 						e.preventDefault()
 						let data = new FormData(form);
@@ -238,11 +236,17 @@ export function start(mode) {
 						}))
 						gameObjects = startGame(gameOptions)
 						started = true
-						form.remove()
+						document.getElementById('main').innerHTML = ''
+
 					})
+
+
+					console.log("NEED TO SHOW GAME SETTINGS")
 		            break;
 
 				case 'startGame':
+					console.log('NEED TO PLAY')
+					document.getElementById('main').innerHTML = ''
 						gameObjects = startGame(data)
 						started = true
 						break;
@@ -252,23 +256,23 @@ export function start(mode) {
 		        //     updateTime(data)
 		        //     break;
 
-		        case 'match_making':
-		            update_match_making(data)
-		        default:
-					break;
-				}
-				if (started)
-					gameObjects.ball.rotation.x += 0.1
-			}
-			if (camera.position.z > 5 && started){
-				camera.position.z -= 0.1
-				camera.position.x += 0.01
-				camera.position.y +=0.005
-				camera.rotation.y +=0.002
-			}
-			else if (camera.position.z < 5 && started){
-				document.getElementById('blurryScreen').style.transform = 'translate(-50%, -50%) scale(1)'
-				document.getElementById('loader').style.display = 'block'
+		    //     case 'match_making':
+		    //         update_match_making(data)
+		    //     default:
+			// 		break;
+			// 	}
+			// 	if (started)
+			// 		gameObjects.ball.rotation.x += 0.1
+			// }
+			// if (camera.position.z > 5 && started){
+			// 	camera.position.z -= 0.1
+			// 	camera.position.x += 0.01
+			// 	camera.position.y +=0.005
+			// 	camera.rotation.y +=0.002
+			// }
+			// else if (camera.position.z < 5 && started){
+			// 	document.getElementById('blurryScreen').style.transform = 'translate(-50%, -50%) scale(1)'
+			// 	document.getElementById('loader').style.display = 'block'
 
 			}
 			
@@ -276,4 +280,4 @@ export function start(mode) {
 	}
 
 
-}
+}}

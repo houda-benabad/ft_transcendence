@@ -1,7 +1,6 @@
 import './profileView.js'
 import './homeView.js'
 import './settingsView.js'
-import './gameView.js'
 
 const router = {
     init : () => 
@@ -30,6 +29,7 @@ const router = {
     go : (path, addTohistory=true) => {
         if(addTohistory)
             history.pushState({path}, {}, path)
+        document.querySelector
         const main = document.getElementById('main')
         let mainContent
         switch(path)
@@ -43,9 +43,6 @@ const router = {
             case './settings' :
             mainContent = document.createElement('settings-view')
             break;
-            case './game':
-            mainContent = document.createElement('game-view')
-            break
         }
         main.innerHTML = ''
         main.append(mainContent)
