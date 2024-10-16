@@ -30,7 +30,7 @@ export class gameView extends HTMLElement
                             <p id="slider-mode">seconds</p>
                             <p id="slider-number">10</p>
                         </div>
-                        <input type="range" min="10" max="180" value="10" id="slider-input">
+                        <input type="range" min="10" max="180" name='range' value="10" id="slider-input">
                     </div>
                 <div class="settings-row">
                     <p class="settings-label">texture</p>

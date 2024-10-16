@@ -7,6 +7,8 @@
 @import './css/settings.css';
 @import './css/game.css';
 @import './css/popup.css';
+@import './game.css';
+
 
 :root
 {
@@ -45,7 +47,10 @@ html
 {
     background-color: var(--background);
 }
-
+#app
+{
+  height : 100vh;
+}
 #app.active
 {
   display: grid;

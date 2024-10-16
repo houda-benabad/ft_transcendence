@@ -93,7 +93,7 @@ export function updateScore(gameObjects, data, mode) {
 
 }
 
-export function time(elapsedTime) {
+export function time() {
     let time = document.createElement('div')
     time.setAttribute('id', 'timePanel')
     time.innerHTML = `
@@ -107,6 +107,7 @@ export function time(elapsedTime) {
 }
 
 export function updateTime(data) {
+	console.log('data = ', data)
     let circularProgress = document.querySelector(".circular-progress"),
         progressValue = document.querySelector(".progress-value");
     let progressStartValue = data.elapsed,
