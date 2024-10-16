@@ -59,7 +59,7 @@ class Ball(GameObject):
 		self.updateBounds()
 		self.velocity[1] += 0.03
 		
-		if (self.bottom <= plane.top):
+		if (self.bottom  - self.dimension[0]<= plane.top):
 			self.velocity[1] = 0
 
 		if (self.left <= plane.left or self.right >= plane.right):

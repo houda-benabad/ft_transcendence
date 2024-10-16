@@ -25,7 +25,7 @@ function socketSetup(mode) {
 	return gameSocket
 }
 
-export function gameSetup(scene, camera, renderer, background) {
+export function sceneSetup(scene, camera, renderer, background) {
 	camera.position.z = 20;
 	camera.rotation.y = -Math.PI
 
@@ -162,7 +162,7 @@ export function create_objects_vs(scene, texture) {
 export function startGame(gameOptions){
 	console.log('STATING')
 	setup_canva()
-	gameSetup(scene, camera, renderer,  gameOptions.background)
+	sceneSetup(scene, camera, renderer,  gameOptions.background)
 	return create_objects_vs(scene, gameOptions.texture,)
 }
 
@@ -223,10 +223,10 @@ export function start(mode) {
 							gameObjects = startGame(data)
 							break;
 							
-				// case "endGame":
+				case "endGame":
 
-				//     updateEndGame(data)
-				//     break;
+				    updateEndGame(data)
+				    break;
 			
 		        // case 'time':
 		        //     timePanel.style.display = 'flex'

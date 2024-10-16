@@ -121,31 +121,23 @@ export function updateTime(data) {
 
 }
 
-export function endgame(data) {
-    let pop = document.createElement('div')
-    pop.setAttribute('id', 'popup')
 
-    let real_state = ""
+export function updateEndGame(data) {
+    let endGame = document.createElement('div');
+	endGame.id = 'endGame'
+	endGame.className = 'glass'
+    document.getElementById('app').appendChild(endGame)
+
+	let real_state = ""
     if (data.state == "W")
         real_state = "WON"
     else
         real_state = "LOST"
-    pop.innerHTML = `
-	<h4>YOU ${real_state}</h4>
-	<p>by ${data.by}</p>
-	<button id="back">BACK HOME</button>
-	`
-    return pop
-}
 
-export function updateEndGame(data) {
-    let endGame = endgame(data);
-    document.getElementById('canva').append(endGame)
+	endGame.innerHTML = `
+		<h4>YOU ${real_state}!</h4>
+		`
     endGame.style.transform = " translate(-50%, -50%) scale(1) "
-    let backHome = document.getElementById("back")
-    backHome.addEventListener('click', (e) => {
-        window.location.href = '/'
-    })
 }
 
 export function match_making() {
