@@ -44,9 +44,9 @@ class Player(GameObject):
 	def move(self, keycode, plane):
 		target = self.position[0]
 		if (keycode == 37 and self.position[0] > -plane.dimension[0] / 2 + self.dimension[0] / 2):
-			target -= 0.5
+			target -= 1
 		elif (keycode == 39 and self.position[0] < plane.dimension[0] / 2 - self.dimension[0] / 2):
-			target += 0.5
+			target += 1
 		self.position[0] += (target - self.position[0]) * 0.1
 
 class Ball(GameObject):
