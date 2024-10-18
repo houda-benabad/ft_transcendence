@@ -58,37 +58,6 @@ export function updateScore(gameObjects, data, mode) {
 
         </div>
 		`
-    } else if (mode == 'multi') {
-        html.innerHTML = `
-		<div class="player-info">
-			<div class="player">
-				<p>hajar Ouaslam</p>
-			</div>
-			<h1>${data.player1.score}</h1>
-		</div>
-
-
-		<div class="player-info">
-			<div class="player">
-				<p>kaouthar kouaz</p>
-			</div>
-			<h1>${data.player2.score}</h1>
-		</div>
-
-		<div class="player-info">
-			<div class="player">
-				<p>ferdaous adermouch</p>
-			</div>
-			<h1>${data.player3.score}</h1>
-		</div>
-
-		<div class="player-info">
-			<div class="player">
-				<p>houda obenabad</p>
-			</div>
-			<h1>${data.player4.score}</h1>
-		</div>
-	`
     }
 
 }
@@ -107,7 +76,6 @@ export function time() {
 }
 
 export function updateTime(data) {
-	console.log('data = ', data)
     let circularProgress = document.querySelector(".circular-progress"),
         progressValue = document.querySelector(".progress-value");
     let progressStartValue = data.elapsed,

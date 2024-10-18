@@ -13,12 +13,10 @@ from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 import game.routing
-import multiPlayer.routing
-import tournament.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
-websockets = game.routing.websocket_urlpatterns + multiPlayer.routing.websocket_urlpatterns + tournament.routing.websocket_urlpatterns
+websockets = game.routing.websocket_urlpatterns
 
 application = ProtocolTypeRouter({
     'http':get_asgi_application(),

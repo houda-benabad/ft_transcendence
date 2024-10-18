@@ -1,0 +1,137 @@
+:root
+{
+    --background: #040715;
+    --delete : #CC3A32;
+    --profile-box: #190B39;
+    --home-highlighter : #9E23A4;
+    --profile-btm : linear-gradient(to right, #190B39, #9E23A4);
+    --level-progress : linear-gradient(to right, #8056DE, #C32BCA);
+    --level-bar : #3E4565;
+    --secondary : #8056DE;
+    --secondary-hover : #6A38DC;
+    --secondary2 : #190B39;
+    --secondary2-hover : #3A1A83;
+    --input-field : #0C0B2C;
+    --intra: #23A0B7;
+    --intra-hover: #145662;
+    --border : rgba(255,255,255, 0.2);
+    --border-type2: #8056DE;
+    --highlight: #D347DB;
+    --text2 : #A198BA;
+
+    --button-type1 : linear-gradient(to left,#D347DB , #D347DB , #8E99E9);
+
+    --online : #15EE23;
+    --playing : #FB773C;
+    --offline : #D32727; 
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'sora', sans-serif;
+}
+
+html
+{
+    background-color: var(--background);
+}
+
+.game-elements{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* SCORE */
+.score{
+    width: 50%;
+    height: 65px;
+    display: flex;
+    justify-content: center;
+}
+
+.user{
+    flex-grow: 1;
+    display: flex;
+        align-items: center;
+        justify-content: center;
+    height: 60%;
+    background-color: #145662;
+}
+
+.score-num{
+    height: 100%;
+    flex-grow: .5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: #190B39;
+}
+
+
+.waiting-pop{
+    background-color: var(--border-type2);
+    width: 50%;
+    height: 400px;
+    border-radius: 15px;
+    /* margin-top: 175px; */
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    margin: auto 0;
+
+
+}
+
+#loader {
+    width: 80px;
+    height: 70px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    background:
+      linear-gradient(#fff 0 0) 0    0/8px 20px,
+      linear-gradient(#fff 0 0) 100% 0/8px 20px,
+      radial-gradient(farthest-side,#fff 90%,#0000) 0 5px/8px 8px content-box,
+      #00000000;
+    background-repeat: no-repeat; 
+    animation: l3 2s infinite linear;
+
+
+  }
+  @keyframes l3{
+    25% {background-position: 0 0   ,100% 100%,100% calc(100% - 5px)}
+    50% {background-position: 0 100%,100% 100%,0    calc(100% - 5px)}
+    75% {background-position: 0 100%,100%    0,100% 5px}
+  }
+
+#cancel-btn{
+    width: 155px;
+    height: 65px;
+}
+
+.endGame-pop{
+    background-color: var(--border-type2);
+    width: 155px;
+    height: 65px;
+    border-radius: 15px;
+    margin-top: 175px;
+    margin: auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.time{
+    width: 155.85px;
+    height: 65px;
+    background-color: var(--border-type2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+}

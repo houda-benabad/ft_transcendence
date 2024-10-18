@@ -4,8 +4,8 @@ import {  match_making, update_match_making, score, updateScore, time, updateTim
 import { gameView } from './services/gameView.js';
 
 
-const PLAYER_GEO = new THREE.BoxGeometry(1, .3, .3)
-const BALL_GEO = new THREE.SphereGeometry(.2, 32, 15)
+const PLAYER_GEO = new THREE.BoxGeometry(1, .3, .1)
+const BALL_GEO = new THREE.SphereGeometry(.1, 32, 15)
 
 function socketSetup(mode) {
 	let url = `ws://${window.location.host}/ws/${mode}/`
@@ -36,7 +36,8 @@ export function sceneSetup(scene, camera, renderer, background) {
 	document.getElementById('app').appendChild(renderer.domElement)
 
 	// HELPER
-	const axesHelper = new THREE.AxesHelper(5);
+	const axesHelper = new THREE.AxesHelper( 5 );
+	scene.add( axesHelper );
 
 	// ORBIT CONTROLER
 	const orbit = new OrbitControls(camera, renderer.domElement)
@@ -90,24 +91,54 @@ export function sceneSetup(scene, camera, renderer, background) {
 export function setup_canva() {
 	let canva = document.getElementById("app");
 
-	let loader = document.createElement('div')
-	loader.id = 'loader'
+	let gameElements = document.createElement('div')
+	gameElements.id = 'game-elements'
 
-	let blurryScreen = document.createElement('div')
-	blurryScreen.id= 'blurryScreen'
-	blurryScreen.className = 'glass'
-	blurryScreen.innerHTML = ` 
-            <h1>Waiting for others...</h1> 
-            <button id="cancel">Cancel</button> 
+	gameElements.innerHTML = `
+        <div class="score">
+            <div class="user glass">
+                <h3 id="user1">hajar</h3>
+            </div>
+            <div class="score-num glass">
+                <h1 id="score">0 : 0</h1>
+            </div>
+            <div class="user glass">
+                <h3 id="user2">kouaz</h3>
+            </div>
+        </div>
+		<div class="waiting-holder">
+			<div class="waiting-pop glass">
+				<h1>Waiting for other player...</h1>
+				<div id="loader"></div>
+				<button id="cancel-btn">Cancel</button>
+			</div>
+		<div>
+        <div class="endGame-pop glass">
+            <h3>YOU <span>WON</span>!</h3>
+        </div>
+        <div class="time glass">
+            <h1 id="time">00:05</h1>
+        </div>
 	`
-	let scorePanel = score(0, 0)
-	let timePanel = time(0)
-	canva.append(scorePanel)
-	canva.append(loader)
-	canva.append(blurryScreen)
-	canva.append(timePanel)
-	timePanel.style.display = 'none'
-	scorePanel.style.display = 'none'
+	canva.append(gameElements)
+	document.querySelector('.score').style.display = 'none'
+	document.querySelector('.time').style.display = 'none'
+	document.querySelector('.endGame-pop').style.transform = 'scale(0)'
+}
+
+export function update_canva(data) {
+	document.querySelector('.waiting-pop').style.transform = 'scale(0)'
+	
+	document.querySelector('.score').style.display = 'flex'
+	document.getElementById('user1').innerHTML = data.coordinates.player.name
+	document.getElementById('user2').innerHTML = data.coordinates.otherPlayer.name
+	let score_html = `${data.coordinates.player.score} : ${data.coordinates.otherPlayer.score}`
+	document.getElementById('score').innerHTML = score_html
+	if (data.time){
+		document.querySelector('.time').style.display = 'flex'
+		document.getElementById('time').innerHTML = data.time
+	}
+
 }
 
 function update_coordinates(gameObjects, coordinates, mode) {
@@ -118,13 +149,6 @@ function update_coordinates(gameObjects, coordinates, mode) {
 		const { player, otherPlayer } = gameObjects;
 		player.position.fromArray(coordinates.player.position);
 		otherPlayer.position.fromArray(coordinates.otherPlayer.position);
-	} else if (mode === 'multi') {
-		document.getElementById("match_popup").style.display = 'none'
-		const { player1, player2, player3, player4 } = gameObjects;
-		player1.position.lerp(coordinates.player1.position, 0.1);
-		player2.position.lerp(coordinates.player2.position, 0.1);
-		player3.position.lerp(coordinates.player3.position, 0.1);
-		player4.position.lerp(coordinates.player4.position, 0.1);
 	}
 }
 
@@ -145,12 +169,12 @@ export function create_objects_vs(scene, texture) {
 
 	// PLAYER
 	player = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0x8C96ED }))
-	player.position.set(0, .4, 2.35)
+	player.position.set(0, .4, 2.45)
 
 
 	//OTHERPLAYER
 	otherPlayer = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
-	otherPlayer.position.set(0, .4, -2.35)
+	otherPlayer.position.set(0, .4, -2.45)
 
 	scene.add(plane);
 	scene.add(player);
@@ -160,7 +184,6 @@ export function create_objects_vs(scene, texture) {
 }
 
 export function startGame(gameOptions){
-	console.log('STATING')
 	setup_canva()
 	sceneSetup(scene, camera, renderer,  gameOptions.background)
 	return create_objects_vs(scene, gameOptions.texture,)
@@ -179,31 +202,31 @@ export function start(mode) {
 
 	function animation() {
 		gameSocket.onmessage = (e) => {
-		    const { type, data } = JSON.parse(e.data)
-		    switch (type) {
-		        case "coordinates":
-					document.getElementById('loader').style.display = 'none'
-					document.getElementById('blurryScreen').style.transform = 'translate(-50%, -50%) scale(0)'
+			const { type, data } = JSON.parse(e.data)
+			switch (type) {
+		        case "api":
+					console.log('data = ', data)
+					// document.getElementById('loader').style.display = 'none'
 					started = false
-		            update_coordinates(gameObjects, data, mode)
-		            updateScore(gameObjects, data, mode)
+		            update_coordinates(gameObjects, data.coordinates, mode)
+		            update_canva(data)
 		            break;
 
 					
 					case 'gameInfo':
 						gameSettings()
-						console.log('HOST')
 						let form = document.getElementById('game-settings')
+
 						form.addEventListener('submit', (e) => {
 							e.preventDefault()
 							
 							let data = new FormData(form);
 							gameOptions = Object.fromEntries(data)
+
 							gameSocket.send(JSON.stringify({
 								'type': 'gameSettings',
 								'data': gameOptions
 							}))
-							
 							
 							started = true
 							const app = document.getElementById('app')
@@ -211,11 +234,11 @@ export function start(mode) {
 							app.innerHTML = ''
 							gameObjects = startGame(gameOptions)
 							
+							
 						})
 						break;
 						
-						case 'startGame':
-							console.log('INVITED')
+					case 'startGame':
 							started = true
 							const app = document.getElementById('app')
 							app.className = 'game'
@@ -223,15 +246,10 @@ export function start(mode) {
 							gameObjects = startGame(data)
 							break;
 							
-				case "endGame":
+					case "endGame":
 
-				    updateEndGame(data)
-				    break;
-			
-		        // case 'time':
-		        //     timePanel.style.display = 'flex'
-		        //     updateTime(data)
-		        //     break;
+						updateEndGame(data)
+						break;
 
 		        default:
 					break;
@@ -246,9 +264,7 @@ export function start(mode) {
 				camera.rotation.y +=0.002
 			}
 			else if (camera.position.z < 5 && started){
-				document.getElementById('blurryScreen').style.transform = 'translate(-50%, -50%) scale(1)'
-				document.getElementById('loader').style.display = 'block'
-
+				document.querySelector('.waiting-pop').style.transform = 'scale(1)'
 			}
 			
 		renderer.render(scene, camera);

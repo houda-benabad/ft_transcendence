@@ -50,59 +50,68 @@ class Player(GameObject):
 		self.position[0] += (target - self.position[0]) * 0.1
 
 class Ball(GameObject):
-
 	def reset(self):
-		self.position = [0, 0.8, 0]
-		self.velocity = [random.uniform(-0.1, 0.1), 0.01, 0.05]
+		self.position = [0, .8, 0]
+		rand = 1
+		if (random.randint(0, 1)% 2 == 0):
+			rand = -1
+		self.velocity[2] *= rand 
+		
+  
 
 	def update(self, plane, player, otherplayer):
 		self.updateBounds()
-		self.velocity[1] += 0.03
 		
-		if (self.bottom  - self.dimension[0]<= plane.top):
+		# HANDLE Y DONE
+		if round(self.bottom, 2)  <= round(plane.top,2):
+			self.position[1] = round(plane.top,2) + round(self.dimension[0] / 2 , 2)
 			self.velocity[1] = 0
+		else:
+			self.velocity[1] -= 0.01
 
-		if (self.left <= plane.left or self.right >= plane.right):
+		# HANDLE PLANE SPACE DONE
+		if (self.back >= player.back):
+			otherplayer.score+= 1
+			self.reset()
+		elif (self.front <= otherplayer.front):
+			player.score += 1
+			self.reset()
+
+		# Handle wall collisions
+		if self.left <= plane.left or self.right >= plane.right:
 			self.velocity[0] *= -1
-		
-		
-		if (self.back >= player.front and self.velocity[2] > 0):
-			if ((self.left >= player.left - self.dimension[0] and self.right <= player.right + self.dimension[0]) or
-				( player.left > self.position[0]  and player.left < self.right) or 
-				( player.right < self.position[0]  and player.right > self.left)):
 
-					hitpont = (self.position[0] - player.position[0]) / player.dimension[0]
-					self.velocity[0] = hitpont * 0.05
-					self.velocity[2] += 0.02
-					self.velocity[2] *= -1
+		# HANDLE PLAYERS COLLITSION
 
-			else:
-				otherplayer.score += 1
-				self.reset()
-
-		if (self.front <= otherplayer.back  and self.velocity[2] < 0):
-			if (self.left >= otherplayer.left - self.dimension[0] and self.right <= otherplayer.right + self.dimension[0]) :
-				hitpont = (self.position[0] - otherplayer.position[0]) / player.dimension[0]
-				self.velocity[0] = hitpont * 0.05
-				self.velocity[2] -= 0.02
+		if (round(self.back, 2) >= round(player.front, 2)):
+			if (round(self.left) >= round(player.left) and round(self.right) <= round(player.right)):
 				self.velocity[2] *= -1
+				if self.velocity[2] < 0:
+					self.velocity[2] -= .01
+				else:
+					self.velocity[2] += .01
 
-			else:
-				self.reset()
-				player.score += 1
+		elif (round(self.front, 2) <= round(otherplayer.back, 2)):
+			if (round(self.left) >= round(otherplayer.left) and round(self.right) <= round(otherplayer.right)):
+				self.velocity[2] *= -1
+				if self.velocity[2] < 0:
+						self.velocity[2] -= .01
+				else:
+					self.velocity[2] += .01
 
-		self.position[0] += self.velocity[0]
-		self.position[1] -= self.velocity[1]
-		self.position[2] += self.velocity[2]
 
+		for i in range(3):
+			self.position[i] += self.velocity[i]
 
 class Game():
 	def __init__(self, settings):
-    #  P V D
-		self.ball = Ball( [ 0 , .8 , 0 ], [ random.uniform(-0.1, 0.1),.01,.01 ], [ .2,.2,.2 ] )
+	#  P V D
+		self.ball = Ball( [ 0 , .8 , 0 ], [ .01,-.01,.03 ], [ .2,.2,.2 ] )
 		self.plane = Plane([0,0,0], [.01,.01,.05], [3,.2,5])
-		self.player = Player([0,.4,self.plane.dimension[2]/2 - .3], [0,-.1,.05], [1,.3,.3])
-		self.otherPlayer = Player([0,.4,-self.plane.dimension[2]/2 + .3], [0,-.1,.05], [1,.3,.3])
+
+		self.player = Player([0,.4,2.45], [0,-.1,.05], [1,.3,.1])
+		self.otherPlayer = Player([0,.4,-2.45], [0,-.1,.05], [1,.3,.1])
+
 		self.settings = settings
 		self.goalTime =  int(self.settings['range'])
   
@@ -112,35 +121,34 @@ class Game():
 		self.otherPlayer.update(self.plane)
 		self.ball.update(self.plane, self.player, self.otherPlayer)
 
-	async def is_game_over(self, start_time, channel_layer):
+	async def is_game_over(self, start_time):
 		if (self.settings['mode'] == 'score'):
 			goal =  int(self.settings['range'])
 			return self.player.score == goal or self.otherPlayer.score == goal
 
 		if (self.settings['mode'] == 'time'):
 			elapsed = time.time() - start_time
-			await channel_layer.group_send("invite",
-			{
-				'type': 'time',
-				'data': int(elapsed)
-			}
-			)
 			if (elapsed >= self.goalTime and self.player.score == self.otherPlayer.score):
 				self.goalTime +=  5
-			return elapsed >= self.goalTime
+			return elapsed >= self.goalTime 
 
 		return False
+
+	def get_time(self, start_time):
+		return  int(time.time() - start_time)
 
 	def get_coordinates(self):
 		return{
 			"ball" :{
-       			"position": self.ball.position
-          	},
+	   			"position": self.ball.position
+		  	},
 			"player":{
+				"name" : 'hajar',
 				"position":self.player.position, 
 				"score":self.player.score
 			},
 			"otherPlayer":{
+				"name" : 'kouaz',
 				"position": self.otherPlayer.position,
 				"score": self.otherPlayer.score
 				}
@@ -175,18 +183,32 @@ async def startGame(channel_layer, hoster, invited):
 		game.move_players(hoster, invited)
 		hoster.keycode= 0
 		invited.keycode = 0
+  
 	
-		# SEND TO FRONT
-		await channel_layer.group_send("invite",
-			{
-				'type': 'coordinates',
-				'data': game.get_coordinates()
-			}
-		)
-		
 		# GAME OVER CHECK
-		if (await game.is_game_over(start, channel_layer)):
+		if await game.is_game_over(start):
 			break
+			# SEND ALL INFO (COORDINATES = SCORE = TIME)
+		if game.settings['mode'] == 'time' :
+			await channel_layer.group_send("invite",
+				{
+					'type': 'api',
+					'data': {
+						'coordinates' : game.get_coordinates(),
+						'time' : game.get_time(start)
+			}
+				}
+			)
+		else:
+			
+			await channel_layer.group_send("invite",
+				{
+					'type': 'api',
+					'data': {
+						'coordinates' : game.get_coordinates(),
+			}
+				}
+			)
 
 		await asyncio.sleep(0.04)
 
@@ -199,15 +221,15 @@ async def startGame(channel_layer, hoster, invited):
 	await hoster.send(text_data=json.dumps({
 		'type' : 'endGame',
 		'data' :{
-      		'state' : hoster.game_result,
+	  		'state' : hoster.game_result,
 			'by' : message
-      	} 
+	  	} 
 	}))
 
 	await invited.send(text_data=json.dumps({
 		'type' : 'endGame',
 		'data' :{
-      		'state' : invited.game_result,
+	  		'state' : invited.game_result,
 			'by' : message
-      	} 
+	  	} 
 	}))

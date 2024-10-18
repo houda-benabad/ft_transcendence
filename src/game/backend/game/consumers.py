@@ -79,10 +79,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 			self.game.settings = dataJson['data']
 			await sync_to_async(self.game.save)()
    
-	async def coordinates(self, event):
+	async def api(self, event):
 		data = event['data']
 		await self.send(text_data=json.dumps({
-			'type': 'coordinates',
+			'type': 'api',
 			'data': data
 		}))
   
