@@ -75,11 +75,11 @@ home-view
 {
     background-image: linear-gradient(to bottom,rgba(4,7,22, 0.3),rgba(4,7,22, 1) 70%), url(../../img/multiplayer.jpg); 
 }
-#one-vs-one
+#remote
 {
     background-image: linear-gradient(to bottom,rgba(4,7,22, 0.3),rgba(4,7,22, 1) 70%), url(../../img/1vs1.jpg); 
 }
-#rps 
+#local
 {
     background-image: linear-gradient(to bottom,rgba(4,7,22, 0.3),rgba(4,7,22, 1) 70%), url(../../img/rps.jpg); 
 }

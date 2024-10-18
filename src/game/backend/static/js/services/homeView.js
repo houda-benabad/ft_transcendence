@@ -19,25 +19,25 @@ export class homeView extends HTMLElement
     {
         const leaderBoard = document.createElement('div')
         const tournament = document.createElement('div')
-        const oneVsOne = document.createElement('div')
+        const remote = document.createElement('div')
         const multiplayer = document.createElement('div')
-        const rps = document.createElement('div')
+        const local = document.createElement('div')
 
         leaderBoard.classList.add('table-box')
         tournament.id = 'tournament'
-        oneVsOne.id = "one-vs-one"
+        remote.id = "remote"
         multiplayer.id = "multiplayer"
-        rps.id = "rps"
-        oneVsOne.classList.add('home-mini-box')
+        local.id = "local"
+        local.classList.add('home-mini-box')
         multiplayer.classList.add('home-mini-box')
-        rps.classList.add('home-mini-box')
+        remote.classList.add('home-mini-box')
 
 
         this.appendChild(leaderBoard)
         this.appendChild(tournament)
-        this.appendChild(oneVsOne)
+        this.appendChild(remote)
         this.appendChild(multiplayer)
-        this.appendChild(rps)
+        this.appendChild(local)
     }
     async addLeaderBoard()
     {
@@ -112,19 +112,20 @@ export class homeView extends HTMLElement
             }
             switch(id)
             {
-                case 'one-vs-one' :
-                info.h3 = '1 vs 1'
+                case 'remote' :
+                info.h3 = 'Remote'
                 info.p = 'hihihihi i was joking with u ^^'
                 break;
                 case 'multiplayer' :
                 info.h3 = 'Multiplayer'
                 info.p = 'do you want to fight, yalah lets go'
                 break;
-                case 'rps' :
-                info.h3 = 'RPS'
+                case 'local' :
+                info.h3 = 'Local'
                 info.p = 'zdambooooooorbaaaah , lala yalh n3awduu'
                 break;
             }
+            console.log(id)
             e.innerHTML =
             `
             <div>
@@ -139,7 +140,7 @@ export class homeView extends HTMLElement
         document.querySelectorAll('.anchor-tmp').forEach(a => a.addEventListener('click' , () =>{
             //  MAIN CONTENT NEED TO BE EMPTY
             switch (a.dataset.link) {
-                case 'one-vs-one':
+                case 'remote':
                     start('game')
                     break;
             
