@@ -13,7 +13,7 @@ async function init()
 }
 
 async function addWebsiteLayout() {
-    const response = await fetch('/websiteLayout.html')
+    const response = await fetch('/signup')
     const responseText = await response.text()
     const app = document.getElementById('app')
 

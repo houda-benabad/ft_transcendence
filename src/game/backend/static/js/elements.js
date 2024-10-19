@@ -62,32 +62,32 @@ export function updateScore(gameObjects, data, mode) {
 
 }
 
-export function time() {
-    let time = document.createElement('div')
-    time.setAttribute('id', 'timePanel')
-    time.innerHTML = `
-		<div class="container">
-			<div class="circular-progress">
-				<span class="progress-value">0 second</span>
-			</div>
-		</div>
-	`
-    return time
-}
+// export function time() {
+//     let time = document.createElement('div')
+//     time.setAttribute('id', 'timePanel')
+//     time.innerHTML = `
+// 		<div class="container">
+// 			<div class="circular-progress">
+// 				<span class="progress-value">0 second</span>
+// 			</div>
+// 		</div>
+// 	`
+//     return time
+// }
 
-export function updateTime(data) {
-    let circularProgress = document.querySelector(".circular-progress"),
-        progressValue = document.querySelector(".progress-value");
-    let progressStartValue = data.elapsed,
-        progressEndValue = data.endTime
-    let progressPercentage = (progressStartValue / progressEndValue) * 100;
-    progressValue.textContent = `${progressStartValue} s`;
-    if (progressStartValue > progressEndValue)
-        circularProgress.style.background = `conic-gradient(red ${progressPercentage * 3.6}deg, black 0deg)`;
-    else
-        circularProgress.style.background = `conic-gradient(#7d2ae8 ${progressPercentage * 3.6}deg, black 0deg)`;
+// export function updateTime(data) {
+//     let circularProgress = document.querySelector(".circular-progress"),
+//         progressValue = document.querySelector(".progress-value");
+//     let progressStartValue = data.elapsed,
+//         progressEndValue = data.endTime
+//     let progressPercentage = (progressStartValue / progressEndValue) * 100;
+//     progressValue.textContent = `${progressStartValue} s`;
+//     if (progressStartValue > progressEndValue)
+//         circularProgress.style.background = `conic-gradient(red ${progressPercentage * 3.6}deg, black 0deg)`;
+//     else
+//         circularProgress.style.background = `conic-gradient(#7d2ae8 ${progressPercentage * 3.6}deg, black 0deg)`;
 
-}
+// }
 
 
 export function updateEndGame(data) {

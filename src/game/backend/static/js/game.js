@@ -1,6 +1,6 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
-import {  match_making, update_match_making, score, updateScore, time, updateTime, updateEndGame, gameSettings } from './elements.js';
+import {   updateEndGame, gameSettings } from './elements.js';
 import { gameView } from './services/gameView.js';
 
 
@@ -33,7 +33,7 @@ export function sceneSetup(scene, camera, renderer, background) {
 	// RENDERER
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMap.enabled = true;
-	document.getElementById('app').appendChild(renderer.domElement)
+	document.getElementById('game-elements').appendChild(renderer.domElement)
 
 	// HELPER
 	const axesHelper = new THREE.AxesHelper( 5 );
@@ -112,22 +112,23 @@ export function setup_canva() {
 				<div id="loader"></div>
 				<button id="cancel-btn">Cancel</button>
 			</div>
-		<div>
+		</div>
+		<div class="time glass">
+			<h1 id="time">00:05</h1>
+		</div>
         <div class="endGame-pop glass">
-            <h3>YOU <span>WON</span>!</h3>
-        </div>
-        <div class="time glass">
-            <h1 id="time">00:05</h1>
+            <h3>YOU <span id="status">WON</span>!</h3>
         </div>
 	`
 	canva.append(gameElements)
 	document.querySelector('.score').style.display = 'none'
+	console.log(gameElements.innerHTML)
 	document.querySelector('.time').style.display = 'none'
 	document.querySelector('.endGame-pop').style.transform = 'scale(0)'
 }
 
 export function update_canva(data) {
-	document.querySelector('.waiting-pop').style.transform = 'scale(0)'
+	document.querySelector('.waiting-holder').style.transform = 'scale(0)'
 	
 	document.querySelector('.score').style.display = 'flex'
 	document.getElementById('user1').innerHTML = data.coordinates.player.name
@@ -247,8 +248,8 @@ export function start(mode) {
 							break;
 							
 					case "endGame":
-
-						updateEndGame(data)
+						
+						document.querySelector('.endGame-pop').style.transform = 'scale(1)'
 						break;
 
 		        default:

@@ -8,3 +8,7 @@ def home_view(request):
 
 def layouts(request):
 	return render(request, 'home/websiteLayout.html')
+
+def signup(request):
+	print("SIGN UP")
+	return render(request, 'home/signup.html')

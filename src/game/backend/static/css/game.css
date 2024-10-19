@@ -16,7 +16,6 @@ canvas{
     align-items: center;
     justify-content: center;
     color: white;
-    /* position: absolute; */
 }
 
 .waiting-holder{
@@ -26,6 +25,8 @@ canvas{
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    z-index: 10;
 }
 
 .waiting-pop{
@@ -86,6 +87,9 @@ canvas{
     height: 65px;
     display: flex;
     justify-content: center;
+    position: absolute;
+    z-index: 10;
+    top: 0;
 }
 
 .user{
@@ -101,24 +105,37 @@ canvas{
     background: #0c0b2c86; 
     border-color: var(--secondary2);
     border-style: solid;
+    border-width: 0px 2px 2px 2px;
     height: 100%;
     flex-grow: .5;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
 }
 
 
 /* TIME */
 
 .time{
+    background-color: red;
     width: 155.85px;
     height: 65px;
     background: #0c0b2c86; 
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    z-index: 10;
+    top: 94%;
+    border-color: var(--secondary2);
+    border-style: solid;
+    border-width: 2px 2px 0px 2px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 /* END GAME */
@@ -127,7 +144,7 @@ canvas{
     background: #0c0b2c86; 
 
     width: 155px;
-    height: 65px;
+    height: 90px;
     border-radius: 15px;
     margin-top: 175px;
     margin: auto 0;
@@ -135,4 +152,7 @@ canvas{
     align-items: center;
     justify-content: space-around;
     flex-direction: column;
+    position: absolute;
+    z-index: 10;
+    transition-duration: 600ms;
 }
