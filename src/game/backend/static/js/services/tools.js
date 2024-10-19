@@ -109,7 +109,7 @@ async function sendData(endpoint)
     }
 }
 
-async function showModal(message)
+export async function showModal(message)
 {
     const app = document.getElementById('app')
     const div = document.createElement('div')
@@ -129,15 +129,23 @@ async function showModal(message)
     modalBackground.style.display = 'flex'
     modalMessage.textContent = message
     
-    modalBackground.addEventListener('click', (event) => {
-        if (event.target === modalBackground)
-            modalBackground.style.display = 'none'
+    // modalBackground.addEventListener('click', (event) => {
+    //     if (event.target === modalBackground)
+    //         modalBackground.style.display = 'none'
         
-        app.removeChild(div)
-    })
+    //     app.removeChild(div)
+    // })
 }
 
-export function delay (ms) { return new Promise(resolve => {setTimeout(resolve, ms)})}
+export function delay (ms) 
+{ return new Promise(resolve => 
+    {
+        const app = document.getElementById('app')
+
+        app.innerHTML = "<div id='loader'></div>"
+        setTimeout(resolve, ms)
+    })
+}
 
 // other function , we ll see if we need them later on 
 export function tableLine(data)
@@ -221,5 +229,3 @@ export async function addWebsiteLayout() {
     app.classList.add('active')
     app.innerHTML = `${responseText}`
 }
-
-

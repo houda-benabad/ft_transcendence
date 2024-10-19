@@ -1,7 +1,7 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
 import {   updateEndGame, gameSettings } from './elements.js';
-import { getBackToHome } from './services/tools.js';
+import { getBackToHome , showModal, delay} from './services/tools.js';
 
 const PLAYER_GEO = new THREE.BoxGeometry(1, .3, .1)
 const BALL_GEO = new THREE.SphereGeometry(.1, 32, 15)
@@ -241,8 +241,17 @@ export function start() {
 							break;
 							
 					case "endGame":
+						showModal('U WON!')
+						const modalBackground = document.getElementById('modal-background')
 						
-						document.querySelector('.endGame-pop').style.transform = 'scale(1)'
+						console.log("GAME FINISHED = ", modalBackground)
+
+						modalBackground.addEventListener('click', async (event) => {
+							await delay(3000)
+							getBackToHome()
+
+						})
+						// document.querySelector('.endGame-pop').style.transform = 'scale(1)'
 						break;
 
 		        default:

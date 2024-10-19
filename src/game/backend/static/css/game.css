@@ -58,7 +58,10 @@ canvas{
       #00000000;
     background-repeat: no-repeat; 
     animation: l3 2s infinite linear;
-
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
   }
   @keyframes l3{
