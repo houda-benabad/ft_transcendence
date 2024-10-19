@@ -46,10 +46,6 @@ function socketSetup() {
     let url = `ws://${window.location.host}/ws/multi/`
     const gameSocket = new WebSocket(url)
 
-    gameSocket.onopen = function(e) {
-        console.log("CONECTION ESTABLISHED")
-    }
-
     document.addEventListener('keydown', (event) => {
         gameSocket.send(JSON.stringify({
             'type': 'keycode',

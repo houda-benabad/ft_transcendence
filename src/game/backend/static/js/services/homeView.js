@@ -1,6 +1,7 @@
 import {tableLine} from './tools.js'
 import router from './router.js'
 import {start} from '../game.js'
+import {local} from '../local.js'
 
 export class homeView extends HTMLElement
 {
@@ -141,7 +142,10 @@ export class homeView extends HTMLElement
             //  MAIN CONTENT NEED TO BE EMPTY
             switch (a.dataset.link) {
                 case 'remote':
-                    start('game')
+                    start()
+                    break;
+                case 'local':
+                    local()
                     break;
             
                 default:

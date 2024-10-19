@@ -6,7 +6,6 @@ export class gameView extends HTMLElement
     }
     async connectedCallback()
     {
-        console.log("TEST")
         await this.addContent()
         this.eventListener()
     }

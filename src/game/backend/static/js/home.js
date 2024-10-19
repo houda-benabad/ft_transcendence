@@ -41,7 +41,6 @@ tour.addEventListener('click', (e) => {
     local.remove()
     tour.remove()
     rps.remove()
-    console.log("CLOCKED")
     TOUR.create_form()
 })
 

@@ -1,21 +1,18 @@
+import router from './router.js'
+
 const routes = {
-    '/' : './html/signup.html',
-    '/register' : './html/register.html',
-    '/home' : './html/header.html'
+    '/signup' : 'signup',
+    '/signin' : 'signin',
 }
+// to remove event listners that we wont be in need anymore
 
-function saveGenderOption () //function feature to check gender
+export async function init(path)
 {
-    document.querySelectorAll('.gender-option').forEach(option => {
-        option.addEventListener('click', () => {
-            document.querySelectorAll('.gender-option').forEach(item => item.classList.remove('selected'))
-            option.classList.add('selected')
-
-            const value = option.getAttribute('data-value')
-            document.querySelector('#selected-gender').value = value
-        })
-    })
+    await loadPage(path)
+    eventListener()
+    await waitForFormSubmit(path)
 }
+
 export async function loadPage(path)
 { 
     const app = document.getElementById('app')
@@ -27,60 +24,122 @@ export async function loadPage(path)
     
     app.innerHTML = ''
     app.innerHTML = content
-    if (path == '/register')
-        saveGenderOption()
 }
 
-export function waitForFormSubmit()
+export function eventListener()
+{
+    const tmpAnchor = document.getElementById('sign')
+    const tmpAnchor2 = document.querySelector('.intra')
+
+    tmpAnchor.addEventListener('click', (event) => {
+        event.preventDefault()
+        init(tmpAnchor.getAttribute('href'))
+    }
+    )
+
+    tmpAnchor2.addEventListener('click', async (event) => 
+    {
+        const value = tmpAnchor2.dataset.value
+
+        console.log(value)
+        event.preventDefault()
+        try
+        {
+            console.log('data sent successfully to : intra')
+            const response = await fetch('https://8b89b413-0cc1-4252-92aa-2ac6c60c1be4.mock.pstmn.io/intra')
+            if (!response.ok)
+            {
+                throw new Error(response.status)
+                return ;
+            }
+            await showModal(`you ${value} successfully`)
+        }
+        catch(error)
+        {
+            await showModal('an error occured')
+        }
+    })
+}
+export function waitForFormSubmit(endpoint)
 {
     return (new Promise((resolve) => {
         const form = document.querySelector('form')
         const path = document.getElementById('submit').getAttribute('data-link')
-        form.addEventListener('submit', (event) => {
+        form.addEventListener('submit', async (event) => {
             event.preventDefault()
-            if (!saveFormData())
-                return ;
-            resolve(path)
+            await sendData(endpoint)
+            resolve('/home')
         })
     }))
 }
-
 // this part gave it to the backend.
-function saveFormData(path)
+async function sendData(endpoint)
 {
-    const formId = document.querySelector('form').getAttribute('data-id')
-    if (formId === 'login')
+    // to use path
+    const form = document.querySelector('form')
+    const formData = new FormData(form)
+    const formObject = {}
+
+    formData.forEach((value, key) => { formObject[key] = value })
+
+    try
     {
-        const loginData = {
-            username : document.querySelector('#username').value,
-            password : document.querySelector('#password').value
-        }
-        app.loginData = loginData // this is where i saved data related to login
-    }
-    else
-    {
-        const genderValue = document.getElementById('selected-gender').value
-        console.log('gender value : ' + genderValue)
-        if (!genderValue)
-        {
-            document.getElementById('error-message').style.display = 'block'
-            return false;
-        }
-        const registrationData = {
-            username : document.getElementById('username').value,
-            country : document.getElementById('country').value,
-            birthday : {
-                day : document.getElementById('day').value,
-                month : document.getElementById('month').value,
-                year : document.getElementById('year').value,
+        console.log('data sent successfully to : ' + endpoint)
+        const response = await fetch(`https://8b89b413-0cc1-4252-92aa-2ac6c60c1be4.mock.pstmn.io${endpoint}`, {
+            method : 'POST', 
+            headers : {
+                'Content-Type' : 'application/json'
             },
-            gender : genderValue
+            body : JSON.stringify(formObject)
+        })
+        if (!response.ok)
+        {
+            if (response.status === 401)
+            {
+                await showModal('wrong username or password, please try again ^^')
+                return ;
+            }
+            throw new Error(response.status)
         }
-        app.registrationData = registrationData // thsi where i saved data related to register
+        await showModal('you logged in successfully')
     }
-    return true
+    catch(error)
+    {
+        await showModal('an error occured')
+    }
 }
 
+async function showModal(message)
+{
+    const app = document.getElementById('app')
+    const div = document.createElement('div')
+
+    div.id = 'modal-background'
+    div.innerHTML = 
+    `
+        <div id="modal">
+            <p id="modal-message"></p>
+        </div>
+    `
+    app.appendChild(div)
+
+    const modalBackground = document.getElementById('modal-background')
+    const modalMessage = document.getElementById('modal-message')
+
+    modalBackground.style.display = 'flex'
+    modalMessage.textContent = message
+    
+    modalBackground.addEventListener('click', (event) => {
+        if (event.target === modalBackground)
+            modalBackground.style.display = 'none'
+        
+        app.removeChild(div)
+    })
+}
+
+export function delay (ms) { return new Promise(resolve => {setTimeout(resolve, ms)})}
+
+// other function , we ll see if we need them later on 
 export function tableLine(data)
 {
     const key = Object.keys(data)
@@ -145,3 +204,22 @@ export async function addFriendsBox()
         `
     }
 }
+
+// houda palezzzzzz rememeber this 
+
+export async function getBackToHome()
+{
+    await addWebsiteLayout()
+    router.init()
+}
+
+export async function addWebsiteLayout() {
+    const response = await fetch('/websiteLayout')
+    const responseText = await response.text()
+    const app = document.getElementById('app')
+
+    app.classList.add('active')
+    app.innerHTML = `${responseText}`
+}
+
+

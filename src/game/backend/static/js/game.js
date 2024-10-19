@@ -1,19 +1,14 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
 import {   updateEndGame, gameSettings } from './elements.js';
-import { gameView } from './services/gameView.js';
-
+import { getBackToHome } from './services/tools.js';
 
 const PLAYER_GEO = new THREE.BoxGeometry(1, .3, .1)
 const BALL_GEO = new THREE.SphereGeometry(.1, 32, 15)
 
-function socketSetup(mode) {
-	let url = `ws://${window.location.host}/ws/${mode}/`
+function socketSetup() {
+	let url = `ws://${window.location.host}/ws/game/`
 	const gameSocket = new WebSocket(url)
-
-	gameSocket.onopen = (e) => {
-		console.log("CONECTION ESTABLISHED")
-	}
 
 	document.addEventListener('keydown', (event) => {
 		gameSocket.send(JSON.stringify({
@@ -26,6 +21,7 @@ function socketSetup(mode) {
 }
 
 export function sceneSetup(scene, camera, renderer, background) {
+	console.log("HEEEEEEY")
 	camera.position.z = 20;
 	camera.rotation.y = -Math.PI
 
@@ -122,9 +118,11 @@ export function setup_canva() {
 	`
 	canva.append(gameElements)
 	document.querySelector('.score').style.display = 'none'
-	console.log(gameElements.innerHTML)
 	document.querySelector('.time').style.display = 'none'
 	document.querySelector('.endGame-pop').style.transform = 'scale(0)'
+	document.getElementById('cancel-btn').addEventListener('click', ()=>{
+		getBackToHome()
+	})
 }
 
 export function update_canva(data) {
@@ -142,15 +140,12 @@ export function update_canva(data) {
 
 }
 
-function update_coordinates(gameObjects, coordinates, mode) {
+function update_coordinates(gameObjects, coordinates) {
 	const { ball } = gameObjects;
 	ball.position.fromArray(coordinates.ball.position);
-
-	if (mode === 'game') {
-		const { player, otherPlayer } = gameObjects;
-		player.position.fromArray(coordinates.player.position);
-		otherPlayer.position.fromArray(coordinates.otherPlayer.position);
-	}
+	const { player, otherPlayer } = gameObjects;
+	player.position.fromArray(coordinates.player.position);
+	otherPlayer.position.fromArray(coordinates.otherPlayer.position);
 }
 
 export function create_objects_vs(scene, texture) {
@@ -187,16 +182,16 @@ export function create_objects_vs(scene, texture) {
 export function startGame(gameOptions){
 	setup_canva()
 	sceneSetup(scene, camera, renderer,  gameOptions.background)
-	return create_objects_vs(scene, gameOptions.texture,)
+	return create_objects_vs(scene, gameOptions.texture)
 }
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 const scene = new THREE.Scene();
 
-export function start(mode) {
+export function start() {
 
-	const gameSocket = socketSetup(mode)
+	const gameSocket = socketSetup()
 
 	let gameObjects, gameOptions, started = false
 	renderer.setAnimationLoop(animation);
@@ -206,10 +201,8 @@ export function start(mode) {
 			const { type, data } = JSON.parse(e.data)
 			switch (type) {
 		        case "api":
-					console.log('data = ', data)
-					// document.getElementById('loader').style.display = 'none'
 					started = false
-		            update_coordinates(gameObjects, data.coordinates, mode)
+		            update_coordinates(gameObjects, data.coordinates)
 		            update_canva(data)
 		            break;
 

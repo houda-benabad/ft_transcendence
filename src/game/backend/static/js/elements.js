@@ -197,5 +197,6 @@ export function gameSettings() {
 
 	main.innerHTML = ''
 	main.append(mainContent)
+	
 }
 
