@@ -1,13 +1,13 @@
 #app
 {
-    /* display: grid;
+    display: grid;
     grid-template-columns: 2fr 1fr;
     #image-cover
     {
         background-image: linear-gradient(to right,rgba(4,7,22, 0) ,rgba(4,7,22, 1)), url(static/img/background.png);
         background-size: contain;
         height: 100vh;
-    } */
+    }
     #signDiv
     {
         color: white;

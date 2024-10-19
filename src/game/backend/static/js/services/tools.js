@@ -15,6 +15,7 @@ export async function init(path)
 
 export async function loadPage(path)
 { 
+
     const app = document.getElementById('app')
     
     const htmlFile = routes[path]
@@ -22,6 +23,7 @@ export async function loadPage(path)
     const content = await html.text()
     
     
+    console.log(app)
     app.innerHTML = ''
     app.innerHTML = content
 }
