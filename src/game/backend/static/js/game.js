@@ -21,7 +21,6 @@ function socketSetup() {
 }
 
 export function sceneSetup(scene, camera, renderer, background) {
-	console.log("HEEEEEEY")
 	camera.position.z = 20;
 	camera.rotation.y = -Math.PI
 
@@ -243,9 +242,6 @@ export function start() {
 					case "endGame":
 						showModal('U WON!')
 						const modalBackground = document.getElementById('modal-background')
-						
-						console.log("GAME FINISHED = ", modalBackground)
-
 						modalBackground.addEventListener('click', async (event) => {
 							await delay(3000)
 							getBackToHome()

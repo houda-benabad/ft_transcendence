@@ -56,24 +56,22 @@ class Ball(GameObject):
 		if (random.randint(0, 1)% 2 == 0):
 			rand = -1
 		self.velocity[2] *= rand 
-		
-  
 
 	def update(self, plane, player, otherplayer):
 		self.updateBounds()
 		
 		# HANDLE Y DONE
-		if round(self.bottom, 2)  <= round(plane.top,2):
-			self.position[1] = round(plane.top,2) + round(self.dimension[0] / 2 , 2)
+		if round(self.bottom, 4)  <= round(plane.top,2):
+			self.position[1] = round(plane.top,2) + round(self.dimension[0] / 2 , 4)
 			self.velocity[1] = 0
 		else:
 			self.velocity[1] -= 0.01
 
 		# HANDLE PLANE SPACE DONE
-		if (self.back >= player.back):
+		if (self.back >= plane.back):
 			otherplayer.score+= 1
 			self.reset()
-		elif (self.front <= otherplayer.front):
+		elif (self.front <= plane.front):
 			player.score += 1
 			self.reset()
 
@@ -83,7 +81,7 @@ class Ball(GameObject):
 
 		# HANDLE PLAYERS COLLITSION
 
-		if (round(self.back, 2) >= round(player.front, 2)):
+		if (round(self.back, 4) >= round(player.front, 4)):
 			if (round(self.left) >= round(player.left) and round(self.right) <= round(player.right)):
 				self.velocity[2] *= -1
 				if self.velocity[2] < 0:
@@ -91,7 +89,7 @@ class Ball(GameObject):
 				else:
 					self.velocity[2] += .01
 
-		elif (round(self.front, 2) <= round(otherplayer.back, 2)):
+		elif (round(self.front, 4) <= round(otherplayer.back, 4)):
 			if (round(self.left) >= round(otherplayer.left) and round(self.right) <= round(otherplayer.right)):
 				self.velocity[2] *= -1
 				if self.velocity[2] < 0:
@@ -99,7 +97,8 @@ class Ball(GameObject):
 				else:
 					self.velocity[2] += .01
 
-
+		self.velocity[2] %= 2
+		print(self.velocity[2])
 		for i in range(3):
 			self.position[i] += self.velocity[i]
 
