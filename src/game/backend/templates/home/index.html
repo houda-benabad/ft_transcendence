@@ -5,15 +5,16 @@
     <title>Pong</title>
     <meta charset="utf-8">
 
-    <script type="module" src="{% static "/js/app.js" %}" defer></script>
+    <script type="module" src="{% static '/js/app.js' %}" defer></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 
-    <link rel="stylesheet" href="{% static "/css/style.css" %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
 </head>
 
 <body>
     <div id="app">
-        
+        {% block app %}
+        {% endblock app%}
     </div>
 </body>
 

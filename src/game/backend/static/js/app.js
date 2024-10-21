@@ -16,9 +16,9 @@ async function addWebsiteLayout() {
 
 window.addEventListener('DOMContentLoaded', async () => 
 {
-    // let path = '/signin' // first page
-    // await init(path)
+    let path = '/signin'
+    await init(path)
     // await delay(1500)
-    await addWebsiteLayout()
-    router.init()
+    // await addWebsiteLayout()
+    // router.init()
 })
