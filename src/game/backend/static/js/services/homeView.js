@@ -2,6 +2,7 @@ import {tableLine} from './tools.js'
 import router from './router.js'
 import {start} from '../game.js'
 import {local} from '../local.js'
+import {tourn} from '../tournament.js'
 
 export class homeView extends HTMLElement
 {
@@ -140,12 +141,18 @@ export class homeView extends HTMLElement
 
         document.querySelectorAll('.anchor-tmp').forEach(a => a.addEventListener('click' , () =>{
             //  MAIN CONTENT NEED TO BE EMPTY
+            console.log(a.dataset.link)
             switch (a.dataset.link) {
                 case 'remote':
                     start()
                     break;
+
                 case 'local':
                     local()
+                    break;
+
+                case 'tournament':
+                    tourn()
                     break;
             
                 default:
