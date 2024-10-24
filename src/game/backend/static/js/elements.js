@@ -1,6 +1,6 @@
 // import {gameOptions} from './game.js'
 
-import { startGame } from "./game.js"
+import { startGame } from "./game2.js"
 import "./services/gameView.js"
 
 export function score(firstScore, secondScore) {

@@ -1,24 +1,45 @@
-import {loadPage} from './services/tools.js'
-import {waitForFormSubmit} from './services/tools.js'
-import {eventListener} from './services/tools.js'
-import {delay} from './services/tools.js'
-import {init} from './services/tools.js'
+import {loadFirstPage, superviser, delay} from './services/tools.js'
 import router from './services/router.js'
-
 async function addWebsiteLayout() {
-    const response = await fetch('websiteLayout')
-    const responseText = await response.text()
     const app = document.getElementById('app')
 
     app.classList.add('active')
-    app.innerHTML = `${responseText}`
+    app.innerHTML =
+    `  
+    <div id="header">
+    <h2>hello, Eva</h2>
+    <div id="search-bar">
+        <input type="text" placeholder="search friends ...">
+        <i class="iconify" data-icon="teenyicons:search-outline" data-inline="false"></i>
+    </div>
+    <div class="anchor-box circle">
+        <a href="./notify"><i class="iconify" data-icon="clarity:notification-line" data-inline="false"></i></a>
+    </div>
+    </div>
+    <div id="navbar">
+        <nav>
+            <div id="nav-top">
+                <a href="./home" class="static selected"><i class="iconify" data-icon="hugeicons:home-02" data-inline="false"></i></a>
+                <a href="./profile" class="static"><i class="iconify" data-icon="fluent:person-20-regular" data-inline="false"></i></a>
+                <a href="./game" class="static"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
+                <a href="./chat" class="static"><i class="iconify" data-icon="teenyicons:chat-outline" data-inline="false"></i></a>
+            </div>
+            <div id="nav-btm">
+                <a href="./settings" class="static"><i class="iconify" data-icon="solar:settings-outline" data-inline="false"></i></a>
+                <a href="./logout" class="static"><i class="iconify" data-icon="streamline:logout-1" data-inline="false"></i></a>
+            </div>
+        </nav>
+    </div>
+    <div id="main"></div>
+    `
 }
 
 window.addEventListener('DOMContentLoaded', async () => 
 {
-    let path = '/signin'
-    await init(path)
-    // await delay(1500)
-    // await addWebsiteLayout()
-    // router.init()
+    // await loadFirstPage()
+    // await superviser()
+    // await delay(3000)
+    await addWebsiteLayout()
+    router.init()
 })
+

@@ -1,91 +1,42 @@
-import {  create_objects_vs, sceneSetup } from './game.js'
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
 import { gameSettings } from './elements.js'
 import { getBackToHome , showModal, delay} from './services/tools.js';
 
-let WINNER = ''
-let BALL_VELOCITY = {
-	x: 0.01,
-	z: 0.01
-}
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+const scene = new THREE.Scene();
+const world = new CANNON.World();
+const PLAYER_GEO = new THREE.BoxGeometry(1, .3, .1)
+const BALL_GEO = new THREE.SphereGeometry(.1, 32, 15)
 
-const PLAYER_SPEED = 0.05
-const MAX_PLAYER_X = 1.5
-const MIN_PLAYER_X = -1.5
-
-
-export function is_out_bound(ballBody, score) {
-	if (ballBody.position.z > 2.5) {
-		ballBody.position.set(0, 0.8, 0)
-		score.p1 += 1
-		document.getElementById('score').innerHTML = `${score.p1}  :  ${score.p2}`
-		return true
-	}
-	if ( ballBody.position.z < -2.5) {
-		ballBody.position.set(0, 0.8, 0)
-		score.p2 += 1
-		document.getElementById('score').innerHTML = `${score.p1}  :  ${score.p2}`
-
-		return true
-	}
-	return false
-}
-
-export function move_players(player, otherPlayer) {
+function socketSetup() {
+	let url = `ws://${window.location.host}/ws/game/`
+	const gameSocket = new WebSocket(url)
 	const keyState = {}
 
 	document.addEventListener('keydown', (event) => { keyState[event.code] = true })
 	document.addEventListener('keyup', (event) => { keyState[event.code] = false })
 
-	return function() {
-		if (keyState['ArrowLeft'] && player.position.x > MIN_PLAYER_X)
-			player.position.x -= PLAYER_SPEED
-		if (keyState['ArrowRight'] && player.position.x < MAX_PLAYER_X)
-			player.position.x += PLAYER_SPEED
-		if (keyState['KeyA'] && otherPlayer.position.x > MIN_PLAYER_X)
-			otherPlayer.position.x -= PLAYER_SPEED
-		if (keyState['KeyD'] && otherPlayer.position.x < MAX_PLAYER_X)
-			otherPlayer.position.x += PLAYER_SPEED
-	}
+	document.addEventListener('keydown', (event) => {
+		gameSocket.send(JSON.stringify({
+			'type': 'keycode',
+			'data': event.keyCode
+		}))
+	});
+
+	return gameSocket
 }
 
-export function check_plane_sides(ballBody){
-
-	if (ballBody.position.x >= 1.5){
-		BALL_VELOCITY.x*= -1
-	}
-	else if (ballBody.position.x <= -1.5)
-		BALL_VELOCITY.x *= -1
+export function startGame(gameOptions){
+	const app = document.getElementById('app')
+	app.className = 'game'
+	app.innerHTML = ''
+	setup_canva()
+	sceneSetup(scene, camera, renderer,  gameOptions.background)
+	return create_objects(scene, gameOptions.texture)
 }
-
-export function local() {
-	gameSettings()
-	let gameOptions
-	let form = document.getElementById('game-settings')
-	form.addEventListener('submit', (e) => {
-		e.preventDefault()
-		
-		let data = new FormData(form);
-		gameOptions = Object.fromEntries(data)
-		const app = document.getElementById('app')
-		app.className = 'game'
-		app.innerHTML = ''
-		startGame(gameOptions)
-		
-		
-	})
-
-}
-
-
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-const scene = new THREE.Scene();
-const world = new CANNON.World();
-
-
 
 export function setup_canva() {
 	let canva = document.getElementById("app");
@@ -94,44 +45,156 @@ export function setup_canva() {
 	gameElements.id = 'game-elements'
 
 	gameElements.innerHTML = `
-		<div class="score">
-			<div class="user glass">
-				<h3 id="user1">hajar</h3>
-			</div>
-			<div class="score-num glass">
-				<h1 id="score">0 : 0</h1>
-			</div>
-			<div class="user glass">
-				<h3 id="user2">kouaz</h3>
+        <div class="score">
+            <div class="user glass">
+                <h3 id="user1">hajar</h3>
+            </div>
+            <div class="score-num glass">
+                <h1 id="score">0 : 0</h1>
+            </div>
+            <div class="user glass">
+                <h3 id="user2">kouaz</h3>
+            </div>
+        </div>
+		<div class="waiting-holder">
+			<div class="waiting-pop glass">
+				<h1>Waiting for other player...</h1>
+				<div id="loader"></div>
+				<button id="cancel-btn">Cancel</button>
 			</div>
 		</div>
 		<div class="time glass">
 			<h1 id="time">00:05</h1>
 		</div>
-		<div class="endGame-pop glass">
-			<h3>YOU <span id="status">WON</span>!</h3>
-		</div>
+        <div class="endGame-pop glass">
+            <h3>YOU <span id="status">WON</span>!</h3>
+        </div>
 	`
 	canva.append(gameElements)
+	document.querySelector('.score').style.display = 'none'
+	document.querySelector('.time').style.display = 'none'
 	document.querySelector('.endGame-pop').style.transform = 'scale(0)'
+	document.getElementById('cancel-btn').addEventListener('click', ()=>{
+		getBackToHome()
+	})
 }
 
-export function create_player(dimension, position){
-	const Shape = new CANNON.Box(new CANNON.Vec3(...dimension));
-	const Body = new CANNON.Body({
-	  mass: 0,
-	  position: new CANNON.Vec3(...position),
-	});
-	Body.addShape(Shape);
-	Body.fixedRotation = true;
-	world.addBody(Body);
-	return Body
+export function update_canva(data) {
+	document.querySelector('.waiting-holder').style.transform = 'scale(0)'
+	
+	document.querySelector('.score').style.display = 'flex'
+	document.getElementById('user1').innerHTML = data.coordinates.player.name
+	document.getElementById('user2').innerHTML = data.coordinates.otherPlayer.name
+	let score_html = `${data.coordinates.player.score} : ${data.coordinates.otherPlayer.score}`
+	document.getElementById('score').innerHTML = score_html
+	if (data.time){
+		document.querySelector('.time').style.display = 'flex'
+		document.getElementById('time').innerHTML = data.time
+	}
+
 }
 
-export function create_bodies(){
+export function sceneSetup(scene, camera, renderer, background) {
+	camera.position.z = 20;
+	camera.rotation.y = -Math.PI
+
+
+	// RENDERER
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.shadowMap.enabled = true;
+	document.getElementById('game-elements').appendChild(renderer.domElement)
+
+	// ORBIT CONTROLER
+	const orbit = new OrbitControls(camera, renderer.domElement)
+
+
+	// LIGHT
+	const light = new THREE.DirectionalLight(0xffffff, 6);
+	light.castShadow = true
+	light.position.y = 5;
+	light.position.z = 5;
+
+	// WINDOW
+	window.addEventListener('resize', onWindowResize, false);
+
+	function onWindowResize() {
+
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+
+		renderer.setSize(window.innerWidth, window.innerHeight);
+
+	}
+	// ADD TO SCENE
+	scene.add(light)
+	
+	const geometry = new THREE.SphereGeometry(8, 128, 128);
+	geometry.scale(-1, 1, 1);
+	
+	const textureLoader = new THREE.TextureLoader();
+	textureLoader.load(
+		`static/img/background/${background}.png`,
+		(texture) => {
+			texture.encoding = THREE.sRGBEncoding;
+			texture.minFilter = THREE.LinearMipmapLinearFilter;
+			texture.magFilter = THREE.LinearFilter;
+			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+			
+			const material = new THREE.MeshBasicMaterial({ map: texture });
+			const sphere = new THREE.Mesh(geometry, material);
+			scene.add(sphere);
+		},
+		undefined,
+		(error) => {
+			console.error('An error occurred while loading the texture:', error);
+		}
+	);
+	
+
+}
+
+export function create_objects(scene, texture) {
+	let ball, plane
+	let players = {player1, player2, player3, player4};
+
+	//PLANE
+	plane = new THREE.Mesh(new THREE.BoxGeometry(3, .2, 5), new THREE.MeshLambertMaterial({ color: 0x5F1584 }))
+
+	// 	BALL
+	if (texture == 'default')
+		ball = new THREE.Mesh(BALL_GEO, new THREE.MeshLambertMaterial({ color: 0xD43ADF }))
+	else {
+		const textureLoader = new THREE.TextureLoader().load(`static/img/texture/${texture}.png`);
+		ball = new THREE.Mesh(BALL_GEO, new THREE.MeshStandardMaterial({ map : textureLoader }))
+	}
+	ball.position.set(0, .8, 0)
+
+	// PLAYER
+	players.player1 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0x8C96ED }))
+	players.player1.position.set(1.5, .4, 2.45)
+
+
+	//OTHERPLAYER
+	players.player2 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
+	players.player2.position.set(1.5, .4, -2.45)
+
+	players.player3 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
+	players.player3.position.set(-1.5, .4, -2.45)
+
+	players.player4 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
+	players.player4.position.set(-1.5, .4, 2.45)
+
+	scene.add(plane);
+	scene.add(players.player);
+	scene.add(players.player2);
+	scene.add(players.player3);
+	scene.add(players.player4);
+	scene.add(ball);
+	return { ball, players, plane }
+}
+
+function create_bodies(){
 	let player = create_player([0.5, .15, 0.05], [0, .25, 2.45])
-
-	// OTHERPLAYER BODY
 	let otherPlayer = create_player([0.5, .15, 0.05], [0, .25, -2.45])
 
 	const ball = new CANNON.Body({
@@ -148,17 +211,23 @@ export function create_bodies(){
 	});
 	groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); 
 	world.addBody(groundBody);
-	
-
-	ball.addEventListener('collide', (event)=>{
-		if (event.body !=  groundBody )
-			BALL_VELOCITY.z *= -1
-	})
 
 	return {player, otherPlayer, ball}
 }
 
-export function update_position(gameObjects, gameBodies){
+function create_player(dimension, position){
+	const Shape = new CANNON.Box(new CANNON.Vec3(...dimension));
+	const Body = new CANNON.Body({
+	  mass: 0,
+	  position: new CANNON.Vec3(...position),
+	});
+	Body.addShape(Shape);
+	Body.fixedRotation = true;
+	world.addBody(Body);
+	return Body
+}
+
+function update_position(gameObjects, gameBodies){
 	gameObjects.player.position.copy(gameBodies.player.position);
 	gameObjects.player.quaternion.copy(gameBodies.player.quaternion);
 
@@ -167,73 +236,122 @@ export function update_position(gameObjects, gameBodies){
 
 	gameObjects.ball.position.copy(gameBodies.ball.position);
 	gameObjects.ball.quaternion.copy(gameBodies.ball.quaternion);
-
-
-	gameBodies.ball.position.z += BALL_VELOCITY.z
-	gameBodies.ball.position.x += BALL_VELOCITY.x
 }
 
-export function game_over(){
-	showModal('GAME OVER')
-	const modalBackground = document.getElementById('modal-background')
-	modalBackground.addEventListener('click', async () => {
-		await delay(3000)
-		getBackToHome()
-	})
+function update_coordinates(gameBodies, coordinates) {
+	const { ball } = gameBodies;
+	ball.position.x = coordinates.ball.position[0];
+	ball.position.z = coordinates.ball.position[1];
+	const { player, otherPlayer } = gameBodies;
+	player.position.x = coordinates.player.position[0];
+	player.position.z = coordinates.player.position[1];
+
+	otherPlayer.position.x = coordinates.otherPlayer.position[0];
+	otherPlayer.position.z = coordinates.otherPlayer.position[1];
 }
 
-function startGame(gameOptions) {
+function cleanupScene(scene, renderer, world) {
+    scene.traverse((object) => {
+        if (object.geometry) {
+            object.geometry.dispose();
+        }
+        if (object.material) {
+            if (Array.isArray(object.material)) {
+                object.material.forEach(material => material.dispose());
+            } else {
+                object.material.dispose();
+            }
+        }
+    });
+
+    while(scene.children.length > 0) {
+        scene.remove(scene.children[0]);
+    }
+
+    while(world.bodies.length > 0) {
+        world.removeBody(world.bodies[0]);
+    }
+
+    renderer.dispose();
+
+    renderer.domElement.remove();
+}
+
+export function multi() {
+
 	const timeStep = 1/60
+	const gameSocket = socketSetup()
+
+	let gameObjects, gameBodies,gameOptions, started = false
+
 	world.gravity.set(0, -9.82, 0);
 	world.broadphase = new CANNON.NaiveBroadphase();
 	world.solver.iterations = 10;
-	let score = {
-		p1 : 0,
-		p2 : 0
-	}
-	const startTime  = new Date()
-	setup_canva()
-	sceneSetup(scene, camera, renderer, gameOptions.background)
-	let gameObjects = create_objects_vs(scene, gameOptions.texture)
-	let gameBodies = create_bodies()
+	renderer.setAnimationLoop(animation);
 
-	const updatePlayerPositions = move_players(gameBodies.player, gameBodies.otherPlayer)
-	let Animate = true
-
-
-	function animate() {
-		if (!Animate) return
-
-		let id = requestAnimationFrame(animate);
-
+	function animation() {
 		world.step(timeStep);
-		updatePlayerPositions()
+		gameSocket.onmessage = (e) => {
+			const { type, data } = JSON.parse(e.data)
+			switch (type) {
+				case 'api':
+					started= false
+					document.querySelector('.waiting-holder').style.display = 'none'
+					update_coordinates(gameBodies, data.coordinates)
+					update_position(gameObjects, gameBodies)
+					update_canva(data)
+					break;
+				case 'gameInfo':
+					gameSettings()
+					let form = document.getElementById('game-settings')
+					form.addEventListener('submit', (e) => {
+						e.preventDefault()
+						
+						let data = new FormData(form);
+						gameOptions = Object.fromEntries(data)
 
-		is_out_bound(gameBodies.ball, score)
-		check_plane_sides(gameBodies.ball)
-	
-		if (Animate && gameOptions.mode == 'time'){
-			let now  = new Date()
-			let elapsed  = Math.round( (now - startTime) / 1000)
+						gameSocket.send(JSON.stringify({
+							'type': 'gameSettings',
+							'data': gameOptions
+						}))
+						gameObjects = startGame(gameOptions)
+						gameBodies = create_bodies()
+						started = true
+					})
+					break;
+				case 'startGame':
+					gameObjects = startGame(data)
+					gameBodies = create_bodies()
+					started = true
+					break;
 
-			if(elapsed >= gameOptions.range && score.p1 != score.p2){
-				Animate = false
-				cancelAnimationFrame(id)
-				game_over()
+				case 'endGame':
+					showModal('U WON!')
+					const modalBackground = document.getElementById('modal-background')
+					cleanupScene(scene, renderer, world)
+					modalBackground.addEventListener('click', async (event) => {
+						await delay(3000)
+						getBackToHome()
+					})
+					break;
+				default:
+					break;
 			}
-			if (document.getElementById('time'))
-				document.getElementById('time').innerHTML = elapsed
 		}
-		else if (Animate && (score.p1 == gameOptions.range || score.p2 == gameOptions.range)){
-				cancelAnimationFrame(id)
-				Animate = false
-				game_over()
+	
+		if (camera.position.z > 5 && started){
+			camera.position.z -= 0.1
+			camera.position.x += 0.01
+			camera.position.y +=0.005
+			camera.rotation.y +=0.002
 		}
-		update_position(gameObjects, gameBodies)
+		else if (camera.position.z < 5 && started){
+			if (document.querySelector('.waiting-pop'))
+				document.querySelector('.waiting-pop').style.transform = 'scale(1)'
+		}
 
 		renderer.render(scene, camera);
 	}
-	
-	animate();
-	
+
+
 }

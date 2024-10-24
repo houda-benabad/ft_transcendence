@@ -1,4 +1,5 @@
 import json, time, asyncio
+from typing import  Dict
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync, sync_to_async
@@ -6,22 +7,36 @@ from channels.db import database_sync_to_async
 from collections import deque
 from . import models,  game
 
-players=[]
+channels : Dict[str, Dict[str, 'GameConsumer']] = {}
 
 class GameConsumer(AsyncWebsocketConsumer):
 	gameOption = {}	
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.game = None
+		self.is_host = False
+		self.game_group_name = ""
+		self.keycode= 0
+		self.game_result = 0
+
 	async def connect(self):
 		await self.accept()
-		print("GAME NEW CONNECTION")
-		self.game_group_name = 'invite'
+
+		self.game = await self.get_or_create_game()
+		self.game_group_name = f"game-{self.game.id}"
+  
+		if not self.game_group_name in channels :
+			channels[self.game_group_name] = {
+				'hoster' : '',
+				'invited': ''
+			}
+   
+		print("group name = ", self.game_group_name)
+
 		await self.channel_layer.group_add(self.game_group_name,self.channel_name)
 
-		self.keycode= 0
-		players.append(self)
-
-
-		self.is_host = await self.is_host()
-		if (self.is_host):
+		if self.is_host:
+			channels[self.game_group_name]['hoster'] = self
 			print("IS HOST")
 			await self.send(text_data=json.dumps({
 				'type' : 'gameInfo',
@@ -30,42 +45,29 @@ class GameConsumer(AsyncWebsocketConsumer):
    
 		else:
 			print("IS INVITED")
-			self.game = await self.find_game()
+			channels[self.game_group_name]['invited'] = self
 			await self.send(text_data=json.dumps({
 				'type' : 'startGame',
 				'data' : self.game.settings
 			}))
-			await asyncio.sleep(2)
-			self.game.player_count += 1
-			await sync_to_async(self.game.save)()
-			if (self.game and await self.game_is_ready(self.game) and len(players)  >= 2):
-					for player in players:
-						player.game.gameStatus = 'STARTED'
-						await sync_to_async(player.game.save)()
-					await self.start_game()
+			await asyncio.sleep(3)
+			await self.start_game()
 
 	@database_sync_to_async
-	def game_is_ready(self, game):
-		return game.player_count == 2
-
-	@database_sync_to_async
-	def is_host(self):
-		game = models.Game.objects.filter(gameStatus='WAITING').first()
-		if not game :
-			return  True
-		return  False
-
-	@database_sync_to_async
-	def create_game(self):
-		return models.Game.objects.create(gameStatus='WAITING', player_count=1)
-
-	@database_sync_to_async
-	def find_game(self):
-		return models.Game.objects.filter(gameStatus='WAITING').first()
+	def get_or_create_game(self):
+		game = models.Game.objects.filter(gameStatus='WAITING', player_count=1).first()
+		if game :
+			self.is_host = False
+			game.player_count += 1
+			game.save()
+			return game
+		else:
+			self.is_host = True
+			return models.Game.objects.create(player_count=1, gameStatus='WAITING')
 
 	async def start_game(self):
-		invited = players.pop()
-		hoster = players.pop()
+		hoster = channels[self.game_group_name]['hoster']
+		invited = channels[self.game_group_name]['invited']
 		asyncio.create_task(game.startGame(self.channel_layer, hoster, invited))
 
 	async def receive(self, text_data):
@@ -74,8 +76,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 		if (dataType == 'keycode'):
 			self.keycode = dataJson['data']
+
 		elif (dataType == 'gameSettings' and self.is_host):
-			self.game = await self.create_game()
 			self.game.settings = dataJson['data']
 			await sync_to_async(self.game.save)()
    
@@ -99,13 +101,11 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'type': 'discard',
 			'data': data
 		}))
-	
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1
 		if (self.game.gameStatus == 'WAITING'):
-			players.remove(self)
-			await self.channel_layer.group_discard('invite', self.channel_name)
+			await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
 			if (self.is_host):
 				await sync_to_async(self.game.delete)()
 			else:

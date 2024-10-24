@@ -1,93 +1,136 @@
 import router from './router.js'
 
-const routes = {
-    '/signup' : 'signup',
-    '/signin' : 'signin',
-}
+const valueType = ['Sign up', 'Sign in']
 // to remove event listners that we wont be in need anymore
 
-export async function init(path)
+export async function superviser()
 {
-    await loadPage(path)
+    await updateData()
     eventListener()
-    await waitForFormSubmit(path)
+    await waitForFormSubmit()
 }
 
-export async function loadPage(path)
+export async function loadFirstPage()
 { 
 
     const app = document.getElementById('app')
-    
-    const htmlFile = routes[path]
-    const html = await fetch(htmlFile)
-    const content = await html.text()
-    
-    
-    console.log(app)
-    app.innerHTML = ''
-    app.innerHTML = content
+    app.innerHTML =
+    `
+    <div id="image-cover"></div>
+    <div class="container">
+        <div id="signDiv" data-value='Sign in'>
+            <h1 class='sign'></h1>
+            <form data-id="login">
+                <label for="username">Username</label>
+                <input name="username" id="username" required/>
+                <label for="password" type="password">Password</label>
+                <input name="password" id="password" type="password" required>
+                <button type='submit' class="button-type1 sign"></button>
+            </form>
+            <div class="line-text">
+                <span>or</span>
+            </div>
+            <a class="clickable intra" href="#">
+                <img src="static/img/intra-removebg-preview 1.png">
+                <p>continue with <span>Intra</span></p>
+            </a>
+            <p id="sign-text"></p>
+        </div>
+    </div>
+    `
 }
 
+function updateData()
+{
+    const value = document.getElementById('signDiv').getAttribute('data-value')
+
+    const dataToChange = document.querySelectorAll('.sign').forEach(e => {
+        e.innerHTML = value
+    })
+    document.querySelectorAll('input').forEach(e => { e.value = ''})
+
+    const signText = document.getElementById('sign-text')
+    const signAnchor = document.getElementById('sign-anchor')
+
+    const text = (value === valueType[0]) ? "already a Member?" : "don't you have an Account?"
+    const text2 = (value === valueType[0]) ? valueType[1] : valueType[0]
+
+    signText.innerHTML = text + ` <a href="#" id="sign-anchor">${text2}</a>`
+
+}
 export function eventListener()
 {
-    const tmpAnchor = document.getElementById('sign')
+    const tmpAnchor = document.getElementById('sign-anchor')
     const tmpAnchor2 = document.querySelector('.intra')
 
     tmpAnchor.addEventListener('click', (event) => {
         event.preventDefault()
-        init(tmpAnchor.getAttribute('href'))
+        document.getElementById('signDiv').dataset.value = tmpAnchor.innerHTML
+        updateData()
     }
     )
 
     tmpAnchor2.addEventListener('click', async (event) => 
     {
         const value = tmpAnchor2.dataset.value
-
-        console.log(value)
+        let response
         event.preventDefault()
         try
         {
-            console.log('data sent successfully to : intra')
-            const response = await fetch('https://8b89b413-0cc1-4252-92aa-2ac6c60c1be4.mock.pstmn.io/intra')
+            console.log('data sent successfully to : intra') // just for the moment
+            response = await fetch('https://8b89b413-0cc1-4252-92aa-2ac6c60c1be4.mock.pstmn.io/intra')
             if (!response.ok)
             {
                 throw new Error(response.status)
                 return ;
             }
-            await showModal(`you ${value} successfully`)
         }
         catch(error)
         {
-            await showModal('an error occured')
+            console.log(error)
         }
+        
+        const responseBody = await response.json()
+
+        await showModal(responseBody)
     })
 }
-export function waitForFormSubmit(endpoint)
+export function waitForFormSubmit(type='false')
 {
     return (new Promise((resolve) => {
         const form = document.querySelector('form')
-        const path = document.getElementById('submit').getAttribute('data-link')
+
         form.addEventListener('submit', async (event) => {
             event.preventDefault()
-            await sendData(endpoint)
+            if (type)
+            {
+                let data = new FormData(form);
+				let playersObject = Object.fromEntries(data)
+                let players = Object.values(playersObject)
+                return resolve(players)
+            }
+            await sendData()
+            console.log('im out of send data')
             resolve('/home')
         })
     }))
 }
 // this part gave it to the backend.
-async function sendData(endpoint)
+async function sendData()
 {
-    // to use path
+    const endpoint = document.getElementById('signDiv').getAttribute('data-value').toLowerCase().replace(' ', '')
+
     const form = document.querySelector('form')
     const formData = new FormData(form)
     const formObject = {}
+    let response
 
     formData.forEach((value, key) => { formObject[key] = value })
 
     try
     {
         console.log('data sent successfully to : ' + endpoint)
-        const response = await fetch(`https://8b89b413-0cc1-4252-92aa-2ac6c60c1be4.mock.pstmn.io${endpoint}`, {
+        response = await fetch(`https://8b89b413-0cc1-4252-92aa-2ac6c60c1be4.mock.pstmn.io/${endpoint}`, {
             method : 'POST', 
             headers : {
                 'Content-Type' : 'application/json'
@@ -96,22 +139,20 @@ async function sendData(endpoint)
         })
         if (!response.ok)
         {
-            if (response.status === 401)
-            {
-                await showModal('wrong username or password, please try again ^^')
-                return ;
-            }
-            throw new Error(response.status)
+            if (response.status !== 401 & response.status !== 409)
+                throw new Error(response)
         }
-        await showModal('you logged in successfully')
     }
     catch(error)
     {
-        await showModal('an error occured')
+        console.log('an error occured')
     }
+    const responseBody = await response.json()
+
+    await showModal(responseBody)
 }
 
-export async function showModal(message)
+export async function showModal(message, type)
 {
     const app = document.getElementById('app')
     const div = document.createElement('div')
@@ -120,23 +161,61 @@ export async function showModal(message)
     div.innerHTML = 
     `
         <div id="modal">
-            <p id="modal-message"></p>
         </div>
     `
     app.appendChild(div)
 
     const modalBackground = document.getElementById('modal-background')
-    const modalMessage = document.getElementById('modal-message')
+    const modalMessage = document.getElementById('modal')
 
-    modalBackground.style.display = 'flex'
-    modalMessage.textContent = message
-    
-    // modalBackground.addEventListener('click', (event) => {
-    //     if (event.target === modalBackground)
-    //         modalBackground.style.display = 'none'
+    if (!type)
+    {
+        modal.innerHTML = message
+        modalBackground.style.display = 'flex'
+    }
+    else
+    {
+        // make it work later on make it cleaner and better
+        if (type === 'alias')
+        {
+            modal.classList.add('modal-special')
+            modal.innerHTML =
+            `
+            <h2>Tournament Registration</h2>
+            <form id="alias">
+                <label for='first-player'>first player</label>
+                <input type='text' id='first-player' name='first-player' required>
+            
+                <label for='first2-player'>first player</label>
+                <input type='text' id='first2-player' name='first2-player' required>
+            
+                <label for='first3-player'>first player</label>
+                <input type='text' id='first3-player' name='first3-player' required>
         
-    //     app.removeChild(div)
-    // })
+                <label for='first4-player'>first player</label>
+                <input type='text' id='first4-player' name='first4-player' required>
+        
+                <button type='submit' id='submit' class='button-type4'>Save</button>
+            </form>
+            `
+        }
+        modalBackground.style.display = 'flex'
+        let response = await waitForFormSubmit(type, true)
+        console.log('response : ' + response)
+        modalBackground.style.display = 'none'
+        app.removeChild(div)
+        return (response)
+    }
+
+    // we did remove it for the pop up windows for the game part for a reason
+    modalBackground.addEventListener('click', (event) => {
+        if (event.target === modalBackground)
+        {
+            modalBackground.style.display = 'none'
+            app.removeChild(div)
+        }
+        
+    })
 }
 
 export function delay (ms) 

@@ -1,9 +1,9 @@
-import {tableLine} from './tools.js'
+import {tableLine, showModal} from './tools.js'
 import router from './router.js'
 import {start} from '../game.js'
 import {local} from '../local.js'
 import {tourn} from '../tournament.js'
-
+import {multi} from '../multiPlayer.js'
 export class homeView extends HTMLElement
 {
     constructor()
@@ -141,7 +141,6 @@ export class homeView extends HTMLElement
 
         document.querySelectorAll('.anchor-tmp').forEach(a => a.addEventListener('click' , () =>{
             //  MAIN CONTENT NEED TO BE EMPTY
-            console.log(a.dataset.link)
             switch (a.dataset.link) {
                 case 'remote':
                     start()
@@ -153,6 +152,10 @@ export class homeView extends HTMLElement
 
                 case 'tournament':
                     tourn()
+                    break;
+                
+                case 'multiplayer':
+                    multi()
                     break;
             
                 default:

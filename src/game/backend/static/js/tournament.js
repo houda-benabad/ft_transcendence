@@ -1,15 +1,13 @@
-import {  create_objects_vs, sceneSetup } from './game.js'
+import {  create_objects_vs, sceneSetup } from './game2.js'
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js'
 import { gameSettings } from './elements.js'
+// import { showModal } from './services/tools.js'
+import { getBackToHome , showModal, delay} from './services/tools.js';
 
 
-
-
-let WINNER = ''
 let BALL_VELOCITY = {
-	x: 0,
-	y: 0.01,
+	x: 0.01,
 	z: 0.01
 }
 
@@ -68,13 +66,13 @@ function move_players(player, otherPlayer) {
 	document.addEventListener('keyup', (event) => { keyState[event.code] = false })
 
 	return function() {
-		if (keyState['ArrowLeft'] && player.position.x > MIN_PLAYER_X)
+		if (keyState['ArrowLeft'] && player.position.x > MIN_PLAYER_X + .5)
 			player.position.x -= PLAYER_SPEED
-		if (keyState['ArrowRight'] && player.position.x < MAX_PLAYER_X)
+		if (keyState['ArrowRight'] && player.position.x < MAX_PLAYER_X - .5)
 			player.position.x += PLAYER_SPEED
-		if (keyState['KeyA'] && otherPlayer.position.x > MIN_PLAYER_X)
+		if (keyState['KeyA'] && otherPlayer.position.x > MIN_PLAYER_X + .5)
 			otherPlayer.position.x -= PLAYER_SPEED
-		if (keyState['KeyD'] && otherPlayer.position.x < MAX_PLAYER_X)
+		if (keyState['KeyD'] && otherPlayer.position.x < MAX_PLAYER_X - .5)
 			otherPlayer.position.x += PLAYER_SPEED
 	}
 }
@@ -97,13 +95,13 @@ export function setup_canva(player1, player2) {
 	gameElements.innerHTML = `
 		<div class="score">
 			<div class="user glass">
-				<h3 id="user1">${player2}</h3>
+				<h3 id="user1">${player1}</h3>
 			</div>
 			<div class="score-num glass">
 				<h1 id="score">0 : 0</h1>
 			</div>
 			<div class="user glass">
-				<h3 id="user2">${player1}</h3>
+				<h3 id="user2">${player2}</h3>
 			</div>
 		</div>
 		<div class="time glass">
@@ -174,24 +172,50 @@ function update_position(gameObjects, gameBodies){
 	gameBodies.ball.position.x += BALL_VELOCITY.x
 }
 
-
-function startGame(gameOptions){
+async function startGame(gameOptions, players){
 	let firstWinner, secondWinner, winner
-	let players = ['hajar', 'kouaz', 'houda', 'hind']
-	game(players[0], players[1], gameOptions)
-	    .then(value => {
-			firstWinner = value;
-			console.log(value);
-			return game(players[2], players[3], gameOptions)
+
+	// FIRST ROUND
+	showModal(`This round ${players[0]} VS ${players[1]}`)
+	let modalBackground = document.getElementById('modal-background')
+	modalBackground.addEventListener('click', async () => {
+		await delay(2000)
+		document.getElementById('app').innerHTML = ''
+		firstWinner = await game(players[0], players[1], gameOptions)
+	
+	// SECOND ROUND
+		showModal(`This round ${players[2]} VS ${players[3]}`)
+		modalBackground = document.getElementById('modal-background')
+		modalBackground.addEventListener('click', async () => {
+			await delay(2000)
+			document.getElementById('app').innerHTML = ''
+			secondWinner = await game(players[2], players[3], gameOptions)
+	
+	// LAST ROUND
+			showModal(`This round ${firstWinner} VS ${secondWinner}`)
+			modalBackground = document.getElementById('modal-background')
+			modalBackground.addEventListener('click', async () => {
+				await delay(2000)
+				document.getElementById('app').innerHTML = ''
+				winner = await game(firstWinner, secondWinner, gameOptions)
+	// WINNER
+				showModal(`winner is ${winner}`)
+				modalBackground = document.getElementById('modal-background')
+				modalBackground.addEventListener('click', async () => {
+					await delay(2000)
+					getBackToHome()
+
+	
+				})
+
+			})
 		})
-	    .then(value => {
-			secondWinner = value;
-			console.log(value);
-			return game(firstWinner, secondWinner, gameOptions)})
-	    .then(value => {console.log(value)})
+	})
+
 }
 
 export async function tourn() {
+	const players = await showModal('', 'alias')
 	gameSettings()
 	let gameOptions
 	let form = document.getElementById('game-settings')
@@ -203,8 +227,7 @@ export async function tourn() {
 		const app = document.getElementById('app')
 		app.className = 'game'
 		app.innerHTML = ''
-		startGame(gameOptions)
-		console.log(gameOptions)
+		startGame(gameOptions, players)
 	})
 }
 

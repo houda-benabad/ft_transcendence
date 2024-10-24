@@ -17,11 +17,8 @@ class GameObject():
 		self.updateBounds()
 
 	def updateBounds(self) :
-		self.top= self.position[1] + self.dimension[1] / 2
-		self.bottom = self.position[1] - self.dimension[1] / 2
-
-		self.back = self.position[2] + self.dimension[2] / 2
-		self.front = self.position[2] - self.dimension[2] / 2
+		self.back = self.position[1] + self.dimension[2] / 2
+		self.front = self.position[1] - self.dimension[2] / 2
 
 		self.left = self.position[0] - self.dimension[0] / 2
 		self.right = self.position[0] + self.dimension[0] / 2
@@ -33,13 +30,8 @@ class Player(GameObject):
 	score = 0
 
 	def update(self, plane):
-		self.velocity[1] += -0.01
 		
 		self.updateBounds()
-
-		if (self.bottom > plane.top):
-			self.position[1] += self.velocity[1]
-		self.velocity[1] = 0
 	
 	def move(self, keycode, plane):
 		target = self.position[0]
@@ -51,23 +43,24 @@ class Player(GameObject):
 
 class Ball(GameObject):
 	def reset(self):
-		self.position = [0, .8, 0]
+		self.position = [0, 0]
 		rand = 1
 		if (random.randint(0, 1)% 2 == 0):
 			rand = -1
-		self.velocity[2] *= rand 
+		self.velocity[1] *= rand 
+
+ 
+	def update_z_velocity(self):
+		self.velocity[1] *= -1
+		if self.velocity[1] < 0 and self.velocity[1] > -0.1:
+			self.velocity[1] -= .01
+		elif self.velocity[1] > 0 and self.velocity[1] < 0.1:
+			self.velocity[1] += .01
 
 	def update(self, plane, player, otherplayer):
 		self.updateBounds()
-		
-		# HANDLE Y DONE
-		if round(self.bottom, 4)  <= round(plane.top,2):
-			self.position[1] = round(plane.top,2) + round(self.dimension[0] / 2 , 4)
-			self.velocity[1] = 0
-		else:
-			self.velocity[1] -= 0.01
 
-		# HANDLE PLANE SPACE DONE
+		# # HANDLE PLANE SPACE DONE
 		if (self.back >= plane.back):
 			otherplayer.score+= 1
 			self.reset()
@@ -79,37 +72,27 @@ class Ball(GameObject):
 		if self.left <= plane.left or self.right >= plane.right:
 			self.velocity[0] *= -1
 
-		# HANDLE PLAYERS COLLITSION
+		# # HANDLE PLAYERS COLLITSION
 
 		if (round(self.back, 4) >= round(player.front, 4)):
-			if (round(self.left) >= round(player.left) and round(self.right) <= round(player.right)):
-				self.velocity[2] *= -1
-				if self.velocity[2] < 0:
-					self.velocity[2] -= .01
-				else:
-					self.velocity[2] += .01
+			if (self.left >= player.left and self.right <= player.right):
+				self.update_z_velocity()
 
 		elif (round(self.front, 4) <= round(otherplayer.back, 4)):
-			if (round(self.left) >= round(otherplayer.left) and round(self.right) <= round(otherplayer.right)):
-				self.velocity[2] *= -1
-				if self.velocity[2] < 0:
-						self.velocity[2] -= .01
-				else:
-					self.velocity[2] += .01
+			if (self.left >= otherplayer.left and self.right <= otherplayer.right):
+				self.update_z_velocity()
 
-		self.velocity[2] %= 2
-		print(self.velocity[2])
-		for i in range(3):
+		for i in range(2):
 			self.position[i] += self.velocity[i]
 
 class Game():
 	def __init__(self, settings):
 	#  P V D
-		self.ball = Ball( [ 0 , .8 , 0 ], [ .01,-.01,.03 ], [ .2,.2,.2 ] )
-		self.plane = Plane([0,0,0], [.01,.01,.05], [3,.2,5])
+		self.ball = Ball( [ 0 ,  0 ], [ .01,-.01,.03 ], [ .2,.2,.2 ] )
+		self.plane = Plane([0,0], [.01,.01,.05], [3,.2,5])
 
-		self.player = Player([0,.4,2.45], [0,-.1,.05], [1,.3,.1])
-		self.otherPlayer = Player([0,.4,-2.45], [0,-.1,.05], [1,.3,.1])
+		self.player = Player([0,2.45], [0,-.1,.05], [1,.3,.1])
+		self.otherPlayer = Player([0,-2.45], [0,-.1,.05], [1,.3,.1])
 
 		self.settings = settings
 		self.goalTime =  int(self.settings['range'])
@@ -189,7 +172,7 @@ async def startGame(channel_layer, hoster, invited):
 			break
 			# SEND ALL INFO (COORDINATES = SCORE = TIME)
 		if game.settings['mode'] == 'time' :
-			await channel_layer.group_send("invite",
+			await channel_layer.group_send(hoster.game_group_name,
 				{
 					'type': 'api',
 					'data': {
@@ -200,7 +183,7 @@ async def startGame(channel_layer, hoster, invited):
 			)
 		else:
 			
-			await channel_layer.group_send("invite",
+			await channel_layer.group_send(hoster.game_group_name,
 				{
 					'type': 'api',
 					'data': {

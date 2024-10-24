@@ -1,15 +1,11 @@
-import {  create_objects_vs, sceneSetup } from './game2.js'
+import {  create_objects_vs, sceneSetup } from './game.js'
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
 import { gameSettings } from './elements.js'
 import { getBackToHome , showModal, delay} from './services/tools.js';
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-const scene = new THREE.Scene();
-const world = new CANNON.World();
-
+let WINNER = ''
 let BALL_VELOCITY = {
 	x: 0.01,
 	z: 0.01
@@ -20,7 +16,7 @@ const MAX_PLAYER_X = 1.5
 const MIN_PLAYER_X = -1.5
 
 
-function is_out_bound(ballBody, score) {
+export function is_out_bound(ballBody, score) {
 	if (ballBody.position.z > 2.5) {
 		ballBody.position.set(0, 0.8, 0)
 		score.p1 += 1
@@ -37,7 +33,7 @@ function is_out_bound(ballBody, score) {
 	return false
 }
 
-function move_players(player, otherPlayer) {
+export function move_players(player, otherPlayer) {
 	const keyState = {}
 
 	document.addEventListener('keydown', (event) => { keyState[event.code] = true })
@@ -55,7 +51,7 @@ function move_players(player, otherPlayer) {
 	}
 }
 
-function check_plane_sides(ballBody){
+export function check_plane_sides(ballBody){
 
 	if (ballBody.position.x >= 1.5){
 		BALL_VELOCITY.x*= -1
@@ -63,6 +59,33 @@ function check_plane_sides(ballBody){
 	else if (ballBody.position.x <= -1.5)
 		BALL_VELOCITY.x *= -1
 }
+
+export function local() {
+	gameSettings()
+	let gameOptions
+	let form = document.getElementById('game-settings')
+	form.addEventListener('submit', (e) => {
+		e.preventDefault()
+		
+		let data = new FormData(form);
+		gameOptions = Object.fromEntries(data)
+		const app = document.getElementById('app')
+		app.className = 'game'
+		app.innerHTML = ''
+		startGame(gameOptions)
+		
+		
+	})
+
+}
+
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+const scene = new THREE.Scene();
+const world = new CANNON.World();
+
+
 
 export function setup_canva() {
 	let canva = document.getElementById("app");
@@ -93,7 +116,7 @@ export function setup_canva() {
 	document.querySelector('.endGame-pop').style.transform = 'scale(0)'
 }
 
-function create_player(dimension, position){
+export function create_player(dimension, position){
 	const Shape = new CANNON.Box(new CANNON.Vec3(...dimension));
 	const Body = new CANNON.Body({
 	  mass: 0,
@@ -105,7 +128,7 @@ function create_player(dimension, position){
 	return Body
 }
 
-function create_bodies(){
+export function create_bodies(){
 	let player = create_player([0.5, .15, 0.05], [0, .25, 2.45])
 
 	// OTHERPLAYER BODY
@@ -135,7 +158,7 @@ function create_bodies(){
 	return {player, otherPlayer, ball}
 }
 
-function update_position(gameObjects, gameBodies){
+export function update_position(gameObjects, gameBodies){
 	gameObjects.player.position.copy(gameBodies.player.position);
 	gameObjects.player.quaternion.copy(gameBodies.player.quaternion);
 
@@ -150,7 +173,7 @@ function update_position(gameObjects, gameBodies){
 	gameBodies.ball.position.x += BALL_VELOCITY.x
 }
 
-function game_over(){
+export function game_over(){
 	showModal('GAME OVER')
 	const modalBackground = document.getElementById('modal-background')
 	modalBackground.addEventListener('click', async () => {
@@ -158,26 +181,6 @@ function game_over(){
 		getBackToHome()
 	})
 }
-
-export function local() {
-	gameSettings()
-	let gameOptions
-	let form = document.getElementById('game-settings')
-	form.addEventListener('submit', (e) => {
-		e.preventDefault()
-		
-		let data = new FormData(form);
-		gameOptions = Object.fromEntries(data)
-		const app = document.getElementById('app')
-		app.className = 'game'
-		app.innerHTML = ''
-		startGame(gameOptions)
-		
-		
-	})
-
-}
-
 
 function startGame(gameOptions) {
 	const timeStep = 1/60
@@ -188,14 +191,14 @@ function startGame(gameOptions) {
 		p1 : 0,
 		p2 : 0
 	}
+	const startTime  = new Date()
 	setup_canva()
 	sceneSetup(scene, camera, renderer, gameOptions.background)
 	let gameObjects = create_objects_vs(scene, gameOptions.texture)
 	let gameBodies = create_bodies()
-	
+
 	const updatePlayerPositions = move_players(gameBodies.player, gameBodies.otherPlayer)
 	let Animate = true
-	const startTime  = new Date()
 
 
 	function animate() {
