@@ -1,6 +1,6 @@
 import {tableLine, showModal} from './tools.js'
 import router from './router.js'
-import {start} from '../game.js'
+import {start} from '../invite.js'
 import {local} from '../local.js'
 import {tourn} from '../tournament.js'
 import {multi} from '../multiPlayer.js'

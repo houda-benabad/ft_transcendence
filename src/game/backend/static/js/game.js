@@ -1,17 +1,12 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
-import { gameSettings } from './elements.js'
-import { getBackToHome , showModal, delay} from './services/tools.js';
+import { getBackToHome } from './services/tools.js';
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-const scene = new THREE.Scene();
-const world = new CANNON.World();
 const PLAYER_GEO = new THREE.BoxGeometry(1, .3, .1)
 const BALL_GEO = new THREE.SphereGeometry(.1, 32, 15)
 
-function socketSetup() {
+export function socketSetup() {
 	let url = `ws://${window.location.host}/ws/game/`
 	const gameSocket = new WebSocket(url)
 	const keyState = {}
@@ -27,15 +22,6 @@ function socketSetup() {
 	});
 
 	return gameSocket
-}
-
-export function startGame(gameOptions){
-	const app = document.getElementById('app')
-	app.className = 'game'
-	app.innerHTML = ''
-	setup_canva()
-	sceneSetup(scene, camera, renderer,  gameOptions.background)
-	return create_objects(scene, gameOptions.texture)
 }
 
 export function setup_canva() {
@@ -184,11 +170,11 @@ export function create_objects(scene, texture) {
 	return { ball, player, otherPlayer, plane }
 }
 
-function create_bodies(){
-	let player = create_player([0.5, .15, 0.05], [0, .25, 2.45])
+export function create_bodies(world){
+	let player = create_player([0.5, .15, 0.05], [0, .25, 2.45], world)
 
 	// OTHERPLAYER BODY
-	let otherPlayer = create_player([0.5, .15, 0.05], [0, .25, -2.45])
+	let otherPlayer = create_player([0.5, .15, 0.05], [0, .25, -2.45], world)
 
 	const ball = new CANNON.Body({
 		shape: new CANNON.Sphere(.1),
@@ -208,7 +194,7 @@ function create_bodies(){
 	return {player, otherPlayer, ball}
 }
 
-function create_player(dimension, position){
+export function create_player(dimension, position, world){
 	const Shape = new CANNON.Box(new CANNON.Vec3(...dimension));
 	const Body = new CANNON.Body({
 	  mass: 0,
@@ -220,7 +206,7 @@ function create_player(dimension, position){
 	return Body
 }
 
-function update_position(gameObjects, gameBodies){
+export function update_position(gameObjects, gameBodies){
 	gameObjects.player.position.copy(gameBodies.player.position);
 	gameObjects.player.quaternion.copy(gameBodies.player.quaternion);
 
@@ -231,7 +217,7 @@ function update_position(gameObjects, gameBodies){
 	gameObjects.ball.quaternion.copy(gameBodies.ball.quaternion);
 }
 
-function update_coordinates(gameBodies, coordinates) {
+export function update_coordinates(gameBodies, coordinates) {
 	const { ball } = gameBodies;
 	ball.position.x = coordinates.ball.position[0];
 	ball.position.z = coordinates.ball.position[1];
@@ -243,7 +229,7 @@ function update_coordinates(gameBodies, coordinates) {
 	otherPlayer.position.z = coordinates.otherPlayer.position[1];
 }
 
-function cleanupScene(scene, renderer, world) {
+export function cleanupScene(scene, renderer, world) {
     scene.traverse((object) => {
         if (object.geometry) {
             object.geometry.dispose();
@@ -268,82 +254,4 @@ function cleanupScene(scene, renderer, world) {
     renderer.dispose();
 
     renderer.domElement.remove();
-}
-
-export function start() {
-	const timeStep = 1/60
-	const gameSocket = socketSetup()
-
-	let gameObjects, gameBodies,gameOptions, started = false
-
-	world.gravity.set(0, -9.82, 0);
-	world.broadphase = new CANNON.NaiveBroadphase();
-	world.solver.iterations = 10;
-	renderer.setAnimationLoop(animation);
-
-	function animation() {
-		world.step(timeStep);
-		gameSocket.onmessage = (e) => {
-			const { type, data } = JSON.parse(e.data)
-			switch (type) {
-				case 'api':
-					started= false
-					document.querySelector('.waiting-holder').style.display = 'none'
-					update_coordinates(gameBodies, data.coordinates)
-					update_position(gameObjects, gameBodies)
-					update_canva(data)
-					break;
-				case 'gameInfo':
-					gameSettings()
-					let form = document.getElementById('game-settings')
-					form.addEventListener('submit', (e) => {
-						e.preventDefault()
-						
-						let data = new FormData(form);
-						gameOptions = Object.fromEntries(data)
-
-						gameSocket.send(JSON.stringify({
-							'type': 'gameSettings',
-							'data': gameOptions
-						}))
-						gameObjects = startGame(gameOptions)
-						gameBodies = create_bodies()
-						started = true
-					})
-					break;
-				case 'startGame':
-					gameObjects = startGame(data)
-					gameBodies = create_bodies()
-					started = true
-					break;
-
-				case 'endGame':
-					showModal('U WON!')
-					const modalBackground = document.getElementById('modal-background')
-					cleanupScene(scene, renderer, world)
-					modalBackground.addEventListener('click', async (event) => {
-						await delay(3000)
-						getBackToHome()
-					})
-					break;
-				default:
-					break;
-			}
-		}
-	
-		if (camera.position.z > 5 && started){
-			camera.position.z -= 0.1
-			camera.position.x += 0.01
-			camera.position.y +=0.005
-			camera.rotation.y +=0.002
-		}
-		else if (camera.position.z < 5 && started){
-			if (document.querySelector('.waiting-pop'))
-				document.querySelector('.waiting-pop').style.transform = 'scale(1)'
-		}
-
-		renderer.render(scene, camera);
-	}
-
-
 }

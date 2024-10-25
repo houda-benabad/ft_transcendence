@@ -87,7 +87,6 @@ export class gameView extends HTMLElement
 
     input.addEventListener('input', () => 
     {
-        console.log('input field : ' + input.value)
         num.innerHTML = `${input.value}`
     })
 }

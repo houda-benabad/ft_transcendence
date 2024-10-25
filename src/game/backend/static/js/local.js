@@ -1,4 +1,4 @@
-import {  create_objects_vs, sceneSetup } from './game2.js'
+import {  create_objects, sceneSetup, create_bodies, update_position , cleanupScene} from './game.js'
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js';
@@ -20,7 +20,7 @@ const MAX_PLAYER_X = 1.5
 const MIN_PLAYER_X = -1.5
 
 
-function is_out_bound(ballBody, score) {
+export function is_out_bound(ballBody, score) {
 	if (ballBody.position.z > 2.5) {
 		ballBody.position.set(0, 0.8, 0)
 		score.p1 += 1
@@ -37,25 +37,25 @@ function is_out_bound(ballBody, score) {
 	return false
 }
 
-function move_players(player, otherPlayer) {
+export function move_players(player, otherPlayer) {
 	const keyState = {}
 
 	document.addEventListener('keydown', (event) => { keyState[event.code] = true })
 	document.addEventListener('keyup', (event) => { keyState[event.code] = false })
 
 	return function() {
-		if (keyState['ArrowLeft'] && player.position.x > MIN_PLAYER_X)
+		if (keyState['ArrowLeft'] && player.position.x > MIN_PLAYER_X + .5)
 			player.position.x -= PLAYER_SPEED
-		if (keyState['ArrowRight'] && player.position.x < MAX_PLAYER_X)
+		if (keyState['ArrowRight'] && player.position.x < MAX_PLAYER_X - .5)
 			player.position.x += PLAYER_SPEED
-		if (keyState['KeyA'] && otherPlayer.position.x > MIN_PLAYER_X)
+		if (keyState['KeyA'] && otherPlayer.position.x > MIN_PLAYER_X + .5)
 			otherPlayer.position.x -= PLAYER_SPEED
-		if (keyState['KeyD'] && otherPlayer.position.x < MAX_PLAYER_X)
+		if (keyState['KeyD'] && otherPlayer.position.x < MAX_PLAYER_X - .5)
 			otherPlayer.position.x += PLAYER_SPEED
 	}
 }
 
-function check_plane_sides(ballBody){
+export function check_plane_sides(ballBody, BALL_VELOCITY){
 
 	if (ballBody.position.x >= 1.5){
 		BALL_VELOCITY.x*= -1
@@ -93,71 +93,16 @@ export function setup_canva() {
 	document.querySelector('.endGame-pop').style.transform = 'scale(0)'
 }
 
-function create_player(dimension, position){
-	const Shape = new CANNON.Box(new CANNON.Vec3(...dimension));
-	const Body = new CANNON.Body({
-	  mass: 0,
-	  position: new CANNON.Vec3(...position),
-	});
-	Body.addShape(Shape);
-	Body.fixedRotation = true;
-	world.addBody(Body);
-	return Body
-}
-
-function create_bodies(){
-	let player = create_player([0.5, .15, 0.05], [0, .25, 2.45])
-
-	// OTHERPLAYER BODY
-	let otherPlayer = create_player([0.5, .15, 0.05], [0, .25, -2.45])
-
-	const ball = new CANNON.Body({
-		shape: new CANNON.Sphere(.1),
-		mass: 1,
-		position: new CANNON.Vec3(0, .8, 0),
-	  });
-	  world.addBody(ball);
-
-	const groundBody = new CANNON.Body({
-		shape: new CANNON.Plane(),
-		type: CANNON.Body.STATIC,
-		position: new CANNON.Vec3(0, 0.1, 0),
-	});
-	groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); 
-	world.addBody(groundBody);
-	
-
-	ball.addEventListener('collide', (event)=>{
-		if (event.body !=  groundBody )
-			BALL_VELOCITY.z *= -1
-	})
-
-	return {player, otherPlayer, ball}
-}
-
-function update_position(gameObjects, gameBodies){
-	gameObjects.player.position.copy(gameBodies.player.position);
-	gameObjects.player.quaternion.copy(gameBodies.player.quaternion);
-
-	gameObjects.otherPlayer.position.copy(gameBodies.otherPlayer.position);
-	gameObjects.otherPlayer.quaternion.copy(gameBodies.otherPlayer.quaternion);
-
-	gameObjects.ball.position.copy(gameBodies.ball.position);
-	gameObjects.ball.quaternion.copy(gameBodies.ball.quaternion);
-
-
-	gameBodies.ball.position.z += BALL_VELOCITY.z
-	gameBodies.ball.position.x += BALL_VELOCITY.x
-}
-
-function game_over(){
-	showModal('GAME OVER')
+export function game_over(msg){
+	showModal(msg)
 	const modalBackground = document.getElementById('modal-background')
 	modalBackground.addEventListener('click', async () => {
 		await delay(3000)
 		getBackToHome()
 	})
 }
+
+
 
 export function local() {
 	gameSettings()
@@ -178,7 +123,6 @@ export function local() {
 
 }
 
-
 function startGame(gameOptions) {
 	const timeStep = 1/60
 	world.gravity.set(0, -9.82, 0);
@@ -190,8 +134,13 @@ function startGame(gameOptions) {
 	}
 	setup_canva()
 	sceneSetup(scene, camera, renderer, gameOptions.background)
-	let gameObjects = create_objects_vs(scene, gameOptions.texture)
-	let gameBodies = create_bodies()
+	let gameObjects = create_objects(scene, gameOptions.texture)
+	let gameBodies = create_bodies(world)
+
+	gameBodies.ball.addEventListener('collide', (event)=>{
+		if (event.body !=  gameBodies.groundBody )
+			BALL_VELOCITY.z *= -1
+	})
 	
 	const updatePlayerPositions = move_players(gameBodies.player, gameBodies.otherPlayer)
 	let Animate = true
@@ -207,7 +156,7 @@ function startGame(gameOptions) {
 		updatePlayerPositions()
 
 		is_out_bound(gameBodies.ball, score)
-		check_plane_sides(gameBodies.ball)
+		check_plane_sides(gameBodies.ball, BALL_VELOCITY)
 	
 		if (Animate && gameOptions.mode == 'time'){
 			let now  = new Date()
@@ -216,7 +165,8 @@ function startGame(gameOptions) {
 			if(elapsed >= gameOptions.range && score.p1 != score.p2){
 				Animate = false
 				cancelAnimationFrame(id)
-				game_over()
+				cleanupScene(scene, renderer, world)
+				game_over('GAME OVER')
 			}
 			if (document.getElementById('time'))
 				document.getElementById('time').innerHTML = elapsed
@@ -224,11 +174,14 @@ function startGame(gameOptions) {
 		else if (Animate && (score.p1 == gameOptions.range || score.p2 == gameOptions.range)){
 				cancelAnimationFrame(id)
 				Animate = false
-				game_over()
+				cleanupScene(scene, renderer, world)
+				game_over('GAME OVER')
 		}
+		gameBodies.ball.position.z += BALL_VELOCITY.z
+		gameBodies.ball.position.x += BALL_VELOCITY.x
 		update_position(gameObjects, gameBodies)
 
-		renderer.render(scene, camera);
+		renderer.render(scene, camera)
 	}
 	
 	animate();
