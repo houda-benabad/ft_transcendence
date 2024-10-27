@@ -68,7 +68,11 @@ class GameConsumer(AsyncWebsocketConsumer):
 	async def start_game(self):
 		hoster = channels[self.game_group_name]['hoster']
 		invited = channels[self.game_group_name]['invited']
-		asyncio.create_task(game.startGame(self.channel_layer, hoster, invited))
+		if (invited and hoster):
+			print('GAME START')
+			asyncio.create_task(game.startGame(self.channel_layer, hoster, invited))
+		else:
+			print('GAME ERROR')
 
 	async def receive(self, text_data):
 		dataJson = json.loads(text_data)
@@ -104,11 +108,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1
-		if (self.game.gameStatus == 'WAITING'):
-			await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
-			if (self.is_host):
-				await sync_to_async(self.game.delete)()
-			else:
-				self.game.player_count -= 1
-				await sync_to_async(self.game.save)()
-		print("BYE BYE : ", close_code)
+		print(f"BYE BYE {self.game_group_name}"),
+		await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
+		if (self.game.gameStatus == 'WAITING' and self.is_host):
+			await sync_to_async(self.game.delete)()

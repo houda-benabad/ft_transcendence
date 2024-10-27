@@ -6,6 +6,12 @@ fclean : clean
 	docker compose -f src/docker-compose.yml stop
 	docker system prune -af
 
+noDocker:
+	echo 'Server starting ...'
+	python3 -m venv venv && source venv/bin/activate 
+	pip install -r src/game/requirements.txt
+	python src/game/backend/manage.py runserver
+
 re : clean all
 
 push:

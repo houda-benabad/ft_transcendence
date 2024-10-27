@@ -29,16 +29,16 @@ function socketSetup() {
 	return gameSocket
 }
 
-export function startGame(gameOptions){
+export function startGame(gameOptions, gameSocket){
 	const app = document.getElementById('app')
 	app.className = 'game'
 	app.innerHTML = ''
-	setup_canva()
+	setup_canva(gameSocket)
 	sceneSetup(scene, camera, renderer,  gameOptions.background)
 	return create_objects(scene, gameOptions.texture)
 }
 
-export function setup_canva() {
+export function setup_canva(gameSocket) {
 	let canva = document.getElementById("app");
 
 	let gameElements = document.createElement('div')
@@ -75,6 +75,8 @@ export function setup_canva() {
 	document.querySelector('.time').style.display = 'none'
 	document.querySelector('.endGame-pop').style.transform = 'scale(0)'
 	document.getElementById('cancel-btn').addEventListener('click', ()=>{
+		cleanupScene(scene, renderer, world)
+		gameSocket.close()
 		getBackToHome()
 	})
 }
@@ -306,13 +308,13 @@ export function start() {
 							'type': 'gameSettings',
 							'data': gameOptions
 						}))
-						gameObjects = startGame(gameOptions)
+						gameObjects = startGame(gameOptions, gameSocket)
 						gameBodies = create_bodies()
 						started = true
 					})
 					break;
 				case 'startGame':
-					gameObjects = startGame(data)
+					gameObjects = startGame(data, gameSocket)
 					gameBodies = create_bodies()
 					started = true
 					break;
@@ -322,6 +324,7 @@ export function start() {
 					const modalBackground = document.getElementById('modal-background')
 					cleanupScene(scene, renderer, world)
 					modalBackground.addEventListener('click', async (event) => {
+						gameSocket.close()
 						await delay(3000)
 						getBackToHome()
 					})
