@@ -19,17 +19,21 @@ class GameConsumer(AsyncWebsocketConsumer):
 		self.game_result = 0
 
 	async def connect(self):
-		print('MULTI ')
 		await self.accept()
+		await self.send(text_data=json.dumps({
+			'type': 'Connected',
+		}))
+		print('MULTI ')
 
 		self.game = await self.get_or_create_game()
 		players.append(self)
 		self.game_group_name = f"multi-{self.game.id}"
-   
+	
 		print("group name = ", self.game_group_name)
 		await self.channel_layer.group_add(self.game_group_name,self.channel_name)
-		# if len(players) >= 4:
-		# 	await self.start_game(players)
+		if len(players) >= 4:
+			await asyncio.sleep(3)
+			await self.start_game(players)
 
 	@database_sync_to_async
 	def get_or_create_game(self):
@@ -39,6 +43,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 			game.save()
 			return game
 		else:
+			print('FIRST CONNECTION')
 			return models.Game.objects.create(player_count=1, gameStatus='WAITING')
 
 	async def start_game(self, players):
@@ -64,13 +69,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'data': data
 		}))
   
-	async def time(self, event):
-		data = event['data']
-		await self.send(text_data=json.dumps({
-			'type': 'time',
-			'data': data
-		}))
-
 	async def discard(self, event):
 		data = event['data']
 		await self.send(text_data=json.dumps({
@@ -80,7 +78,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1
-		print(f"BYE BYE {self.game_group_name}"),
+		print(f"BYE BYE {self.game_group_name}")
+		self.game.player_count -=1
+		await sync_to_async(self.game.save)()
 		await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
-		if (self.game.gameStatus == 'WAITING' and self.is_host):
-			await sync_to_async(self.game.delete)()

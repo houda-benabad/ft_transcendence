@@ -88,7 +88,7 @@ class Game():
 	def __init__(self):
 	#  P V D
 		self.ball = Ball( [ 0 ,  0 ], [ .01,-.01,.03 ], [ .2,.2,.2 ] )
-		self.plane = Plane([0,0], [.01,.01,.05], [3,.2,5])
+		self.plane = Plane([0,0], [.01,.01,.05], [6,.2,5])
 
 		self.player1 = Player([0,2.45], [0,-.1,.05], [1,.3,.1])
 		self.player2 = Player([0,-2.45], [0,-.1,.05], [1,.3,.1])

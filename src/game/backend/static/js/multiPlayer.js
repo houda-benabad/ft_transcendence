@@ -29,16 +29,16 @@ function socketSetup() {
 	return gameSocket
 }
 
-export function startGame(gameOptions){
+export function startGame(gameSocket){
 	const app = document.getElementById('app')
 	app.className = 'game'
 	app.innerHTML = ''
-	setup_canva()
+	setup_canva(gameSocket)
 	sceneSetup(scene, camera, renderer,  'default')
 	return create_objects(scene, 'default')
 }
 
-export function setup_canva() {
+export function setup_canva(gameSocket) {
 	let canva = document.getElementById("app");
 
 	let gameElements = document.createElement('div')
@@ -74,7 +74,9 @@ export function setup_canva() {
 	document.querySelector('.score').style.display = 'none'
 	document.querySelector('.time').style.display = 'none'
 	document.querySelector('.endGame-pop').style.transform = 'scale(0)'
+	// document.querySelector('.waiting-pop').style.transform = 'scale(1)'
 	document.getElementById('cancel-btn').addEventListener('click', ()=>{
+		gameSocket.close()
 		getBackToHome()
 	})
 }
@@ -83,8 +85,6 @@ export function update_canva(data) {
 	document.querySelector('.waiting-holder').style.transform = 'scale(0)'
 	
 	document.querySelector('.score').style.display = 'flex'
-	document.getElementById('user1').innerHTML = data.coordinates.player.name
-	document.getElementById('user2').innerHTML = data.coordinates.otherPlayer.name
 	let score_html = `${data.coordinates.player.score} : ${data.coordinates.otherPlayer.score}`
 	document.getElementById('score').innerHTML = score_html
 	if (data.time){
@@ -155,10 +155,9 @@ export function sceneSetup(scene, camera, renderer, background) {
 
 export function create_objects(scene, texture) {
 	let ball, plane
-	let players = {player1, player2, player3, player4};
 
 	//PLANE
-	plane = new THREE.Mesh(new THREE.BoxGeometry(3, .2, 5), new THREE.MeshLambertMaterial({ color: 0x5F1584 }))
+	plane = new THREE.Mesh(new THREE.BoxGeometry(6, .2, 5), new THREE.MeshLambertMaterial({ color: 0x5F1584 }))
 
 	// 	BALL
 	if (texture == 'default')
@@ -170,22 +169,21 @@ export function create_objects(scene, texture) {
 	ball.position.set(0, .8, 0)
 
 	// PLAYER
-	players.player1 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0x8C96ED }))
-	players.player1.position.set(1.5, .4, 2.45)
+	let player1 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
+	player1.position.set(1.5, .4, 2.45)
 
+	let player2 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
+	player2.position.set(1.5, .4, -2.45)
 
-	//OTHERPLAYER
-	players.player2 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
-	players.player2.position.set(1.5, .4, -2.45)
+	let player3 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
+	player3.position.set(-1.5, .4, -2.45)
 
-	players.player3 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
-	players.player3.position.set(-1.5, .4, -2.45)
+	let player4 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
+	player4.position.set(-1.5, .4, 2.45)
 
-	players.player4 = new THREE.Mesh(PLAYER_GEO, new THREE.MeshLambertMaterial({ color: 0xE4E6FB }))
-	players.player4.position.set(-1.5, .4, 2.45)
-
+	let players = {player1, player2, player3, player4};
 	scene.add(plane);
-	scene.add(players.player);
+	scene.add(players.player1);
 	scene.add(players.player2);
 	scene.add(players.player3);
 	scene.add(players.player4);
@@ -194,8 +192,10 @@ export function create_objects(scene, texture) {
 }
 
 function create_bodies(){
-	let player = create_player([0.5, .15, 0.05], [0, .25, 2.45])
-	let otherPlayer = create_player([0.5, .15, 0.05], [0, .25, -2.45])
+	let player1 = create_player([0.5, .15, 0.05], [0, .25, 2.45])
+	let player2 = create_player([0.5, .15, 0.05], [0, .4, -2.45])
+	let player3 = create_player([0.5, .15, 0.05], [0, .25, 2.45])
+	let player4 = create_player([0.5, .15, 0.05], [0, .4, -2.45])
 
 	const ball = new CANNON.Body({
 		shape: new CANNON.Sphere(.1),
@@ -212,7 +212,7 @@ function create_bodies(){
 	groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); 
 	world.addBody(groundBody);
 
-	return {player, otherPlayer, ball}
+	return {player1, player2, player3, player4, ball}
 }
 
 function create_player(dimension, position){
@@ -228,11 +228,17 @@ function create_player(dimension, position){
 }
 
 function update_position(gameObjects, gameBodies){
-	gameObjects.player.position.copy(gameBodies.player.position);
-	gameObjects.player.quaternion.copy(gameBodies.player.quaternion);
+	gameObjects.player1.position.copy(gameBodies.player1.position);
+	gameObjects.player1.quaternion.copy(gameBodies.player1.quaternion);
 
-	gameObjects.otherPlayer.position.copy(gameBodies.otherPlayer.position);
-	gameObjects.otherPlayer.quaternion.copy(gameBodies.otherPlayer.quaternion);
+	gameObjects.player2.position.copy(gameBodies.player2.position);
+	gameObjects.player2.quaternion.copy(gameBodies.player2.quaternion);
+
+	gameObjects.player3.position.copy(gameBodies.player3.position);
+	gameObjects.player3.quaternion.copy(gameBodies.player3.quaternion);
+
+	gameObjects.player4.position.copy(gameBodies.player4.position);
+	gameObjects.player4.quaternion.copy(gameBodies.player4.quaternion);
 
 	gameObjects.ball.position.copy(gameBodies.ball.position);
 	gameObjects.ball.quaternion.copy(gameBodies.ball.quaternion);
@@ -240,14 +246,23 @@ function update_position(gameObjects, gameBodies){
 
 function update_coordinates(gameBodies, coordinates) {
 	const { ball } = gameBodies;
+
 	ball.position.x = coordinates.ball.position[0];
 	ball.position.z = coordinates.ball.position[1];
-	const { player, otherPlayer } = gameBodies;
-	player.position.x = coordinates.player.position[0];
-	player.position.z = coordinates.player.position[1];
 
-	otherPlayer.position.x = coordinates.otherPlayer.position[0];
-	otherPlayer.position.z = coordinates.otherPlayer.position[1];
+	const { player1, player2, player3, player4 } = gameBodies;
+
+	player1.position.x = coordinates.player1.position[0];
+	player1.position.z = coordinates.player1.position[1];
+
+	player2.position.x = coordinates.player2.position[0];
+	player2.position.z = coordinates.player2.position[1];
+	
+	player3.position.x = coordinates.player3.position[0];
+	player3.position.z = coordinates.player3.position[1];
+
+	player4.position.x = coordinates.player4.position[0];
+	player4.position.z = coordinates.player4.position[1];
 }
 
 function cleanupScene(scene, renderer, world) {
@@ -281,18 +296,18 @@ export function multi() {
 
 	const timeStep = 1/60
 	const gameSocket = socketSetup()
-	let gameObjects, gameBodies,gameOptions, started = false
+	let gameObjects, gameBodies,started = false
 
 	world.gravity.set(0, -9.82, 0);
 	world.broadphase = new CANNON.NaiveBroadphase();
 	world.solver.iterations = 10;
+	
 	renderer.setAnimationLoop(animation);
-
 	function animation() {
 		world.step(timeStep);
 		gameSocket.onmessage = (e) => {
 			const { type, data } = JSON.parse(e.data)
-			console.log('TYPE = ', type)
+
 			switch (type) {
 				case 'api':
 					started= false
@@ -301,9 +316,10 @@ export function multi() {
 					update_position(gameObjects, gameBodies)
 					update_canva(data)
 					break;
-				case 'startGame':
-					gameObjects = startGame(data)
+				case 'Connected':
+					gameObjects = startGame(gameSocket)
 					gameBodies = create_bodies()
+					console.error('OBJECTS ARE CREATED')
 					started = true
 					break;
 
