@@ -12,7 +12,7 @@ const PLAYER_GEO = new THREE.BoxGeometry(1, .3, .1)
 const BALL_GEO = new THREE.SphereGeometry(.1, 32, 15)
 
 function socketSetup() {
-	let url = `ws://${window.location.host}/ws/game/`
+	let url = `ws://${window.location.host}/ws/multiplayer/`
 	const gameSocket = new WebSocket(url)
 	const keyState = {}
 
@@ -34,8 +34,8 @@ export function startGame(gameOptions){
 	app.className = 'game'
 	app.innerHTML = ''
 	setup_canva()
-	sceneSetup(scene, camera, renderer,  gameOptions.background)
-	return create_objects(scene, gameOptions.texture)
+	sceneSetup(scene, camera, renderer,  'default')
+	return create_objects(scene, 'default')
 }
 
 export function setup_canva() {
@@ -47,13 +47,13 @@ export function setup_canva() {
 	gameElements.innerHTML = `
         <div class="score">
             <div class="user glass">
-                <h3 id="user1">hajar</h3>
+                <h3 id="user1">team1</h3>
             </div>
             <div class="score-num glass">
                 <h1 id="score">0 : 0</h1>
             </div>
             <div class="user glass">
-                <h3 id="user2">kouaz</h3>
+                <h3 id="user2">team2</h3>
             </div>
         </div>
 		<div class="waiting-holder">
@@ -281,7 +281,6 @@ export function multi() {
 
 	const timeStep = 1/60
 	const gameSocket = socketSetup()
-
 	let gameObjects, gameBodies,gameOptions, started = false
 
 	world.gravity.set(0, -9.82, 0);
@@ -293,6 +292,7 @@ export function multi() {
 		world.step(timeStep);
 		gameSocket.onmessage = (e) => {
 			const { type, data } = JSON.parse(e.data)
+			console.log('TYPE = ', type)
 			switch (type) {
 				case 'api':
 					started= false
@@ -300,24 +300,6 @@ export function multi() {
 					update_coordinates(gameBodies, data.coordinates)
 					update_position(gameObjects, gameBodies)
 					update_canva(data)
-					break;
-				case 'gameInfo':
-					gameSettings()
-					let form = document.getElementById('game-settings')
-					form.addEventListener('submit', (e) => {
-						e.preventDefault()
-						
-						let data = new FormData(form);
-						gameOptions = Object.fromEntries(data)
-
-						gameSocket.send(JSON.stringify({
-							'type': 'gameSettings',
-							'data': gameOptions
-						}))
-						gameObjects = startGame(gameOptions)
-						gameBodies = create_bodies()
-						started = true
-					})
 					break;
 				case 'startGame':
 					gameObjects = startGame(data)

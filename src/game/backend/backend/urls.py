@@ -20,6 +20,7 @@ from game.urls import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include( "backendApp.urls" ) ),
+    path('', include( "core.urls" ) ),
     path('ws/game/', include( "game.urls" ) ),
+    # path('ws/multiplayer/', include( "multiplayer.urls" ) ),
 ]

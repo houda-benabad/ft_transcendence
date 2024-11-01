@@ -30,8 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
+    'core',
     'game',
-    'backendApp',
+    'multiplayer'
 ]
 
 STATIC_URL = "static/"
