@@ -56,7 +56,7 @@ export default class Engine {
 	setupRenderer(  ){
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
         this.renderer.shadowMap.enabled = true;
-        document.querySelector( 'local-view' ).appendChild( this.renderer.domElement )
+        document.getElementById( 'app' ).appendChild( this.renderer.domElement )
 	}
 
 	setupWorld(  ){
@@ -103,8 +103,8 @@ export default class Engine {
 		this.cleanScene(  )
 		this.cleanWorld(  )
 		this.cleanRenderer(  )
-		eventListener.off(document, 'keydown')
-		eventListener.off(document, 'keyup')
+		eventListeners.off(document, 'keydown')
+		eventListeners.off(document, 'keyup')
 	}
 
 }

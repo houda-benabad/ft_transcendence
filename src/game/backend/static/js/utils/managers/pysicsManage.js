@@ -16,13 +16,21 @@ export default class physicsManager{
 
 	setupBallCollisionEvent(){
 		this.components.bodies.ball.addEventListener('collide', (event)=>{
-            if (event.body !=  this.components.bodies.plane )
-                this.ball_velocity.z *= -1
+			if (event.body !=  this.components.bodies.plane){
+				this.ball_velocity.z *= -1
+				console.log( 'is colliding = ', this.ball_velocity.z )
+			}
         })
 	}
 
 	resetBall(){
 		this.components.bodies.ball.position.set(...Object.values(POSITION.BALL))
+		console.log( 'new vwlocity = ',  this.ball_velocity)
+		this.ball_velocity = {
+			x: Math.random() * (-0.07 - 0.02),
+			y:0,
+			z:Math.random() * (-0.07 - 0.02)
+		}
 	}
 
 	checkBallPositionForScore() {

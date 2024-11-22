@@ -1,6 +1,6 @@
 import { DIMENSION, POSITION } from "../../constants/components.js"
 import { MODE } from "../../constants/engine.js"
-import { VELOCITY } from "../../constants/logic.js"
+import { KEYS, VELOCITY } from "../../constants/logic.js"
 
 export default class inputManager{
 	constructor( components, mode ){
@@ -15,30 +15,30 @@ export default class inputManager{
 	}
 
 	setupEventListeners(  ){
-		eventListeners.on(document,'keydown', ( event ) => { this.keys[event.code] = true } )
-		eventListeners.on(document, 'keyup', ( event ) => { this.keys[event.code] = false } )
+		eventListeners.on(document,'keydown', ( event ) => { this.keys[event.keyCode] = true } )
+		eventListeners.on(document, 'keyup', ( event ) => { this.keys[event.keyCode] = false } )
 	}
 
 	localMovements(  ){
 		let {player1 , player2} = this.components.bodies
-		if ( this.keys['ArrowLeft'] && player1.position.x > this.bounds.min )  player1.position.x -= VELOCITY.PLAYER
-		if ( this.keys['ArrowRight'] && player1.position.x < this.bounds.max ) player1.position.x += VELOCITY.PLAYER
+		if ( this.keys[KEYS.LEFTARROW] && player1.position.x > this.bounds.min )  player1.position.x -= VELOCITY.PLAYER
+		if ( this.keys[KEYS.RIGHTARROW] && player1.position.x < this.bounds.max ) player1.position.x += VELOCITY.PLAYER
 
-		if ( this.keys['KeyA'] && player2.position.x > this.bounds.min ) player2.position.x -= VELOCITY.PLAYER
-		if ( this.keys['KeyD'] && player2.position.x < this.bounds.max ) player2.position.x += VELOCITY.PLAYER
+		if ( this.keys[KEYS.A] && player2.position.x > this.bounds.min ) player2.position.x -= VELOCITY.PLAYER
+		if ( this.keys[KEYS.D] && player2.position.x < this.bounds.max ) player2.position.x += VELOCITY.PLAYER
 	}
 2
 	remoteMovements(  socket  ){
-		if ( this.keys['ArrowLeft'] ){
+		if ( this.keys[KEYS.LEFTARROW] ){
 			socket.send( JSON.stringify( {
 				'type': 'keycode',
-				'data': 37
+				'data': KEYS.LEFTARROW
 			} ) )
 		}
-		if (  this.keys['ArrowRight']  ){
+		if (  this.keys[KEYS.RIGHTARROW]  ){
 			socket.send( JSON.stringify( {
 				'type': 'keycode',
-				'data': 39
+				'data': KEYS.RIGHTARROW
 			} ) )
 		}
 	}
