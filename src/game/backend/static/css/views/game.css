@@ -1,0 +1,128 @@
+game-view
+{
+    height: 100%;
+    display: grid;
+    background-color: var(--secondary2);
+    border-radius: 35px;
+    color: white;
+    
+    
+    #game-settings
+    {
+        padding: 35px 100px 35px 35px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px; /* its a gap horizontal*/
+
+        .settings-slider
+        {
+            margin-left: 300px;
+            #slider-infos
+            {
+                display: flex;
+                justify-content: space-between;
+            }
+            #slider-input
+            {
+                margin-top: 10px;
+                width: 100%;
+                color : var(--secondary2);
+                ::-webkit-slider-thumb
+                {
+                    background-color: red;
+                }
+            }
+        }
+       #button 
+        {
+            margin-top: 50px;
+            margin-left: 300px;
+            display: flex;
+            justify-content: center;
+
+            button 
+            {
+                height: 60px;
+                width: 190px;
+            }
+        }
+
+    }
+    .settings-row
+    {
+        display: flex;
+        align-items: center;
+
+        .settings-label 
+        {
+            width : 300px;
+        }
+        .settings-choice
+        {
+            flex : 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap : 40px;
+            input 
+            {
+                display: none;
+            }
+            label
+            {
+                padding: 20px 60px;
+                text-align: center;
+                font-weight: 700;
+                border-radius: 7px;
+                border : solid 1px var(--secondary);
+                color: var(--secondary);
+                cursor: pointer;
+
+                transition: 0.3s ease;
+            }
+            input:checked + label,label:hover
+            {
+                background-color: var(--secondary);
+                border: solid 1px var(--secondary);
+                color: white;
+            }
+        }
+        .settings-choice.image
+        {
+            label
+            {
+                padding: 35px 60px;
+                color: white;
+                border: none;
+            }
+            input:checked + label, label:hover
+            {
+                color : var(--secondary);
+                border : solid 1px var(--secondary);
+            }
+        }
+        #settings-background,#settings-texture /*at the momemnt*/
+        {
+            .default 
+            {
+
+                background-image: linear-gradient(to bottom,rgba(4,7,22, 0.3),rgba(4,7,22, 1) 70%), url('../../img/background.png'); 
+                background-size: cover;
+                background-repeat: none;
+            }
+            .popular
+            {
+
+                background-image: linear-gradient(to bottom,rgba(4,7,22, 0.3),rgba(4,7,22, 1) 70%), url("static/img/background.png"); 
+                background-size: cover;
+                background-repeat: none;
+            }
+            .special
+            {
+
+                background-image: linear-gradient(to bottom,rgba(4,7,22, 0.3),rgba(4,7,22, 1) 70%), url("static/img/background.png"); 
+                background-size: cover;
+                background-repeat: none;
+            }
+        }
+   }
+}
