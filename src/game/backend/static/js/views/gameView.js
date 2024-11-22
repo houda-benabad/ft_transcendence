@@ -29,11 +29,11 @@ export class gameView extends HTMLElement
         eventListeners.setAllByType(this.modes, 'change')
         eventListeners.on(this.input, 'input', (event) => eventHandlers.game.inputOfSlider())   
         const gameOptions = await formService.game()
-        router.go('./game/local')
-        // await this.runGame(gameOptions)
-        // await modalService.show( 'Game over', 'hihi')
-        // this.game.clean()
-        // await reset()
+        // router.go('./game/local')
+        await this.runGame(gameOptions)
+        await modalService.show( 'Game over', 'hihi')
+        this.game.clean()
+        await reset()
     }
     async runGame(gameOptions)
     {
