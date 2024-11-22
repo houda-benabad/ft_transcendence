@@ -28,7 +28,6 @@ export class eventService
     {
         elements.forEach(e => {
             const functionKey = e.dataset.action.toUpperCase()
-            
             if (functionKey === 'MODE' || functionKey === "ROUTER")
                 eventListeners.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event, e))
             else

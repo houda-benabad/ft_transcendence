@@ -5,6 +5,7 @@ import { modalService } from '../services/modalService.js'
 import { MODE } from '../constants/engine.js'
 import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
+import { gameManager } from './managers/gameManager.js'
 
 export const eventHandlers = 
 {
@@ -88,39 +89,32 @@ export const eventHandlers =
     },
     home :
     {
-        tournament()
+        playGame(event)
         {
-            modalService.show(null, 'tournament')
-            //the event listeners of my main , tournament form as well as the main should be removed
-            // router.navigateTo('./game', false)
-            // console.log('im out the show function in tournament')
-        },
-        remote()
-        {
-            console.log('im in the remote handler')
-        },
-        multiplayer()
-        {
-            console.log('im in the multiplayer function')
-        },
-        async local()
-        {
-            // game settings
-            await router.navigateTo('./game-settings')
-            const gameSettings = await formService.game()
+            const mode = event.target.dataset.mode
+            const myGameManager = new gameManager()
 
-            router.navigateTo('./game')
-
-            const game = await local(gameSettings)
-
-            await modalService.show( 'Game over', 'hihi')
-
-            game.clean()
-            await reset()
-            router.navigateTo('./home')
-
-
+            if (mode === 'local')
+                myGameManager.local()
         }
+    //     async local()
+    //     {
+    //         // game settings
+    //         await router.navigateTo('./game-settings')
+    //         const gameSettings = await formService.game()
+
+    //         router.navigateTo('./game')
+
+    //         const game = await local(gameSettings)
+
+    //         await modalService.show( 'Game over', 'hihi')
+
+    //         game.clean()
+    //         await reset()
+    //         router.navigateTo('./home')
+
+
+    //     }
     },
     game :
     {

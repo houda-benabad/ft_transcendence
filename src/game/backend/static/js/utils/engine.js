@@ -56,7 +56,7 @@ export default class Engine {
 	setupRenderer(  ){
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
         this.renderer.shadowMap.enabled = true;
-        document.querySelector( 'game-view' ).appendChild( this.renderer.domElement )
+        document.querySelector( '#app' ).appendChild( this.renderer.domElement )
 	}
 
 	setupWorld(  ){

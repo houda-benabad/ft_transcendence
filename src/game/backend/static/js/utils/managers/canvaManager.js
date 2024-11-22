@@ -1,13 +1,12 @@
 class appCanva{
     constructor(){
         let canva = document.getElementById("app");
-        canva.className = 'game'
         canva.innerHTML = ''
         this.elements = document.createElement('div')
         this.elements.id = 'game-elements'
         canva.append(this.elements)
 
-
+        alert(44)
         this.waiting = document.createElement('div')
         this.waiting.className = 'waiting-holder'
         this.waiting.innerHTML = `
@@ -67,12 +66,14 @@ class appCanva{
     update(element, data){
         switch (element) {
             case 'score':
-                document.getElementById('user1').innerHTML = data.p1.name
-                document.getElementById('user2').innerHTML = data.p2.name
-                document.getElementById('score').innerHTML = `${data.p1.score} : ${data.p2.score}`
+                // console.log( data.p1 )
+                // document.getElementById('user1').innerHTML = data.p1.name
+                // document.getElementById('user2').innerHTML = data.p2.name
+                // document.getElementById('score').innerHTML = `${data.p1.score} : ${data.p2.score}`
                 break;
             case 'time':
-                document.getElementById('time').innerHTML = data
+                // console.log(data)
+                // document.getElementById('time').innerHTML = data
                 break;
             default:
                 break;

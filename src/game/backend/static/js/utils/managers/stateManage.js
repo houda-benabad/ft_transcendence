@@ -8,9 +8,9 @@ export default class stateManager{
 	reachedMaxTime(score){
 		if (this.options.mode == 'time'){
 			let now  = new Date()
-			this.elapsed  = Math.round( (now - this.startTime) / 1000)
+			this.timeElapsed  = Math.round( (now - this.startTime) / 1000)
 			return (
-				this.elapsed >= this.options.range && 
+				this.timeElapsed >= this.options.range && 
 				score.p1!= score.p2)
 		}
 	}

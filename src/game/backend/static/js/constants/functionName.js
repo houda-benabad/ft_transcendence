@@ -2,10 +2,7 @@ import { eventHandlers } from "../utils/eventHandlers.js"
 
 export const FUNCTIONNAME =
 {
-    TOURNAMENT : eventHandlers.home.tournament,
-    LOCAL : eventHandlers.home.local,
-    REMOTE : eventHandlers.home.remote,
-    MULTIPLAYER : eventHandlers.home.multiplayer,
+    PLAY_GAME : eventHandlers.home.playGame,
     MODE : (event, mode) => eventHandlers.game.slider(event, mode),
     ROUTER: (event, e) => eventHandlers.router.anchorsNavHandler(event, e),
     UPDATE_IMAGE : eventHandlers.settings.updateImage,
