@@ -28,28 +28,6 @@ export class gameSettingsView extends HTMLElement
 
         eventListeners.setAllByType(this.modes, 'change')
         eventListeners.on(this.input, 'input', (event) => eventHandlers.game.inputOfSlider())   
-        gameSettings = await formService.game()
-        router.navigateTo('./game')
-        // await this.runGame(gameOptions)
-        // await modalService.show( 'Game over', 'hihi')
-        // this.game.clean()
-        // await reset()
-    }
-    async runGame(gameOptions)
-    {
-
-        const app = document.getElementById( 'app' )
-            // removed event listeners, and cleand app
-            eventListeners.removeAll()
-            app.replaceChildren()
-
-            // cre
-            this.game = new Local( gameOptions )
-            this.game.setup( )
-            return new Promise ( ( resolve )=>{
-                this.game.animate( resolve )
-
-            })
     }
     disconnectedCallback()
     {

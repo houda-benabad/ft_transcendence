@@ -33,6 +33,7 @@ const router = {
 
         console.log(path)
         let mainContent = document.createElement(ROUTES.get(path))
+        mainContent.settings = 'hello'
 
         if (path === './game')
             app.replaceChildren(mainContent)

@@ -41,7 +41,7 @@ export default class Local extends Logic {
 		this.update(  )
 		if (  this.isGameover(   )  ){
 			cancelAnimationFrame( id )
-			resolve(    )
+			resolve(  this  )
 		}
 
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );

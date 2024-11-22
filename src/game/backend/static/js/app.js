@@ -3,7 +3,6 @@ import { eventService } from './services/eventService.js'
 import router  from './router/router.js'
  
 window.eventListeners = new eventService()
-window.gameSettings = null
 
 window.addEventListener('DOMContentLoaded', async () => 
 {

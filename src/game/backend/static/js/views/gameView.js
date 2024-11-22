@@ -52,27 +52,9 @@ export class gameView extends HTMLElement
 	async connectedCallback()
 	{
 		this.add('score')
-		if(gameSettings.mode == 'time')
-			this.add( 'time' )
-		await this.runGame( gameSettings )
-		await modalService.show( 'Game over', 'hihi')
-		this.game.clean()
-		await reset()
-		router.navigateTo('./home')
 	}
 	disconnectedCallback()
 	{
-	}
-
-	async runGame(gameOptions)
-	{
-			//locql
-			this.game = new Local( gameOptions )
-			this.game.setup( )
-			return new Promise ( ( resolve )=>{
-				this.game.animate( resolve )
-
-			})
 	}
 	add(element){
 		console.log(this)
