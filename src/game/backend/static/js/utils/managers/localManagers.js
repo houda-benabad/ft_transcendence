@@ -23,7 +23,6 @@ export default class Local extends Logic {
 		this.physics.checkWallCollision(  )
 		this.physics.checkBallPositionForScore(  )
 		this.physics.updateBallPosition(  )	
-		this.physics.setupBallCollisionEvent(  )
 		super.update(  )
 	}
 

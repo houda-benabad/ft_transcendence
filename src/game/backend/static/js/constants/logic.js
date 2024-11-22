@@ -1,9 +1,9 @@
 export const VELOCITY = {
     PLAYER : .05,
     BALL : {
-        x:.01,
+        x: Math.random() * (0.07 - 0.02),
         y:0,
-        z:.01
+        z:Math.random() * (0.07 - 0.02)
     }
 }
 
@@ -18,5 +18,8 @@ export const PLAYERS =  ['PLAYER1', 'PLAYER2', 'PLAYER3', 'PLAYER4']
 
 
 export const KEYS = {
-    LEFTARROW : 37
+    LEFTARROW : 37,
+    RIGHTARROW : 39,
+    A: 65,
+    D: 68
 }
