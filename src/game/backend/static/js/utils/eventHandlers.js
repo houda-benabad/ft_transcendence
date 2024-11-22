@@ -72,12 +72,12 @@ export const eventHandlers =
 
             event.preventDefault()
             const path = e.getAttribute('href')
-            router.go(path)
+            router.navigateTo(path)
         },
         popstateHandler(event)
         {
             const path = event.state ? event.state.path : './home'
-            router.go(path, false)
+            router.navigateTo(path, false)
 
             document.querySelectorAll('.static').forEach((item) => item.classList.remove('selected'))
             document.querySelector(`a[href="${path}"]`).classList.add('selected')
@@ -89,7 +89,7 @@ export const eventHandlers =
         {
             modalService.show(null, 'tournament')
             //the event listeners of my main , tournament form as well as the main should be removed
-            // router.go('./game', false)
+            // router.navigateTo('./game', false)
             // console.log('im out the show function in tournament')
         },
         remote()
@@ -103,7 +103,7 @@ export const eventHandlers =
         local()
         {
             // game settings
-            router.go('./game')
+            router.navigateTo('./game-settings')
         }
     },
     game :

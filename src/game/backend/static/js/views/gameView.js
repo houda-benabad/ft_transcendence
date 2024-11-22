@@ -1,62 +1,101 @@
-import { formService } from "../services/formService.js"
-import { gameTemplate } from "../templates/gameTemplate.js"
-import { eventHandlers } from "../utils/eventHandlers.js"
-
 import { TEXTURE } from "../constants/components.js"
 import Local from "../utils/managers/localManagers.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 import router from "../router/router.js"
+import { gameSettingsView } from "./gameSettingsView.js"
 
 export class gameView extends HTMLElement
 {
-    constructor()
-    {
-        super()
+	constructor()
+	{
+		super()
 
-        this.input = null
-        this.modes = null
-        this.game = null
-    }
-    async connectedCallback()
-    {
-        this.innerHTML = gameTemplate()
+		let canva = document.getElementById("app");
+		canva.className = 'game'
+		canva.innerHTML = ''
+		this.elements = document.createElement('div')
+		this.elements.id = 'game-elements'
+		canva.append(this.elements)
 
-        // SETTING THE EVENT LISTENERS
-        this.input = document.getElementById('slider-input')
-        this.modes = document.querySelectorAll('input[name="mode"]')
 
-        eventListeners.setAllByType(this.modes, 'change')
-        eventListeners.on(this.input, 'input', (event) => eventHandlers.game.inputOfSlider())   
-        const gameOptions = await formService.game()
-        // router.go('./game/local')
-        await this.runGame(gameOptions)
-        await modalService.show( 'Game over', 'hihi')
-        this.game.clean()
-        await reset()
-    }
-    async runGame(gameOptions)
-    {
+		this.waiting = document.createElement('div')
+		this.waiting.className = 'waiting-holder'
+		this.waiting.innerHTML = `
+			<div class="waiting-pop glass">
+				<h1>Waiting for other player...</h1>
+				<div id="loader"></div>
+				<button id="cancel-btn">Cancel</button>
+			</div>
+		`
+		this.score = document.createElement('div')
+		this.score.className = 'score'
+		this.score.innerHTML = `
+			<div class="user glass">
+				<h3 id="user1">team1</h3>
+			</div>
+			<div class="score-num glass">
+				<h1 id="score">0 : 0</h1>
+			</div>
+			<div class="user glass">
+				<h3 id="user2">team2</h3>
+			</div>
+	`
+	
+	this.time = document.createElement('div')
+	this.time.className = 'time glass'
+	this.time.innerHTML = `<h1 id="time">00:00</h1>`
+	
+	this.endGame = document.createElement('div')
+	this.endGame.className = 'endGame-pop glass'
+	}
+	async connectedCallback()
+	{
+		this.add('score')
+		if(gameSettings.mode == 'time')
+			this.add( 'time' )
+		await this.runGame( gameSettings )
+		await modalService.show( 'Game over', 'hihi')
+		this.game.clean()
+		await reset()
+		router.navigateTo('./home')
+	}
+	disconnectedCallback()
+	{
+	}
 
-        const app = document.getElementById( 'app' )
-            // removed event listeners, and cleand app
-            eventListeners.removeAll()
-            app.replaceChildren()
+	async runGame(gameOptions)
+	{
+			//locql
+			this.game = new Local( gameOptions )
+			this.game.setup( )
+			return new Promise ( ( resolve )=>{
+				this.game.animate( resolve )
 
-            // cre
-            this.game = new Local( gameOptions )
-            this.game.setup( )
-            return new Promise ( ( resolve )=>{
-                this.game.animate( resolve )
-
-            })
-    }
-    disconnectedCallback()
-    {
-        // do i need to remove all of this event listeners, im gonna reset  - -
-        eventListeners.removeAllByType(this.modes, 'change')
-        eventListeners.off(this.input, 'input')
-    }
+			})
+	}
+	add(element){
+		console.log(this)
+		switch (element) {
+			case 'waiting':
+				this.appendChild(this.waiting)
+				break;
+			case 'score':
+				this.appendChild(this.score)
+				break;
+			case 'time':
+				this.appendChild(this.time)
+				break;
+			case 'endGame':
+				this.endGame.innerHTML = `<h3>YOU <span id="status">You ${data}</span>!</h3>`
+				this.appendChild(this.endGame)
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 customElements.define('game-view', gameView)
+
+//global
