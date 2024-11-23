@@ -128,7 +128,7 @@ canvas{
     justify-content: center;
     position: absolute;
     z-index: 10;
-    top: 92%;
+    top: 93%;
     border-color: var(--secondary2);
     border-style: solid;
     border-width: 2px 2px 0px 2px;

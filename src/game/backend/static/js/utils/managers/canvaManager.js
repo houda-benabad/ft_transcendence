@@ -19,13 +19,13 @@ class appCanva{
         this.score.className = 'score'
         this.score.innerHTML = `
             <div class="user glass">
-                <h3 id="user1">team1</h3>
+                <h3 id="user1">user1</h3>
             </div>
             <div class="score-num glass">
                 <h1 id="score">0 : 0</h1>
             </div>
             <div class="user glass">
-                <h3 id="user2">team2</h3>
+                <h3 id="user2">user2</h3>
             </div>
 	`
 
@@ -65,14 +65,16 @@ class appCanva{
     update(element, data){
         switch (element) {
             case 'score':
-                console.log( data.p1 )
-                // document.getElementById('user1').innerHTML = data.p1.name
-                // document.getElementById('user2').innerHTML = data.p2.name
-                // document.getElementById('score').innerHTML = `${data.p1.score} : ${data.p2.score}`
+                if (data.name) {
+
+                    document.getElementById('user1').innerHTML = data.p1.name
+                    document.getElementById('user2').innerHTML = data.p2.name
+                }
+                document.getElementById('score').innerHTML = `${data.p1} : ${data.p2}`
                 break;
             case 'time':
                 // console.log(data)
-                document.getElementById('time').innerHTML = data
+                // document.getElementById('time').innerHTML = data
                 break;
             default:
                 break;
