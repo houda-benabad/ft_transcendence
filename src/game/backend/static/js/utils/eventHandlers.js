@@ -82,17 +82,14 @@ export const eventHandlers =
 
             if (mode === 'local')
             {
-                            // game settings
+                // generic
                 await router.navigateTo('./game-settings')
                 const gameSettings = await formService.game()
-
                 router.navigateTo('./game')
-
+                // non generic
                 await local(gameSettings)
-
                 await modalService.show( 'Game over', 'hihi')
-
-                // game.clean()
+                //generic
                 await reset()
                 router.navigateTo('./home')
             }
