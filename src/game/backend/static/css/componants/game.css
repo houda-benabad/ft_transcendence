@@ -15,6 +15,7 @@ canvas{
     align-items: center;
     justify-content: center;
     color: white;
+    position: absolute;
 }
 
 .waiting-holder{

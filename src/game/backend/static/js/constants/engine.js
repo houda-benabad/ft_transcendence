@@ -10,9 +10,9 @@ export const CAMERA = {
 	NEAR : .1,
 	ASPECTRATIO : window.innerWidth / window.innerHeight,
 	INITIALPOSITION : {
-		x:0,
+		x:20,
 		y:0,
-		z:20
+		z:0
 	}
 }
 

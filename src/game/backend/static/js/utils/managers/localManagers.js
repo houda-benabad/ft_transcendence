@@ -1,26 +1,40 @@
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { MODE, WORLD } from "../../constants/engine.js"
-import Logic from "../../utils/logic.js"
-import physicsManager from "../../utils/managers/pysicsManage.js"
+import physicsManager from "./physicsManager.js"
 import inputManager from "../../utils/managers/inputManager.js"
-import stateManager from '../../utils/managers/stateManage.js'
+import stateManager from '../../utils/managers/stateManager.js'
+import Engine from '../engine.js'
 import appCanva from "./canvaManager.js"
+import Components from '../components.js'
+import visualsManager from './visualManager.js'
 
-export default class Local extends Logic {
+
+export default class Local{
 	constructor( options ) {
-        super( MODE.LOCAL, options )
-		this.canva = new appCanva()
 		this.options = options
-		this.physics = new physicsManager( this.components )
+		this.animationProgress = 0
+
+		this.engine = new Engine( MODE.LOCAL )
+		this.components = new Components(this.engine, MODE.LOCAL, options)
+		this.visual = new visualsManager(this.components, MODE.LOCAL)
 		this.input = new inputManager( this.components )
+		this.canva = new appCanva()
+
+		this.physics = new physicsManager( this.components )
 		this.state = new stateManager( options )
+
 	}
 
 	setup(  ){
-        super.setup(  )
+        this.engine.setup( )
+		this.components.setup( )
+
 		this.canva.add( 'score' )
 		if (this.options.mode == 'time' )
 			this.canva.add( 'time' )
 		this.physics.setupBallCollisionEvent(  )
+		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
+		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
 
 	getScore(  ){
@@ -35,11 +49,13 @@ export default class Local extends Logic {
 		this.input.movePlayers(   )
 		this.physics.checkWallCollision(  )
 		this.physics.checkBallPositionForScore(  )
-		this.physics.updateBallPosition(  )	
+		this.physics.updateBallPosition(  )
+		this.visual.updatePosition()
+
+
 		this.canva.update( 'score', this.getScore(  ) )
 		if (this.options.mode == 'time' )
 			this.canva.update( 'time', this.getTime(  ) )
-		super.update(  )
 	}
 
 	isGameover(  ){
@@ -51,16 +67,30 @@ export default class Local extends Logic {
 	}
 
 	animate(  resolve  ){
+
 		let id = requestAnimationFrame( (  )=>this.animate( resolve ) )
 		this.engine.world.step( WORLD.TIMESTAMP )
 		
-		this.update(  )
-		if (  this.isGameover(   )  ){
-			cancelAnimationFrame( id )
-			resolve(  this  )
+		if (this.animationProgress < 1)
+			this.initialAnimation(  )
+		else if (this.animationProgress == 1){
+			this.state.setup()
 		}
-
+		else{
+			this.update(  )
+			if (  this.isGameover(   )  ){
+				cancelAnimationFrame( id )
+				resolve(  )
+			}
+		}
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
+
+	}
+
+	initialAnimation(){
+		this.animationProgress += 0.005;
+		this.engine.camera.position.lerpVectors( this.cameraInitial,  this.cameraTarget,  this.animationProgress )
+		this.engine.camera.lookAt( this.engine.scene.position )
 	}
 
 }

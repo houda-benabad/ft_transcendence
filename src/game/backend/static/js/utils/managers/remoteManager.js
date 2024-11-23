@@ -8,6 +8,7 @@ import Components from "../components.js"
 export default class Remote{
     constructor( mode ){
 		this.mode = mode
+
 		this.engine = new Engine( this.mode )
 		this.components = new Components(this.engine, this.mode)
 		this.visual = new visualsManager(this.components, this.mode)
@@ -17,6 +18,7 @@ export default class Remote{
 	setup(){
 		this.engine.setup( )
 		this.components.setup( )
+		this.canva.add( 'waiting' )
 	}
 
     update( id ){

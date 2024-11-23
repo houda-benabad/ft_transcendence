@@ -21,16 +21,35 @@ export class gameManager
             classInstance.animate( resolve )
         })
     }
-    async local()
-    {
-        await router.navigateTo('./game-settings')
-        this.gameSettings = await formService.game()
-        
-        await this.#run(new Local(this.gameSettings))
 
-        await modalService.show('game over', 'hihihi')
-        //generic state
-        await reset()
-        router.navigateTo('./home')
-    }
+    // async local()
+    // {
+    //     await router.navigateTo('./game-settings')
+    //     this.gameSettings = await formService.game()
+        
+    //     await this.#run(new Local(this.gameSettings))
+
+    //     await modalService.show('game over', 'hihihi')
+    //     //generic state
+    //     await reset()
+    //     router.navigateTo('./home')
+    // }
+    async local()
+        {
+            // game settings
+            await router.navigateTo('./game-settings')
+            const gameSettings = await formService.game()
+
+            router.navigateTo('./game')
+
+            const game = await local(gameSettings)
+
+            await modalService.show( 'Game over', 'hihi')
+
+            game.clean()
+            await reset()
+            router.navigateTo('./home')
+
+
+        }
 }

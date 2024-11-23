@@ -21,24 +21,24 @@ export default class inputManager{
 
 	localMovements(  ){
 		let {player1 , player2} = this.components.bodies
-		if ( this.keys[KEYS.LEFTARROW] && player1.position.x > this.bounds.min )  player1.position.x -= VELOCITY.PLAYER
-		if ( this.keys[KEYS.RIGHTARROW] && player1.position.x < this.bounds.max ) player1.position.x += VELOCITY.PLAYER
+		if ( this.keys[KEYS.DOWN] && player1.position.x > this.bounds.min )  player1.position.x -= VELOCITY.PLAYER
+		if ( this.keys[KEYS.UP] && player1.position.x < this.bounds.max ) player1.position.x += VELOCITY.PLAYER
 
-		if ( this.keys[KEYS.A] && player2.position.x > this.bounds.min ) player2.position.x -= VELOCITY.PLAYER
-		if ( this.keys[KEYS.D] && player2.position.x < this.bounds.max ) player2.position.x += VELOCITY.PLAYER
+		if ( this.keys[KEYS.S] && player2.position.x > this.bounds.min ) player2.position.x -= VELOCITY.PLAYER
+		if ( this.keys[KEYS.W] && player2.position.x < this.bounds.max ) player2.position.x += VELOCITY.PLAYER
 	}
 2
 	remoteMovements(  socket  ){
-		if ( this.keys[KEYS.LEFTARROW] ){
+		if ( this.keys[KEYS.UP] ){
 			socket.send( JSON.stringify( {
 				'type': 'keycode',
-				'data': KEYS.LEFTARROW
+				'data': KEYS.UP
 			} ) )
 		}
-		if (  this.keys[KEYS.RIGHTARROW]  ){
+		if (  this.keys[KEYS.DOWN]  ){
 			socket.send( JSON.stringify( {
 				'type': 'keycode',
-				'data': KEYS.RIGHTARROW
+				'data': KEYS.DOWN
 			} ) )
 		}
 	}

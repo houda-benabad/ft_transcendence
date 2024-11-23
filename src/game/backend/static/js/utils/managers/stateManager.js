@@ -1,8 +1,12 @@
 export default class stateManager{
 	constructor(options){
 		this.options = options
-		this.startTime = new Date()
+		this.startTime = 0
 		this.timeElapsed = 0
+	}
+
+	setup(){
+		this.startTime = new Date()
 	}
 
 	reachedMaxTime(score){

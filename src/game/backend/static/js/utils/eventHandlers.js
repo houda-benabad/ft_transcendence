@@ -5,7 +5,6 @@ import { modalService } from '../services/modalService.js'
 import { MODE } from '../constants/engine.js'
 import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
-import { gameManager } from './managers/gameManager.js'
 
 export const eventHandlers = 
 {
@@ -55,18 +54,6 @@ export const eventHandlers =
             //delete that form listener
         }
     },
-
-    removeModalHandler(event, resolve) // what type of function is this
-    {
-        const modalBackground = document.getElementById('modal-background')
-        
-        if (event.target === modalBackground)
-        {
-            eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler)
-            modalBackground.remove()
-            resolve()
-        }
-    },
     router : 
     {
         anchorsNavHandler(event, e)
@@ -89,32 +76,27 @@ export const eventHandlers =
     },
     home :
     {
-        playGame(event)
+        async playGame(event)
         {
             const mode = event.target.dataset.mode
-            const myGameManager = new gameManager()
 
             if (mode === 'local')
-                myGameManager.local()
+            {
+                            // game settings
+                await router.navigateTo('./game-settings')
+                const gameSettings = await formService.game()
+
+                router.navigateTo('./game')
+
+                await local(gameSettings)
+
+                await modalService.show( 'Game over', 'hihi')
+
+                // game.clean()
+                await reset()
+                router.navigateTo('./home')
+            }
         }
-    //     async local()
-    //     {
-    //         // game settings
-    //         await router.navigateTo('./game-settings')
-    //         const gameSettings = await formService.game()
-
-    //         router.navigateTo('./game')
-
-    //         const game = await local(gameSettings)
-
-    //         await modalService.show( 'Game over', 'hihi')
-
-    //         game.clean()
-    //         await reset()
-    //         router.navigateTo('./home')
-
-
-    //     }
     },
     game :
     {
@@ -172,6 +154,17 @@ export const eventHandlers =
         deleteAccount()
         {
             console.log('the account need to be deleted')
+        }
+    },
+    removeModalHandler(event, resolve) // what type of function is this
+    {
+        const modalBackground = document.getElementById('modal-background')
+        
+        if (event.target === modalBackground)
+        {
+            eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler)
+            modalBackground.remove()
+            resolve()
         }
     }
 }
