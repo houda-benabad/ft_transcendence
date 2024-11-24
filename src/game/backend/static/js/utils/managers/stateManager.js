@@ -1,14 +1,14 @@
 export default class stateManager{
 	constructor(options){
 		this.options = options
-		this.startTime = 0
+		this.startTime = new Date()
 		this.timeElapsed = 0
 	}
 
 	setup(){
 		this.startTime = new Date()
 	}
-
+	
 	reachedMaxTime(score){
 		if (this.options.mode == 'time'){
 			let now  = new Date()

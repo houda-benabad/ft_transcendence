@@ -72,9 +72,11 @@ export default class Local{
 		this.engine.world.step( WORLD.TIMESTAMP )
 		
 		if (this.animationProgress < 1)
+		{
 			this.initialAnimation(  )
-		else if (this.animationProgress == 1){
-			this.state.setup()
+			console.log( this.animationProgress )
+			if ( this.animationProgress >= 1)
+				this.state.setup(  )
 		}
 		else{
 			this.update(  )
