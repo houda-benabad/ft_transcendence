@@ -1,0 +1,89 @@
+  services:
+    authentication:
+      depends_on:
+        postgres:
+          condition: service_healthy
+      build:
+        context: ./requirements/authentication/
+        dockerfile: Dockerfile
+      # ports:
+      #   - 8000:8000
+      restart: on-failure
+      env_file:
+        - .env
+      networks:
+        - transcendence
+      volumes:
+        - authvolume:/usr/src/user_management
+
+    postgres:
+      image: postgres:15.8
+      restart: on-failure
+      env_file:
+        - .env
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready", "-U", "$$POSTGRES_USER", "-d", "$$POSTGRES_DB"]
+        interval: 30s #test to see if we can minimize it
+        timeout: 60s
+        retries: 5
+        start_period: 80s
+      networks:
+        - transcendence
+      volumes:
+        - dbvolume:/var/lib/postgresql/data/
+    
+    frontend:
+      build:
+        context: ./requirements/frontend/
+        dockerfile: Dockerfile
+      restart: on-failure
+      env_file:
+        - .env
+      networks:
+        - transcendence
+      volumes:
+        - frontVolume:/var/www 
+    
+    nginx:
+      build:
+        context: ./requirements/nginx/
+        dockerfile: Dockerfile
+      restart: on-failure
+      ports:
+        - 80:80
+      env_file:
+        - .env
+      networks:
+        - transcendence
+      depends_on:
+        - authentication
+        - frontend
+      # volumes:
+      #   - frontVolume:/var/www
+  
+  networks:
+    transcendence:
+      driver: bridge
+  
+  volumes:
+
+    authvolume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./requirements/authentication/user_management
+
+    dbvolume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./data/
+    
+    frontVolume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./requirements/frontend
