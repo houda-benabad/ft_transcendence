@@ -9,5 +9,6 @@ export function remote(  ) {
 
     let remote = new Remote(  MODE.REMOTE  )
     remote.setup(  )
-    remote.animate(  )
+    return new Promise( resolve => remote.animate( resolve ))
+    
 }

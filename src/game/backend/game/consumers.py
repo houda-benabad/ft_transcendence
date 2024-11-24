@@ -53,6 +53,13 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'type': 'score',
 			'data': data
 		}))
+  
+	async def start(self, event):
+		data = event['data']
+		await self.send(text_data=json.dumps({
+			'type': 'start',
+			'data': data
+		}))
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1

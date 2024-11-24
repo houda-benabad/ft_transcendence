@@ -11,7 +11,8 @@ export const ACTIONS  = {
     'api' : 'updateApi',
     'score' : 'updateScore',
     'Connected' : 'updateConnection',
-    'endGame' : 'updateState'
+    'endGame' : 'updateState',
+    'start' : 'updateStart'
 }
 
 export const PLAYERS =  ['PLAYER1', 'PLAYER2', 'PLAYER3', 'PLAYER4']

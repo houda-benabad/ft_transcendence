@@ -5,7 +5,6 @@ class appCanva{
         this.elements = document.createElement('div')
         this.elements.id = 'game-elements'
         canva.append(this.elements)
-        console.log( 'canva for the moment : ', canva.innerHTML)
         this.waiting = document.createElement('div')
         this.waiting.className = 'waiting-holder'
         this.waiting.innerHTML = `
@@ -66,14 +65,12 @@ class appCanva{
         switch (element) {
             case 'score':
                 if (data.name) {
-
-                    document.getElementById('user1').innerHTML = data.p1.name
-                    document.getElementById('user2').innerHTML = data.p2.name
+                    document.getElementById('user1').innerHTML = data.p2.name
+                    document.getElementById('user2').innerHTML = data.p1.name
                 }
-                document.getElementById('score').innerHTML = `${data.p1} : ${data.p2}`
+                document.getElementById('score').innerHTML = `${data.p2.score} : ${data.p1.score}`
                 break;
             case 'time':
-                // console.log(data)
                 document.getElementById('time').innerHTML = data
                 break;
             default:

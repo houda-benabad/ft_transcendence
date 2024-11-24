@@ -31,7 +31,6 @@ const router = {
         const main = document.getElementById('main')
         const app = document.getElementById('app')
 
-        console.log(path)
         let mainContent = document.createElement(ROUTES.get(path))
         mainContent.settings = 'hello'
 

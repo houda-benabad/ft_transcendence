@@ -28,11 +28,12 @@ export default class Local{
 	setup(  ){
         this.engine.setup( )
 		this.components.setup( )
-
 		this.canva.add( 'score' )
+		
+		this.physics.setupBallCollisionEvent(  )
 		if (this.options.mode == 'time' )
 			this.canva.add( 'time' )
-		this.physics.setupBallCollisionEvent(  )
+
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
@@ -74,7 +75,6 @@ export default class Local{
 		if (this.animationProgress < 1)
 		{
 			this.initialAnimation(  )
-			console.log( this.animationProgress )
 			if ( this.animationProgress >= 1)
 				this.state.setup(  )
 		}

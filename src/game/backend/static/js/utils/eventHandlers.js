@@ -5,6 +5,8 @@ import { modalService } from '../services/modalService.js'
 import { MODE } from '../constants/engine.js'
 import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
+import { remote } from '../mods/remote.js'
+import { multiplayer } from '../mods/multiplayer.js'
 
 export const eventHandlers = 
 {
@@ -93,6 +95,24 @@ export const eventHandlers =
                 await reset()
                 router.navigateTo('./home')
             }
+            else if (mode === 'remote')
+            {
+                router.navigateTo('./game')
+                const result = await remote(  )
+                await modalService.show( `You ${result.state}`, 'hihi')
+                //generic
+                await reset()
+                router.navigateTo('./home')
+            }
+            else if (mode === 'multiplayer')
+                {
+                    router.navigateTo('./game')
+                    const result = await multiplayer(  )
+                    await modalService.show( `You ${result.state}`, 'hihi')
+                    //generic
+                    await reset()
+                    router.navigateTo('./home')
+                }
         }
     },
     game :

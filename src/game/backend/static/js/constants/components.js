@@ -52,7 +52,7 @@ export const POSITION = {
     PLAYER4 : {
         x:1.5,
         y:.4,
-        z:-2.55
+        z:-DIMENSION.PLANE/2
     }
 }
 
@@ -60,22 +60,22 @@ export const MULTIPLAYERPOSITION = {
     PLAYER1 : {
         x:1.5,
         y:.4,
-        z:2.55
+        z:(DIMENSION.PLANE.z+1)/2
     },
     PLAYER2 : {
         x:-1.5,
         y:.4,
-        z:2.55
+        z:(DIMENSION.PLANE.z+1)/2
     },
     PLAYER3 : {
         x:1.5,
         y:.4,
-        z:-2.55
+        z:-(DIMENSION.PLANE.z+1)/2
     },
     PLAYER4 : {
         x:-1.5,
         y:.4,
-        z:-2.55
+        z:-(DIMENSION.PLANE.z+1)/2
     }
 }
 
