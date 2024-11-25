@@ -39,7 +39,7 @@ export default class Local{
 	}
 
 	getScore(  ){
-		return this.physics.score
+		return this.physics.userInfo
 	}
 
 	getTime(  ){
@@ -60,7 +60,7 @@ export default class Local{
 	}
 
 	isGameover(  ){
-		return this.state.isGameover( this.physics.score )
+		return this.state.isGameover( this.physics.userInfo )
 	}
 
 	clean(){

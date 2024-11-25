@@ -11,8 +11,16 @@ export default class physicsManager{
 	constructor(components){
 		this.components = components
 		this.ball_velocity = VELOCITY.BALL
-		this.score = {	p1 : 0,	p2 : 0	}
-
+		this.userInfo = {
+			p1 : {
+				score : 0,
+				name : 'user1'
+			},
+			p2 :{
+				score : 0,
+				name: 'user2'
+			}
+		}
 	}
 
 	updateBallPosition(){
@@ -41,11 +49,11 @@ export default class physicsManager{
 		let {ball} =  this.components.bodies
 		if (ball.position.z > DIMENSION.PLANE.z/2) {
 			this.resetBall()
-			this.score.p1 += 1
+			this.userInfo.p2.score += 1
 		}
 		if ( ball.position.z < -DIMENSION.PLANE.z/2) {
 			this.resetBall()
-			this.score.p2 += 1
+			this.userInfo.p1.score += 1
 		}
 	}
 	

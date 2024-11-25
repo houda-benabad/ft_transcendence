@@ -9,23 +9,23 @@ export default class stateManager{
 		this.startTime = new Date()
 	}
 	
-	reachedMaxTime(score){
+	reachedMaxTime(data){
 		if (this.options.mode == 'time'){
 			let now  = new Date()
 			this.timeElapsed  = Math.round( (now - this.startTime) / 1000)
 			return (
 				this.timeElapsed >= this.options.range && 
-				score.p1!= score.p2)
+				data.p1.score!= data.p2.score)
 		}
 	}
 
-	reachedMaxScore(score){
+	reachedMaxScore(data){
 		return (
-			score.p1 == this.options.range || 
-			score.p2 == this.options.range)
+			data.p1.score == this.options.range || 
+			data.p2.score == this.options.range)
 	}
 
-	isGameover(score){
-		return this.reachedMaxTime(score) || this.reachedMaxScore(score)
+	isGameover(data){
+		return this.reachedMaxTime(data) || this.reachedMaxScore(data)
 	}
 }
