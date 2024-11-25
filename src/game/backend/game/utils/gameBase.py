@@ -20,7 +20,7 @@ class Game():
 		self.ball.update(self.plane, self.p1, self.p2)
 
 	async def is_game_over(self):
-		return self.p1.score >= 2 or self.p2.score >= 2
+		return self.p1.score >= 6 or self.p2.score >= 6
 
 	def get_coordinates(self):
 		return{
