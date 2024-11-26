@@ -7,6 +7,8 @@ export const VELOCITY = {
     }
 }
 
+export const MAXVELOCITY = .09
+
 export const ACTIONS  = {
     'api' : 'updateApi',
     'score' : 'updateScore',

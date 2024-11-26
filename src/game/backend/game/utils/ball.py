@@ -41,8 +41,6 @@ class Ball(GameObject):
 		self.check_ground_sides( plane ) # does a perfect job
 		self.check_out_ground( plane, p1, p2 ) # sometimes get out ground for no reason, up: fixed
 		self.check_player_collision( p1, p2 ) # does a perfect job 
-		
-    
-    
+
 		for i in range(2):
 			self.position[i] += self.velocity[i]

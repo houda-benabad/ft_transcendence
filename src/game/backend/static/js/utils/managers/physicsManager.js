@@ -1,11 +1,7 @@
 import { DIMENSION, POSITION } from "../../constants/components.js"
 import { VELOCITY } from "../../constants/logic.js"
+import { MAXVELOCITY } from "../../constants/logic.js";
 
-export function getRandomFloat(minValue, maxValue) {
-	const sign = (Math.random() % 2 == 0) ? -1 : 1;
-	const value = Math.random();
-	return parseFloat((sign * value).toFixed(2));
-}
 
 export default class physicsManager{
 	constructor(components){
@@ -23,6 +19,10 @@ export default class physicsManager{
 		}
 	}
 
+	getDirection() {
+		return (Math.random() % 2 == 0) ? -1 : 1
+	}
+
 	updateBallPosition(){
 		this.components.bodies.ball.position.z += this.ball_velocity.z
 		this.components.bodies.ball.position.x += this.ball_velocity.x
@@ -32,8 +32,8 @@ export default class physicsManager{
 		this.components.bodies.ball.addEventListener('collide', (event)=>{
 			if (event.body !=  this.components.bodies.plane){
 				this.ball_velocity.z *= -1
-				if (Math.abs(this.ball_velocity.z) < 0.09)
-					this.ball_velocity.z += .001 * (this.ball_velocity.z > 0 ? 1 : -1)
+				if (Math.abs(this.ball_velocity.z) < MAXVELOCITY)
+					this.ball_velocity.z += .005 * (this.ball_velocity.z > 0 ? 1 : -1)
 			}
         })
 	}
@@ -41,8 +41,8 @@ export default class physicsManager{
 	resetBall(){
 		this.components.bodies.ball.position.set(0,.2,0)
 		this.ball_velocity = VELOCITY.BALL
-		this.ball_velocity.z *= (getRandomFloat() % 2 == 0 ? -1 : 1)
-		this.ball_velocity.x *= (getRandomFloat() % 2 == 0 ? -1 : 1)
+		this.ball_velocity.z *= this.getDirection(  )
+		this.ball_velocity.x *= this.getDirection(  )
 	}
 
 	checkBallPositionForScore() {
