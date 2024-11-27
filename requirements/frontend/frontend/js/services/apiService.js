@@ -1,4 +1,5 @@
 import {ENDPOINTS} from '../constants/endpoints.js'
+import { updateData } from '../utils/utils.js'
 import { modalService } from './modalService.js'
 
 const serverIp = 'http://localhost:8000/api/'
@@ -7,7 +8,6 @@ export const apiService =
 { 
     async fetchApi (url, options = {})
     {
-        console.log(options)
         return new Promise
         (async (resolve) => {
         try {
@@ -18,13 +18,34 @@ export const apiService =
                     ...options.headers
                 }
             })
-            console.log(response.status)
+            const responseBody = await response.json()
+            const entries = Object.entries(responseBody)
+            const [key , value] = entries[0]
+
             if (!response.ok && response.status === 500)
                 throw new Error(response.status)
             else if (response.ok)
-                resolve()
-            const message = await response.json()
+            {
+                
+                if(url === ENDPOINTS.SIGN_UP)
+                {
+                    await modalService.show('welcome to pingyyyyyy')
+                    await new Promise(resolve => {setTimeout(resolve, 1500)})
+                    document.getElementById('signDiv').dataset.value = 'Sign in'
+                    updateData()
+                    const modalBackground = document.getElementById('modal-background')
 
+                    modalBackground.remove()
+                }
+                else if (url === ENDPOINTS.SIGN_IN)
+                {
+                    await modalService.show('you logged in successfully')
+                    token = value
+                    resolve (true)
+                }
+                return ;
+            }
+            const message = value[0]
             await modalService.show(message)
         }
         catch(error)
@@ -59,6 +80,7 @@ export const apiService =
                 method: 'GET',
                 headers: 
                 {
+                    "Authorization": "mytoken",
                     // to add the authorization header for the token 
                 },
                 body: JSON.stringify(userInfos)

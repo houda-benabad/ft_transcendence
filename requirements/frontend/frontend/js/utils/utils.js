@@ -44,13 +44,17 @@ export function updateData()
 
 export async function sendData(ENDPOINTS)
 {
-    const form = document.querySelector('form')
-    const formData = new FormData(form)
-    const formObject = {}
-
-    formData.forEach((value, key) => { formObject[key] = value })
-
-    await apiService.auth[ENDPOINTS](formObject)
+    return new Promise(async (resolve) => {
+        const form = document.querySelector('form')
+        const formData = new FormData(form)
+        const formObject = {}
+        
+        formData.forEach((value, key) => { formObject[key] = value })
+        
+        const response = await apiService.auth[ENDPOINTS](formObject)
+        if (response === true)
+            resolve(true)
+    })
 }
 
 export async function reset()

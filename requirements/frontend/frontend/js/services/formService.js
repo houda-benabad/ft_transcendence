@@ -17,9 +17,12 @@ export const formService =
                 const ENDPOINTS = document.getElementById('signDiv').getAttribute('data-value').toLowerCase().replace(' ', '') 
 
                 event.preventDefault()
-                await sendData(ENDPOINTS)
-                await reset()
-                resolve()
+                const response = await sendData(ENDPOINTS)
+                if (response === true)
+                {
+                    await reset()
+                    resolve()
+                }
             })
         })
     },

@@ -17,17 +17,10 @@ export const modalService =
             modalBackground.style.display = 'flex'
     
             if (type === 'tournament') // what is this - -
-            {
                 formService.handleTournament()
-                eventListeners.on(modalBackground, 'click', eventHandlers.removeModalHandler) // dont know if we will be needsing this eventlistener
-            }
-            else if (type)
-            {
-                //cleaned up better.
-                eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve)) // dont know if we will be needsing this eventlistener
-            }
+            eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve)) // dont know if we will be needsing this eventlistener
             modal.innerHTML = message
-            // resolve()
+            resolve()
         })
     },
 

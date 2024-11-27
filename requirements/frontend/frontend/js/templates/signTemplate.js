@@ -2,7 +2,7 @@ export function signTemplate()
 {
     return (`
      <div id="image-cover"></div>
-    <div id="signDiv" data-value='Sign in' class="container">
+    <div id="signDiv" data-value='Sign up' class="container">
         <h1 class='sign'></h1>
         <form data-id="login">
             <label for="username">Username</label>

@@ -9,6 +9,9 @@ export class profileView extends HTMLElement
     connectedCallback() 
     {
         this.innerHTML = profileTemplate.layout()
+        //here to fetch for the profile infos
+
+        console.log(token)
         this.addProfile()
         this.gameHistory()
         this.friends() // still need to make this one responsive.
