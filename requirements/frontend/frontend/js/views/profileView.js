@@ -1,3 +1,4 @@
+import { apiService } from "../services/apiService.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
 
@@ -6,21 +7,24 @@ export class profileView extends HTMLElement
     constructor(){
         super()
     }
-    connectedCallback() 
+    async connectedCallback() 
     {
         this.innerHTML = profileTemplate.layout()
         //here to fetch for the profile infos
+        console.log('im in profile view')
+        const response = await apiService.profile.getProfileInfos()
+        
+        const [username, profile_pic_url] = response
 
-        console.log(token)
-        this.addProfile()
+        this.addProfile(profile_pic_url)
         this.gameHistory()
         this.friends() // still need to make this one responsive.
     }
-    addProfile()
+    addProfile(profile_pic_url)
     {
         const profileBox = document.getElementById('profile-box1')
     
-        profileBox.innerHTML = profileTemplate.profileBox()
+        profileBox.innerHTML = profileTemplate.profileBox(profile_pic_url)
         animateProgressBar()
         eventListeners.on(window, 'resize', () => animateProgressBar())    
     }

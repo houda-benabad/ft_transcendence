@@ -143,8 +143,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# MEDIA_URL = "http://localhost:3000/media/"
+
 MEDIA_URL = '/media/'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 REST_FRAMEWORK = {
@@ -162,15 +164,14 @@ DJOSER = {
     }
 }
 
-# CORS_URLS_REGEX = r"^/api/.*"
-
-
 CORS_URLS_REGEX = r'^/auth/.*'
-CORS_ALLOW_HEADERS = [
-    "Content-Type",
-    "Authorization",
-]
-CORS_ALLOWED_ORIGINS = ["https://localhost:443", "https://api.intra.42.fr"]
+CORS_ALLOWED_ORIGINS = ["https://localhost:443"]#, "https://api.intra.42.fr"]
+
+
+# CORS_ALLOW_HEADERS = [
+#     "Content-Type",
+#     "Authorization",
+# ]
 # if DEBUG:
 #     CORS_ALLOWED_ORIGINS += [
 #     "http://localhost:80",

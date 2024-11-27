@@ -23,7 +23,10 @@ export const apiService =
             const [key , value] = entries[0]
 
             if (!response.ok && response.status === 500)
+            {
+                console.log('im hierrrr -- ')
                 throw new Error(response.status)
+            }
             else if (response.ok)
             {
                 
@@ -43,6 +46,8 @@ export const apiService =
                     token = value
                     resolve (true)
                 }
+                else
+                    resolve(entries)
                 return ;
             }
             const message = value[0]
@@ -77,13 +82,11 @@ export const apiService =
         getProfileInfos()
         {
             return apiService.fetchApi(ENDPOINTS.PROFILE, {
-                method: 'GET',
-                headers: 
-                {
-                    "Authorization": "mytoken",
-                    // to add the authorization header for the token 
-                },
-                body: JSON.stringify(userInfos)
+                method: 'GET'
+                // headers: 
+                // {
+                //     "Authorization": `"token ${token}"`,
+                // },
             })
         }
     }

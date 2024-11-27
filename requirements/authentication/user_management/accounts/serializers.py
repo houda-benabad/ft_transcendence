@@ -19,5 +19,8 @@ class UserCreateSerializer(BaseUserCreateSerializer):
     def create(self, validated_data):
         avatar = validated_data.pop('avatar', None)
         user =  super().create(validated_data)
-        Profile.objects.create(user=user, avatar=avatar)
+        if avatar is None:
+            Profile.objects.create(user=user)
+        else:
+            Profile.objects.create(user=user, avatar=avatar)
         return user

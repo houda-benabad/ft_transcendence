@@ -8,8 +8,8 @@ window.token = null
 
 window.addEventListener('DOMContentLoaded', async () => 
 {
-    await init()
-    // await reset() // use this only when u need to start from home 
+    // await init()
+    await reset() // use this only when u need to start from home 
     router.init()
 })
 

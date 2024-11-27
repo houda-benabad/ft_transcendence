@@ -8,13 +8,14 @@ export const profileTemplate  =
             <div class="friends-box"></div>`
         )
     },
-    profileBox()
+    profileBox(profile_pic_url)
     {
+        console.log(profile_pic_url[1])
         return (`
             <div id="box">
             <div id="profile-box1-top">
                 <div id="profile-box1-top1">
-                    <img src="static/assets/componants/user.jpeg">
+                    <img src="${profile_pic_url[1]}">
                     <div id="profile-box1-top-id">
                         <h2 id="profile-box1-top-username">eva luna</h2>
                         <p class="status profile-box1-box-text">online</p>

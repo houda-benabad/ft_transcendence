@@ -91,3 +91,4 @@
         type: none
         o: bind
         device: ./requirements/frontend
+    
