@@ -9,7 +9,12 @@ from django.contrib.auth import get_user_model
 class ProfileDetailAPIView(generics.RetrieveAPIView):    #profile
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    lookup_field = 'user__username'
+    lookup_field = 'pk'
+
+    def get_object(self):
+        if self.kwargs.get(self.lookup_field):
+            return self.get_queryset().get(pk=self.kwargs[self.lookup_field])
+        return self.get_queryset().get(user=self.request.user)
 
 profile_detail_view = ProfileDetailAPIView.as_view()
 

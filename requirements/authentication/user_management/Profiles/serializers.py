@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import Profile#, Friendship
 
-
 class ProfileSerializer(serializers.ModelSerializer):
+
     username = serializers.CharField(source='user.username', read_only=True)
     profile_pic_url = serializers.SerializerMethodField(read_only=True)
 
@@ -18,6 +18,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             return request.build_absolute_uri(obj.avatar.url)
         return (obj.image_url)
+
+
 
 
 # class BasicProfileSerializer(serializers.ModelSerializer):

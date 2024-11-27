@@ -4,17 +4,16 @@ from Profiles.models import Profile
 from rest_framework import serializers
 
 class UserCreateSerializer(BaseUserCreateSerializer):
-    
+
+    avatar = serializers.ImageField(required=False, write_only=True)
+
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = [
             "username",
             "password",
+            'avatar'
         ]
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['avatar'] = serializers.ImageField(required=False, write_only=True)
 
     def create(self, validated_data):
         avatar = validated_data.pop('avatar', None)
@@ -24,3 +23,4 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         else:
             Profile.objects.create(user=user, avatar=avatar)
         return user
+
