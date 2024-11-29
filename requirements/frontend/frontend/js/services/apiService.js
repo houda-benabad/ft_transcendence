@@ -78,17 +78,28 @@ export const apiService =
         },
         intra() {return (apiService.fetchApi(ENDPOINTS.INTRA))}
     },
-    profile : 
+    search :
     {
-        getProfileInfos()
+        getAllUsers()
         {
             return apiService.fetchApi(ENDPOINTS.PROFILE, {
-                method: 'GET'
-                // headers: 
-                // {
-                //     "Authorization": `"token ${token}"`,
-                // },
-            })
-        }
+            headers: 
+            {
+                "Authorization": `"token ${token.token}"`,
+            },
+        })
     }
+    // profile : 
+    // {
+    //     getProfileInfos()
+    //     {
+    //         return apiService.fetchApi(ENDPOINTS.PROFILE, {
+    //             // headers: 
+    //             // {
+    //             //     "Authorization": `"token ${token}"`,
+    //             // },
+    //         })
+    //     }
+    // }
+}
 }

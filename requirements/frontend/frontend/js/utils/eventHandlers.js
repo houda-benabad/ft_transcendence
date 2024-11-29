@@ -78,29 +78,15 @@ export const eventHandlers =
         {
             const searchResults = document.getElementById('search-results')
             const app = document.getElementById('app')
+
+            const users = apiService.search.getAllUsers()
             // here where i ll fetch for my data // for the moment i will live it like this
-            const users = [
-                {
-                    id: 1,
-                    username: 'hind',
-                    profile_pic: '../../assets/componants/user.jpeg'
-                },
-                {
-                    id: 2,
-                    username: 'ahmed',
-                    profile_pic: '../../assets/componants/user.jpeg'
-                },
-                {
-                    id: 3,
-                    username: 'sarah',
-                    profile_pic: '../../assets/componants/user.jpeg'
-                },
-            ]
-            eventListeners.on(event.target, 'input', (event) => eventHandlers.router.searchItemHandler(event, users))
-            eventListeners.on(app, 'click', (event) => {
-                searchResults.replaceChildren()
-                searchResults.style.display = 'none'
-            })
+            // const users // SHOuld contain the values of users.
+            // eventListeners.on(event.target, 'input', (event) => eventHandlers.router.searchItemHandler(event, users))
+            // eventListeners.on(app, 'click', (event) => {
+            //     searchResults.replaceChildren()
+            //     searchResults.style.display = 'none'
+            // })
             // the event listeners should be cleaned up 
             // input event , that fires in every change.
         },
