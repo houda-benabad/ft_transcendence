@@ -20,8 +20,7 @@ async def startGame(channel_layer, hoster, invited):
 		
 		# MOVEMENT 
 		game.move_players(hoster, invited)
-		hoster.keycode= 0
-		invited.keycode = 0
+		
   
 	
 			# SEND ALL INFO (COORDINATES = SCORE = TIME)

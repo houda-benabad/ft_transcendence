@@ -38,6 +38,8 @@ class Game():
 	def move_players(self, hoster, invited):
 		self.p1.move(hoster.keycode, self.plane)
 		self.p2.move(invited.keycode, self.plane)
+		hoster.keycode= 0
+		invited.keycode = 0
   
 	def end_game_results(self, hoster, invited):
 		if (invited.keycode == -1 or self.p1.score > self.p2.score):

@@ -18,6 +18,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 		self.game_group_name = ''
 
 	async def connect(self):
+		print( 'self = ',  self.scope )
 		await self.accept()
 		await self.send(text_data=json.dumps({
 			'type': 'Connected',
