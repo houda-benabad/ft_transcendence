@@ -1,14 +1,17 @@
 from rest_framework import serializers
 from .models import Profile#, Friendship
+from django.core.validators import validate_image_file_extension
 
-class ProfileSerializer(serializers.ModelSerializer):
+class BasicProfileSerializer(serializers.ModelSerializer):
 
+    user_id = serializers.CharField(source='user.id', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)
-    profile_pic_url = serializers.SerializerMethodField(read_only=True)
+    profile_pic_url = serializers.SerializerMethodField(read_only=True, validators=[validate_image_file_extension])
 
     class Meta:
         model = Profile
         fields = [
+            'user_id',
 			'username',
 			'profile_pic_url',
 		]
@@ -19,77 +22,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.avatar.url)
         return (obj.image_url)
 
-
-
-
-# class BasicProfileSerializer(serializers.ModelSerializer):
-#     username = serializers.CharField(source='user.username', read_only=True)
-#     profile_pic_url = serializers.SerializerMethodField(read_only=True)
-#     is_friend = serializers.SerializerMethodField(read_only=True)
-#     url_profile = serializers.HyperlinkedIdentityField(view_name='profile', lookup_field='pk', read_only=True)
-
-#     class Meta:
-#         model = Profile
-#         fields = [
-# 			'username',
-# 			'profile_pic_url',
-# 			'is_friend',
-# 			'url_add_friend',
-# 			'url_profile'
-# 		]
+class ProfileSerializer(BasicProfileSerializer):
     
-#     def get_profile_pic_url(self, obj):
-#         if self.image_url == "":
-#             return self.avatar.url
-#         return self.image_url
-    
-#     def get_is_friend(self, obj):
-#         request = self.context.get("request")
-#         if request.user != obj.user : 
-#             friend = obj.user.Friendships.filter(friend=obj.user)
-#             if friend.exists():
-#                 return True
-#         return False
-                
+    class Meta(BasicProfileSerializer.Meta):
+        fields = BasicProfileSerializer.Meta.fields + [
+        ]
 
-# class FriendsSerializer(serializers.ModelSerializer):
-
-# 	friend_info = serializers.SerializerMethodField(read_only=True)
- 
-# 	class Meta:
-# 		model = Friendship
-# 		fields = [
-# 			'friend_info'
-# 		]
-    
-# 	def get_friend_info(self, obj):
-# 		profile = self.friend.profile
-# 		return BasicProfileSerializer(profile, many=False, context=self.context)
-        
-
-# class ProfileSerializer(serializers.ModelSerializer):
-#     username = serializers.CharField(source='user.username', read_only=True)
-#     profile_pic_url = serializers.SerializerMethodField(read_only=True)
-#     # friends = serializers.SerializerMethodField(read_only=True)
-
-#     class Meta:
-#         model = Profile
-#         fields = [
-# 			'username',
-# 			'profile_pic_url',
-# 			# 'friends'
-# 		]
-    
-#     # def get_username(self, obj):
-#     #     return obj.user.username
-    
-#     def get_profile_pic_url(self, obj):
-#         if obj.image_url == "":
-#             return obj.avatar.url
-#         request = self.context.get('request')
-#         return request.build_absolute_uri(obj.avatar.url)
-    
-#     # def get_friends(self, obj):
-#     #     friends_qs = self.user.Friendships.all()
-#     #     return FriendsSerializer(friends_qs, many=True, context=self.context)
     

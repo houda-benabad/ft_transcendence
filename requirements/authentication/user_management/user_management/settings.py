@@ -43,7 +43,8 @@ PACKAGES = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
-    'corsheaders'
+    'corsheaders',
+    'friendship'
 ]
 
 APPS_ADDED = [
@@ -153,15 +154,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
     ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 DJOSER = {
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer',
     },
-     'PERMISSIONS': {
-        'user_create': ['rest_framework.permissions.AllowAny']
-    }
 }
 
 CORS_URLS_REGEX = r'^/auth/.*'

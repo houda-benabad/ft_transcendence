@@ -8,6 +8,7 @@ djoser
 requests
 urllib3==1.26.15
 Pillow
+django-friendship
 # pyyaml
 # drf_social_oauth2==3.1.0
 # django-oauth-toolkit
