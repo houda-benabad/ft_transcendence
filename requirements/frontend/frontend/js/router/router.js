@@ -29,7 +29,6 @@ const router = {
             history.pushState({path}, {}, path)
         if (path.includes('id='))
             [path, options] = path.split('/id=')
-        console.log(path)
         router.handleRoute(path, options)
     },
     handleRoute : (path, options) => 
@@ -43,7 +42,7 @@ const router = {
         if (options)
             mainContent.dataset.options = options
         else
-            mainContent.dataset.options = ''
+            mainContent.dataset.options = 'me'
         if (path === './game')
             app.replaceChildren(mainContent)
         else
