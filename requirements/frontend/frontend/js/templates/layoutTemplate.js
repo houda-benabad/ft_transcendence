@@ -2,10 +2,11 @@ export function layoutTemplate()
 {
     return(`
         <div id="header">
-        <h2>hello, name</h2>
+        <h2></h2>
         <div id="search-bar">
-            <input type="text" placeholder="search friends ...">
+            <input id="search-input" type="text" placeholder="search friends ...">
             <i class="iconify" data-icon="teenyicons:search-outline" data-inline="false"></i>
+            <div id="search-results"></div>
         </div>
         <div class="anchor-box circle">
             <a href="./notify"><i class="iconify" data-icon="clarity:notification-line" data-inline="false"></i></a>
@@ -27,3 +28,5 @@ export function layoutTemplate()
         <div id="main"></div>
     `)
 }
+
+// to add h2 with username injected to itp

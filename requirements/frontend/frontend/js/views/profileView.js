@@ -1,21 +1,21 @@
 import { apiService } from "../services/apiService.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
-
+import { eventListeners } from "../utils/global.js"
 export class profileView extends HTMLElement
 {
     constructor(){
         super()
+        //initialize which type of element we are talking about
     }
     async connectedCallback() 
     {
+        const id = this.dataset.options
         this.innerHTML = profileTemplate.layout()
+        console.log('value in connected : ', id)
         //here to fetch for the profile infos
-        console.log('im in profile view')
-        const response = await apiService.profile.getProfileInfos()
+        const profile_pic_url = '../asse.jpeg'
         
-        const [username, profile_pic_url] = response
-
         this.addProfile(profile_pic_url)
         this.gameHistory()
         this.friends() // still need to make this one responsive.

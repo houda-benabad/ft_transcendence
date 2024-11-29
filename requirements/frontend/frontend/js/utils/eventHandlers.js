@@ -5,7 +5,8 @@ import { modalService } from '../services/modalService.js'
 import { MODE } from '../constants/engine.js'
 import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
-
+import { eventListeners } from './global.js'
+//break it into small chunks
 export const eventHandlers = 
 {
     auth :
@@ -72,6 +73,80 @@ export const eventHandlers =
 
             document.querySelectorAll('.static').forEach((item) => item.classList.remove('selected'))
             document.querySelector(`a[href="${path}"]`).classList.add('selected')
+        },
+        searchHandler(event)
+        {
+            const searchResults = document.getElementById('search-results')
+            const app = document.getElementById('app')
+            // here where i ll fetch for my data // for the moment i will live it like this
+            const users = [
+                {
+                    id: 1,
+                    username: 'hind',
+                    profile_pic: '../../assets/componants/user.jpeg'
+                },
+                {
+                    id: 2,
+                    username: 'ahmed',
+                    profile_pic: '../../assets/componants/user.jpeg'
+                },
+                {
+                    id: 3,
+                    username: 'sarah',
+                    profile_pic: '../../assets/componants/user.jpeg'
+                },
+            ]
+            eventListeners.on(event.target, 'input', (event) => eventHandlers.router.searchItemHandler(event, users))
+            eventListeners.on(app, 'click', (event) => {
+                searchResults.replaceChildren()
+                searchResults.style.display = 'none'
+            })
+            // the event listeners should be cleaned up 
+            // input event , that fires in every change.
+        },
+        searchItemHandler(event, users)
+        {
+            const searchResults = document.getElementById('search-results')
+            const input = event.target.value
+            const list = users.filter((e) => e.username.includes(input))
+            
+            searchResults.replaceChildren()
+            if (!input)
+            {
+                searchResults.style.display = 'none'
+                return ;
+            }
+            if (!list.length)
+            {
+                searchResults.innerHTML = `
+                <p id="no-result">no Results</p>`
+                return ;
+            }
+            searchResults.style.display = 'block'
+            // this list should only contain lets say 5 values max - -
+            list.forEach(e => 
+            {
+                // to clean
+                const searchItem = document.createElement('div')
+
+                searchItem.classList.add('search-item')
+                searchItem.dataset.action = "search"
+                searchItem.id = e.id
+                searchItem.innerHTML = 
+                `<img src="${e.profile_pic}">
+                <p>${e.username}<p>`
+
+                searchResults.appendChild(searchItem)
+            }
+            )
+            const searchItems = document.querySelectorAll('.search-item')
+            //remove this searchItems event listeners
+            searchItems.forEach(e => {
+                e.addEventListener('click', (event) => {
+                    router.navigateTo(`./profile/id=${e.id}`)
+                    // i think this one should be remplaced by a query parameter.
+                })
+            })
         }
     },
     home :

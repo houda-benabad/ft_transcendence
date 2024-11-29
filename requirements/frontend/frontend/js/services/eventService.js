@@ -1,27 +1,28 @@
 import { eventHandlers } from "../utils/eventHandlers.js"
 import { FUNCTIONNAME } from "../constants/functionName.js"
+import { eventListeners } from "../utils/global.js"
 
 export class eventService
 {
     constructor()
     {
-        this.listeners = new Map()
+        this._listeners = new Map()
     }
     on(element, eventType, handler)
     {
         const key = this.#getUniqueKey(element, eventType)
         
-        this.listeners.set(key, {element, eventType, handler})
+        this._listeners.set(key, {element, eventType, handler})
         element.addEventListener(eventType, handler)
     }
     off(element, eventType)
     {
         const key = this.#getUniqueKey(element, eventType)
-        if (this.listeners.has(key))
+        if (this._listeners.has(key))
         {
-            const {element, eventType, handler} = this.listeners.get(key)
+            const {element, eventType, handler} = this._listeners.get(key)
             element.removeEventListener(eventType, handler)
-            this.listeners.delete(key)
+            this._listeners.delete(key)
         }
     }
     setAllByType(elements, eventType)
@@ -45,11 +46,11 @@ export class eventService
     }
     removeAll()
     {
-        this.listeners.forEach((value, key) => {
+        this._listeners.forEach((value, key) => {
             const {element, eventType, handler} = value
             
             element.removeEventListener(eventType, handler)
-            this.listeners.delete(key)
+            this._listeners.delete(key)
         })
     }
     #getUniqueKey(element, eventType)

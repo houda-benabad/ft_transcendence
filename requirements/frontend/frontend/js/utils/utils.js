@@ -4,7 +4,7 @@ import { layoutTemplate } from '../templates/layoutTemplate.js'
 import { formService } from '../services/formService.js'
 import { apiService } from '../services/apiService.js'
 import { eventHandlers } from './eventHandlers.js'
-
+import { eventListeners } from './global.js'
 export async function init()
 {
     const myApp = document.getElementById('app')

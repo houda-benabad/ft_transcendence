@@ -10,12 +10,11 @@ export const profileTemplate  =
     },
     profileBox(profile_pic_url)
     {
-        console.log(profile_pic_url[1])
         return (`
             <div id="box">
             <div id="profile-box1-top">
                 <div id="profile-box1-top1">
-                    <img src="${profile_pic_url[1]}">
+                    <img src="${profile_pic_url}">
                     <div id="profile-box1-top-id">
                         <h2 id="profile-box1-top-username">eva luna</h2>
                         <p class="status profile-box1-box-text">online</p>

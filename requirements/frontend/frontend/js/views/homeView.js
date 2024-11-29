@@ -1,4 +1,5 @@
 import { homeTemplate } from '../templates/homeTemplate.js'
+import { eventListeners } from '../utils/global.js'
 
 export class homeView extends HTMLElement
 {

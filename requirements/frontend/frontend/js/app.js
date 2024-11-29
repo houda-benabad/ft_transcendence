@@ -1,15 +1,13 @@
 import { init , reset } from './utils/utils.js'
 import { eventService } from './services/eventService.js'
 import router  from './router/router.js'
+import { token } from './utils/global.js'
  
-window.eventListeners = new eventService()
-// not CLEAAAAAAN
-window.token = null
-
 window.addEventListener('DOMContentLoaded', async () => 
 {
-    // await init()
-    await reset() // use this only when u need to start from home 
+    // if (token.isAuthenticated() === false)
+    //     await init() // to remove the reset function from here
+    await reset()
     router.init()
 })
 

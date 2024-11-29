@@ -18,6 +18,10 @@
             font-size: 1.1rem;
             border: none;
         }
+        input:focus
+        {
+            border: solid 3px var(--secondary);
+        }
         .iconify
         {
             position: absolute;
@@ -25,6 +29,45 @@
             right: -40%;
             transform: translateY(-50%);
             font-size: 26px;
+        }
+        #search-results
+        {
+            background-color: var(--secondary2);
+            position: absolute;
+            width: 100%;
+            margin-top: 7px;
+            z-index: 1;
+            border: solid 1px var(--secondary);
+            border-radius: 12px;
+            display: none;
+            .search-item
+            {
+                padding: 5px 0px 5px 10px;
+                border-radius: 12px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                &:hover
+                {
+                    background-color: var(--secondary2-hover);
+                }
+                img
+                {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                }
+                img,p
+                {
+                    pointer-events: none;
+                }
+            }
+            #no-result
+            {
+                text-align: center;
+                padding: 20px;
+            }
         }
     }
     @media (max-width : 750px)
