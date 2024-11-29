@@ -9,6 +9,7 @@ export const apiService =
 { 
     async fetchApi (url, options = {})
     {
+        // console.log('options :', options)
         return new Promise
         (async (resolve) => {
         try {
@@ -78,28 +79,17 @@ export const apiService =
         },
         intra() {return (apiService.fetchApi(ENDPOINTS.INTRA))}
     },
-    search :
+    user : 
     {
-        getAllUsers()
+        getUserInfos(identifier = '')
         {
-            return apiService.fetchApi(ENDPOINTS.PROFILE, {
-            headers: 
-            {
-                "Authorization": `"token ${token.token}"`,
-            },
-        })
+            console.log('my endpoint :' ,ENDPOINTS.PROFILE + identifier)
+            return apiService.fetchApi(ENDPOINTS.PROFILE + identifier, {
+                headers: 
+                {
+                    "Authorization": `token ${token.token}`,
+                }
+            })
+        }
     }
-    // profile : 
-    // {
-    //     getProfileInfos()
-    //     {
-    //         return apiService.fetchApi(ENDPOINTS.PROFILE, {
-    //             // headers: 
-    //             // {
-    //             //     "Authorization": `"token ${token}"`,
-    //             // },
-    //         })
-    //     }
-    // }
-}
 }

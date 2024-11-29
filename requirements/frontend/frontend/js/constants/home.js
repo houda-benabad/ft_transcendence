@@ -9,7 +9,7 @@ export const HOME =
     },
     IMG :
     {
-        TOURNAMENT_IMAGE : 'static/assets/componants/homeHighlighter.png',
+        TOURNAMENT_IMAGE : '../../assets/componants/homeHighlighter.png',
     }
 }
 HOME.MINIBOXES = new Map([

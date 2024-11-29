@@ -5,8 +5,9 @@ import { token } from './utils/global.js'
  
 window.addEventListener('DOMContentLoaded', async () => 
 {
-    // if (token.isAuthenticated() === false)
-    //     await init() // to remove the reset function from here
+    console.log(token.isAuthenticated())
+    if (token.isAuthenticated() === false)
+        await init() // to remove the reset function from here
     await reset()
     router.init()
 })

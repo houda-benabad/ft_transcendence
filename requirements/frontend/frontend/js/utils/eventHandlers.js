@@ -74,27 +74,30 @@ export const eventHandlers =
             document.querySelectorAll('.static').forEach((item) => item.classList.remove('selected'))
             document.querySelector(`a[href="${path}"]`).classList.add('selected')
         },
-        searchHandler(event)
+        async searchHandler(event)
         {
             const searchResults = document.getElementById('search-results')
             const app = document.getElementById('app')
 
-            const users = apiService.search.getAllUsers()
-            // here where i ll fetch for my data // for the moment i will live it like this
-            // const users // SHOuld contain the values of users.
-            // eventListeners.on(event.target, 'input', (event) => eventHandlers.router.searchItemHandler(event, users))
-            // eventListeners.on(app, 'click', (event) => {
-            //     searchResults.replaceChildren()
-            //     searchResults.style.display = 'none'
-            // })
+            const users = await apiService.user.getUserInfos()
+
+            eventListeners.on(event.target, 'input', (event) => eventHandlers.router.searchItemHandler(event, users))
+            eventListeners.on(app, 'click', (event) => {
+                searchResults.replaceChildren()
+                searchResults.style.display = 'none'
+            })
+
             // the event listeners should be cleaned up 
             // input event , that fires in every change.
         },
         searchItemHandler(event, users)
         {
+
+            // do not know if it would be proper to show the user as well.
+            // console.log(JSON.stringify(users)) // i have in it two arrays, what is that 
             const searchResults = document.getElementById('search-results')
             const input = event.target.value
-            const list = users.filter((e) => e.username.includes(input))
+            const list = users.filter((e) => e[1].username.includes(input))
             
             searchResults.replaceChildren()
             if (!input)
@@ -117,10 +120,10 @@ export const eventHandlers =
 
                 searchItem.classList.add('search-item')
                 searchItem.dataset.action = "search"
-                searchItem.id = e.id
+                searchItem.id = e[1].user_id
                 searchItem.innerHTML = 
-                `<img src="${e.profile_pic}">
-                <p>${e.username}<p>`
+                `<img src="${e[1].profile_pic_url}">
+                <p>${e[1].username}<p>`
 
                 searchResults.appendChild(searchItem)
             }
