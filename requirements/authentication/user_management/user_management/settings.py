@@ -49,7 +49,8 @@ PACKAGES = [
 
 APPS_ADDED = [
     'accounts',
-    'Profiles'
+    'Profiles',
+    'friends'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PACKAGES + APPS_ADDED
