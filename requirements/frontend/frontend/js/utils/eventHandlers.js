@@ -5,7 +5,8 @@ import { modalService } from '../services/modalService.js'
 import { MODE } from '../constants/engine.js'
 import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
-
+import { eventListeners } from './global.js'
+//break it into small chunks
 export const eventHandlers = 
 {
     auth :
@@ -72,6 +73,17 @@ export const eventHandlers =
 
             document.querySelectorAll('.static').forEach((item) => item.classList.remove('selected'))
             document.querySelector(`a[href="${path}"]`).classList.add('selected')
+        },
+        searchHandler(event)
+        {
+            console.log('the input field was clicked !!!!!')
+            // here where i ll fetch for my data.
+            const users =
+            {
+                username : 'hind',
+            }
+
+            // input event , that fires in every change.
         }
     },
     home :

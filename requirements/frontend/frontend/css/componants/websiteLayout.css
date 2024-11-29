@@ -18,6 +18,10 @@
             font-size: 1.1rem;
             border: none;
         }
+        input:focus
+        {
+            border: solid 1px var(--secondary);
+        }
         .iconify
         {
             position: absolute;
@@ -25,6 +29,32 @@
             right: -40%;
             transform: translateY(-50%);
             font-size: 26px;
+        }
+        #search-results
+        {
+            background-color: var(--secondary2);
+            position: absolute;
+            width: 100%;
+            margin-top: 7px;
+            z-index: 1;
+            border: solid 1px var(--secondary);
+            border-radius: 12px;
+            display: none;
+            #search-item
+            {
+                padding: 15px 0px 15px 15px;
+                border-radius: 12px;
+                cursor: pointer;
+                &:hover
+                {
+                    background-color: var(--secondary2-hover);
+                }
+            }
+            #no-result
+            {
+                text-align: center;
+                padding: 20px;
+            }
         }
     }
     @media (max-width : 750px)

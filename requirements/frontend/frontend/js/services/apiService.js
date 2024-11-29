@@ -1,6 +1,7 @@
 import {ENDPOINTS} from '../constants/endpoints.js'
 import { updateData } from '../utils/utils.js'
 import { modalService } from './modalService.js'
+import { token } from '../utils/global.js'
 
 const serverIp = 'http://localhost:8000/api/'
 
@@ -43,7 +44,7 @@ export const apiService =
                 else if (url === ENDPOINTS.SIGN_IN)
                 {
                     await modalService.show('you logged in successfully')
-                    token = value
+                    token.token = value // hihi the problem with naming
                     resolve (true)
                 }
                 else

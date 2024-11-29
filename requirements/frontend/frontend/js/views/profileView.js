@@ -1,7 +1,7 @@
 import { apiService } from "../services/apiService.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
-
+import { eventListeners } from "../utils/global.js"
 export class profileView extends HTMLElement
 {
     constructor(){
@@ -11,11 +11,11 @@ export class profileView extends HTMLElement
     {
         this.innerHTML = profileTemplate.layout()
         //here to fetch for the profile infos
-        console.log('im in profile view')
-        const response = await apiService.profile.getProfileInfos()
-        
-        const [username, profile_pic_url] = response
+        // const response = await apiService.profile.getProfileInfos()
+        // const [username, profile_pic_url] = response
 
+        const profile_pic_url = '../asse.jpeg'
+        
         this.addProfile(profile_pic_url)
         this.gameHistory()
         this.friends() // still need to make this one responsive.

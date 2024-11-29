@@ -6,15 +6,18 @@ import '../views/gameView.js'
 
 import { eventHandlers } from '../utils/eventHandlers.js'
 import { ROUTES } from '../constants/routes.js'
+import { eventListeners } from '../utils/global.js'
 
 const router = {
     init : () => 
     {
         const anchors = document.querySelectorAll('.static')
+        const searchInput = document.getElementById('search-input')
         const path = window.location.pathname
 
         eventListeners.setAllByType(anchors, 'click')
-        eventListeners.on(window, 'popstate', () => eventHandlers.router.popstateHandler)
+        eventListeners.on(window, 'popstate', eventHandlers.router.popstateHandler)
+        eventListeners.on(searchInput, 'focus', eventHandlers.router.searchHandler)
       
         router.navigateTo(path, false) // route to the view i want, normally it should be profile
     },
@@ -31,7 +34,6 @@ const router = {
         const main = document.getElementById('main')
         const app = document.getElementById('app')
 
-        console.log(path)
         let mainContent = document.createElement(ROUTES.get(path))
         mainContent.settings = 'hello'
 
