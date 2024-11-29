@@ -6,14 +6,14 @@ export class profileView extends HTMLElement
 {
     constructor(){
         super()
+        //initialize which type of element we are talking about
     }
     async connectedCallback() 
     {
+        const id = this.dataset.options
         this.innerHTML = profileTemplate.layout()
+        console.log('value in connected : ', id)
         //here to fetch for the profile infos
-        // const response = await apiService.profile.getProfileInfos()
-        // const [username, profile_pic_url] = response
-
         const profile_pic_url = '../asse.jpeg'
         
         this.addProfile(profile_pic_url)

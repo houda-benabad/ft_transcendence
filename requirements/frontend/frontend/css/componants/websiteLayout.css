@@ -20,7 +20,7 @@
         }
         input:focus
         {
-            border: solid 1px var(--secondary);
+            border: solid 3px var(--secondary);
         }
         .iconify
         {
@@ -40,14 +40,27 @@
             border: solid 1px var(--secondary);
             border-radius: 12px;
             display: none;
-            #search-item
+            .search-item
             {
-                padding: 15px 0px 15px 15px;
+                padding: 5px 0px 5px 10px;
                 border-radius: 12px;
                 cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 7px;
                 &:hover
                 {
                     background-color: var(--secondary2-hover);
+                }
+                img
+                {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                }
+                img,p
+                {
+                    pointer-events: none;
                 }
             }
             #no-result

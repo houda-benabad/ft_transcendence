@@ -23,20 +23,27 @@ const router = {
     },
     navigateTo : (path, addTohistory=true) =>
     {
+        let options = null
+
         if(addTohistory)
             history.pushState({path}, {}, path)
-
-        router.handleRoute(path)
+        if (path.includes('id='))
+            [path, options] = path.split('/id=')
+        console.log(path)
+        router.handleRoute(path, options)
     },
-    handleRoute : (path) => 
+    handleRoute : (path, options) => 
     {
         //attention with the event listener
         const main = document.getElementById('main')
         const app = document.getElementById('app')
 
         let mainContent = document.createElement(ROUTES.get(path))
-        mainContent.settings = 'hello'
 
+        if (options)
+            mainContent.dataset.options = options
+        else
+            mainContent.dataset.options = ''
         if (path === './game')
             app.replaceChildren(mainContent)
         else
