@@ -8,16 +8,16 @@ export const profileTemplate  =
             <div class="friends-box"></div>`
         )
     },
-    profileBox(profile_pic_url)
+    profileBox(db)
     {
         return (`
             <div id="box">
             <div id="profile-box1-top">
                 <div id="profile-box1-top1">
-                    <img src="${profile_pic_url}">
+                    <img src="${db.profilePic}">
                     <div id="profile-box1-top-id">
-                        <h2 id="profile-box1-top-username">eva luna</h2>
-                        <p class="status profile-box1-box-text">online</p>
+                        <h2 id="profile-box1-top-username">${db.username}</h2>
+                        <p class="status profile-box1-box-text">${db.status}</p>
                     </div>
                 </div>
                 <div class="anchor-box square">
@@ -35,87 +35,61 @@ export const profileTemplate  =
             </div>
             <div id="profile-box1-bottom">
                 <div>
-                    <p class="profile-box1-box-text">Level</p>
-                    <p class="profile-box1-bottom-data">67</p>
+                    <p class="profile-box1-box-text">total Points</p>
+                    <p class="profile-box1-bottom-data">${db.totalPoints}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
-                    <p class="profile-box1-box-text">totalGames</p>
-                    <p class="profile-box1-bottom-data">1000</p>
+                    <p class="profile-box1-box-text">total Games</p>
+                    <p class="profile-box1-bottom-data">${db.totalGames}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
                     <p class="profile-box1-box-text">friends</p>
-                    <p class="profile-box1-bottom-data">10</p>
+                    <p class="profile-box1-bottom-data">${db.friendsCount}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
                     <p class="profile-box1-box-text">Rank</p>
-                    <p class="profile-box1-bottom-data">10</p>
+                    <p class="profile-box1-bottom-data">${db.rank}</p>
                 </div>
             </div>
         </div>`)
     },
-    gameHistory()
+    gameHistory(db)
     {
-        return (`
-            <h3>Game History</h3>
-            <div id="table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>game type</th>
-                        <th>date/time</th>
-                        <th>points</th>
-                        <th>status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>tournament</td>
-                        <td>date here</td>
-                        <td>points gained</td>
-                        <td>win/lose</td>
-                    </tr>
-                    <tr>
-                        <td>tournament</td>
-                        <td>date here</td>
-                        <td>points gained</td>
-                        <td>win/lose</td>
-                    </tr>
-                    <tr>
-                        <td>tournament</td>
-                        <td>date here</td>
-                        <td>points gained</td>
-                        <td>win/lose</td>
-                    </tr>
-                    <tr>
-                        <td>tournament</td>
-                        <td>date here</td>
-                        <td>points gained</td>
-                        <td>win/lose</td>
-                    </tr>
-                    <tr>
-                        <td>tournament</td>
-                        <td>date here</td>
-                        <td>points gained</td>
-                        <td>win/lose</td>
-                    </tr>
-                    <tr>
-                        <td>tournament</td>
-                        <td>date here</td>
-                        <td>points gained</td>
-                        <td>win/lose</td>
-                    </tr>
-                    <tr>
-                        <td>tournament</td>
-                        <td>date here</td>
-                        <td>points gained</td>
-                        <td>win/lose</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>`)
+        let dynamicPart = ''
+
+        if (!db.length)
+            dynamicPart = `<tr><td colspan="4" id="no-data">no games played yet !!!</td></tr>`
+        db.forEach(e => {
+            console.log('im hiere')
+            dynamicPart += 
+            `<tr>
+                <td>${e.gameType}</td>
+                <td>${e.dateTime}</td>
+                <td>${e.gamePoints}</td>
+                <td>${e.gameStatus}</td>
+            </tr>
+            `
+        });
+
+        console.log('what is thi s , ', dynamicPart)
+        return `
+        <h3>Game History</h3>
+        <div id="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>game type</th>
+                    <th>date/time</th>
+                    <th>points</th>
+                    <th>status</th>
+                </tr>
+            </thead>
+            <tbody>
+            ${dynamicPart}
+            </tbody`        
     },
     friends()
     {

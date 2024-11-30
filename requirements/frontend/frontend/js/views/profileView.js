@@ -6,41 +6,189 @@ export class profileView extends HTMLElement
 {
     constructor(){
         super()
+        this.database = {
+            user_details :
+            {
+                id : 1,
+                username : 'pingy world',
+                profile_pic : '../../assets/componants/user.jpeg',
+                is_online : true
+            },
+            general_details :
+            {
+                friends_count : 1000,
+                total_games : 1200,
+                total_points : 1200,
+                rank : 1000,
+            },
+            game_history :
+            [
+                {
+                    game_type : 'multiplayer',
+                    data_time : '2024/12/01/12:00PM',
+                    points : 100,
+                    status : 'win'
+                },
+                {
+                    game_type : 'local',
+                    data_time : '2024/12/01/12:10PM',
+                    points : 100,
+                    status : 'win'
+                },
+                {
+                    game_type : 'multiplayer',
+                    data_time : '2024/12/01/10:00AM',
+                    points : 0,
+                    status : 'lose'
+                },
+                {
+                    game_type : 'multiplayer',
+                    data_time : '2024/12/01/10:00AM',
+                    points : 0,
+                    status : 'lose'
+                },
+                {
+                    game_type : 'multiplayer',
+                    data_time : '2024/12/01/10:00AM',
+                    points : 0,
+                    status : 'lose'
+                },
+                
+            ],
+            friends :
+            [
+                {
+                    id: 1,
+                    username: 'hind',
+                    profile_pic : './image.jpeg',
+                    is_online : true
+                },
+                {
+                    id: 3,
+                    username: 'hind',
+                    profile_pic : './image.jpeg',
+                    is_online : true
+                },
+                {
+                    id: 4,
+                    username: 'hind',
+                    profile_pic : './image.jpeg',
+                    is_online : true
+                },
+                {
+                    id: 10,
+                    username: 'hind',
+                    profile_pic : './image.jpeg',
+                    is_online : true
+                },
+                {
+                    id: 2,
+                    username: 'hind',
+                    profile_pic : './image.jpeg',
+                    is_online : true
+                }
+            ],
+            requests :
+            [
+                {
+                    request_id : 10,
+                    from_user : {
+                        id : 10,
+                        username: 'houda',
+                        profile_pic : './image.jpeg',
+                        is_online : true 
+                    }
+                },
+                {
+                    request_id : 10,
+                    from_user : {
+                        id : 10,
+                        username: 'houda',
+                        profile_pic : './image.jpeg',
+                        is_online : true 
+                    }
+                },
+                {
+                    request_id : 10,
+                    from_user : {
+                        id : 10,
+                        username: 'houda',
+                        profile_pic : './image.jpeg',
+                        is_online : true 
+                    }
+                }
+            ]
+        }
         //initialize which type of element we are talking about
     }
     async connectedCallback() 
     {
-        this.innerHTML = profileTemplate.layout()
+        // const identifier = this.dataset.options
+        // this.database = await apiService.user.getUserInfos(identifier) //normally it should be here, and it should be null in the constructor but .
 
-        const id = this.dataset.options
-        const response = apiService.user.getUserInfos(id)
-        console.log('identifier : =>.', id)
-        //here to fetch for the profile infos
-        const profile_pic_url = '../asse.jpeg'
+        this.innerHTML = profileTemplate.layout()
         
-        this.addProfile(profile_pic_url)
+        this.addProfile()
         this.gameHistory()
-        this.friends() // still need to make this one responsive.
+        // this.friends() // still need to make this one responsive.
     }
-    addProfile(profile_pic_url)
+    addProfile()
     {
         const profileBox = document.getElementById('profile-box1')
-    
-        profileBox.innerHTML = profileTemplate.profileBox(profile_pic_url)
+        const profileDb = this.extractProfileDb()
+        
+        profileBox.innerHTML = profileTemplate.profileBox(profileDb)
         animateProgressBar()
         eventListeners.on(window, 'resize', () => animateProgressBar())    
     }
     gameHistory()
     {
         const gameHistory = document.querySelector('.table-box')
+        const gameHistoryDb = this.extractGameHistoryDb()
 
-        gameHistory.innerHTML = profileTemplate.gameHistory()
+        gameHistory.innerHTML = profileTemplate.gameHistory(gameHistoryDb)
     }
     friends()
     {
         const friends = document.querySelector('.friends-box')
 
         friends.innerHTML = profileTemplate.friends()
+    }
+    extractProfileDb()
+    {
+        const {
+            user_details : { id, username, profile_pic, is_online},
+            general_details : {
+                friends_count = 0,
+                total_games = 0,
+                total_points = 0,
+                rank = 0,
+            }
+        } = this.database
+
+        return ({
+            userId : id,
+            username,
+            profilePic : profile_pic,
+            status : is_online ? 'online' : 'offline',
+            friendsCount : friends_count,
+            totalGames : total_games,
+            totalPoints : total_points,
+            rank,
+        })
+    }
+    extractGameHistoryDb()
+    {
+        const { game_history } = this.database // would game history be sent to me empty or not sent by hind - -
+
+        return game_history.map(game => (
+            {
+                gameType : game.game_type,
+                dateTime : game.data_time,
+                gamePoints : game.points,
+                gameStatus : game.status
+            })
+        )
     }
 }
 customElements.define('profile-view', profileView) 

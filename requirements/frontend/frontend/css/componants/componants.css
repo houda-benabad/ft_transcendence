@@ -184,7 +184,15 @@ form {
             {
               font-size: 0.7rem;
               border-bottom: 1px solid rgba(255,255,255, 0.1);
-          }
+
+            }
+            #no-data
+            {
+              text-align: center;
+              padding: 30px;
+              border-bottom: none;
+              font-size: 1rem;
+            }
           
           td[class="message-info"]
           {
