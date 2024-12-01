@@ -1,24 +1,21 @@
-from rest_framework import generics
-from .serializers import otherUserSerializer, BasicOtherUserSerializer 
-from Profiles.models import Profile
 
-class OtherUserDetailAPIView(generics.RetrieveAPIView):    #profile
-    queryset = Profile.objects.all()
-    serializer_class = otherUserSerializer
-    lookup_field = 'user__id'
+from rest_framework.views import ApiView
+from . import mixins
 
-other_user_profile_detail_view = OtherUserDetailAPIView.as_view()
+class	SendFriendshipRequest(mixins.SendFriendshipRequestMixin, ApiView):
+    def	post(self, request, *args, **kwargs):
+        return self.send_request(request, *args, **kwargs)
 
+class	CancelFriendshipRequest(mixins.CancelFriendshipRequestMixin, ApiView):
+    def	delete(self, request, *args, **kwargs):
+        return self.cancel_request(request, *args, **kwargs)
+    
+class	AcceptFriendshipRequest(mixins.AcceptRequestMixin, ApiView):
+    
+    def post(self, request, *args, **kwargs):
+        return self.accept_request(request, *args, **kwargs)
 
-class BasicOtherUserDetailAPIView(generics.RetrieveAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = BasicOtherUserSerializer
-    lookup_field = 'user__id'
+class	RejectFriendshipRequest(mixins.RejectRequestMixin, ApiView):
 
-other_user_basic_profile_detail_view = BasicOtherUserDetailAPIView.as_view()
-
-class BasicOtherUserListAPIView(generics.ListAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = BasicOtherUserSerializer
-
-other_user_basic_profile_list_view = BasicOtherUserListAPIView.as_view()
+    def	patch(self, request, *args, **kwargs):
+        return self.reject_request(request, *args, **kwargs)
