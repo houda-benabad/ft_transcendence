@@ -48,11 +48,13 @@ export const apiService =
                     token.token = value // hihi the problem with naming
                     resolve (true)
                 }
+                else if (url.includes(ENDPOINTS.PROFILE))
+                    resolve(responseBody)
                 else
                     resolve(entries)
                 return ;
             }
-            const message = value[0]
+            const message = value[0] // do not know if this is a clean way to do it
             await modalService.show(message)
         }
         catch(error)
