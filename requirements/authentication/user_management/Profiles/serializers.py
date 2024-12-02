@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Profile#, Friendship
 from django.core.validators import validate_image_file_extension
 from friendship.models import Friend
-from friends.serializers import FriendshipRequestSerializer
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
@@ -33,11 +32,15 @@ class DetailedUserProfileSerializer(serializers.Serializer):
     
     def get_friends(self, obj):
         friends_qs = Friend.objects.friends(obj.user)
-        return UserProfileSerializer(friends_qs, many=True, context=self.context).data
+        friends_profiles_qs = Profile.objects.filter(user__in=friends_qs)
+        return UserProfileSerializer(friends_profiles_qs, many=True, context=self.context).data
     
     def get_requests(self, obj):
+        
+        from friends.serializers import FriendshipRequestSerializer
+
         requests_qs = Friend.objects.requests(obj.user)
-        return FriendshipRequestSerializer(requests_qs, many=True, context=self.context)
+        return FriendshipRequestSerializer(requests_qs, many=True, context=self.context).data
 
 
 
