@@ -6,6 +6,7 @@ from Profiles.models import Profile
 from django.http import JsonResponse
 from rest_framework.response import Response
 import urllib
+from rest_framework.views import APIView
 
 UID= "u-s4t2ud-4e0040e091261200ad3133c430908cc0f4fa293d4c3b73e39819835cf81d5de5"
 SECRET = "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"
@@ -18,11 +19,11 @@ def intraLogin(request):
     params = {
         "client_id": UID,
         "redirect_uri": redirectUri,
-        "response_type": "code"
+        "response_type": "code",
+        "scope": "public"
     }
     authUrl = intraAuthUrl + '?' + urllib.parse.urlencode(params)
     return redirect(authUrl)
-        
 
 def intraLoginRedirect(request):
     code=request.GET.get('code')

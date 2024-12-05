@@ -1,11 +1,9 @@
 from rest_framework import generics
-# from rest_framework import permissions
 from .models import Profile
-from .serializers import UserProfileSerializer , DetailedUserProfileSerializer
-#, OtherUserProfileSerializer, DetailedotherUserProfileSerializer
+from .serializers import UserProfileSerializer , DetailedUserProfileSerializer, OtherUserProfileSerializer, DetailedotherUserProfileSerializer
 
 
-class ProfileDetailAPIView(generics.RetrieveAPIView):    #profile
+class ProfileDetailAPIView(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
     serializer_class = DetailedUserProfileSerializer
 
@@ -21,25 +19,10 @@ class ProfileListAPIView(generics.ListAPIView):
 Profile_list_view = ProfileListAPIView.as_view()
 
 
+class OtherUserDetailAPIView(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = DetailedotherUserProfileSerializer
+    lookup_field = 'user__id'
 
+other_user_profile_detail_view = OtherUserDetailAPIView.as_view()
 
-# class OtherUserDetailAPIView(generics.RetrieveAPIView):    #profile
-#     queryset = Profile.objects.all()
-#     serializer_class = DetailedotherUserProfileSerializer
-#     lookup_field = 'user__id'
-
-# other_user_profile_detail_view = OtherUserDetailAPIView.as_view()
-
-
-# class BasicOtherUserDetailAPIView(generics.RetrieveAPIView):
-#     queryset = Profile.objects.all()
-#     serializer_class = OtherUserProfileSerializer
-#     lookup_field = 'user__id'
-
-# other_user_basic_profile_detail_view = BasicOtherUserDetailAPIView.as_view()
-
-# class BasicOtherUserListAPIView(generics.ListAPIView):
-#     queryset = Profile.objects.all()
-#     serializer_class = OtherUserProfileSerializer
-
-# other_user_basic_profile_list_view = BasicOtherUserListAPIView.as_view()

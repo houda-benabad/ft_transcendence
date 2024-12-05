@@ -4,12 +4,11 @@ from friendship.exceptions import AlreadyFriendsError, AlreadyExistsError
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
-from .permissions import RequestReceiverPermission
 
 class	SendFriendshipRequestMixin:
 
     def send_request(self, request, to_user_id):
-
+ 
         try:
             to_user = User.objects.get(id=to_user_id)
             Friend.objects.add_friend(request.user, to_user)
@@ -31,44 +30,42 @@ class	CancelFriendshipRequestMixin:
             friendship_request = FriendshipRequest.objects.get(from_user=request.user, to_user=to_user)
             friendship_request.cancel()
 
-        except User.DoesNotExist as e:
-            return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
-        except FriendshipRequest.DoesNotExist as e:
+        except (User.DoesNotExist, FriendshipRequest.DoesNotExist) as e:
             return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class	AcceptRequestMixin(RequestReceiverPermission):
+class	AcceptRequestMixin:
 
-    def accept_request(self, request, request_id):
+    def accept_request(self, request, from_user_id):
         
         try:
-            friendship_request = FriendshipRequest.objects.get(id=request_id)
-            if not self.has_permission(request, friendship_request.to_user):
-                return Response({"detail": "you do not have permission to accept this friendship request"}, status=status.HTTP_403_FORBIDDEN) #
+            from_user = User.objects.get(id=from_user_id)
+            friendship_request = FriendshipRequest.objects.get(from_user=from_user, to_user=request.user)
             friendship_request.accept()
 
-        except FriendshipRequest.DoesNotExist as e:
+        except (User.DoesNotExis, FriendshipRequest.DoesNotExist) as e:
             return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
 
         return Response({"message": "Friendship request was accepted."}, status=status.HTTP_201_CREATED)
 
 
-class	RejectRequestMixin(RequestReceiverPermission):
+class	RejectRequestMixin:
 
-    def reject_request(self, request, request_id):
+    def reject_request(self, request, from_user_id):
         
         try:
-            friendship_request = FriendshipRequest.objects.get(id=request_id)
-            if not self.has_permission(request, friendship_request.to_user):
-                return Response({"detail": "you do not have permission to reject this friendship request"}, status=status.HTTP_403_FORBIDDEN) //
+            from_user = User.objects.get(id=from_user_id)
+            friendship_request = FriendshipRequest.objects.get(from_user=from_user, to_user=request.user)
             friendship_request.reject()
+            friendship_request.delete()
             
-        except FriendshipRequest.DoesNotExist as e:
+        except (User.DoesNotExis, FriendshipRequest.DoesNotExist) as e:
             return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
 
         return Response({"message": "Friendship request was rejected."}, status=status.HTTP_204_NO_CONTENT)
+
 
 class	RemoveFriendMixin:
 
@@ -84,6 +81,3 @@ class	RemoveFriendMixin:
             return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-# the rejected requests since weren't deleted still appear in the requests lists of the user

@@ -44,7 +44,8 @@ PACKAGES = [
     'rest_framework.authtoken',
     'djoser',
     'corsheaders',
-    'friendship'
+    'friendship',
+    'drf_yasg'
 ]
 
 APPS_ADDED = [
@@ -162,7 +163,7 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer',
+        'user_create': 'accounts.serializers.UserCreateSerializer'
     },
 }
 
