@@ -50,7 +50,7 @@ class   IntraCallback(APIView):
         try:
             access_token = self.exchange_code(request, code)
             user_data = self.get_user_data(access_token)
-            intraUser = User.objects.get_or_create(username=user_data["username"])
+            intraUser = User.objects.get_or_create(username=user_data["username"]) # check case where the same username is used in standard authentication
             token = Token.objects.get_or_create(user=intraUser[0])
             Profile.objects.get_or_create(user=intraUser[0], image_url = user_data["image_url"])
             
@@ -75,15 +75,15 @@ class   IntraCallback(APIView):
         
         try:
             response = requests.post(settings.INTRA_TOKEN_URI, data=data, headers=headers)
-            if response.status_code != 200:
+            if response.status_code != status.HTTP_200_OK:
                 raise OAuthError("code exchange with access token failed", response.status_code)
             credentials = response.json()
             access_token = credentials['access_token']
             if not access_token:
-                raise OAuthError('No access token in response', 401)
+                raise OAuthError('No access token in response', status.HTTP_401_UNAUTHORIZED)
         
         except requests.exceptions.RequestException as e:
-            raise OAuthError(str(e), 503)
+            raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
         
         return access_token
         
@@ -96,7 +96,7 @@ class   IntraCallback(APIView):
         
         try:
             response = requests.get(settings.USER_INFO_URI, headers=headers)
-            if response.status_code != 200:
+            if response.status_code != status.HTTP_200_OK:
                 raise OAuthError("getting user info failed", response.status_code)
             user_info = response.json()
             data = {
@@ -105,7 +105,7 @@ class   IntraCallback(APIView):
             }
         
         except requests.exceptions.RequestException as e:
-            raise OAuthError(str(e), 503)
+            raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
         
         return data
 
