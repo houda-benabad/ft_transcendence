@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap'); */
 @import './views/sign.css';
 @import './views/home.css';
 @import './views/profile.css';
@@ -22,6 +22,7 @@
     --secondary : #8056DE;
     --secondary-hover : #6A38DC;
     --secondary2 : #190B39;
+    --secondary3: #2A1260;
     --secondary2-hover : #3A1A83;
     --input-field : #0C0B2C;
     --border : rgba(255,255,255, 0.2);

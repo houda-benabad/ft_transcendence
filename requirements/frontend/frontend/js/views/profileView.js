@@ -130,7 +130,7 @@ export class profileView extends HTMLElement
         
         this.addProfile()
         this.gameHistory()
-        // this.friends() // still need to make this one responsive.
+        this.addFriends()
     }
     addProfile()
     {
@@ -148,11 +148,35 @@ export class profileView extends HTMLElement
 
         gameHistory.innerHTML = profileTemplate.gameHistory(gameHistoryDb)
     }
-    friends()
+    addFriends()
     {
-        const friends = document.querySelector('.friends-box')
+        const friendsBox = document.querySelector('.friends-box')
 
-        friends.innerHTML = profileTemplate.friends()
+        // here im gonna be creating the element in which will be having a friends and requests
+        friendsBox.innerHTML =
+        `
+        <div id="choices">
+            <a class="selected choice-item" href="#" id="friends">friends</a>
+            <a href="#" id="requests" class="choice-item">requests</a>
+            <div id="sliding-line"></div>
+        </div>
+        `
+        const selected = document.querySelector('.selected')
+        const slidingLine = document.getElementById('sliding-line')
+
+        slidingLine.style.width = `${selected.offsetWidth}px`
+        slidingLine.style.transform = `translateX(${selected.offsetLeft}px)`
+
+        document.querySelectorAll('.choice-item').forEach(e => {
+            e.addEventListener('mouseenter', () => {
+                slidingLine.style.width = `${e.offsetWidth}px`
+                slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
+
+                document.querySelectorAll('.choice-item').forEach(e => e.classList.remove('selected'))
+
+                e.classList.add('selected')
+            })
+        })
     }
     extractProfileDb()
     {
