@@ -182,3 +182,9 @@ CORS_ALLOWED_ORIGINS = ["https://localhost:443"]#, "https://api.intra.42.fr"]
 # ]
     
 APPEND_SLASH = True
+
+UID= os.environ.get('UID')
+SECRET = os.environ.get('SECRET')
+INTRA_AUTH_URL = os.environ.get('INTRA_AUTH_URL')
+INTRA_TOKEN_URI = os.environ.get('INTRA_TOKEN_URI')
+USER_INFO_URI = os.environ.get('USER_INFO_URI')
