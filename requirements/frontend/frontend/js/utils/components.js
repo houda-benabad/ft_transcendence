@@ -1,5 +1,5 @@
-// import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
-// import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js'
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
+import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js'
 import { COLORS, DIMENSION, POSITION, BACKGROUND, TEXTURE, MULTIPLAYERPOSITION } from "../constants/components.js"
 import { MODE } from '../constants/engine.js'
 import { PLAYERS } from '../constants/logic.js'

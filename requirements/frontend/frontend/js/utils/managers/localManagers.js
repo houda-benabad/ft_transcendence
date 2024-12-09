@@ -1,4 +1,4 @@
-// import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { MODE, WORLD } from "../../constants/engine.js"
 import physicsManager from "./physicsManager.js"
 import inputManager from "../../utils/managers/inputManager.js"
