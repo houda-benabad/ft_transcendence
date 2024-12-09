@@ -9,10 +9,9 @@ export class profileView extends HTMLElement
         this.database = {
             user_details :
             {
-                id : 1,
+                user_id : 1,
                 username : 'pingy world',
-                profile_pic : '../../assets/componants/user.jpeg',
-                is_online : true
+                profile_pic_url : '../../assets/componants/user.jpeg',
             },
             general_details :
             {
@@ -58,67 +57,125 @@ export class profileView extends HTMLElement
             friends :
             [
                 {
-                    id: 1,
+                    user_id: 1,
                     username: 'hind',
-                    profile_pic : './image.jpeg',
-                    is_online : true
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
                 },
                 {
-                    id: 3,
+                    user_id: 3,
                     username: 'hind',
-                    profile_pic : './image.jpeg',
-                    is_online : true
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
                 },
                 {
-                    id: 4,
+                    user_id: 4,
                     username: 'hind',
-                    profile_pic : './image.jpeg',
-                    is_online : true
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
                 },
                 {
-                    id: 10,
+                    user_id: 10,
                     username: 'hind',
-                    profile_pic : './image.jpeg',
-                    is_online : true
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
                 },
                 {
-                    id: 2,
+                    user_id: 2,
                     username: 'hind',
-                    profile_pic : './image.jpeg',
-                    is_online : true
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : '../../assets/componants/user.jpeg',
+                    remove_friend : 'a url sent by hind'
                 }
             ],
             requests :
             [
                 {
-                    request_id : 10,
+                    id : 10,
                     from_user : {
-                        id : 10,
+                        user_id : 10,
                         username: 'houda',
-                        profile_pic : './image.jpeg',
-                        is_online : true 
-                    }
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                    },
+                    accept_request : 'a url sent by hind',
+                    reject_request : 'a url sent by hind'
                 },
                 {
-                    request_id : 10,
+                    id : 10,
                     from_user : {
-                        id : 10,
+                        user_id : 10,
                         username: 'houda',
-                        profile_pic : './image.jpeg',
-                        is_online : true 
-                    }
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                    },
+                    accept_request : 'a url sent by hind',
+                    reject_request : 'a url sent by hind'
                 },
                 {
-                    request_id : 10,
+                    id : 10,
                     from_user : {
-                        id : 10,
+                        user_id : 10,
                         username: 'houda',
-                        profile_pic : './image.jpeg',
-                        is_online : true 
-                    }
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                    },
+                    accept_request : 'a url sent by hind',
+                    reject_request : 'a url sent by hind'
                 }
             ]
         }
+        this.selectedChoice = null
         //initialize which type of element we are talking about
     }
     async connectedCallback() 
@@ -130,7 +187,8 @@ export class profileView extends HTMLElement
         
         this.addProfile()
         this.gameHistory()
-        this.addFriends()
+        this.addFriendsEvent()
+        this.addFriendsBox()
     }
     addProfile()
     {
@@ -148,40 +206,97 @@ export class profileView extends HTMLElement
 
         gameHistory.innerHTML = profileTemplate.gameHistory(gameHistoryDb)
     }
-    addFriends()
+    addFriendsEvent()
     {
         const friendsBox = document.querySelector('.friends-box')
 
         // here im gonna be creating the element in which will be having a friends and requests
         friendsBox.innerHTML =
         `
-        <div id="choices">
-            <a class="selected choice-item" href="#" id="friends">friends</a>
-            <a href="#" id="requests" class="choice-item">requests</a>
-            <div id="sliding-line"></div>
+        <div id="choices-container">
+            <div id="choices">
+                <a class="selected-choice choice-item" href="#" id="friends">friends</a>
+                <a href="#" id="requests" class="choice-item">requests</a>
+                <div id="sliding-line"></div>
+            </div>
         </div>
+        <div id="friends-box-container"></div>
         `
-        const selected = document.querySelector('.selected')
+        this.selectedChoice = document.querySelector('.selected-choice')
         const slidingLine = document.getElementById('sliding-line')
 
-        slidingLine.style.width = `${selected.offsetWidth}px`
-        slidingLine.style.transform = `translateX(${selected.offsetLeft}px)`
+        // initial value
+        slidingLine.style.width = `${this.selectedChoice.offsetWidth}px`
+        slidingLine.style.transform = `translateX(${this.selectedChoice.offsetLeft}px)`
 
         document.querySelectorAll('.choice-item').forEach(e => {
-            e.addEventListener('mouseenter', () => {
-                slidingLine.style.width = `${e.offsetWidth}px`
+            e.addEventListener('mouseover', (event) => {
+                slidingLine.style.width = `${e.offsetWidth}px` // do i need this .
+                slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
+                e.classList.add('hoovered')
+                this.selectedChoice.classList.remove('selected-choice')
+            })
+            e.addEventListener('mouseout', (event) => {
+                slidingLine.style.width = `${this.selectedChoice.offsetWidth}px` // do i need this .
+                slidingLine.style.transform = `translateX(${this.selectedChoice.offsetLeft}px)`
+                e.classList.remove('hoovered')
+                this.selectedChoice.classList.add('selected-choice')
+            })
+            e.addEventListener('click', (event) => {
+                console.log('normally shouldnt be the event preveneted ')
+                event.preventDefault()
+
+                slidingLine.style.width = `${e.offsetWidth}px` // do i need this .
                 slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
 
-                document.querySelectorAll('.choice-item').forEach(e => e.classList.remove('selected'))
-
-                e.classList.add('selected')
+                this.selectedChoice.classList.remove('selected-choice')
+                e.classList.add('selected-choice')
+                this.selectedChoice = e
+                this.addFriendsBox()
             })
         })
+    }
+    addFriendsBox()
+    {
+        const friendsBox = document.querySelector('.friends-box')
+        const friendsDb = this.extractFriendsDb(this.selectedChoice.id)
+
+        profileTemplate.friendsBox(friendsDb)
+    }
+    extractFriendsDb(id)
+    {
+        const {friends, requests} = this.database
+
+        if (id === 'friends')
+        {
+            return friends.map(friend => ({
+                userId : friend.user_id,
+                username : friend.username,
+                profilePic : friend.profile_pic_url,
+                removeFriend : friend.remove_friend,
+                other : 'online', // gonna see about this
+                firstIcon : 'eva:person-remove-outline',
+                secondIcon : 'solar:gamepad-minimalistic-linear'
+            }))
+        }
+
+        return requests.map(request => ({
+            requestId : request.id,
+            userId : request.from_user.user_id,
+            username : request.from_user.username,
+            profilePic : request.from_user.profile_pic_url,
+            acceptRequest : request.accept_request,
+            rejectRequest : request.reject_request,
+            other : '2 min ago',
+            firstIcon : 'dashicons:no-alt',
+            secondIcon : 'dashicons:yes'
+        }))
+    
     }
     extractProfileDb()
     {
         const {
-            user_details : { id, username, profile_pic, is_online},
+            user_details : { user_id, username, profile_pic_url},
             general_details : {
                 friends_count = 0,
                 total_games = 0,
@@ -191,10 +306,10 @@ export class profileView extends HTMLElement
         } = this.database
 
         return ({
-            userId : id,
+            userId : user_id,
             username,
-            profilePic : profile_pic,
-            status : is_online ? 'online' : 'offline',
+            profilePic : profile_pic_url,
+            status  : 'online', // we gotta see how to do this
             friendsCount : friends_count,
             totalGames : total_games,
             totalPoints : total_points,

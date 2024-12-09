@@ -1,0 +1,67 @@
+friends :
+            [
+                {
+                    user_id: 1,
+                    username: 'hind',
+                    profile_pic_url : './image.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 3,
+                    username: 'hind',
+                    profile_pic_url : './image.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 4,
+                    username: 'hind',
+                    profile_pic_url : './image.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 10,
+                    username: 'hind',
+                    profile_pic_url : './image.jpeg',
+                    remove_friend : 'a url sent by hind'
+                },
+                {
+                    user_id: 2,
+                    username: 'hind',
+                    profile_pic_url : './image.jpeg',
+                    remove_friend : 'a url sent by hind'
+                }
+            ],
+            requests :
+            [
+                {
+                    id : 10,
+                    from_user : {
+                        user_id : 10,
+                        username: 'houda',
+                        profile_pic_url : './image.jpeg',
+                    },
+                    accept_request : 'a url sent by hind',
+                    reject_request : 'a url sent by hind'
+                },
+                {
+                    id : 10,
+                    from_user : {
+                        user_id : 10,
+                        username: 'houda',
+                        profile_pic_url : './image.jpeg',
+                    },
+                    accept_request : 'a url sent by hind',
+                    reject_request : 'a url sent by hind'
+                },
+                {
+                    id : 10,
+                    from_user : {
+                        user_id : 10,
+                        username: 'houda',
+                        profile_pic_url : './image.jpeg',
+                    },
+                    accept_request : 'a url sent by hind',
+                    reject_request : 'a url sent by hind'
+                }
+            ]
+        }

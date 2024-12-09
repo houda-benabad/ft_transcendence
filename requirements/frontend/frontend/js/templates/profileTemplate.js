@@ -89,4 +89,28 @@ export const profileTemplate  =
             ${dynamicPart}
             </tbody`        
     },
+    friendsBox(db)
+    {
+        let dynamicPart = document.getElementById('friends-box-container')
+
+        //good idea to use here a document fragment and replacechildren
+        dynamicPart.innerHTML = ''
+        
+        db.forEach(e => {
+            dynamicPart.innerHTML +=
+            `
+                <div class="friends-box-item">
+                    <img src='${e.profilePic}'>
+                    <div class="user-infos">
+                        <p class="username">${e.username}</p>
+                        <p class="other">${e.other}</p>
+                    </div>
+                    <div class="icons">
+                        <a href="./play" ><i class="iconify first" data-icon="${e.firstIcon}" data-inline="false"></i></a>
+                        <a href="./remove" ><i class="iconify second" data-icon="${e.secondIcon}" data-inline="false"></i></a>
+                    </div>
+                </div>
+            `
+        })
+    }
 }
