@@ -8,6 +8,4 @@ class Profile(models.Model):
     avatar = models.ImageField(default='default.jpg', upload_to='avatars')
     image_url = models.URLField(blank=True)
 
-# class Friendship(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     friend = models.ForeignKey(User, on_delete= models.CASCADE)
+

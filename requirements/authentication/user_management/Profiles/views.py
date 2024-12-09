@@ -1,20 +1,28 @@
 from rest_framework import generics
-# from rest_framework import permissions
 from .models import Profile
-from .serializers import ProfileSerializer , BasicProfileSerializer 
+from .serializers import UserProfileSerializer , DetailedUserProfileSerializer, OtherUserProfileSerializer, DetailedotherUserProfileSerializer
 
 
-class ProfileDetailAPIView(generics.RetrieveAPIView):    #profile
+class ProfileDetailAPIView(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = DetailedUserProfileSerializer
 
     def get_object(self):
-        return self.get_queryset().get(user=self.request.user)
+        return self.request.user.profile
 
 profile_detail_view = ProfileDetailAPIView.as_view()
 
 class ProfileListAPIView(generics.ListAPIView):
     queryset = Profile.objects.all()
-    serializer_class = BasicProfileSerializer
+    serializer_class = UserProfileSerializer
 
 Profile_list_view = ProfileListAPIView.as_view()
+
+
+class OtherUserDetailAPIView(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = DetailedotherUserProfileSerializer
+    lookup_field = 'user__id'
+
+other_user_profile_detail_view = OtherUserDetailAPIView.as_view()
+

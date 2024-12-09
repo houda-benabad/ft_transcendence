@@ -17,13 +17,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
-
+schema_view = get_schema_view(
+    openapi.Info(title='My API', default_version='v1'),
+    public=True,
+    permission_classes=[permissions.AllowAny]  # Override authentication
+)
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('swagger/', schema_view.with_ui('swagger'), name='api_docs'),
     path('auth/', include('accounts.urls')),
     path('api/profiles/', include('Profiles.urls')),
-    path('api/profiles/', include('friends.urls'))
+    path('api/friendship/', include('friends.urls')),
 ]
 
 if settings.DEBUG:
