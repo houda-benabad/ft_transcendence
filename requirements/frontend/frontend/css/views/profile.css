@@ -48,7 +48,7 @@ profile-view
                 .selected-choice,.hoovered
                 {
                     color: var(--highlight);
-                    transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+                    transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
                     text-shadow:   0 0 10px var(--highlight),
                                 0 0 5px #ff00ff;
                 }
@@ -62,7 +62,7 @@ profile-view
                     background-color: var(--highlight);
     
                     box-shadow: 0px 0px 10px 2px var(--highlight);
-                    transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+                    transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
                 }
             }
         }
@@ -76,6 +76,12 @@ profile-view
             height : 530px; /* will see a solution for it later on*/
             width: 85%;
             overflow-y: auto;
+
+            > p {
+                text-align: center;
+                font-size: 1rem;
+                padding-top: 1vh;
+            }
             &::-webkit-scrollbar
             {
                 width: 15px;

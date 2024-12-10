@@ -113,6 +113,7 @@ export const profileTemplate  =
             iconsDiv.classList.add('icons')
             iconsDiv.innerHTML = ''
             e.icons.forEach((e, index) => {
+                console.log(e)
                 iconsDiv.innerHTML += ` <a href="./play" ><i class="iconify ${index === 0 ? 'first' : 'second'}" data-icon="${e}" data-inline="false"></i></a>`
             })
             friendBoxItem.appendChild(iconsDiv)
@@ -122,5 +123,3 @@ export const profileTemplate  =
         friendsBoxConatainer.replaceChildren(fragment)
     },
 }
-{/* <a href="./play" ><i class="iconify first" data-icon="${e.firstIcon}" data-inline="false"></i></a>
-<a href="./remove" ><i class="iconify second" data-icon="${e.secondIcon}" data-inline="false"></i></a> */}

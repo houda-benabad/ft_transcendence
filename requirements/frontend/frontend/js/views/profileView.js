@@ -22,6 +22,11 @@ export class profileView extends HTMLElement
                 total_points : 1200,
                 rank : 1000,
             },
+            relationship :
+            {
+                status : 'friend',
+                url : 'my urls that need to be save'
+            },
             game_history :
             [
                 {
@@ -253,15 +258,24 @@ export class profileView extends HTMLElement
                 this.selectedChoice.classList.add('selected-choice')
             })
             e.addEventListener('click', (event) => {
+
                 event.preventDefault()
-
-                slidingLine.style.width = `${e.offsetWidth}px` // do i need this .
+                
                 slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
-
                 this.selectedChoice.classList.remove('selected-choice')
                 e.classList.add('selected-choice')
                 this.selectedChoice = e
-                this.addFriendsBox()
+
+                const friendsDb = this.extractFriendsDb(this.selectedChoice)
+                const friendsBoxConatainer = document.getElementById('friends-box-container')
+
+                if (friendsDb.length === 0)
+                {
+                    const value = this.selectedChoice ? this.selectedChoice.id : 'friends'
+                    friendsBoxConatainer.innerHTML = `<p>there is no ${value} at the moment</p>`
+                    return ;
+                }
+                profileTemplate.friendsBox(friendsDb)
             })
         })
     }
@@ -287,30 +301,36 @@ export class profileView extends HTMLElement
             friendsBox.innerHTML = 
         `<h2>${this.userUsername}'s friends</h2>
             <div id="friends-box-container"></div>`
+
+        const friendsBoxConatainer = document.getElementById('friends-box-container')
+
+        if (friendsDb.length === 0)
+        {
+            const value = this.selectedChoice ? this.selectedChoice.id : 'friends'
+            friendsBoxConatainer.innerHTML = `<p>there is no ${value} at the moment</p>`
+            return ;
+        }
         profileTemplate.friendsBox(friendsDb)
     }
     extractFriendsDb(db=null)
     {
-        const {friends, requests = null} = this.database
+        const {friends, requests} = this.database
 
         if (db === null || db.id === 'friends')
         {
             return friends.map(friend => ({
                 userId : friend.user_details.user_id,
-                username : friend.user_details.username,
+                username : friend.relationship ? friend.user_details.username : 'Me',
                 profilePic : friend.user_details.profile_pic_url,
                 removeFriend : friend.user_details.remove_friend,
                 other : 'online',
                 icons : this.userType === 'me' ? [
                     'eva:person-remove-outline',
                     'solar:gamepad-minimalistic-linear'
-                ] : friend.relationship ? [
-                    friend.relationship.status === 'friends' ?
-                        'la:user-friends' : 'eva:person-add-outline'
-                ] : ['la:user-friends']
+                ] : friend.relationship ? [friend.relationship.status === 'friend' ?
+                    'la:user-friends' : 'eva:person-add-outline'] : ['la:user-friends']
             }))
         }
-
         return requests.map(request => ({
             requestId : request.id,
             userId : request.from_user.user_id,
@@ -320,8 +340,8 @@ export class profileView extends HTMLElement
             rejectRequest : request.reject_request,
             other : '2 min ago', // need to find a solution for this ..
             icons : [
-                'eva:person-remove-outline',
-                'solar:gamepad-minimalistic-linear'
+                'dashicons:no',
+                'dashicons:yes'
             ]
         }))
     
@@ -339,7 +359,7 @@ export class profileView extends HTMLElement
             relationship,
         } = this.database
 
-        this.userType = relationship ? relationship.status : 'me'
+        this.userType = relationship ? relationship.status : 'me' // where i would be in need of this
         this.userUsername = username
         return ({
             userId : user_id,
