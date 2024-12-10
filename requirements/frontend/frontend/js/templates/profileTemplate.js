@@ -21,7 +21,7 @@ export const profileTemplate  =
                     </div>
                 </div>
                 <div class="anchor-box square">
-                    <a href="./edit-profile"><i class="iconify" data-icon="mage:edit" data-inline="false"></i></a>
+                    <a href="./edit-profile"><i class="iconify" data-icon="${db.iconType}" data-inline="false"></i></a>
                 </div>
             </div>
             <div id="profile-box1-middle">
@@ -91,26 +91,36 @@ export const profileTemplate  =
     },
     friendsBox(db)
     {
-        let dynamicPart = document.getElementById('friends-box-container')
+        let friendsBoxConatainer = document.getElementById('friends-box-container')
+        let fragment = document.createDocumentFragment()
 
         //good idea to use here a document fragment and replacechildren
-        dynamicPart.innerHTML = ''
         
         db.forEach(e => {
-            dynamicPart.innerHTML +=
+            const friendBoxItem = document.createElement('div')
+
+            friendBoxItem.classList.add('friends-box-item')
+            friendBoxItem.innerHTML =
             `
-                <div class="friends-box-item">
-                    <img src='${e.profilePic}'>
-                    <div class="user-infos">
-                        <p class="username">${e.username}</p>
-                        <p class="other">${e.other}</p>
-                    </div>
-                    <div class="icons">
-                        <a href="./play" ><i class="iconify first" data-icon="${e.firstIcon}" data-inline="false"></i></a>
-                        <a href="./remove" ><i class="iconify second" data-icon="${e.secondIcon}" data-inline="false"></i></a>
-                    </div>
+                <img src='${e.profilePic}'>
+                <div class="user-infos">
+                    <p class="username">${e.username}</p>
+                    <p class="other">${e.other}</p>
                 </div>
             `
+            const iconsDiv = document.createElement('div')
+
+            iconsDiv.classList.add('icons')
+            iconsDiv.innerHTML = ''
+            e.icons.forEach((e, index) => {
+                iconsDiv.innerHTML += ` <a href="./play" ><i class="iconify ${index === 0 ? 'first' : 'second'}" data-icon="${e}" data-inline="false"></i></a>`
+            })
+            friendBoxItem.appendChild(iconsDiv)
+
+            fragment.appendChild(friendBoxItem)
         })
-    }
+        friendsBoxConatainer.replaceChildren(fragment)
+    },
 }
+{/* <a href="./play" ><i class="iconify first" data-icon="${e.firstIcon}" data-inline="false"></i></a>
+<a href="./remove" ><i class="iconify second" data-icon="${e.secondIcon}" data-inline="false"></i></a> */}

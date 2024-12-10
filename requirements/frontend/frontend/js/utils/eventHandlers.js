@@ -80,7 +80,10 @@ export const eventHandlers =
             const searchResults = document.getElementById('search-results')
             const app = document.getElementById('app')
 
-            const users = await apiService.user.getUserInfos()
+            // search batr azal search request query params     /api/endpoints?queryselector
+            //queryselector => header 
+            // const users = await apiService.user.getUserInfos() // gotta see the proper way to do it.
+            //gotta make this work later on
 
             eventListeners.on(event.target, 'input', (event) => eventHandlers.router.searchItemHandler(event, users))
             eventListeners.on(app, 'click', (event) => {
@@ -93,7 +96,6 @@ export const eventHandlers =
         },
         searchItemHandler(event, users)
         {
-
             // do not know if it would be proper to show the user as well.
             // console.log(JSON.stringify(users)) // i have in it two arrays, what is that 
             const searchResults = document.getElementById('search-results')

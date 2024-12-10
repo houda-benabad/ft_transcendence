@@ -4,6 +4,8 @@ import { animateProgressBar } from "../utils/animations.js"
 import { eventListeners } from "../utils/global.js"
 export class profileView extends HTMLElement
 {
+    //userdetails in friends in id 
+    // what about if its me would this element relationship not be there
     constructor(){
         super()
         this.database = {
@@ -57,137 +59,159 @@ export class profileView extends HTMLElement
             friends :
             [
                 {
-                    user_id: 1,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 3,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 4,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 10,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                },
-                {
-                    user_id: 2,
-                    username: 'hind',
-                    profile_pic_url : '../../assets/componants/user.jpeg',
-                    remove_friend : 'a url sent by hind'
-                }
-            ],
-            requests :
-            [
-                {
-                    id : 10,
-                    from_user : {
-                        user_id : 10,
-                        username: 'houda',
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
                         profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
                     },
-                    accept_request : 'a url sent by hind',
-                    reject_request : 'a url sent by hind'
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
                 },
                 {
-                    id : 10,
-                    from_user : {
-                        user_id : 10,
-                        username: 'houda',
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
                         profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
                     },
-                    accept_request : 'a url sent by hind',
-                    reject_request : 'a url sent by hind'
+                    relationship : null
                 },
                 {
-                    id : 10,
-                    from_user : {
-                        user_id : 10,
-                        username: 'houda',
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
                         profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
                     },
-                    accept_request : 'a url sent by hind',
-                    reject_request : 'a url sent by hind'
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
+                },
+                {
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
+                    },
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
+                },
+                {
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
+                    },
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
+                },
+                {
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
+                    },
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
+                },
+                {
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
+                    },
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
+                },
+                {
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
+                    },
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
+                },
+                {
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
+                    },
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
+                },
+                {
+                    user_details :
+                    {
+                        user_id: 1,
+                        username: 'hind',
+                        profile_pic_url : '../../assets/componants/user.jpeg',
+                        remove_friend : 'a url sent by hind'
+                    },
+                    relationship :
+                    {
+                        status: 'stranger',
+                        url : 'url to send request'
+                    }
                 }
             ]
         }
         this.selectedChoice = null
+        this.userType = null
+        this.userUsername = null
         //initialize which type of element we are talking about
     }
     async connectedCallback() 
     {
         // const identifier = this.dataset.options
+        const identifier = '2'
+
         // this.database = await apiService.user.getUserInfos(identifier) //normally it should be here, and it should be null in the constructor but .
 
         this.innerHTML = profileTemplate.layout()
         
         this.addProfile()
         this.gameHistory()
-        this.addFriendsEvent()
         this.addFriendsBox()
     }
     addProfile()
@@ -208,20 +232,6 @@ export class profileView extends HTMLElement
     }
     addFriendsEvent()
     {
-        const friendsBox = document.querySelector('.friends-box')
-
-        // here im gonna be creating the element in which will be having a friends and requests
-        friendsBox.innerHTML =
-        `
-        <div id="choices-container">
-            <div id="choices">
-                <a class="selected-choice choice-item" href="#" id="friends">friends</a>
-                <a href="#" id="requests" class="choice-item">requests</a>
-                <div id="sliding-line"></div>
-            </div>
-        </div>
-        <div id="friends-box-container"></div>
-        `
         this.selectedChoice = document.querySelector('.selected-choice')
         const slidingLine = document.getElementById('sliding-line')
 
@@ -243,7 +253,6 @@ export class profileView extends HTMLElement
                 this.selectedChoice.classList.add('selected-choice')
             })
             e.addEventListener('click', (event) => {
-                console.log('normally shouldnt be the event preveneted ')
                 event.preventDefault()
 
                 slidingLine.style.width = `${e.offsetWidth}px` // do i need this .
@@ -259,24 +268,46 @@ export class profileView extends HTMLElement
     addFriendsBox()
     {
         const friendsBox = document.querySelector('.friends-box')
-        const friendsDb = this.extractFriendsDb(this.selectedChoice.id)
+        const friendsDb = this.extractFriendsDb(this.selectedChoice)
 
+        if (this.userType === 'me')
+        {
+            friendsBox.innerHTML = `
+            <div id="choices-container">
+                <div id="choices">
+                    <a class="selected-choice choice-item" href="#" id="friends">friends</a>
+                    <a href="#" id="requests" class="choice-item">requests</a>
+                    <div id="sliding-line"></div>
+                </div>
+            </div>
+            <div id="friends-box-container"></div>`
+            this.addFriendsEvent()
+        }
+        else
+            friendsBox.innerHTML = 
+        `<h2>${this.userUsername}'s friends</h2>
+            <div id="friends-box-container"></div>`
         profileTemplate.friendsBox(friendsDb)
     }
-    extractFriendsDb(id)
+    extractFriendsDb(db=null)
     {
-        const {friends, requests} = this.database
+        const {friends, requests = null} = this.database
 
-        if (id === 'friends')
+        if (db === null || db.id === 'friends')
         {
             return friends.map(friend => ({
-                userId : friend.user_id,
-                username : friend.username,
-                profilePic : friend.profile_pic_url,
-                removeFriend : friend.remove_friend,
-                other : 'online', // gonna see about this
-                firstIcon : 'eva:person-remove-outline',
-                secondIcon : 'solar:gamepad-minimalistic-linear'
+                userId : friend.user_details.user_id,
+                username : friend.user_details.username,
+                profilePic : friend.user_details.profile_pic_url,
+                removeFriend : friend.user_details.remove_friend,
+                other : 'online',
+                icons : this.userType === 'me' ? [
+                    'eva:person-remove-outline',
+                    'solar:gamepad-minimalistic-linear'
+                ] : friend.relationship ? [
+                    friend.relationship.status === 'friends' ?
+                        'la:user-friends' : 'eva:person-add-outline'
+                ] : ['la:user-friends']
             }))
         }
 
@@ -287,9 +318,11 @@ export class profileView extends HTMLElement
             profilePic : request.from_user.profile_pic_url,
             acceptRequest : request.accept_request,
             rejectRequest : request.reject_request,
-            other : '2 min ago',
-            firstIcon : 'dashicons:no-alt',
-            secondIcon : 'dashicons:yes'
+            other : '2 min ago', // need to find a solution for this ..
+            icons : [
+                'eva:person-remove-outline',
+                'solar:gamepad-minimalistic-linear'
+            ]
         }))
     
     }
@@ -302,9 +335,12 @@ export class profileView extends HTMLElement
                 total_games = 0,
                 total_points = 0,
                 rank = 0,
-            }
+            },
+            relationship,
         } = this.database
 
+        this.userType = relationship ? relationship.status : 'me'
+        this.userUsername = username
         return ({
             userId : user_id,
             username,
@@ -314,6 +350,8 @@ export class profileView extends HTMLElement
             totalGames : total_games,
             totalPoints : total_points,
             rank,
+            iconType : relationship ? (relationship.status === 'friend' ? 'eva:person-remove-outline' : 'eva:person-add-outline') : 'mage:edit',
+            iconUrl: relationship ? (relationship.urls) : 'navigateTo settinnfs'
         })
     }
     extractGameHistoryDb()

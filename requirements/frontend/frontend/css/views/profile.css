@@ -26,6 +26,10 @@ profile-view
         grid-column: 2 / 4;
         height: 100%;
         /* overflow-y: hidden; */
+        h2
+        {
+            padding: 7% 0% 3% 5%;
+        }
         #choices-container
         {
             padding: 5% 10%;
@@ -35,7 +39,7 @@ profile-view
                 display: flex;
                 a {
                     padding: 3% 0%;
-                    font-size: 1.4rem;
+                    font-size: 1.2rem;
                     text-decoration: none;
                     color: var( --secondary3);
                     width: 100%;
@@ -69,7 +73,7 @@ profile-view
             flex-direction: column;
             gap: 10px;
 
-            height : 550px; /* will see a solution for it later on*/
+            height : 530px; /* will see a solution for it later on*/
             width: 85%;
             overflow-y: auto;
             &::-webkit-scrollbar
