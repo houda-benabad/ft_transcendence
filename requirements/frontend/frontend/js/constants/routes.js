@@ -1,5 +1,4 @@
 export const ROUTES = new Map([
-    ['/', 'profile-view'],
     ['./home', 'home-view'],
     ['./profile', 'profile-view'],
     ['./game-settings', 'game-settings-view'],

@@ -1,9 +1,4 @@
-me => check 
-other => request
-
-///////////////////
-
-this.database = {
+export const database = {
     user_details :
     {
         user_id : 1,
@@ -17,6 +12,11 @@ this.database = {
         total_points : 1200,
         rank : 1000,
     },
+    // relationship :
+    // {
+    //     status : 'stranger',
+    //     url : 'my urls that need to be save'
+    // },
     game_history :
     [
         {
@@ -188,58 +188,6 @@ this.database = {
                 status: 'stranger',
                 url : 'url to send request'
             }
-        }
-    ],
-    requests: [
-        {
-            id : 3,
-            from_user : {
-                user_id : 5,
-                username : 'hello',
-                profile_pic_url : '../../assets/componants/user.jpeg',
-            },
-            accept_request : 'url for the accept',
-            reject_request : 'url for the reject'
-        },
-        {
-            id : 3,
-            from_user : {
-                user_id : 5,
-                username : 'hello',
-                profile_pic_url : '../../assets/componants/user.jpeg',
-            },
-            accept_request : 'url for the accept',
-            reject_request : 'url for the reject'
-        },
-        {
-            id : 3,
-            from_user : {
-                user_id : 5,
-                username : 'hello',
-                profile_pic_url : '../../assets/componants/user.jpeg',
-            },
-            accept_request : 'url for the accept',
-            reject_request : 'url for the reject'
-        },
-        {
-            id : 3,
-            from_user : {
-                user_id : 5,
-                username : 'hello',
-                profile_pic_url : '../../assets/componants/user.jpeg',
-            },
-            accept_request : 'url for the accept',
-            reject_request : 'url for the reject'
-        },
-        {
-            id : 3,
-            from_user : {
-                user_id : 5,
-                username : 'hello',
-                profile_pic_url : '../../assets/componants/user.jpeg',
-            },
-            accept_request : 'url for the accept',
-            reject_request : 'url for the reject'
         }
     ]
 }
