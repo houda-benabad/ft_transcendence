@@ -145,11 +145,11 @@ export const eventHandlers =
     {
         async playGame(event)
         {
-            console.log( "Clicked" )
             const mode = event.target.dataset.mode
-
+            
             if (mode === 'local')
-            {
+                {
+                console.log( "Clicked" )
                 // generic
                 await router.navigateTo('./game-settings')
                 const gameSettings = await formService.game()
