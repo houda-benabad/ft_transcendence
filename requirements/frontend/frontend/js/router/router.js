@@ -13,7 +13,7 @@ const router = {
     {
         const anchors = document.querySelectorAll('.static')
         const searchInput = document.getElementById('search-input')
-        const path = window.location.pathname
+        const path = window.location.pathname  === '/' ? './profile' : window.location.pathname
 
         eventListeners.setAllByType(anchors, 'click')
         eventListeners.on(window, 'popstate', eventHandlers.router.popstateHandler)
@@ -23,30 +23,29 @@ const router = {
     },
     navigateTo : (path, addTohistory=true) =>
     {
-        let options = null
-
+        console.log(path)
         if(addTohistory)
             history.pushState({path}, {}, path)
-        if (path.includes('id='))
-            [path, options] = path.split('/id=')
-        router.handleRoute(path, options)
+       
+        const customElement = path.includes('./profile') ? ROUTES.get('./profile') : ROUTES.get(path)
+        const options = customElement === 'profile-view' ? ( path === './profile' ? 'me' :  path.replace('./profile/', '')) : null
+
+        router.handleRoute(customElement, options)
     },
-    handleRoute : (path, options) => 
+    handleRoute : (customElement, options) => 
     {
         //attention with the event listener
         const main = document.getElementById('main')
         const app = document.getElementById('app')
 
-        let mainContent = document.createElement(ROUTES.get(path))
+        let mainContent = document.createElement(customElement)
 
         if (options)
-            mainContent.dataset.options = options
-        else
-            mainContent.dataset.options = 'me'
-        if (path === './game')
-            app.replaceChildren(mainContent)
-        else
-            main.replaceChildren(mainContent)
+            mainContent.userId = options
+        const targetContainer = customElement === 'game-view' ? app : main
+
+        targetContainer.replaceChildren(mainContent)
+        
     }
 }
 

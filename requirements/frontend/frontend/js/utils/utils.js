@@ -61,14 +61,14 @@ export async function reset()
 {
     const app = document.getElementById('app')
     
-    eventListeners.removeAll()
-    //for the moment i ll comment it//waiting for the user to read the pop
-    await new Promise(resolve => {
-        // app.replaceChildren()
-        app.innerHTML = '<div id="loader"></div>'
-        // here where that feature of delay that hajar worked on should be added.
-        setTimeout(resolve, 1500)
-    })
+    // eventListeners.removeAll()
+    // //for the moment i ll comment it//waiting for the user to read the pop
+    // await new Promise(resolve => {
+    //     // app.replaceChildren()
+    //     app.innerHTML = '<div id="loader"></div>'
+    //     // here where that feature of delay that hajar worked on should be added.
+    //     setTimeout(resolve, 1500)
+    // })
     app.innerHTML = layoutTemplate()
     app.classList.add('active')
     

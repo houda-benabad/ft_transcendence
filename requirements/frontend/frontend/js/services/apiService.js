@@ -85,7 +85,6 @@ export const apiService =
     {
         getUserInfos(identifier = '')
         {
-            console.log('my endpoint :' ,ENDPOINTS.PROFILE + identifier)
             return apiService.fetchApi(ENDPOINTS.PROFILE + identifier, {
                 headers: 
                 {

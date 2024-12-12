@@ -21,7 +21,7 @@ export const profileTemplate  =
                     </div>
                 </div>
                 <div class="anchor-box square">
-                    <a href="./edit-profile"><i class="iconify" data-icon="mage:edit" data-inline="false"></i></a>
+                    <a href="./edit-profile"><i class="iconify" data-icon="${db.iconType}" data-inline="false"></i></a>
                 </div>
             </div>
             <div id="profile-box1-middle">
@@ -63,7 +63,6 @@ export const profileTemplate  =
         if (!db.length)
             dynamicPart = `<tr><td colspan="4" id="no-data">no games played yet !!!</td></tr>`
         db.forEach(e => {
-            console.log('im hiere')
             dynamicPart += 
             `<tr>
                 <td>${e.gameType}</td>
@@ -74,7 +73,6 @@ export const profileTemplate  =
             `
         });
 
-        console.log('what is thi s , ', dynamicPart)
         return `
         <h3>Game History</h3>
         <div id="table">
@@ -91,204 +89,37 @@ export const profileTemplate  =
             ${dynamicPart}
             </tbody`        
     },
-    friends()
+    friendsBox(db)
     {
-        return (`
-        <h2>Friends</h2>
-        <div class="friends-user-list">
-            <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-             <div class='friend online'>
-                <img src="static/assets/componants/user.jpeg">
-                <div class="friend-mini-box">
-                    <div id="friend-info">
-                        <p id="friend-name">emma</p>
-                        <p id="status">online</p>
-                    </div>
-                    <div id="icons">
-                        <a href="#"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>`)
+        let friendsBoxConatainer = document.getElementById('friends-box-container')
+        let fragment = document.createDocumentFragment()
+
+        //good idea to use here a document fragment and replacechildren
         
-    }
+        db.forEach(e => {
+            const friendBoxItem = document.createElement('div')
+
+            friendBoxItem.classList.add('friends-box-item')
+            friendBoxItem.innerHTML =
+            `
+                <img src='${e.profilePic}'>
+                <div class="user-infos">
+                    <p class="username">${e.username}</p>
+                    <p class="other">${e.other}</p>
+                </div>
+            `
+            const iconsDiv = document.createElement('div')
+
+            iconsDiv.classList.add('icons')
+            iconsDiv.innerHTML = ''
+            e.icons.forEach((e, index) => {
+                console.log(e)
+                iconsDiv.innerHTML += ` <a href="./play" ><i class="iconify ${index === 0 ? 'first' : 'second'}" data-icon="${e}" data-inline="false"></i></a>`
+            })
+            friendBoxItem.appendChild(iconsDiv)
+
+            fragment.appendChild(friendBoxItem)
+        })
+        friendsBoxConatainer.replaceChildren(fragment)
+    },
 }
