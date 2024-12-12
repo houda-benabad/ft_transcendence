@@ -64,6 +64,20 @@
         - frontend
       # volumes:
       #   - frontVolume:/var/www
+
+    # game:
+    #   build:
+    #     context: ./requirements/game/
+    #     dockerfile: Dockerfile
+    #   container_name: game
+    #   restart: on-failure
+    #   env_file:
+    #     - .env
+    #   networks:
+    #     - transcendence
+    #   depends_on:
+    #     postgres:
+    #       condition: service_healthy
   
   networks:
     transcendence:

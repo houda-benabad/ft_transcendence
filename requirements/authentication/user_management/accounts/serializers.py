@@ -1,8 +1,11 @@
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 # from djoser.serializers import UserSerializer as BaseUserSerializer
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from Profiles.models import Profile
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
+User = get_user_model()
 
 class UserCreateSerializer(BaseUserCreateSerializer):
 
@@ -25,3 +28,4 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             Profile.objects.create(user=user, avatar=avatar)
         return user
 
+    

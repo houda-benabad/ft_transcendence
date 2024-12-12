@@ -1,9 +1,11 @@
 from friendship.models import Friend, FriendshipRequest
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from friendship.exceptions import AlreadyFriendsError, AlreadyExistsError
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
+
+User = get_user_model()
 
 class	SendFriendshipRequestMixin:
 
