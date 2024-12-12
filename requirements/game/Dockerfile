@@ -1,6 +1,6 @@
 FROM python:3.11
 
-COPY ./game /usr/src/game
+COPY ./backend /usr/src/game
 
 WORKDIR  /usr/src/
 

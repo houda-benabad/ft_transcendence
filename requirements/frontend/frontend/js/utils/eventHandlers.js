@@ -145,6 +145,7 @@ export const eventHandlers =
     {
         async playGame(event)
         {
+            console.log( "Clicked" )
             const mode = event.target.dataset.mode
 
             if (mode === 'local')

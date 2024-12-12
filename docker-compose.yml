@@ -65,19 +65,25 @@
       # volumes:
       #   - frontVolume:/var/www
 
-    # game:
-    #   build:
-    #     context: ./requirements/game/
-    #     dockerfile: Dockerfile
-    #   container_name: game
-    #   restart: on-failure
-    #   env_file:
-    #     - .env
-    #   networks:
-    #     - transcendence
-    #   depends_on:
-    #     postgres:
-    #       condition: service_healthy
+    game:
+      build:
+        context: ./requirements/game/
+        dockerfile: Dockerfile
+      container_name: game
+      restart: on-failure
+      env_file:
+        - .env
+      networks:
+        - transcendence
+      ports:
+        - 8080:8000
+      depends_on:
+        postgres:
+            condition: service_healthy
+      volumes:
+        -  gamevolume:/usr/src/game
+        # postgres:
+        #   condition: service_healthy
   
   networks:
     transcendence:
@@ -91,6 +97,13 @@
         type: none
         o: bind
         device: ./requirements/authentication/user_management
+
+    gamevolume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./requirements/game/backend
 
     dbvolume:
       driver: local

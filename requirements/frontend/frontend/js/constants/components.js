@@ -7,9 +7,9 @@ export const COLORS = {
 
 export const DIMENSION = {
     PLANE : {
-        x:3,
+        x:4,
         y:.2,
-        z:5
+        z:6
     },
     BALL : {
         x:.1,
@@ -37,22 +37,22 @@ export const POSITION = {
     PLAYER1 : {
         x:0,
         y:.4,
-        z:2.45
+        z:DIMENSION.PLANE.z/2
     },
     PLAYER2 : {
         x:0,
         y:.4,
-        z:-2.45
+        z:-DIMENSION.PLANE.z/2
     },
     PLAYER3 : {
         x:1.5,
         y:.4,
-        z:2.45
+        z:DIMENSION.PLANE/2
     },
     PLAYER4 : {
         x:1.5,
         y:.4,
-        z:-2.45
+        z:-DIMENSION.PLANE/2
     }
 }
 
@@ -60,22 +60,22 @@ export const MULTIPLAYERPOSITION = {
     PLAYER1 : {
         x:1.5,
         y:.4,
-        z:2.45
+        z:(DIMENSION.PLANE.z+1)/2
     },
     PLAYER2 : {
         x:-1.5,
         y:.4,
-        z:2.45
+        z:(DIMENSION.PLANE.z+1)/2
     },
     PLAYER3 : {
         x:1.5,
         y:.4,
-        z:-2.45
+        z:-(DIMENSION.PLANE.z+1)/2
     },
     PLAYER4 : {
         x:-1.5,
         y:.4,
-        z:-2.45
+        z:-(DIMENSION.PLANE.z+1)/2
     }
 }
 
