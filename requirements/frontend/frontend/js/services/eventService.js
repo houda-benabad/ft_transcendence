@@ -32,7 +32,7 @@ export class eventService
             if (functionKey === 'MODE' || functionKey === "ROUTER")
                 eventListeners.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event, e))
             else
-                eventListeners.on(e, eventType, FUNCTIONNAME[functionKey])
+                eventListeners.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event))
         })
     }
     removeAllByType(elements, eventType)

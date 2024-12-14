@@ -3,7 +3,7 @@ import { eventHandlers } from "../utils/eventHandlers.js"
 //this is not maintenable and not clean
 export const FUNCTIONNAME =
 {
-    PLAY_GAME : () => eventHandlers.home.playGame,
+    PLAY_GAME : (event) => eventHandlers.home.playGame(event),
     MODE : (event, mode) => eventHandlers.game.slider(event, mode),
     ROUTER: (event, e) => eventHandlers.router.anchorsNavHandler(event, e),
     UPDATE_IMAGE : () => eventHandlers.settings.updateImage,

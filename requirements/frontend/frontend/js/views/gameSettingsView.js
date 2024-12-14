@@ -7,6 +7,7 @@ import Local from "../utils/managers/localManagers.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 import router from "../router/router.js"
+import { eventListeners } from "../utils/global.js"
 
 export class gameSettingsView extends HTMLElement
 {
