@@ -31,7 +31,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'game',
-    'multiplayer'
+    'multiplayer',
+    'rest_framework',
+    'corsheaders',
 ]
 
 STATIC_URL = "static/"

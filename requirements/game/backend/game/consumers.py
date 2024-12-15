@@ -5,27 +5,28 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync, sync_to_async
 from channels.db import database_sync_to_async
 from collections import deque
-from . import models,  game
+from . import game
+from .models import Player
 
 players = []
 
 class GameConsumer(AsyncWebsocketConsumer):
-	gameOption = {}	
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.keycode= 0
 		self.game_result = 'Won'
 		self.game_group_name = ''
+		self.playerModel = None
 
 	async def connect(self):
-		print( 'self = ',  self.scope )
+		username = self.scope['url_route']['kwargs']['username']
 		await self.accept()
 		await self.send(text_data=json.dumps({
 			'type': 'Connected',
 		}))
 
 		players.append(self)
-		print('PLAYERS NUM = ', len(players))
+		self.playerModel, created = await sync_to_async( Player.objects.get_or_create )( username=username )
 
 		if  len(players) >= 2:
 			await self.start_game()

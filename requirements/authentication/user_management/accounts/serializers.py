@@ -5,6 +5,7 @@ from Profiles.models import Profile
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+
 User = get_user_model()
 
 class UserCreateSerializer(BaseUserCreateSerializer):
@@ -27,5 +28,11 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         else:
             Profile.objects.create(user=user, avatar=avatar)
         return user
-
+    
+    def validate_username(self, value):
+        
+        if len(value) < 3 or len(value) > 30:
+            raise ValidationError("Username must be between 3 and 30 characters.")
+        
+        return value
     

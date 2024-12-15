@@ -42,8 +42,8 @@ DJANGO_APPS = [
 
 PACKAGES = [
     'rest_framework',
-    'rest_framework.authtoken',
-    # 'rest_framework_simplejwt',
+    # 'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'djoser',
     'corsheaders',
     'friendship',
@@ -146,7 +146,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'accounts.User'
+# AUTH_USER_MODEL = 'accounts.User'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -157,19 +157,19 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication'
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
 
-# SIMPLE_JWT = {
-#     "AUTH_HEADER_TYPES": ['Bearer'],
-#     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(seconds=30),
-#     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(minutes=1)
-# }
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ['Bearer'],
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(seconds=30),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(minutes=1)
+}
 
 DJOSER = {
     'SERIALIZERS': {

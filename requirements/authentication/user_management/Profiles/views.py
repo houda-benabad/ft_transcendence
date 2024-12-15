@@ -1,9 +1,7 @@
 from rest_framework import generics
 from .models import Profile
 from .serializers import UserProfileSerializer , DetailedUserProfileSerializer, OtherUserProfileSerializer, DetailedotherUserProfileSerializer
-from rest_framework import filters, status
-from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
+from rest_framework import filters
 import re
 
 class ProfileDetailAPIView(generics.RetrieveAPIView):
@@ -42,24 +40,19 @@ class SearchUsersView(generics.ListAPIView):
         search_query = self.request.query_params.get('search', None)
         
         if search_query:
-            self.validate_query_in_username(search_query)
+            if not self.validate_query_in_username(search_query):
+                return []
         
         return super().filter_queryset(queryset)
     
     def validate_query_in_username(self, query):
     
         if not re.match(r'^[\w.@+-]+$', query):
-            raise ValidationError("The search query can only contain letters, numbers, and @/./+/-/_ characters.")
+            return None
         
         if len(query) > 30:
-            raise ValidationError("The search query cannot have more than 30 characters.")
-
-    def handle_exception(self, exc):
-    
-        if isinstance(exc, ValidationError):
-            return Response({"detail": exc.detail}, status=status.HTTP_400_BAD_REQUEST)
-            
-        return super().handle_exception(exc)
-
+            return None
+        
+        return query
 
 search_users_profiles_view = SearchUsersView.as_view()

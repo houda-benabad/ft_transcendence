@@ -2,6 +2,8 @@ import random
 from .player import Player
 from .ball import Ball
 from .gameObjects import Plane
+from asgiref.sync import async_to_sync, sync_to_async
+
 
 class Game():
 	def __init__(self):
@@ -41,10 +43,25 @@ class Game():
 		hoster.keycode= 0
 		invited.keycode = 0
   
-	def end_game_results(self, hoster, invited):
+	def end_game_results(self, hoster, invited, gameModel):
+		gameModel.player1_points = self.p1.score
+		gameModel.player2_points = self.p2.score
+
+		hoster.playerModel.games += 1
+		invited.playerModel.games += 1
+  
+		hoster.playerModel.points += self.p1.score
+		invited.playerModel.points += self.p2.score
+
+		# hoster.playerModel.level += hoster.playerModel.games / hoster.playerModel.points
+		# invited.playerModel.level += invited.playerModel.games / invited.playerModel.points
+
 		if (invited.keycode == -1 or self.p1.score > self.p2.score):
 			hoster.game_result = "won"
 			invited.game_result = "lost"
+			gameModel.winner = hoster.playerModel
 		elif (self.p1.score < self.p2.score):
 			invited.game_result = "won"
 			hoster.game_result = "lost"
+			gameModel.winner = invited.playerModel
+

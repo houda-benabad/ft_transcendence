@@ -1,0 +1,5 @@
+const modes = {
+    local : {
+        
+    },
+}

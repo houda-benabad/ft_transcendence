@@ -1,20 +1,25 @@
 from django.shortcuts import redirect
 import requests
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from Profiles.models import Profile
 from rest_framework.response import Response
 import urllib
 from rest_framework.views import APIView
-from rest_framework import status, permissions
+from rest_framework import status
 from django.conf import settings
 from django.urls import reverse
+from .permissions import IsNotAuthenticated
+import logging
 
 User = get_user_model()
+logging.basicConfig(level=logging.DEBUG)  
+
+logger = logging.getLogger("accounts.views")  
 
 class   IntraAuth(APIView):
     
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsNotAuthenticated]
     
     def get(self, request):
         
@@ -26,6 +31,7 @@ class   IntraAuth(APIView):
             }
         
         auth_url = settings.INTRA_AUTH_URL + '?' + urllib.parse.urlencode(params)
+        logger.debug(f"Redirecting to auth URL: {auth_url}") 
         return redirect(auth_url)
 
 intra_auth_view = IntraAuth.as_view()
@@ -40,7 +46,7 @@ class   OAuthError(Exception):
 
 class   IntraCallback(APIView):
     
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsNotAuthenticated]
     
     def get(self, request):
         
@@ -55,20 +61,21 @@ class   IntraCallback(APIView):
             user_data = self.get_user_data(access_token)
             intra_user, created = User.objects.get_or_create(username=user_data["username"])
             user_profile = Profile.objects.filter(user=intra_user).first()
-            if not created and user_profile and not user_profile.is_oauth2:
-                raise OAuthError(f"A user with the username '{intra_user.username}' already exists and does not use OAuth.", status.HTTP_400_BAD_REQUEST)
-            if user_profile:
+            if user_profile :
+                if not user_profile.is_oauth2:
+                    raise OAuthError(f"A user with the username '{intra_user.username}' already exists and does not use OAuth.", status.HTTP_400_BAD_REQUEST)
                 user_profile.image_url = user_data["image_url"]
                 user_profile.save()
             else:
                 Profile.objects.create(user=intra_user, image_url = user_data["image_url"], is_oauth2=True)
-            token, created = Token.objects.get_or_create(user=intra_user)
+            refresh = RefreshToken.for_user(intra_user)
+            access = refresh.access_token
         except OAuthError as e:
             return Response({"detail": str(e.message)}, status=e.status_code)
         except Exception as e:  
             return Response({"detail": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({"auth_token": token.key}, status=status.HTTP_200_OK)
+        return Response({"refresh": str(refresh), "access": str(access)}, status=status.HTTP_200_OK)
     
     
     def exchange_code(self, request, code):
