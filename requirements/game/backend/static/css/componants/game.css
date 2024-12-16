@@ -1,0 +1,156 @@
+canvas{
+    display: grid;
+    width: 100%;
+    height: 100%;
+    z-index: 9;
+}
+
+/* WITING POP UP */
+
+#game-elements{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: absolute;
+}
+
+.waiting-holder{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 10;
+}
+
+.waiting-pop{
+    border: 1px solid var(--secondary2);
+    background: #0c0b2c86; 
+    filter: blur(0.5);
+    width: 50%;
+    height: 400px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    margin: auto 0;
+    transition-duration: 600ms;
+}
+
+#loader {
+    width: 80px;
+    height: 70px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    background:
+      linear-gradient(#fff 0 0) 0    0/8px 20px,
+      linear-gradient(#fff 0 0) 100% 0/8px 20px,
+      radial-gradient(farthest-side,#fff 90%,#0000) 0 5px/8px 8px content-box,
+      #00000000;
+    background-repeat: no-repeat; 
+    animation: l3 2s infinite linear;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+  }
+  @keyframes l3{
+    25% {background-position: 0 0   ,100% 100%,100% calc(100% - 5px)}
+    50% {background-position: 0 100%,100% 100%,0    calc(100% - 5px)}
+    75% {background-position: 0 100%,100%    0,100% 5px}
+  }
+
+
+.glass{
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#cancel-btn{
+    width: 155px;
+    height: 65px;
+}
+
+
+/*  Score */
+.score{
+    width: 50%;
+    height: 65px;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    z-index: 10;
+    top: 0;
+}
+
+.user{
+    background: #0c0b2c86; 
+    flex-grow: 1;
+    display: flex;
+        align-items: center;
+        justify-content: center;
+    height: 60%;
+}
+
+.score-num{
+    background: #0c0b2c86; 
+    border-color: var(--secondary2);
+    border-style: solid;
+    border-width: 0px 2px 2px 2px;
+    height: 100%;
+    flex-grow: .5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+}
+
+
+/* TIME */
+
+.time{
+    width: 155.85px;
+    height: 65px;
+    background: #0c0b2c86; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 10;
+    top: 93%;
+    border-color: var(--secondary2);
+    border-style: solid;
+    border-width: 2px 2px 0px 2px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* END GAME */
+
+.endGame-pop{
+    background: #0c0b2c86; 
+
+    width: 155px;
+    height: 90px;
+    border-radius: 15px;
+    margin-top: 175px;
+    margin: auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    position: absolute;
+    z-index: 10;
+    transition-duration: 600ms;
+}

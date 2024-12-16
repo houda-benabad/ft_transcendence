@@ -1,26 +1,29 @@
 from django.db import models
+from django.utils import timezone
 
-# Create your models
+class Player( models.Model ):
+	username = models.CharField( max_length=50 )
+	points = models.IntegerField( default=0 )
+	games = models.IntegerField( default=0 )
+	rank = models.IntegerField( default=0 )
+	level = models.IntegerField( default=0 )
 
+	def __str__( self ):
+		return f"{self.username}"
 
-class Game(models.Model):
-	class STATUS(models.TextChoices):
-		WON = "LOST", "won"
-		LOST = "WON" , "lost"
-
-	created_at = models.DateTimeField(auto_now=True)
-	type = models.CharField(max_length=50, default='Remote')
-	status = models.CharField(max_length=7, choices=STATUS.choices, default='')
-
-	def __str__(self):
-		return f"{self.pk}"
-
-
-
-
-class Player(models.Model):
+class Game( models.Model ):
+	date_time = models.DateTimeField( auto_now_add=True)
+	player1 = models.ForeignKey( "Player", on_delete=models.CASCADE, null=True, related_name='player1_games' )
+	player2 = models.ForeignKey( "Player", on_delete=models.CASCADE, null=True, related_name='player2_games')
+	player1_points = models.IntegerField( default=0 )
+	player2_points = models.IntegerField( default=0 )
+	winner = models.ForeignKey( "Player", on_delete=models.CASCADE, null=True  )
+	
+	def formatted_date_time(self):
+		local_time = timezone.localtime(self.date_time)
+		return local_time.strftime('%Y-%m-%d/ %H:%M')
  
-	name = models.CharField(max_length=50)
-	game = models.ForeignKey("Game" , on_delete=models.CASCADE, null=True)
-	def __str__(self):
-		return f"{self.name}{self.pk}"
+	def __str__( self ):
+		return f"{self.player1} vs {self.player2}  at {self.date_time}"
+
+

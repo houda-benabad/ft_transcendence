@@ -1,5 +1,7 @@
 import json, asyncio, uuid
 from .utils.gameBase import Game
+from asgiref.sync import async_to_sync, sync_to_async
+from . import models
 
 
 async def startGame(channel_layer, hoster, invited):
@@ -9,6 +11,12 @@ async def startGame(channel_layer, hoster, invited):
 
 	await channel_layer.group_add(hoster.game_group_name,hoster.channel_name)
 	await channel_layer.group_add(invited.game_group_name,invited.channel_name)
+
+	gameModel = await sync_to_async( models.Game.objects.create )( 
+        player1=hoster.playerModel,
+        player2=invited.playerModel
+    )
+	print( "Game starting soon")
 	await asyncio.sleep(3)
 	game = Game()
 	while True:
@@ -35,16 +43,16 @@ async def startGame(channel_layer, hoster, invited):
 
 		await channel_layer.group_send(hoster.game_group_name, 
 		{
-			'type': 'score',
-			'data': {
-				'p1' :{
-					'name' : 'kouaz',
-					'score' : game.p1.score,
-         			} ,
-				'p2' :{
-					'name' : 'hajar',
-					'score' : game.p2.score,
-         			} ,
+				'type': 'score',
+				'data': {
+					'p1' :{
+						'name' : 'kouaz',
+						'score' : game.p1.score,
+         				} ,
+					'p2' :{
+						'name' : 'hajar',
+						'score' : game.p2.score,
+         				} ,
 		}
 			}
 		)
@@ -56,9 +64,11 @@ async def startGame(channel_layer, hoster, invited):
 
 
 	# SAVE TO DATABASE
-	game.end_game_results(hoster, invited)
-
-
+	game.end_game_results(hoster, invited, gameModel)
+	await sync_to_async( gameModel.save )()
+	await sync_to_async( hoster.playerModel.save )()
+	await sync_to_async( invited.playerModel.save )()
+	print( "Everuthin is saved up")
 	await hoster.send(text_data=json.dumps({
 		'type' : 'endGame',
 		'data' :{
