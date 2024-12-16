@@ -3,7 +3,6 @@ from Profiles.serializers import UserProfileSerializer
 from friendship.models import Friend, FriendshipRequest
 from django.urls import reverse
 
-
 class FriendshipRequestSerializer(serializers.ModelSerializer):
     
     from_user = UserProfileSerializer(source='from_user.profile', read_only=True)
@@ -29,7 +28,6 @@ class FriendshipRequestSerializer(serializers.ModelSerializer):
         reject_request_url = request.build_absolute_uri(reverse('reject-request', kwargs={'from_user_id': obj.from_user.id}))
         return reject_request_url
 
-
 class FriendSerializer(serializers.Serializer):
     
     user_details = UserProfileSerializer(source='*', read_only=True)
@@ -44,9 +42,7 @@ class FriendSerializer(serializers.Serializer):
         return {"status": "friend", "urls": [remove_friend_url]}
 
 
-class   OtherUserProfileSerializer(serializers.Serializer):
-    
-    user_details = UserProfileSerializer(source='*', read_only=True)
+class RelationshipSerializer(serializers.Serializer):
     relationship = serializers.SerializerMethodField(read_only=True)
     
     def get_relationship(self, obj):
@@ -87,3 +83,16 @@ class   OtherUserProfileSerializer(serializers.Serializer):
     def _stranger_response(self, request, other_user):
         urls=[self._build_uri(request, "send-request", {'to_user_id': other_user.id})]
         return {"status": "stranger", "urls": urls}
+
+class   OtherUserProfileSerializer(RelationshipSerializer):
+    
+    user_details = UserProfileSerializer(source='*', read_only=True)
+
+    def __init__(self, *args, **kwargs):
+        
+        super().__init__(*args, **kwargs)
+        self.fields = {
+            'user_details': self.fields['user_details'],
+            'relationship': self.fields['relationship'],
+            **self.fields
+        }
