@@ -92,5 +92,17 @@ export const apiService =
                 }
             })
         }
+    },
+    search : 
+    {
+        getSearchedUsersInfos(query)
+        {
+            return apiService.fetchApi(ENDPOINTS.SEARCH + query, {
+                headers: 
+                {
+                    "Authorization": `token ${token.token}`,
+                }
+            })
+        }
     }
 }

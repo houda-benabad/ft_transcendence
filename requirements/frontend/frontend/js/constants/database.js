@@ -12,11 +12,11 @@ export const database = {
         total_points : 1200,
         rank : 1000,
     },
-    // relationship :
-    // {
-    //     status : 'stranger',
-    //     url : 'my urls that need to be save'
-    // },
+    relationship :
+    {
+        status : 'stranger',
+        url : 'my urls that need to be save'
+    },
     game_history :
     [
         {

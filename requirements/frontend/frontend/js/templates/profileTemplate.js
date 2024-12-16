@@ -113,7 +113,6 @@ export const profileTemplate  =
             iconsDiv.classList.add('icons')
             iconsDiv.innerHTML = ''
             e.icons.forEach((e, index) => {
-                console.log(e)
                 iconsDiv.innerHTML += ` <a href="./play" ><i class="iconify ${index === 0 ? 'first' : 'second'}" data-icon="${e}" data-inline="false"></i></a>`
             })
             friendBoxItem.appendChild(iconsDiv)
