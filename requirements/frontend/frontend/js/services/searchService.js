@@ -40,20 +40,19 @@ export class searchService
     {
         // const response = await apiService.search.getSearchedUsersInfos(query)
         
-        //until hind comes back ..
         const response = [
         {
-            user_id : 1,
+            url : 1,
             username : 'pingy world',
             profile_pic_url : '../../assets/componants/user.jpeg',
         },
         {
-            user_id : 1,
+            url : 1,
             username : 'pingy world',
             profile_pic_url : '../../assets/componants/user.jpeg',
         },
         {
-            user_id : 1,
+            url : 1,
             username : 'pingy world',
             profile_pic_url : '../../assets/componants/user.jpeg',
         }
@@ -62,19 +61,20 @@ export class searchService
         let dynamicContent = ''
 
         if (!response.length)
-            console.log('in here we need to add some magic')
+            dynamicContent = '<p id="no-result">no Results</p>'
         response.forEach(e => {
-            const {username : username, profile_pic_url: profilePic} = response
+            const {username, profile_pic_url: profilePic, url} = e
 
-            dynamicContent += `<div id="search-item">
+            dynamicContent += `<div class="search-item">
                 <img src=${escapeHtml(profilePic)}>
                 <p>${escapeHtml(username)}</p>
             </div>`
+
         })
 
-        console.log(dynamicContent)
-        this.searchResults.style.display = 'flex'
-        this.searchResults.innerHtml = dynamicContent
+        this.searchResults.style.display = 'block'
+        this.searchResults.innerHTML = `<p id="loading">loading ... </p>`
+        setTimeout(() => this.searchResults.innerHTML = dynamicContent, 1000)
     }
     clear()
     {

@@ -74,6 +74,7 @@ export default class Components {
         geometry.scale( ...Object.values( BACKGROUND.SCALE ) );
         
         const textureLoader = new THREE.TextureLoader(  );
+        console.log( 'background = ', background)
         textureLoader.load( 
             `static/assets/background/${background}.png`,
             ( texture ) => {
