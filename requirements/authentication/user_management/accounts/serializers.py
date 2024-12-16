@@ -1,5 +1,5 @@
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
-# from djoser.serializers import UserSerializer as BaseUserSerializer
+from djoser.serializers import UserSerializer as BaseUserSerializer
 from django.contrib.auth import get_user_model
 from Profiles.models import Profile
 from rest_framework import serializers
@@ -35,4 +35,13 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             raise ValidationError("Username must be between 3 and 30 characters.")
         
         return value
-    
+
+
+class UserSerializer(BaseUserSerializer):
+
+
+    class Meta(BaseUserSerializer.Meta):
+        model = User
+        fields = [
+            "username",
+        ]
