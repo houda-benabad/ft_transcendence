@@ -6,15 +6,12 @@ import { database } from "../constants/database.js"
 
 export class profileView extends HTMLElement
 {
-    //userdetails in friends in id 
-    // what about if its me would this element relationship not be there
     constructor(){
         super()
         this.database = database 
         this.selectedChoice = null
         this.userType = null
         this.userUsername = null
-        //initialize which type of element we are talking about
     }
     async connectedCallback() 
     {

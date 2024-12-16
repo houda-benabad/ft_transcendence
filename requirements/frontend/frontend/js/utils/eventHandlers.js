@@ -39,9 +39,6 @@ export const eventHandlers =
             let data = new FormData(form);
             let playersObject = Object.fromEntries(data)
             let players = Object.values(playersObject)
-            
-            // this players info need to be sent to hajar.
-            //delete that form listener - -
         },
         gameFormHandler(event, resolve)
         {
@@ -52,8 +49,6 @@ export const eventHandlers =
             let data = new FormData(form);
             let gameSettings = Object.fromEntries(data)
             resolve(gameSettings)
-            // here the data of the form need to be sent to hajar
-            //delete that form listener
         }
     },
     router : 
@@ -74,71 +69,6 @@ export const eventHandlers =
 
             document.querySelectorAll('.static').forEach((item) => item.classList.remove('selected'))
             document.querySelector(`a[href="${path}"]`).classList.add('selected')
-        },
-        async searchHandler(event)
-        {
-            const searchResults = document.getElementById('search-results')
-            const app = document.getElementById('app')
-
-            // search batr azal search request query params     /api/endpoints?queryselector
-            //queryselector => header 
-            // const users = await apiService.user.getUserInfos() // gotta see the proper way to do it.
-            //gotta make this work later on
-
-            eventListeners.on(event.target, 'input', (event) => eventHandlers.router.searchItemHandler(event, users))
-            eventListeners.on(app, 'click', (event) => {
-                searchResults.replaceChildren()
-                searchResults.style.display = 'none'
-            })
-
-            // the event listeners should be cleaned up 
-            // input event , that fires in every change.
-        },
-        searchItemHandler(event, users)
-        {
-            // do not know if it would be proper to show the user as well.
-            // console.log(JSON.stringify(users)) // i have in it two arrays, what is that 
-            const searchResults = document.getElementById('search-results')
-            const input = event.target.value
-            const list = users.filter((e) => e[1].username.includes(input))
-            
-            searchResults.replaceChildren()
-            if (!input)
-            {
-                searchResults.style.display = 'none'
-                return ;
-            }
-            if (!list.length)
-            {
-                searchResults.innerHTML = `
-                <p id="no-result">no Results</p>`
-                return ;
-            }
-            searchResults.style.display = 'block'
-            // this list should only contain lets say 5 values max - -
-            list.forEach(e => 
-            {
-                // to clean
-                const searchItem = document.createElement('div')
-
-                searchItem.classList.add('search-item')
-                searchItem.dataset.action = "search"
-                searchItem.id = e[1].user_id
-                searchItem.innerHTML = 
-                `<img src="${e[1].profile_pic_url}">
-                <p>${e[1].username}<p>`
-
-                searchResults.appendChild(searchItem)
-            }
-            )
-            const searchItems = document.querySelectorAll('.search-item')
-            //remove this searchItems event listeners
-            searchItems.forEach(e => {
-                e.addEventListener('click', (event) => {
-                    router.navigateTo(`./profile/id=${e.id}`)
-                    // i think this one should be remplaced by a query parameter.
-                })
-            })
         }
     },
     home :
