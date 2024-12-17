@@ -13,7 +13,7 @@ const router = {
     {
         // console.log('location pathname :', window.location.pathname)
         const anchors = document.querySelectorAll('.static')
-        const path = window.location.pathname  === '/' ? '/profile' : window.location.pathname
+        const path = window.location.pathname  === '/' ? '/home' : window.location.pathname
 
         eventListeners.setAllByType(anchors, 'click')
         eventListeners.on(window, 'popstate', eventHandlers.router.popstateHandler)
