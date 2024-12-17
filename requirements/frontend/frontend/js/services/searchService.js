@@ -39,7 +39,7 @@ export class searchService
         }
     }
     async performSearch(query)
-{
+    {
         console.log('im hier should empty out every event listeners  for cleaning purposes ...')
         const response = await apiService.search.getSearchedUsersInfos(query)
         let fragment = document.createDocumentFragment()
