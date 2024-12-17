@@ -1,0 +1,5 @@
+Django==5.1.1
+django-cors-headers
+djangorestframework
+httpx
+uvicorn

@@ -76,7 +76,7 @@
       networks:
         - transcendence
       ports:
-        - 8080:8000
+        - 8001:8000
       depends_on:
         postgres:
             condition: service_healthy
@@ -84,6 +84,19 @@
         -  gamevolume:/usr/src/game
         # postgres:
         #   condition: service_healthy
+    
+    user_game_aggregator:
+      container_name: user_game_aggregator
+      build:
+        context: ./requirements/user_game_aggregator/
+        dockerfile: Dockerfile
+      ports:
+        - 8002:8000
+      restart: on-failure
+      networks:
+        - transcendence
+      volumes:
+        - aggrvolume:/usr/src/user_game_aggregator
   
   networks:
     transcendence:
@@ -118,4 +131,12 @@
         type: none
         o: bind
         device: ./requirements/frontend
+      
+    aggrvolume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./requirements/user_game_aggregator
+
     
