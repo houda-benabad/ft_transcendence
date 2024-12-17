@@ -15,9 +15,9 @@ const router = {
     {
         // console.log('location pathname :', window.location.pathname)
         const anchors = document.querySelectorAll('.static')
-        const path = window.location.pathname  === '/' ? '/profile' : window.location.pathname
+        const path = window.location.pathname  === '/' ? '/home' : window.location.pathname
         const search = new searchService()
-
+        
         eventListeners.setAllByType(anchors, 'click')
         eventListeners.on(window, 'popstate', eventHandlers.router.popstateHandler)
         search.init()

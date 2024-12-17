@@ -30,7 +30,7 @@ export const eventHandlers =
     },
     form :
     {
-        tournamentFormHandler(event)
+        tournamentFormHandler(event, resolve)
         {
             const form = document.querySelector('form')
 
@@ -39,6 +39,7 @@ export const eventHandlers =
             let data = new FormData(form);
             let playersObject = Object.fromEntries(data)
             let players = Object.values(playersObject)
+            resolve(players)
         },
         gameFormHandler(event, resolve)
         {
@@ -82,7 +83,7 @@ export const eventHandlers =
                 {
                 console.log( "Clicked" )
                 // generic
-                await router.navigateTo('./game-settings')
+                await router.navigateTo('/game-settings')
                 const gameSettings = await formService.game()
                 router.navigateTo('./game')
                 // non generic
@@ -90,7 +91,27 @@ export const eventHandlers =
                 await modalService.show( 'Game over', 'hihi')
                 //generic
                 await reset()
-                router.navigateTo('./home')
+                router.navigateTo('/home')
+            }
+            else if (mode === 'tournament')
+            {
+                const players = await modalService.show('', 'tournament') // the alias names for the players 
+                // generic
+                await router.navigateTo('/game-settings')
+                const gameSettings = await formService.game()
+                router.navigateTo('./game')
+                // non generic
+                await local( gameSettings )
+                console.log( 'FIRST ROUND DONE' )
+        
+                await local( gameSettings )
+                console.log( 'SECOND ROUND DONE' )
+        
+                await local( gameSettings )
+                console.log( 'LAST ROUND DONE' )
+                //generic
+                await reset()
+                router.navigateTo('/home')
             }
         }
     },

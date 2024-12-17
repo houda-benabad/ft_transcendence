@@ -3,16 +3,18 @@ export default class stateManager{
 		this.options = options
 		this.startTime = 0
 		this.timeElapsed = 0
+		this.startTime = new Date()
 	}
 
 	setup(){
 		this.startTime = new Date()
+		console.log( "this one = ", this.startTime )
 	}
 
 	reachedMaxTime(score){
 		if (this.options.mode == 'time'){
 			let now  = new Date()
-			this.timeElapsed  = Math.round( (now - this.startTime) / 1000)
+			this.timeElapsed  = Math.round( (now - this.startTime) / 1000) - 3
 			return (
 				this.timeElapsed >= this.options.range && 
 				score.p1!= score.p2)

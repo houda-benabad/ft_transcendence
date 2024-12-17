@@ -13,19 +13,18 @@ export const profileTemplate  =
     },
     profileBox(db)
     {
-        console.log('here in profile Box :', db.iconType)
         return (`
             <div id="box">
             <div id="profile-box1-top">
                 <div id="profile-box1-top1">
-                    <img src="${db.profilePic}">
+                    <img src="${escapeHtml(db.profilePic)}">
                     <div id="profile-box1-top-id">
-                        <h2 id="profile-box1-top-username">${db.username}</h2>
-                        <p class="status profile-box1-box-text">${db.status}</p>
+                        <h2 id="profile-box1-top-username">${escapeHtml(db.username)}</h2>
+                        <p class="status profile-box1-box-text">${escapeHtml(db.status)}</p>
                     </div>
                 </div>
                 <div class="anchor-box square">
-                    <a href="#"><i class="iconify" data-icon="${db.iconType}" data-inline="false"></i></a>
+                    <a href="#"><i class="iconify" data-icon="${escapeHtml(db.iconType)}" data-inline="false"></i></a>
                 </div>
             </div>
             <div id="profile-box1-middle">
@@ -40,22 +39,22 @@ export const profileTemplate  =
             <div id="profile-box1-bottom">
                 <div>
                     <p class="profile-box1-box-text">total Points</p>
-                    <p class="profile-box1-bottom-data">${db.totalPoints}</p>
+                    <p class="profile-box1-bottom-data">${escapeHtml(db.totalPoints)}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
                     <p class="profile-box1-box-text">total Games</p>
-                    <p class="profile-box1-bottom-data">${db.totalGames}</p>
+                    <p class="profile-box1-bottom-data">${escapeHtml(db.totalGames)}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
                     <p class="profile-box1-box-text">friends</p>
-                    <p class="profile-box1-bottom-data">${db.friendsCount}</p>
+                    <p class="profile-box1-bottom-data">${escapeHtml(db.friendsCount)}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
                     <p class="profile-box1-box-text">Rank</p>
-                    <p class="profile-box1-bottom-data">${db.rank}</p>
+                    <p class="profile-box1-bottom-data">${escapeHtml(db.rank)}</p>
                 </div>
             </div>
         </div>`)
@@ -69,10 +68,10 @@ export const profileTemplate  =
         db.forEach(e => {
             dynamicPart += 
             `<tr>
-                <td>${e.gameType}</td>
-                <td>${e.dateTime}</td>
-                <td>${e.gamePoints}</td>
-                <td>${e.gameStatus}</td>
+                <td>${escapeHtml(e.gameType)}</td>
+                <td>${escapeHtml(e.dateTime)}</td>
+                <td>${escapeHtml(e.gamePoints)}</td>
+                <td>${escapeHtml(e.gameStatus)}</td>
             </tr>
             `
         });
@@ -132,9 +131,9 @@ export const profileTemplate  =
             friendBoxItem.classList.add('friends-box-item')
             friendBoxItem.innerHTML =
             `
-                <img src='${e.profilePic}'>
+                <img src='${escapeHtml(e.profilePic)}'>
                 <div class="user-infos">
-                    <p class="username">${e.username}</p>
+                    <p class="username">${escapeHtml(e.username)}</p>
                     <p class="other">${e.other}</p>
                 </div>
             `

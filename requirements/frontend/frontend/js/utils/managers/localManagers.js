@@ -42,7 +42,7 @@ export default class Local{
 	}
 
 	getTime(  ){
-		return this.state.timeElapsed
+		return this.state.timeElapsed 
 	}
 
 	update(  ){
