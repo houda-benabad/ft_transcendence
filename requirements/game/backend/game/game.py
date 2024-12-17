@@ -3,7 +3,6 @@ from .utils.gameBase import Game
 from asgiref.sync import async_to_sync, sync_to_async
 from . import models
 
-
 async def startGame(channel_layer, hoster, invited):
 	id = uuid.uuid4()
 	hoster.game_group_name = f"game-{id}"

@@ -1,6 +1,8 @@
+import { createParagraph } from "../componants/componants.js"
 import { eventListeners } from "../utils/global.js"
 import { escapeHtml } from "../utils/security.js"
 import { apiService } from "./apiService.js"
+import router  from '../router/router.js'
 
 export class searchService
 {
@@ -37,44 +39,30 @@ export class searchService
         }
     }
     async performSearch(query)
-    {
-        // const response = await apiService.search.getSearchedUsersInfos(query)
+{
+        console.log('im hier should empty out every event listeners  for cleaning purposes ...')
+        const response = await apiService.search.getSearchedUsersInfos(query)
+        let fragment = document.createDocumentFragment()
         
-        const response = [
-        {
-            url : 1,
-            username : 'pingy world',
-            profile_pic_url : '../../assets/componants/user.jpeg',
-        },
-        {
-            url : 1,
-            username : 'pingy world',
-            profile_pic_url : '../../assets/componants/user.jpeg',
-        },
-        {
-            url : 1,
-            username : 'pingy world',
-            profile_pic_url : '../../assets/componants/user.jpeg',
-        }
-        ]
-        // const response = []
-        let dynamicContent = ''
-
         if (!response.length)
-            dynamicContent = '<p id="no-result">no Results</p>'
+            fragment.appendChild(createParagraph('no-result', 'no Results'))
         response.forEach(e => {
-            const {username, profile_pic_url: profilePic, url} = e
-
-            dynamicContent += `<div class="search-item">
-                <img src=${escapeHtml(profilePic)}>
-                <p>${escapeHtml(username)}</p>
-            </div>`
+            const {username, profile_pic_url: profilePic} = e // to add id in here
+            const id = 3 
+            
+            const searchItem = document.createElement('div')
+            searchItem.classList.add('search-item')
+            searchItem.innerHTML = 
+                `<img src=${escapeHtml(profilePic)}>
+                <p>${escapeHtml(username)}</p>`
+            eventListeners.on(searchItem, 'click', () => router.navigateTo(`/profile/${id}`))
+            fragment.appendChild(searchItem)
+            // to be removed as welll, when emptying the search results
 
         })
-
         this.searchResults.style.display = 'block'
         this.searchResults.innerHTML = `<p id="loading">loading ... </p>`
-        setTimeout(() => this.searchResults.innerHTML = dynamicContent, 1000)
+        setTimeout(() => this.searchResults.replaceChildren(fragment), 1000)
     }
     clear()
     {

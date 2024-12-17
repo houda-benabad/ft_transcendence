@@ -89,13 +89,37 @@ export const profileTemplate  =
             ${dynamicPart}
             </tbody`        
     },
-    friendsBox(db)
+    friendsBox(userId)
+    {
+        let dynamicPart
+
+        if (userId === 'me')
+        {
+            dynamicPart = 
+            `  <div id="choices-container">
+                <div id="choices">
+                    <a class="selected-choice choice-item" href="#" id="friends">friends</a>
+                    <a href="#" id="requests" class="choice-item">requests</a>
+                    <div id="sliding-line"></div>
+                </div>
+            </div>`
+        }
+        else 
+            dynamicPart = `<h2>eva's friends</h2>`// in here gotta update the username
+
+        return `${dynamicPart}<div id="friends-box-container"></div>`
+    },
+    friendsBoxConatainer(db) // need some cleansing ... and this is not a template .
     {
         let friendsBoxConatainer = document.getElementById('friends-box-container')
         let fragment = document.createDocumentFragment()
-
-        //good idea to use here a document fragment and replacechildren
         
+        if (db.length === 0)
+        {
+            const value = this.selectedChoice ? this.selectedChoice.id : 'friends'
+            friendsBoxConatainer.innerHTML = `<p>there is no ${value} at the moment</p>`
+            return ;
+        }
         db.forEach(e => {
             const friendBoxItem = document.createElement('div')
 
