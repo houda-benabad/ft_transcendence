@@ -38,43 +38,44 @@ export class searchService
     }
     async performSearch(query)
     {
-        // const response = await apiService.search.getSearchedUsersInfos(query)
+        const response = await apiService.search.getSearchedUsersInfos(query)
         
-        //until hind comes back ..
-        const response = [
-        {
-            user_id : 1,
-            username : 'pingy world',
-            profile_pic_url : '../../assets/componants/user.jpeg',
-        },
-        {
-            user_id : 1,
-            username : 'pingy world',
-            profile_pic_url : '../../assets/componants/user.jpeg',
-        },
-        {
-            user_id : 1,
-            username : 'pingy world',
-            profile_pic_url : '../../assets/componants/user.jpeg',
-        }
-        ]
-        // const response = []
-        let dynamicContent = ''
+        console.log(response)
+        // //until hind comes back ..
+        // const response = [
+        // {
+        //     user_id : 1,
+        //     username : 'pingy world',
+        //     profile_pic_url : '../../assets/componants/user.jpeg',
+        // },
+        // {
+        //     user_id : 1,
+        //     username : 'pingy world',
+        //     profile_pic_url : '../../assets/componants/user.jpeg',
+        // },
+        // {
+        //     user_id : 1,
+        //     username : 'pingy world',
+        //     profile_pic_url : '../../assets/componants/user.jpeg',
+        // }
+        // ]
+        // // const response = []
+        // let dynamicContent = ''
 
-        if (!response.length)
-            console.log('in here we need to add some magic')
-        response.forEach(e => {
-            const {username : username, profile_pic_url: profilePic} = response
+        // if (!response.length)
+        //     console.log('in here we need to add some magic')
+        // response.forEach(e => {
+        //     const {username : username, profile_pic_url: profilePic} = response
 
-            dynamicContent += `<div id="search-item">
-                <img src=${escapeHtml(profilePic)}>
-                <p>${escapeHtml(username)}</p>
-            </div>`
-        })
+        //     dynamicContent += `<div id="search-item">
+        //         <img src=${escapeHtml(profilePic)}>
+        //         <p>${escapeHtml(username)}</p>
+        //     </div>`
+        // })
 
-        console.log(dynamicContent)
-        this.searchResults.style.display = 'flex'
-        this.searchResults.innerHtml = dynamicContent
+        // console.log(dynamicContent)
+        // this.searchResults.style.display = 'flex'
+        // this.searchResults.innerHtml = dynamicContent
     }
     clear()
     {
