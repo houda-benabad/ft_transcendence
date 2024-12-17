@@ -7,7 +7,7 @@ import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
 import { eventListeners } from './global.js'
 
-//break it into small chunks
+//break it into small chunks and cleanse this out .
 export const eventHandlers = 
 {
     auth :
@@ -30,7 +30,7 @@ export const eventHandlers =
     },
     form :
     {
-        tournamentFormHandler(event)
+        tournamentFormHandler(event, resolve)
         {
             const form = document.querySelector('form')
 
@@ -39,6 +39,7 @@ export const eventHandlers =
             let data = new FormData(form);
             let playersObject = Object.fromEntries(data)
             let players = Object.values(playersObject)
+            resolve(players)
         },
         gameFormHandler(event, resolve)
         {
@@ -94,8 +95,7 @@ export const eventHandlers =
             }
             else if (mode === 'tournament')
             {
-                await modalService.show('', 'tournament')
-                console.log( "Clicked" )
+                const players = await modalService.show('', 'tournament') // the alias names for the players 
                 // generic
                 await router.navigateTo('/game-settings')
                 const gameSettings = await formService.game()

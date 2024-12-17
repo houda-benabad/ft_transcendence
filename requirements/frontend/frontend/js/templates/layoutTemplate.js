@@ -2,21 +2,21 @@ export function layoutTemplate()
 {
     return(`
         <div id="header">
-        <h2></h2>
-        <div id="search-bar">
-            <input id="search-input" type="text" placeholder="search friends ...">
-            <i class="iconify" data-icon="teenyicons:search-outline" data-inline="false"></i>
-            <div id="search-results"></div>
-        </div>
-        <div class="anchor-box circle">
-            <a href="/notify"><i class="iconify" data-icon="clarity:notification-line" data-inline="false"></i></a>
-        </div>
+            <h2></h2>
+            <div id="search-bar">
+                <input id="search-input" type="text" placeholder="search friends ...">
+                <i class="iconify" data-icon="teenyicons:search-outline" data-inline="false"></i>
+                <div id="search-results"></div>
+            </div>
+            <div class="anchor-box circle">
+                <a href="/notify"><i class="iconify" data-icon="clarity:notification-line" data-inline="false"></i></a>
+            </div>
         </div>
         <div id="navbar">
             <nav>
                 <div id="nav-top">
-                    <a href="/home" data-action="router" class="static selected"><i class="iconify" data-icon="hugeicons:home-02" data-inline="false"></i></a>
-                    <a href="/profile" data-action="router" class="static"><i class="iconify" data-icon="fluent:person-20-regular" data-inline="false"></i></a>
+                    <a href="/home" data-action="router" class="static"><i class="iconify" data-icon="hugeicons:home-02" data-inline="false"></i></a>
+                    <a href="/profile" data-action="router" class="static selected"><i class="iconify" data-icon="fluent:person-20-regular" data-inline="false"></i></a>
                     <a href="/game" data-action="router" class="static"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
                 </div>
                 <div id="nav-btm">

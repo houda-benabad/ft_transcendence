@@ -24,7 +24,7 @@ export class databaseExtractorService
                 total_games = 0,
                 total_points = 0,
                 rank = 0,
-            },
+            } = {},
             relationship,
         } = this._database
     
@@ -44,7 +44,7 @@ export class databaseExtractorService
     }
     extractDataForGameHistory()
     {
-        const { game_history } = this._database
+        const { game_history = []} = this._database
 
         return game_history.map(game => (
             {

@@ -19,7 +19,11 @@ export const modalService =
     
             if (type === 'tournament') // what is this - -
             {
-                await formService.handleTournament()
+                const players = await formService.handleTournament()
+                eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler)
+                modalBackground.remove()
+                resolve(players)
+
             }
             eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve)) // dont know if we will be needsing this eventlistener
             modal.innerHTML = message

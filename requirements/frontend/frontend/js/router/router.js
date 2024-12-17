@@ -6,15 +6,18 @@ import '../views/gameView.js'
 
 import { eventHandlers } from '../utils/eventHandlers.js'
 import { ROUTES } from '../constants/routes.js'
-import { eventListeners, search } from '../utils/global.js'
+import { eventListeners } from '../utils/global.js'
+import { searchService } from '../services/searchService.js'
 
+//maybe i should make this a constructor.
 const router = {
     init : () => 
     {
         // console.log('location pathname :', window.location.pathname)
         const anchors = document.querySelectorAll('.static')
         const path = window.location.pathname  === '/' ? '/home' : window.location.pathname
-
+        const search = new searchService()
+        
         eventListeners.setAllByType(anchors, 'click')
         eventListeners.on(window, 'popstate', eventHandlers.router.popstateHandler)
         search.init()
