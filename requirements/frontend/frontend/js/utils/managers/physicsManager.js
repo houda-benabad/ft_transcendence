@@ -22,15 +22,23 @@ export default class physicsManager{
 		this.components.bodies.ball.addEventListener( 'collide', ( event )=>{
 			if ( event.body !=  this.components.bodies.plane ){
 				this.ball_velocity.z *= -1
-				if ( Math.abs( this.ball_velocity.z ) < 1 )
-					this.ball_velocity.z += .01 * ( this.ball_velocity.z > 0 ? 1 : -1 )
+				if ( Math.abs( this.ball_velocity.z ) < .8 )
+					this.ball_velocity.z += .005 * ( this.ball_velocity.z > 0 ? 1 : -1 )
 			}
         } )
 	}
 
 	resetBall(  ){
 		this.components.bodies.ball.position.set(0, 0.5, 0)
-		this.ball_velocity.z *= -1
+		this.ball_velocity = {
+			x: 0.03,
+			y:0,
+			z:0.05
+		}
+		let x = ( getRandomFloat(-2, 2) > 0 ? 1 : -1)
+		let z = ( getRandomFloat(-2, 2) > 0 ? 1 : -1)
+		this.ball_velocity.z *= z
+		this.ball_velocity.x *= x
 	}
 
 	checkBallPositionForScore(  ) {
