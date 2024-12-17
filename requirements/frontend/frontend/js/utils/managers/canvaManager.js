@@ -74,7 +74,7 @@ class appCanva{
                 break;
             case 'time':
                 // console.log(data)
-                // document.getElementById('time').innerHTML = data
+                document.getElementById('time').innerHTML = data
                 break;
             default:
                 break;
