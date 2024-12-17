@@ -1,0 +1,4 @@
+dblclick  event
+event.target.closest('[data-action]');
+classes starts with uppercase
+i may end up removing stattic from class layout

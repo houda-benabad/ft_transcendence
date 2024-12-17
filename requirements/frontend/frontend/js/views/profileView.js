@@ -23,11 +23,10 @@ export class profileView extends HTMLElement
 
     async connectedCallback() 
     {
-        // this._database = await apiService.user.getUserInfos(this._userId) // normally this is what it should be
+        this._database = await apiService.user.getUserInfos(this._userId)
+        this._dataTransformer = new databaseExtractorService(this._database)
 
-        this._database = database   
-        this._dataTransformer = new databaseExtractorService(database)
-
+        console.log('database : ', this._database)
         this.innerHTML = profileTemplate.layout()
         this.addProfile()
         this.gameHistory()

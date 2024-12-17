@@ -1,5 +1,8 @@
+import { escapeHtml } from "../utils/security.js"
+
 export const profileTemplate  =
 {
+    // to add escapeHtml .
     layout()
     {
         return (
@@ -10,6 +13,7 @@ export const profileTemplate  =
     },
     profileBox(db)
     {
+        console.log('here in profile Box :', db.iconType)
         return (`
             <div id="box">
             <div id="profile-box1-top">
@@ -21,7 +25,7 @@ export const profileTemplate  =
                     </div>
                 </div>
                 <div class="anchor-box square">
-                    <a href="./edit-profile"><i class="iconify" data-icon="${db.iconType}" data-inline="false"></i></a>
+                    <a href="#"><i class="iconify" data-icon="${db.iconType}" data-inline="false"></i></a>
                 </div>
             </div>
             <div id="profile-box1-middle">
@@ -109,14 +113,16 @@ export const profileTemplate  =
 
         return `${dynamicPart}<div id="friends-box-container"></div>`
     },
-    friendsBoxConatainer(db) // need some cleansing ... and this is not a template .
+    friendsBoxConatainer(db) //rthis is not a template .
     {
         let friendsBoxConatainer = document.getElementById('friends-box-container')
         let fragment = document.createDocumentFragment()
         
-        if (db.length === 0)
+        if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
         {
-            const value = this.selectedChoice ? this.selectedChoice.id : 'friends'
+            const selectedChoice = document.querySelector('.selected-choice')
+            const value = selectedChoice ? selectedChoice.id : 'friends'
+
             friendsBoxConatainer.innerHTML = `<p>there is no ${value} at the moment</p>`
             return ;
         }
