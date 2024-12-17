@@ -22,8 +22,7 @@ export const apiService =
             })
             const responseBody = await response.json()
             const entries = Object.entries(responseBody)
-            const [key , value] = entries[0]
-
+            //this is here the messages i show when login and sign up , should be customized since this is a generic function
             if (!response.ok && response.status === 500)
             {
                 console.log('im hierrrr -- ')
@@ -45,6 +44,7 @@ export const apiService =
                 else if (url === ENDPOINTS.SIGN_IN)
                 {
                     await modalService.show('you logged in successfully')
+                    const [key , value] = entries[0]
                     token.token = value // hihi the problem with naming
                     resolve (true)
                 }
@@ -54,11 +54,13 @@ export const apiService =
                     resolve(entries)
                 return ;
             }
+            const [key , value] = entries[0]
             const message = value[0] // do not know if this is a clean way to do it
             await modalService.show(message)
         }
         catch(error)
         {
+            console.log('thrown in error field ')
             console.log(error)
         }
     })
@@ -83,9 +85,9 @@ export const apiService =
     },
     user : 
     {
-        getUserInfos(identifier = '')
+        getUserInfos(id)
         {
-            return apiService.fetchApi(ENDPOINTS.PROFILE + identifier, {
+            return apiService.fetchApi(ENDPOINTS.PROFILE + id, {
                 headers: 
                 {
                     "Authorization": `token ${token.token}`,
@@ -97,7 +99,9 @@ export const apiService =
     {
         getSearchedUsersInfos(query)
         {
-            return apiService.fetchApi(ENDPOINTS.SEARCH + query, {
+            const url = `${ENDPOINTS.SEARCH}?search=${encodeURIComponent(query)}`
+
+            return apiService.fetchApi(url, {
                 headers: 
                 {
                     "Authorization": `token ${token.token}`,
