@@ -42,8 +42,8 @@ DJANGO_APPS = [
 
 PACKAGES = [
     'rest_framework',
-    # 'rest_framework.authtoken',
-    'rest_framework_simplejwt',
+    'rest_framework.authtoken',
+    # 'rest_framework_simplejwt',
     'djoser',
     'corsheaders',
     'friendship',
@@ -157,19 +157,19 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication'
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
 
-SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ['Bearer'],
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=5),
-    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=3)
-}
+# SIMPLE_JWT = {
+#     "AUTH_HEADER_TYPES": ['Bearer'],
+#     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=5),
+#     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=3)
+# }
 
 DJOSER = {
     'SERIALIZERS': {

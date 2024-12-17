@@ -71,6 +71,7 @@ export const eventHandlers =
             document.querySelector(`a[href="${path}"]`).classList.add('selected')
         }
     },
+    // i do think this as a constructor it would be a good idea - 
     home :
     {
         async playGame(event)

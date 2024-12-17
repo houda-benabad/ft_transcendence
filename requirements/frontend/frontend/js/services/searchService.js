@@ -1,6 +1,8 @@
+import { createParagraph } from "../componants/componants.js"
 import { eventListeners } from "../utils/global.js"
 import { escapeHtml } from "../utils/security.js"
 import { apiService } from "./apiService.js"
+import router  from '../router/router.js'
 
 export class searchService
 {
@@ -38,44 +40,29 @@ export class searchService
     }
     async performSearch(query)
     {
+        console.log('im hier should empty out every event listeners  for cleaning purposes ...')
         const response = await apiService.search.getSearchedUsersInfos(query)
+        let fragment = document.createDocumentFragment()
         
-        console.log(response)
-        // //until hind comes back ..
-        // const response = [
-        // {
-        //     user_id : 1,
-        //     username : 'pingy world',
-        //     profile_pic_url : '../../assets/componants/user.jpeg',
-        // },
-        // {
-        //     user_id : 1,
-        //     username : 'pingy world',
-        //     profile_pic_url : '../../assets/componants/user.jpeg',
-        // },
-        // {
-        //     user_id : 1,
-        //     username : 'pingy world',
-        //     profile_pic_url : '../../assets/componants/user.jpeg',
-        // }
-        // ]
-        // // const response = []
-        // let dynamicContent = ''
+        if (!response.length)
+            fragment.appendChild(createParagraph('no-result', 'no Results'))
+        response.forEach(e => {
+            const {username, profile_pic_url: profilePic} = e // to add id in here
+            const id = 3 
+            
+            const searchItem = document.createElement('div')
+            searchItem.classList.add('search-item')
+            searchItem.innerHTML = 
+                `<img src=${escapeHtml(profilePic)}>
+                <p>${escapeHtml(username)}</p>`
+            eventListeners.on(searchItem, 'click', () => router.navigateTo(`/profile/${id}`))
+            fragment.appendChild(searchItem)
+            // to be removed as welll, when emptying the search results
 
-        // if (!response.length)
-        //     console.log('in here we need to add some magic')
-        // response.forEach(e => {
-        //     const {username : username, profile_pic_url: profilePic} = response
-
-        //     dynamicContent += `<div id="search-item">
-        //         <img src=${escapeHtml(profilePic)}>
-        //         <p>${escapeHtml(username)}</p>
-        //     </div>`
-        // })
-
-        // console.log(dynamicContent)
-        // this.searchResults.style.display = 'flex'
-        // this.searchResults.innerHtml = dynamicContent
+        })
+        this.searchResults.style.display = 'block'
+        this.searchResults.innerHTML = `<p id="loading">loading ... </p>`
+        setTimeout(() => this.searchResults.replaceChildren(fragment), 1000)
     }
     clear()
     {

@@ -11,8 +11,9 @@ import { eventListeners, search } from '../utils/global.js'
 const router = {
     init : () => 
     {
+        // console.log('location pathname :', window.location.pathname)
         const anchors = document.querySelectorAll('.static')
-        const path = window.location.pathname  === '/' ? './home' : window.location.pathname
+        const path = window.location.pathname  === '/' ? '/profile' : window.location.pathname
 
         eventListeners.setAllByType(anchors, 'click')
         eventListeners.on(window, 'popstate', eventHandlers.router.popstateHandler)
@@ -23,11 +24,10 @@ const router = {
     navigateTo : (path, addTohistory=true) =>
     {
         if(addTohistory)
-            history.pushState({path}, {}, path)
+            history.pushState({path}, {}, path) // how does this work - -
        
-        const customElement = path.includes('./profile') ? ROUTES.get('./profile') : ROUTES.get(path)
-        const options = customElement === 'profile-view' ? ( path === './profile' ? 'me' :  path.replace('./profile/', '')) : null
-
+        const customElement = path.includes('/profile') ? ROUTES.get('/profile') : ROUTES.get(path)
+        const options = customElement === 'profile-view' ? ( path === '/profile' ? 'me' :  path.replace('/profile/', '')) : null
         router.handleRoute(customElement, options)
     },
     handleRoute : (customElement, options) => 

@@ -44,12 +44,12 @@
             {
                 padding: 5px 0px 5px 10px;
                 border-radius: 12px;
-                cursor: pointer;
                 display: flex;
                 align-items: center;
                 gap: 7px;
                 &:hover
                 {
+                    cursor: pointer;
                     background-color: var(--secondary2-hover);
                 }
                 img
@@ -63,7 +63,7 @@
                     pointer-events: none;
                 }
             }
-            #no-result
+            #no-result, #loading
             {
                 text-align: center;
                 padding: 20px;
