@@ -17,6 +17,7 @@ class GameSerializer( serializers.ModelSerializer ):
             'points',
             'status'
         ]
+
     def get_date_time( self, obj ):
         return obj.formatted_date_time()
 
@@ -40,16 +41,43 @@ class GameSerializer( serializers.ModelSerializer ):
 
 class PlayerSerializer( serializers.ModelSerializer ):
     game_history = serializers.SerializerMethodField()
+    general_details = serializers.SerializerMethodField()
     class Meta:
         model = Player
         fields = [
-            'points',
-            'rank',
-            'level',
+            "general_details",
             'game_history'
         ]
+        
+    def get_rank( self, obj ):
+        players = Player.objects.order_by( "-points" )
+        rank = list(players).index(obj) + 1
+        return rank
+        
+    def get_general_details( self, obj ):
+        return {
+            "points": obj.points,
+            "rank": self.get_rank( obj ),
+            "level": obj.level
+        }
+
     
 
     def get_game_history( self, obj ):
         game = Game.objects.filter( Q( player1=obj ) | Q( player2=obj ) )
         return GameSerializer( game, many=True, context={ "current_player" : obj } ).data
+
+class PlayerRankSerializer( serializers.ModelSerializer ):
+    rank = serializers.SerializerMethodField()
+    class Meta:
+        model= Player
+        fields=[
+            'rank',
+            'username',
+            'games'
+        ]
+
+    def get_rank( self, obj ):
+        players = Player.objects.order_by( "-points" )
+        rank = list(players).index(obj) + 1
+        return rank

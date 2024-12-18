@@ -20,9 +20,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 websockets = game.routing.websocket_urlpatterns + multiplayer.routing.websocket_urlpatterns 
 
 application = ProtocolTypeRouter({
-    """
-        channel use this function to reouter the request gotten by the Daphne server to the right protocol
-    """
     'http':get_asgi_application(),
     'websocket' : AuthMiddlewareStack(URLRouter(websockets))
 })
