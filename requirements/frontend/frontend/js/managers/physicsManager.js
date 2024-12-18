@@ -1,5 +1,5 @@
-import { DIMENSION, POSITION } from "../../constants/components.js"
-import { VELOCITY } from "../../constants/logic.js"
+import { DIMENSION, POSITION } from "../constants/components.js"
+import { VELOCITY } from "../constants/logic.js"
 
 export function getRandomFloat( min, max ) {
 	return (Math.random() * (max - min) + min) > 0 ? 1 : -1;

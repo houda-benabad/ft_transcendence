@@ -1,6 +1,6 @@
 import { ACTIONS } from "../../constants/logic.js"
-import { WORLD } from "../../constants/engine.js"
-import visualsManager from "../../utils/managers/visualManage.js"
+import { WORLD } from "../constants/engine.js"
+import visualsManager from "./visualManage.js"
 import inputManager from "./inputManager.js"
 import Engine from "../engine.js"
 import Components from "../components.js"

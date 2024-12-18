@@ -1,11 +1,11 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
-import { MODE, WORLD } from "../../constants/engine.js"
+import { MODE, WORLD } from "../constants/engine.js"
 import physicsManager from "./physicsManager.js"
-import inputManager from "../../utils/managers/inputManager.js"
-import stateManager from '../../utils/managers/stateManager.js'
-import Engine from '../engine.js'
+import inputManager from "./inputManager.js"
+import stateManager from './stateManager.js'
+import Engine from '../utils/engine.js'
 import appCanva from "./canvaManager.js"
-import Components from '../components.js'
+import Components from '../utils/components.js'
 import visualsManager from './visualManager.js'
 
 
@@ -30,8 +30,9 @@ export default class Local{
 	setup(  ){
         this.engine.setup( )
 		this.components.setup( )
-
-		this.canva.add( 'score', this.players )
+		
+		
+		this.canva.add( 'score')
 		if (this.options.mode == 'time' )
 			this.canva.add( 'time' )
 		this.physics.setupBallCollisionEvent(  )

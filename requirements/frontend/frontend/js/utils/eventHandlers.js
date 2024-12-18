@@ -6,6 +6,7 @@ import { MODE } from '../constants/engine.js'
 import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
 import { eventListeners } from './global.js'
+import { gameManager } from '../managers/gameManager.js'
 
 //break it into small chunks and cleanse this out .
 export const eventHandlers = 
@@ -78,39 +79,32 @@ export const eventHandlers =
         async playGame( event )
         {
             const mode = event.target.dataset.mode
-            
-            if ( mode === 'local' )
-                {
-                console.log(  "Clicked"  )
-                // generic
+            const manager = new gameManager(  )
+            if ( mode === MODE.LOCAL ){
                 await router.navigateTo( '/game-settings' )
-                const gameSettings = await formService.game(  )
+                this.gameSettings = await formService.game(  )
                 router.navigateTo( './game' )
-                // non generic
-                await local( gameSettings , ["player1", "player2"])
+                await local( this.gameSettings , ["player1", "player2"])
                 await modalService.show(  'Game over', 'hihi' )
-                //generic
                 await reset(  )
                 router.navigateTo( '/home' )
+                // await manager.local( )
             }
-            else if ( mode === 'tournament' )
-            {
+            else if ( mode == MODE.TOURNAMENT){
                 const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
-                // generic
-                const winners = []
                 await router.navigateTo( '/game-settings' )
-                const gameSettings = await formService.game(  )
+                this.gameSettings = await formService.game(  )
                 router.navigateTo( './game' )
-                // non generic
-                winners[0] = await local(  gameSettings, [players[0], players[1]]  )
-        
-                winners[1] = await local(  gameSettings , [players[2], players[3]] )
-        
-                const winner = await local(  gameSettings , winners )
-                //generic
+                const winners = []
+                winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
+                winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
+                const winner = await local(  this.gameSettings , winners )
+                await modalService.show(  'Game over', 'hihi' )
                 await reset(  )
                 router.navigateTo( '/home' )
             }
+                // await manager.tournament(  )
+
         }
     },
     game :

@@ -5,7 +5,6 @@ class appCanva{
         this.elements = document.createElement('div')
         this.elements.id = 'game-elements'
         canva.append(this.elements)
-        console.log( 'canva for the moment : ', canva.innerHTML)
         this.waiting = document.createElement('div')
         this.waiting.className = 'waiting-holder'
         this.waiting.innerHTML = `
