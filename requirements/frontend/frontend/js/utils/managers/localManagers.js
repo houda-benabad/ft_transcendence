@@ -10,15 +10,17 @@ import visualsManager from './visualManager.js'
 
 
 export default class Local{
-	constructor( options ) {
+	constructor( options, players ) {
 		this.options = options
 		this.animationProgress = 0
+		this.players = players
+		this.winner = ""
 
 		this.engine = new Engine( MODE.LOCAL )
 		this.components = new Components(this.engine, MODE.LOCAL, options)
 		this.visual = new visualsManager(this.components, MODE.LOCAL)
 		this.input = new inputManager( this.components )
-		this.canva = new appCanva()
+		this.canva = new appCanva( this.players )
 
 		this.physics = new physicsManager( this.components )
 		this.state = new stateManager( options )
@@ -29,7 +31,7 @@ export default class Local{
         this.engine.setup( )
 		this.components.setup( )
 
-		this.canva.add( 'score' )
+		this.canva.add( 'score', this.players )
 		if (this.options.mode == 'time' )
 			this.canva.add( 'time' )
 		this.physics.setupBallCollisionEvent(  )
@@ -79,8 +81,9 @@ export default class Local{
 		else{
 			this.update(  )
 			if (  this.isGameover(   )  ){
+				this.physics.score.p1 > this.physics.score.p2 ? this.winner = this.players[0] : this.winner = this.players[1]
 				cancelAnimationFrame( id )
-				resolve(  )
+				resolve( this.winner )
 			}
 		}
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );

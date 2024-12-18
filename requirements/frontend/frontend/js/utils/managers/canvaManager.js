@@ -1,5 +1,5 @@
 class appCanva{
-    constructor(){
+    constructor( players ){
         let canva = document.getElementById("app");
         canva.innerHTML = ' '
         this.elements = document.createElement('div')
@@ -19,19 +19,19 @@ class appCanva{
         this.score.className = 'score'
         this.score.innerHTML = `
             <div class="user glass">
-                <h3 id="user1">user1</h3>
+                <h3 id="user1">${players[0]}</h3>
             </div>
             <div class="score-num glass">
                 <h1 id="score">0 : 0</h1>
             </div>
             <div class="user glass">
-                <h3 id="user2">user2</h3>
+                <h3 id="user2">${players[1]}</h3>
             </div>
 	`
 
         this.time = document.createElement('div')
         this.time.className = 'time glass'
-        this.time.innerHTML = `<h1 id="time">00:00</h1>`
+        this.time.innerHTML = `<h1 id="time">0</h1>`
 
         this.endGame = document.createElement('div')
         this.endGame.className = 'endGame-pop glass'
