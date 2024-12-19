@@ -7,6 +7,7 @@ import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
 import { eventListeners } from './global.js'
 import { gameManager } from '../managers/gameManager.js'
+import { remote } from '../mods/remote.js'
 
 //break it into small chunks and cleanse this out .
 export const eventHandlers = 
@@ -88,7 +89,6 @@ export const eventHandlers =
                 await modalService.show(  'Game over', 'hihi' )
                 await reset(  )
                 router.navigateTo( '/home' )
-                // await manager.local( )
             }
             else if ( mode == MODE.TOURNAMENT){
                 const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
@@ -103,7 +103,9 @@ export const eventHandlers =
                 await reset(  )
                 router.navigateTo( '/home' )
             }
-                // await manager.tournament(  )
+            else if ( mode == MODE.REMOTE ){
+                remote(  )
+            }
 
         }
     },

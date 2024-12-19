@@ -41,7 +41,14 @@ export default class Local{
 	}
 
 	getScore(  ){
-		return this.physics.score
+		return { 
+			score : this.physics.score,
+			name: {
+				p1: "hajar",
+				p2: "hind"
+			}
+		}
+
 	}
 
 	getTime(  ){

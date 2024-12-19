@@ -66,13 +66,13 @@ class appCanva{
             case 'score':
                 if (data.name) {
 
-                    document.getElementById('user1').innerHTML = data.p1.name
-                    document.getElementById('user2').innerHTML = data.p2.name
+                    document.getElementById('user1').innerHTML = data.name.p2
+                    document.getElementById('user2').innerHTML = data.name.p1
                 }
-                document.getElementById('score').innerHTML = `${data.p1} : ${data.p2}`
+		        console.log( data )
+                document.getElementById('score').innerHTML = `${data.score.p2} : ${data.score.p1}`
                 break;
             case 'time':
-                // console.log(data)
                 document.getElementById('time').innerHTML = data
                 break;
             default:

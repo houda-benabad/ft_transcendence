@@ -15,8 +15,13 @@ async def startGame(channel_layer, hoster, invited):
         player1=hoster.playerModel,
         player2=invited.playerModel
     )
-	print( "Game starting soon")
 	await asyncio.sleep(3)
+	await channel_layer.group_send(hoster.game_group_name,
+	{
+		'type': 'start',
+		'data': "game is starting"
+	}
+	)
 	game = Game()
 	while True:
 		#  ELEMETS UPDATE
@@ -42,16 +47,16 @@ async def startGame(channel_layer, hoster, invited):
 
 		await channel_layer.group_send(hoster.game_group_name, 
 		{
-				'type': 'score',
-				'data': {
-					'p1' :{
-						'name' : 'kouaz',
-						'score' : game.p1.score,
-         				} ,
-					'p2' :{
-						'name' : 'hajar',
-						'score' : game.p2.score,
-         				} ,
+			'type': 'score',
+			'data': {
+				'name' :{
+					'p1' :'kouaz',
+					'p2' : 'hajar'
+				},
+				'score' :{
+					'p1' : game.p1.score,
+					'p2' : game.p2.score,
+				}
 		}
 			}
 		)

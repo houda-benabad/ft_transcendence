@@ -32,5 +32,6 @@ class NotifConsumer(AsyncWebsocketConsumer):
 
 	async def receive(self, text_data):
 		pass
+
 	async def disconnect(self, close_code):
 		print( "disconnected" )
