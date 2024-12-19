@@ -50,6 +50,7 @@ export default class Remote{
 	}
 
 	updateStart(  ){
+		console.log( "starting game" )
 		this.canva.add( "score" )
 		this.canva.remove( "waiting" )
 	}
@@ -68,7 +69,7 @@ export default class Remote{
 		let id = requestAnimationFrame( (  ) => this.animate() )
 		this.engine.world.step( WORLD.TIMESTAMP) 
 
-		if (this.animationProgress < 1)
+		if ( this.animationProgress < 1 )
 			this.initialAnimation(  )
 		else
 			this.update( id )
