@@ -41,10 +41,8 @@ export class Icons extends HTMLDivElement
             const div = document.createElement('div', )
             div.className = 'anchor-box square'
             div.userId = this._data.userId
-            // {class: 'anchor-box square', }
-            console.log('div : ', div)
-            div.innerHTML = `
-            <a href="#" data-action="${e.action}" class="static"><i class="iconify" data-icon="${e.icon}" data-inline="false"></i></a>`
+            console.log('->>>>> div : ', div)
+            div.innerHTML = `<a href="#" data-action="${e.action}" class="static"><i class="iconify" data-icon="${e.icon}" data-inline="false"></i></a>`
             fragement.appendChild(div)
         });
         this.appendChild(fragement)

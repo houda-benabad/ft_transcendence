@@ -2,3 +2,6 @@ dblclick  event
 event.target.closest('[data-action]');
 classes starts with uppercase
 i may end up removing stattic from class layout
+
+//////////
+custom elements have this feature of a class, but whats better is that i can fire to update its content whenever i reset a value that contains it
