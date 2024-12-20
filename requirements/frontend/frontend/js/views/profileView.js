@@ -6,7 +6,7 @@ import { addListenersForFriendsBox} from '../utils/eventListeners.js'
 import { eventListeners } from "../utils/global.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 
-export class profileView extends HTMLElement
+export class ProfileView extends HTMLElement
 {
     constructor()
     {
@@ -26,12 +26,12 @@ export class profileView extends HTMLElement
         this._database = await apiService.user.getUserInfos(this._userId)
         this._dataTransformer = new databaseExtractorService(this._database)
 
-        console.log('database : ', this._database)
+        // console.log(' =>>>>>>> database : ', this._database)
         this.innerHTML = profileTemplate.layout()
         this.addProfile()
         this.gameHistory()
-        this.addFriendsBox()
-        this.setupEventListenersAndAnimations()
+        // this.addFriendsBox()
+        // this.setupEventListenersAndAnimations()
     }
     setupEventListenersAndAnimations()
     {
@@ -45,8 +45,14 @@ export class profileView extends HTMLElement
     {
         const profileBox = document.getElementById('profile-box1')
         const profileDb = this._dataTransformer.extractData('profile')
-        
+
         profileBox.innerHTML = profileTemplate.profileBox(profileDb) 
+
+        const icons = document.createElement('div', {is : 'custom-icons'})
+        const profileBoxTop = profileBox.querySelector('#profile-box1-top')
+
+        icons.data = {userId : profileDb.userId, relationship : profileDb.relationship, id : 'profile'}
+        profileBoxTop.appendChild(icons)
     }
     gameHistory()
     {
@@ -66,4 +72,4 @@ export class profileView extends HTMLElement
     }
    
 }
-customElements.define('profile-view', profileView) 
+customElements.define('profile-view', ProfileView) 

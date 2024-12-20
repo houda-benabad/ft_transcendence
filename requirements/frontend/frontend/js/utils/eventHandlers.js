@@ -65,7 +65,7 @@ export const eventHandlers =
         },
         popstateHandler(event)
         {
-            const path = event.state ? event.state.path : './home'
+            const path = event.state ? event.state.path : '/home'
             router.navigateTo(path, false)
 
             document.querySelectorAll('.static').forEach((item) => item.classList.remove('selected'))

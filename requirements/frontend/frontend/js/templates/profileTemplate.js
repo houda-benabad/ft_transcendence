@@ -1,8 +1,8 @@
 import { escapeHtml } from "../utils/security.js"
+import { Icons } from "../componants/customElements.js"
 
 export const profileTemplate  =
 {
-    // to add escapeHtml .
     layout()
     {
         return (
@@ -11,8 +11,24 @@ export const profileTemplate  =
             <div class="friends-box"></div>`
         )
     },
+    // gotta make this anchor box may contain two elements .
     profileBox(db)
     {
+        let dynamicPart = ""
+        
+        // console.log('im in here  : ', db.iconsActions) // this should be added as a div
+        // db.actions.forEach((action) =>
+        // {  
+        //     // dynamicPart += `
+        //     // <div class="anchor-box square">
+        //     //       <a href="#" data-action="${action}" data-user-id=${escapeHtml(db.userId)}><i class="iconify" data-icon="${icon}" data-inline="false"></i></a>
+        //     // </div>`
+        //     dynamicPart += `
+        //     <div class="anchor-box square">
+        //         <a href='#' is="custom-icon" action="${action}" userId="${db.userId}"><i class="iconify" data-inline="false"></i></a>
+        //     </div>`
+            
+        // })
         return (`
             <div id="box">
             <div id="profile-box1-top">
@@ -22,9 +38,6 @@ export const profileTemplate  =
                         <h2 id="profile-box1-top-username">${escapeHtml(db.username)}</h2>
                         <p class="status profile-box1-box-text">${escapeHtml(db.status)}</p>
                     </div>
-                </div>
-                <div class="anchor-box square">
-                    <a href="#"><i class="iconify" data-icon="${escapeHtml(db.iconType)}" data-inline="false"></i></a>
                 </div>
             </div>
             <div id="profile-box1-middle">
@@ -141,8 +154,9 @@ export const profileTemplate  =
 
             iconsDiv.classList.add('icons')
             iconsDiv.innerHTML = ''
-            e.icons.forEach((e, index) => {
-                iconsDiv.innerHTML += ` <a href="./play" ><i class="iconify ${index === 0 ? 'first' : 'second'}" data-icon="${e}" data-inline="false"></i></a>`
+            e.actions.forEach((action,index) =>
+            {  
+                iconsDiv.innerHTML += ` <a href="#" data-action="${action}" data-user-id="${e.userId}" is="custom-icon"><i class="iconify ${index === 0 ? 'first' : 'second'}" data-inline="false"></i></a>`
             })
             friendBoxItem.appendChild(iconsDiv)
 
