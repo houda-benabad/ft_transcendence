@@ -23,7 +23,6 @@ export const apiService =
                 }
             })
             const contentType = response.headers.get('Content-Type');
-            
             if (!contentType)
             {
                 console.log('there is no body')
