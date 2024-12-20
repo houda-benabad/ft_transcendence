@@ -79,8 +79,6 @@ export const MULTIPLAYERPOSITION = {
     }
 }
 
-
-
 export const BACKGROUND = {
     DIMENSION :{
         x:8,

@@ -37,7 +37,7 @@ export default class Engine {
 	}
 
 	setupSocket(  ) {
-		let url = `wss://${window.location.host}/wss/${this.mode}/`
+		let url = `wss://${window.location.host}/wss/${this.mode}/hajar`
 		return new WebSocket( url )
 	}
 

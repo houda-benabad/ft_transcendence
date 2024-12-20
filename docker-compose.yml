@@ -97,6 +97,19 @@
         - transcendence
       volumes:
         - aggrvolume:/usr/src/user_game_aggregator
+
+    notification:
+      container_name: notification
+      build:
+        context: ./requirements/notification/
+        dockerfile: Dockerfile
+      ports:
+        - 8005:8000
+      restart: on-failure
+      networks:
+        - transcendence
+      volumes:
+        - notifvolume:/usr/src/notification
   
   networks:
     transcendence:
@@ -139,4 +152,9 @@
         o: bind
         device: ./requirements/user_game_aggregator
 
-    
+    notifvolume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./requirements/notification/

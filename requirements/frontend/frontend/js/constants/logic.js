@@ -10,7 +10,7 @@ export const VELOCITY = {
 export const ACTIONS  = {
     'api' : 'updateApi',
     'score' : 'updateScore',
-    'Connected' : 'updateConnection',
+    'start' : 'updateStart',
     'endGame' : 'updateState'
 }
 

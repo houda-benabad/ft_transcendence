@@ -2,7 +2,7 @@ import { init , reset } from './utils/utils.js'
 import { eventService } from './services/eventService.js'
 import router  from './router/router.js'
 import { token } from './utils/global.js'
-import { EventManager } from './utils/managers/eventManager.js'
+import { EventManager } from './managers/eventManager.js'
  
 class App
 {
