@@ -1,5 +1,3 @@
-import { MODE } from "../../constants/engine.js";
-
 export default class visualsManager {
 	constructor( components, mode ) {
 		this.components = components

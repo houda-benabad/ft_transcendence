@@ -5,8 +5,12 @@ from . import models
 
 async def startGame(channel_layer, hoster, invited):
 	id = uuid.uuid4()
-	hoster.game_group_name = f"game-{id}"
-	invited.game_group_name = f"game-{id}"
+	group_name = f"game-{id}"
+	hoster.game_group_name = group_name
+	invited.game_group_name = group_name 
+ 
+	print( "hoster = ", hoster.game_group_name)
+	print( "invited = ", invited.game_group_name)
 
 	await channel_layer.group_add(hoster.game_group_name,hoster.channel_name)
 	await channel_layer.group_add(invited.game_group_name,invited.channel_name)
@@ -15,8 +19,14 @@ async def startGame(channel_layer, hoster, invited):
         player1=hoster.playerModel,
         player2=invited.playerModel
     )
-	print( "Game starting soon")
-	await asyncio.sleep(3)
+	await asyncio.sleep(5)
+
+	await channel_layer.group_send(group_name,
+	{
+		'type': 'start',
+		'data': "game is starting"
+	}
+	)
 	game = Game()
 	while True:
 		#  ELEMETS UPDATE
@@ -31,7 +41,7 @@ async def startGame(channel_layer, hoster, invited):
   
 	
 			# SEND ALL INFO (COORDINATES = SCORE = TIME)
-		await channel_layer.group_send(hoster.game_group_name,
+		await channel_layer.group_send( group_name,
 				{
 					'type': 'api',
 					'data': {
@@ -40,18 +50,18 @@ async def startGame(channel_layer, hoster, invited):
 				}
 			)
 
-		await channel_layer.group_send(hoster.game_group_name, 
+		await channel_layer.group_send( group_name, 
 		{
-				'type': 'score',
-				'data': {
-					'p1' :{
-						'name' : 'kouaz',
-						'score' : game.p1.score,
-         				} ,
-					'p2' :{
-						'name' : 'hajar',
-						'score' : game.p2.score,
-         				} ,
+			'type': 'score',
+			'data': {
+				'name' :{
+					'p1' :'kouaz',
+					'p2' : 'hajar'
+				},
+				'score' :{
+					'p1' : game.p1.score,
+					'p2' : game.p2.score,
+				}
 		}
 			}
 		)

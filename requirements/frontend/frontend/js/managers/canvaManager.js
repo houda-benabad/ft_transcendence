@@ -1,11 +1,10 @@
 class appCanva{
-    constructor(){
+    constructor( players ){
         let canva = document.getElementById("app");
         canva.innerHTML = ' '
         this.elements = document.createElement('div')
         this.elements.id = 'game-elements'
         canva.append(this.elements)
-        console.log( 'canva for the moment : ', canva.innerHTML)
         this.waiting = document.createElement('div')
         this.waiting.className = 'waiting-holder'
         this.waiting.innerHTML = `
@@ -19,19 +18,19 @@ class appCanva{
         this.score.className = 'score'
         this.score.innerHTML = `
             <div class="user glass">
-                <h3 id="user1">user1</h3>
+                <h3 id="user1">${players[0]}</h3>
             </div>
             <div class="score-num glass">
                 <h1 id="score">0 : 0</h1>
             </div>
             <div class="user glass">
-                <h3 id="user2">user2</h3>
+                <h3 id="user2">${players[1]}</h3>
             </div>
 	`
 
         this.time = document.createElement('div')
         this.time.className = 'time glass'
-        this.time.innerHTML = `<h1 id="time">00:00</h1>`
+        this.time.innerHTML = `<h1 id="time">0</h1>`
 
         this.endGame = document.createElement('div')
         this.endGame.className = 'endGame-pop glass'
@@ -67,13 +66,13 @@ class appCanva{
             case 'score':
                 if (data.name) {
 
-                    document.getElementById('user1').innerHTML = data.p1.name
-                    document.getElementById('user2').innerHTML = data.p2.name
+                    document.getElementById('user1').innerHTML = data.name.p2
+                    document.getElementById('user2').innerHTML = data.name.p1
                 }
-                document.getElementById('score').innerHTML = `${data.p1} : ${data.p2}`
+		        console.log( data )
+                document.getElementById('score').innerHTML = `${data.score.p2} : ${data.score.p1}`
                 break;
             case 'time':
-                // console.log(data)
                 document.getElementById('time').innerHTML = data
                 break;
             default:

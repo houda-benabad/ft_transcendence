@@ -1,5 +1,5 @@
-import router  from '../../router/router.js'
-import { apiService } from '../../services/apiService.js'
+import router  from '../router/router.js'
+import { apiService } from '../services/apiService.js'
 
 export class EventManager
 {

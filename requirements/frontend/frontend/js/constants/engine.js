@@ -30,5 +30,5 @@ export const MODE = {
 	LOCAL : 'local',
 	REMOTE : 'remote',
 	MULTIPLAYER : 'multiplayer',
-	TOURNAMRNT : 'tourn'
+	TOURNAMENT : 'tournament'
 }

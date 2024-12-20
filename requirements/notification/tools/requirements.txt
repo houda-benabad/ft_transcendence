@@ -1,0 +1,7 @@
+django
+channels
+daphne
+sqlparse==0.5.1
+psycopg2-binary==2.9.9
+django-cors-headers
+djangorestframework

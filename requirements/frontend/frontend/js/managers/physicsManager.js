@@ -1,5 +1,5 @@
-import { DIMENSION, POSITION } from "../../constants/components.js"
-import { VELOCITY } from "../../constants/logic.js"
+import { DIMENSION, POSITION } from "../constants/components.js"
+import { VELOCITY } from "../constants/logic.js"
 
 export function getRandomFloat( min, max ) {
 	return (Math.random() * (max - min) + min) > 0 ? 1 : -1;
@@ -45,11 +45,11 @@ export default class physicsManager{
 		let {ball} =  this.components.bodies
 		if ( ball.position.z > DIMENSION.PLANE.z/2 ) {
 			this.resetBall(  )
-			this.score.p1 += 1
+			this.score.p2 += 1
 		}
 		if (  ball.position.z < -DIMENSION.PLANE.z/2 ) {
 			this.resetBall(  )
-			this.score.p2 += 1
+			this.score.p1 += 1
 		}
 	}
 	

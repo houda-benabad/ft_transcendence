@@ -21,9 +21,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		username = self.scope['url_route']['kwargs']['username']
 		await self.accept()
-		await self.send(text_data=json.dumps({
-			'type': 'Connected',
-		}))
 
 		players.append(self)
 		self.playerModel, created = await sync_to_async( Player.objects.get_or_create )( username=username )
@@ -57,6 +54,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 		}))
   
 	async def start(self, event):
+		print( "oh hell yeah" )
 		data = event['data']
 		await self.send(text_data=json.dumps({
 			'type': 'start',

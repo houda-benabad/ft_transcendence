@@ -1,24 +1,26 @@
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
-import { MODE, WORLD } from "../../constants/engine.js"
+import { MODE, WORLD } from "../constants/engine.js"
 import physicsManager from "./physicsManager.js"
-import inputManager from "../../utils/managers/inputManager.js"
-import stateManager from '../../utils/managers/stateManager.js'
-import Engine from '../engine.js'
+import inputManager from "./inputManager.js"
+import stateManager from './stateManager.js'
+import Engine from '../utils/engine.js'
 import appCanva from "./canvaManager.js"
-import Components from '../components.js'
+import Components from '../utils/components.js'
 import visualsManager from './visualManager.js'
 
 
 export default class Local{
-	constructor( options ) {
+	constructor( options, players ) {
 		this.options = options
 		this.animationProgress = 0
+		this.players = players
+		this.winner = ""
 
 		this.engine = new Engine( MODE.LOCAL )
 		this.components = new Components(this.engine, MODE.LOCAL, options)
 		this.visual = new visualsManager(this.components, MODE.LOCAL)
 		this.input = new inputManager( this.components )
-		this.canva = new appCanva()
+		this.canva = new appCanva( this.players )
 
 		this.physics = new physicsManager( this.components )
 		this.state = new stateManager( options )
@@ -28,8 +30,9 @@ export default class Local{
 	setup(  ){
         this.engine.setup( )
 		this.components.setup( )
-
-		this.canva.add( 'score' )
+		
+		
+		this.canva.add( 'score')
 		if (this.options.mode == 'time' )
 			this.canva.add( 'time' )
 		this.physics.setupBallCollisionEvent(  )
@@ -38,7 +41,14 @@ export default class Local{
 	}
 
 	getScore(  ){
-		return this.physics.score
+		return { 
+			score : this.physics.score,
+			name: {
+				p1: "hajar",
+				p2: "hind"
+			}
+		}
+
 	}
 
 	getTime(  ){
@@ -79,8 +89,9 @@ export default class Local{
 		else{
 			this.update(  )
 			if (  this.isGameover(   )  ){
+				this.physics.score.p1 > this.physics.score.p2 ? this.winner = this.players[0] : this.winner = this.players[1]
 				cancelAnimationFrame( id )
-				resolve(  )
+				resolve( this.winner )
 			}
 		}
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
