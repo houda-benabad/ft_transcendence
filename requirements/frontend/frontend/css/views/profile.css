@@ -98,7 +98,8 @@ profile-view
                 /* justify-content: space-between; */
                 img 
                 {
-                    max-width: 50px;
+                    width: 60px;
+                    height: 60px;
                     border-radius: 50%;
                 }
                 .user-infos
@@ -185,6 +186,11 @@ profile-view
                             font-weight: 900;
                         }
                     }
+                }
+                .icons
+                {
+                    display: flex;
+                    gap: 1vh;
                 }
             }
             #profile-box1-bottom

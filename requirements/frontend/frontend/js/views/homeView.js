@@ -1,17 +1,25 @@
+import { database } from '../constants/database.js'
+import { apiService } from '../services/apiService.js'
 import { homeTemplate } from '../templates/homeTemplate.js'
 import { eventListeners } from '../utils/global.js'
-
+import { databaseExtractorService } from '../services/databaseExtractorService.js'
 export class homeView extends HTMLElement
 {
     constructor()
     {
         super()
-        this.buttons = null
+        this.buttons = null /// haha i dont think i will wokr with you anymore  :p
+        this._database = null
     }
-    connectedCallback()
+    async connectedCallback()
     {
+        // this._database = await apiService.home.getLeaderboardData()
+
+        this._database = database
+        this._dataTransformer = new databaseExtractorService(this._database)
+
+
         this.innerHTML = homeTemplate.layout()
-        
         //for tournament
         const tournament = document.getElementById('tournament')
         tournament.innerHTML = homeTemplate.tournament()
@@ -33,6 +41,10 @@ export class homeView extends HTMLElement
     }
     addLeaderBoard()
     {
+        const leaderboardDb = this._dataTransformer.extractData('leaderboard')
+        const tournament = document.querySelector('.table-box')
+
+        tournament.innerHTML = homeTemplate.leaderboard(leaderboardDb)
         // console.log('normally in here i should add the value of the leaderBoard')
     }
 }

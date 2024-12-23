@@ -67,8 +67,8 @@ export const eventHandlers =
         },
         popstateHandler( event )
         {
-            const path = event.state ? event.state.path : './home'
-            router.navigateTo( path, false )
+            const path = event.state ? event.state.path : '/home'
+            router.navigateTo(path, false)
 
             document.querySelectorAll( '.static' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
             document.querySelector( `a[href="${path}"]` ).classList.add( 'selected' )

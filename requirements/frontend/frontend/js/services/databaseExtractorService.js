@@ -9,7 +9,8 @@ export class databaseExtractorService
         const extractionType = {
             'profile' : this.extractDataForProfile.bind(this),
             'gameHistory' : this.extractDataForGameHistory.bind(this),
-            'friends' : this.extractDataForFriends.bind(this)
+            'friends' : this.extractDataForFriends.bind(this),
+            'leaderboard' : this.extractDataForLeaderboard.bind(this)
         }
 
         const extracted = extractionType[type]
@@ -27,19 +28,19 @@ export class databaseExtractorService
             } = {},
             relationship,
         } = this._database
-    
+
+        // console.log('in here : ', this.determineIconsAndActions(relationship))
         return ({
             userId : user_id,
             username,
             profilePic : profile_pic_url,
-            status  : 'online', // we gotta see how to do this
+            status  : 'online',
             friendsCount : friends_count,
             totalGames : total_games,
             totalPoints : total_points,
             rank,
-            // this needs some updates , a map containing icon type and the proper url .
-            iconType : relationship ? (relationship.status === 'friend' ? 'eva:person-remove-outline' : 'eva:person-add-outline') : 'mage:edit',
-            iconUrl: relationship ? (relationship.urls) : 'navigateTo settinnfs'
+            relationship,
+            // actions : this.determineActions('profile', relationship)
         })
     }
     extractDataForGameHistory()
@@ -76,28 +77,62 @@ export class databaseExtractorService
             profilePic : friend.user_details.profile_pic_url,
             removeFriend : friend.user_details.remove_friend,
             other : 'online',
-            icons : relationship ? (friend.relationship ? [friend.relationship.status === 'friend' ?
-                    'la:user-friends' : 'eva:person-add-outline'] : ['la:user-friends']) : ['eva:person-remove-outline','solar:gamepad-minimalistic-linear']
+            actions : this.determineActions('friends', friend.relationship)
             //here gotta link the icons with the convenient urls.
         }))
     }
     extractDataForFriendsRequests()
     {
         const { requests } = this._database
-
+    
         return requests.map(request => ({
             requestId : request.id,
             userId : request.from_user.user_id,
             username : request.from_user.username,
             profilePic : request.from_user.profile_pic_url,
-            acceptRequest : request.accept_request,
+            acceptRequest : request.accept_request, // do not need this anymore
             rejectRequest : request.reject_request,
             other : '2 min ago', // need to find a solution for this ..
-            icons : [
-                'dashicons:no',
-                'dashicons:yes'
-            ]
+            actions : this.determineActions('requests')
         }))
     }
-    
+    extractDataForLeaderboard()
+    {
+        return this._database.map(row => (
+        {
+            userId : row.user_id,
+            username : row.username,
+            rank : row.rank,
+            totalGames : row.total_games
+        })
+        )
+    }
+    determineActions(id, relationship = null)
+    {
+        // console.log(' =>>> relationshipp', relationship)
+        let type
+        if (id === 'profile')
+            type = relationship ? relationship.status : 'me'
+        else if (id === 'friends')
+            type =  relationship ? relationship.status  : 'me-friends'
+        else 
+            type = 'requests'
+
+        // console.log('id  : ', id)
+        // console.log('the type is : ? ', type)
+        // console.log('im here again : ', type)
+        const ActionType = {
+            'friend'  : ['remove_friend'],
+            'stranger' : ['send_request'],
+            'pending' : ['cancel_request','accept_request'],
+            'requested' : ['cancel_request'],
+            'me' : ['edit_profile'],
+            'requests' : ['cancel_request','accept_request']
+        }
+        // console.log('here in the extractor : ', IconType[type])
+        return (ActionType[type])
+    }
 }
+
+
+// 'la:user-friends' : 'eva:person-add-outline'] : ['la:user-friends']) : ['eva:person-remove-outline','solar:gamepad-minimalistic-linear']
