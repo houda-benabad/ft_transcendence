@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from game.models import Player, Game
 from django.db.models import Q
+from django.contrib.auth.models import User
+
 
         
 class GameSerializer( serializers.ModelSerializer ):
@@ -12,6 +14,7 @@ class GameSerializer( serializers.ModelSerializer ):
     class Meta:
         model = Game
         fields = [
+            'id',
             'date_time',
             'type',
             'points',
@@ -56,7 +59,8 @@ class PlayerSerializer( serializers.ModelSerializer ):
         
     def get_general_details( self, obj ):
         return {
-            "points": obj.points,
+            "total_points": obj.points,
+            "total_games": obj.games,
             "rank": self.get_rank( obj ),
             "level": obj.level
         }
@@ -69,15 +73,20 @@ class PlayerSerializer( serializers.ModelSerializer ):
 
 class PlayerRankSerializer( serializers.ModelSerializer ):
     rank = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
     class Meta:
         model= Player
         fields=[
+            'id',
             'rank',
             'username',
-            'games'
+            'total_games'
         ]
 
     def get_rank( self, obj ):
-        players = Player.objects.order_by( "-points" )
+        players = Player.objects.order_by( "-total_points" )
         rank = list(players).index(obj) + 1
         return rank
+    def get_username( self, obj ):
+        user = User.objects.filter( id=obj.userId ).first(  )
+        return user.username

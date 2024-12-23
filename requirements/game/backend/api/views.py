@@ -3,21 +3,23 @@ from rest_framework import generics
 from rest_framework.response import Response
 from .serializer import PlayerSerializer, PlayerRankSerializer
 from game.models import Player
-# Create your views here.
+from django.contrib.auth.models import User
+
 
 class PlayerDetailView( generics.RetrieveAPIView ):
-    lookup_field = 'username'
+    lookup_field = 'userId'
     queryset = Player.objects.all(  )
     serializer_class = PlayerSerializer
 
     def retrieve( self, request, *args, **kwargs ):
-        username = kwargs.get( 'username' )
-        if not username:
-            return Response( data={'detail': 'no username was provided'}, status=404)
-        Player.objects.get_or_create( username=username )
+        userId = kwargs.get( 'userId' )
+        user = User.objects.filter( id=userId).first(  )
+        if not user:
+            return Response( data={'detail': 'no userId was provided'}, status=404)
+        Player.objects.get_or_create( userId=user.id )
         return super().retrieve(request, *args, **kwargs)
 
 class leaderBoardView( generics.ListAPIView ):
     serializer_class =  PlayerRankSerializer
-    queryset = Player.objects.order_by( "-points" )
+    queryset = Player.objects.order_by( "-total_points" )
 
