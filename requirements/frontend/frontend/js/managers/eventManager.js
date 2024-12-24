@@ -1,58 +1,60 @@
-import router  from '../router/router.js'
 import { apiService } from '../services/apiService.js'
 
 export class EventManager
 {
-    constructor()
+    constructor(router)
     {
-        this.init()
-    }
-    init()
-    {
-        // i have one event listeners
+        console.log('im in here in the constructor')
         document.addEventListener('click', this.handleEventDelegation.bind(this))
+        document.addEventListener('submit', this.handleEventDelegation.bind(this))
+        document.addEventListener('input', this.handleEventDelegation.bind(this))
+
+        this._router = router
     }
     handleEventDelegation(event)
     {
-        const htmlElement = event.target
-        console.log('html element : ', htmlElement)
-        // console.log('target :' , event.target)
-        // console.log('333333 here in the manager : ', htmlElement)
-        const tagName = htmlElement.tagName
+        const eventType = event.type
+        const target = event.target
 
-        if (tagName === 'A')
-            event.preventDefault()
-       
-    //   this.determineTheAction(htmlElement)
+        if (target.matches('a'))
+            this.handleAnchorEvents(event, target)
+        else if (target.matches('form') && eventType === 'submit') // do not need that eventType submit
+            this.handleformEvents(event, target)
     }
-    async determineTheAction(htmlElement)
+    handleAnchorEvents(event, target)
     {
-        //will make it more generic
-        // add functions that does for me the work :)
-        const action = htmlElement.getAttribute('action')
-        const userId = htmlElement.getAttribute('userId')
+        // console.log('im in here to handle anchors')
+        event.preventDefault()
 
-        // console.log(' =>>>> html eleemnts is : ', htmlElement)
-        if (action === 'edit_profile')
-            router.navigateTo('/settings')
-        else if (action === 'send_request' || action === 'accept_request')
+        const link = target.getAttribute('data-link')
+        const action = target.getAttribute("data-action")
+
+        if (link)
+            this._router.handleRoute(link)
+        else if (action)
         {
-            // console.log('a malkkk')
-            await apiService.profile.postFriendship(`${action}/${userId}`)
-            if (action === 'send_request')
-                htmlElement.action = 'cancel_request'
-            else if(action === 'accept_request')
-                htmlElement.action = 'to_profile'
-            // htmlElement.content = '<i class="iconify" data-icon="dashicons:no" data-inline="false"></i>'
+            console.log('what action : ', action)
         }
-        else if (action === 'remove_friend' || action === 'cancel_request')
-        {
-            await apiService.profile.deleteFriendship(`${action}/${userId}`)
-            htmlElement.action = 'send_request'
-        }
-        //update icon automatically.
     }
-    //icons as custom eleemnt when i set , automatically it does change .
+    async handleformEvents(event, target)
+    {
+        event.preventDefault()
+        
+        const action = target.getAttribute("data-action")
+        const form = document.querySelector('form')
+
+        const formData = new FormData(form)
+        const formObject = {}
+
+        formData.forEach((value, key) => { formObject[key] = value }) // add the tournament form  and the game one .
+        if (action === 'signin' || action === 'signup')
+            apiService.auth[action](formObject)
+    }
 }
 
-// gotta make the div as a whole of icons . 
+      // await this._apiService.signup(formObject)
+        // console.log('out of the api service lets navigate now to sign in ? ')
+        // this._router.handleRoute('/signin')
+        //here post this values to the backend
+//     eventListeners.on(Anchor, 'click', eventHandlers.auth.signHandler)
+//     eventListeners.on(Anchor2, 'click', eventHandlers.auth.intraHandler)

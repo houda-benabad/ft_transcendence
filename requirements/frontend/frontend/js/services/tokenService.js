@@ -1,4 +1,4 @@
-export class tokenService
+export class TokenService
 {
     constructor()
     {

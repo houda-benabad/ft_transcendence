@@ -1,50 +1,50 @@
-import '../views/profileView.js'
-import '../views/homeView.js'
-import '../views/settingsView.js'
-import '../views/gameSettingsView.js'
-import '../views/gameView.js'
-
-import { eventHandlers } from '../utils/eventHandlers.js'
 import { ROUTES } from '../constants/routes.js'
-import { eventListeners } from '../utils/global.js'
-import { searchService } from '../services/searchService.js'
+import { _tokenService } from '../utils/global.js'
 
-//maybe i should make this a constructor.
-const router = {
-    init : () => 
+export class Router 
+{
+    constructor()
     {
-        // console.log('location pathname :', window.location.pathname)
-        const anchors = document.querySelectorAll('.static')
-        const path = window.location.pathname  === '/' ? '/profile' : window.location.pathname
-        const search = new searchService()
-        eventListeners.setAllByType(anchors, 'click')
-        eventListeners.on(window, 'popstate', eventHandlers.router.popstateHandler)
-        search.init()
+        this._routes = ROUTES
 
-        router.navigateTo(path, false) // route to the view i want, normally it should be profile
-    },
-    navigateTo : (path, addTohistory=true) =>
+        window.addEventListener('popstate', this.handleRoute())
+    }
+    handleRoute(newPath=null)
     {
-        if(addTohistory)
-            history.pushState({path}, {}, path) // how does this work - -
-       
-        const customElement = path.includes('/profile') ? ROUTES.get('/profile') : ROUTES.get(path)
-        const options = customElement === 'profile-view' ? ( path === '/profile' ? 'me' :  path.replace('/profile/', '')) : null
-        router.handleRoute(customElement, options)
-    },
-    handleRoute : (customElement, options) => 
+        const path = newPath || window.location.pathname
+
+        if (_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
+            this.navigateTo('/signin')
+        else if (_tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
+            this.navigateTo('/')
+        else
+            this.navigateTo(path)
+    }
+    navigateTo(path)
     {
-        const main = document.getElementById('main')
+        const route = this._routes[path] || this._routes['/404']
+
+        history.pushState(null, null, path)
+        this.updateContent(route)
+    }
+    updateContent(route)
+    {
+        let fragment = document.createDocumentFragment()
         const app = document.getElementById('app')
+        const main = document.getElementById('main')
 
-        let mainContent = document.createElement(customElement)
+        if (route.customElement)
+            fragment = document.createElement(route.customElement)
+        else
+        {
+            const templateLitteral = route.template
+            const template = document.createElement('template')
 
-        if (options)
-            mainContent.userId = options
-        const targetContainer = customElement === 'game-view' ? app : main
-
-        targetContainer.replaceChildren(mainContent)
-        
+            template.innerHTML = templateLitteral
+            fragment.appendChild(template.content)
+        }
+        const container = route.allScreen ? app : main
+        container.replaceChildren(fragment)
     }
 }
 
