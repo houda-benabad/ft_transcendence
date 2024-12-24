@@ -44,24 +44,24 @@ class RequestConfiguration
     }
 }
 
-const generateHttpRequests = (test) => () =>
-{
-
-    // console.log('hallo wolrddd ')
-    createPostRequest()
+const generateHttpRequests = () =>
+({
+    createPostRequest(endpoint, options = {})
     {
-        console.log('im in here !!!!  : ', test)
-    }
-}
-
-const request = new RequestConfiguration()
+        return(body) => {
+            const request = new RequestConfiguration()
                 .withMethod('POST')
-                .withAuth(false)
-                .withModal('you logged in successfully')
-                .withBody({username : 'john', password : 'hello_worldiee'})
+                .withBody(body)
 
-console.log('request : ', request)
+            console.log(Object.entries(options).length)
+            if (Object.entries(options))
+                request.withAuth(options.needsAuth).withModal(options.modalMessage)
+                        
+            console.log('request  : ', request)
+        }
+    }
+})
 
-const generatedHttpRequests = generateHttpRequests(true)
+const generatedHttpRequests = generateHttpRequests()
 
-console.log('test : ', generatedHttpRequests.createPostRequest())
+generatedHttpRequests.createPostRequest('endpoint OF SIGNUP', {needsAuth :  false, modalMessage : 'welcome to pingyyy !!!'})({username : 'john', password : 'test'}) // lets say here we are sign in
