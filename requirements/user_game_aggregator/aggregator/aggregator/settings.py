@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +69,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'aggregator.wsgi.application'
+# WSGI_APPLICATION = 'aggregator.wsgi.application'
+ASGI_APPLICATION = 'aggregator.asgi.application'
 
 
 # Database
@@ -121,3 +124,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+USER_PROFILE_URL = "http://user_management:8000/api/profiles"#os.environ.get("USER_PROFILE_URL")
+GAME_HISTORY_URL = os.environ.get("GAME_HISTORY_URL")
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ['Bearer'],
+    "SIGNING_KEY": os.environ.get("JWT_SIGNING_KEY")
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+}

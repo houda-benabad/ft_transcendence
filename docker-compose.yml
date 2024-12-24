@@ -1,11 +1,12 @@
   services:
-    authentication:
-      container_name: authentication
+
+    user_management:
+      container_name: user_management
       depends_on:
         postgres:
           condition: service_healthy
       build:
-        context: ./requirements/authentication/
+        context: ./requirements/user_management/
         dockerfile: Dockerfile
       ports:
         - 8000:8000
@@ -60,8 +61,9 @@
       networks:
         - transcendence
       depends_on:
-        - authentication
+        - user_management
         - frontend
+        - game
       # volumes:
       #   - frontVolume:/var/www
 
@@ -92,11 +94,16 @@
         dockerfile: Dockerfile
       ports:
         - 8002:8000
+      env_file:
+        - .env
       restart: on-failure
       networks:
         - transcendence
       volumes:
-        - aggrvolume:/usr/src/user_game_aggregator
+        - aggrvolume:/usr/src/aggregator
+      depends_on:
+        - user_management
+        # - game
   
   networks:
     transcendence:
@@ -109,7 +116,7 @@
       driver_opts:
         type: none
         o: bind
-        device: ./requirements/authentication/user_management
+        device: ./requirements/user_management/user_management
 
     gamevolume:
       driver: local
@@ -137,6 +144,6 @@
       driver_opts:
         type: none
         o: bind
-        device: ./requirements/user_game_aggregator
+        device: ./requirements/user_game_aggregator/aggregator
 
     
