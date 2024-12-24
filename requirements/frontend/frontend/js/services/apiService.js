@@ -1,10 +1,12 @@
-export const apiService =
+class RequestConfiguration
 {
-    auth :
+    constructor()
     {
-        signin : (body) =>
+        this._config = 
         {
-            console.log('hallo people im in sign in')
+            method = 'GET',
+            
+
         }
     }
 }
