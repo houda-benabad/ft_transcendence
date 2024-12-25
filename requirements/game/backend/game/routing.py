@@ -4,5 +4,5 @@ from . import consumers
 
 
 websocket_urlpatterns = [
-    path('wss/remote/<str:username>', consumers.GameConsumer.as_asgi())
+    path('wss/remote/<int:userId>', consumers.GameConsumer.as_asgi())
 ]

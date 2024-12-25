@@ -19,18 +19,32 @@ class GameConsumer(AsyncWebsocketConsumer):
 		self.playerModel = None
 
 	async def connect(self):
-		username = self.scope['url_route']['kwargs']['username']
-		await self.accept()
+		try:
+			userId = self.scope['url_route']['kwargs']['userId']
 
-		players.append(self)
-		self.playerModel, created = await sync_to_async( Player.objects.get_or_create )( username=username )
+			# send request to hind to check if user is authenticated
 
-		if  len(players) >= 2:
-			await self.start_game()
+			await self.accept()
+			players.append(self)
+			self.playerModel = await sync_to_async( Player.objects.get_or_create )( userId=userId )
+
+			if len(players) >= 2:
+				await self.start_game()
+
+		except Exception:
+			self.send_error( "Connection rejected" )
 
 	async def start_game(self):
 		players_set = [players.pop(0) for num in range(2)]
 		asyncio.create_task(game.startGame(self.channel_layer, players_set[0], players_set[1]))
+
+	async def send_error( self, error_message ):
+		await self.send( text_data=json.dumps( 
+            {
+				'type' : 'Error',
+				'data' : error_message
+			}
+        ) )
 
 	async def receive(self, text_data):
 		dataJson = json.loads(text_data)
@@ -54,7 +68,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 		}))
   
 	async def start(self, event):
-		print( "oh hell yeah" )
 		data = event['data']
 		await self.send(text_data=json.dumps({
 			'type': 'start',

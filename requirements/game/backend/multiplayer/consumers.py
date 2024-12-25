@@ -11,22 +11,28 @@ import uuid
 players  = []
 
 class GameConsumer(AsyncWebsocketConsumer):
-	gameOption = {}	
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.game_group_name = ""
 		self.keycode= 0
-		self.game_result = ''
+		self.game_result = 'Won'
+		self.game_group_name = ''
+		self.playerModel = None
 
 	async def connect(self):
-		await self.accept()
-		players.append(self)
-		await self.send(text_data=json.dumps({
-			'type': 'Connected',
-		}))
-		print( 'CONSUMERS = ', len(players))
-		if len(players) >= 4:
-			await self.start_game(players)
+		try:
+			userId = self.scope['url_route']['kwargs']['userId']
+
+			# send request to hind to check if user is authenticated
+
+			await self.accept()
+			players.append(self)
+			self.playerModel = await sync_to_async( Player.objects.get_or_create )( userId=userId )
+
+			if len(players) >= 4:
+				await self.start_game()
+
+		except Exception:
+			self.send_error( "Connection rejected" )
 
 	async def start_game(self, players):
 		players_set = []

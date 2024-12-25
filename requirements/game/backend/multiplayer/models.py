@@ -1,32 +1,34 @@
 from django.db import models
-
-# Create your models
-
-
-class Game(models.Model):
-	class status(models.TextChoices):
-		STARTED = "STARTED", "started"
-		WAITING = "WAITING" , "waiting"
-
-	created_at = models.DateTimeField(auto_now=True)
-	player_count = models.IntegerField(default=0)
-
-	gameStatus = models.CharField(max_length=7, choices=status.choices, default='')
-
-	def __str__(self):
-		return f"{self.pk}"
+from django.utils import timezone
+from django.contrib.auth.models import User
 
 
+class Player( models.Model ):
+	# user = models.ForeignKey( User, on_delete=models.CASCADE, null=True )
+	userId = models.IntegerField( blank=True, null=True  )
+	total_points = models.IntegerField( default=0 )
+	total_games = models.IntegerField( default=0 )
+	rank = models.IntegerField( default=0 )
+	level = models.IntegerField( default=0 )
 
+	def __str__( self ):
+		return f"player-{self.userId}"
 
-class Player(models.Model):
-	class status(models.TextChoices):
-		W = "W", "W"
-		L = "L" , "L"
+class Multiplayer( models.Model ):
+	date_time = models.DateTimeField( auto_now_add=True)
+	player1 = models.ForeignKey( "Player", on_delete=models.CASCADE, null=True, related_name='player1_games' )
+	player2 = models.ForeignKey( "Player", on_delete=models.CASCADE, null=True, related_name='player2_games')
+	player3 = models.ForeignKey( "Player", on_delete=models.CASCADE, null=True, related_name='player2_games')
+	player4 = models.ForeignKey( "Player", on_delete=models.CASCADE, null=True, related_name='player2_games')
+	team1_points = models.IntegerField( default=0 )
+	team2_points = models.IntegerField( default=0 )
+	winner = models.ForeignKey( "Player", on_delete=models.CASCADE, null=True  )
+	
+	def formatted_date_time(self):
+		local_time = timezone.localtime(self.date_time)
+		return local_time.strftime('%Y-%m-%d/ %H:%M')
  
-	name = models.CharField(max_length=50)
-	is_host = models.BooleanField(default=False)
-	game = models.ForeignKey("Game" , on_delete=models.CASCADE, null=True)
-	game_result = models.CharField(max_length=1,choices=status.choices, default='L')
-	def __str__(self):
-		return f"{self.name}{self.pk}"
+	def __str__( self ):
+		return f"{self.player1}-{self.player2} vs {self.player3}-{self.player4}  at {self.date_time}"
+
+
