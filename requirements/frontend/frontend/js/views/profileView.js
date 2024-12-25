@@ -3,7 +3,7 @@ import { database } from "../constants/database.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
 import { addListenersForFriendsBox} from '../utils/eventListeners.js'
-import { eventListeners } from "../utils/global.js"
+// import { eventListeners } from "../utils/global.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 
 export class ProfileView extends HTMLElement
@@ -24,12 +24,13 @@ export class ProfileView extends HTMLElement
     async connectedCallback() 
     {
         this._database = await apiService.user.getUserInfos(this._userId)
-        this._dataTransformer = new databaseExtractorService(this._database)
+        console.log(' =>>>>>>> database : ', this._database)
 
-        // console.log(' =>>>>>>> database : ', this._database)
-        this.innerHTML = profileTemplate.layout()
-        this.addProfile()
-        this.gameHistory()
+        // this._dataTransformer = new databaseExtractorService(this._database)
+
+        // this.innerHTML = profileTemplate.layout()
+        // this.addProfile()
+        // this.gameHistory()
         // this.addFriendsBox()
         // this.setupEventListenersAndAnimations()
     }

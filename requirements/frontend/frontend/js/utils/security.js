@@ -4,10 +4,10 @@ export function escapeHtml(str)
         return str
 
     return str
-        .replace(/</g, '&lt')
-        .replace(/>/g, '&gt')
-        .replace(/&/g, '&amp')
-        .replace(/"/g, '&quot')
-        .replace(/'/g, '&apos')
-        .replace(/</g, '&lt')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
+        .replace(/</g, '&lt;')
 }

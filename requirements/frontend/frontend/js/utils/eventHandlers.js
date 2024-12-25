@@ -1,13 +1,13 @@
-import { updateData , sendData, reset} from './utils.js'
-import { apiService } from '../services/apiService.js'
-import router from '../router/router.js'
-import { modalService } from '../services/modalService.js'
-import { MODE } from '../constants/engine.js'
-import { local } from '../mods/local.js'
-import { formService } from '../services/formService.js'
-import { eventListeners } from './global.js'
-import { gameManager } from '../managers/gameManager.js'
-import { remote } from '../mods/remote.js'
+// import { updateData , sendData, reset} from './utils.js'
+// import { apiService } from '../services/apiService.js'
+// import router from '../router/router.js'
+// import { modalService } from '../services/modalService.js'
+// import { MODE } from '../constants/engine.js'
+// import { local } from '../mods/local.js'
+// import { formService } from '../services/formService.js'
+// import { eventListeners } from './global.js'
+// import { gameManager } from '../managers/gameManager.js'
+// import { remote } from '../mods/remote.js'
 
 //break it into small chunks and cleanse this out .
 export const eventHandlers = 

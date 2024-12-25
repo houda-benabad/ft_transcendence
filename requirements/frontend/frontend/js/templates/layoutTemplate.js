@@ -15,13 +15,13 @@ export function layoutTemplate()
         <div id="navbar">
             <nav>
                 <div id="nav-top">
-                    <a href="/home" data-action="router" class="static"><i class="iconify" data-icon="hugeicons:home-02" data-inline="false"></i></a>
-                    <a href="/profile" data-action="router" class="static selected"><i class="iconify" data-icon="fluent:person-20-regular" data-inline="false"></i></a>
-                    <a href="/game" data-action="router" class="static"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
+                    <a href="/" data-action="router" class="selected"><i class="iconify" data-icon="hugeicons:home-02" data-inline="false"></i></a>
+                    <a href="/profile" data-action="router"><i class="iconify" data-icon="fluent:person-20-regular" data-inline="false"></i></a>
+                    <a href="/game" data-action="router"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
                 </div>
                 <div id="nav-btm">
-                    <a href="/settings" data-action="router" class="static"><i class="iconify" data-icon="solar:settings-outline" data-inline="false"></i></a>
-                    <a href="/logout" data-action="router" class="static"><i class="iconify" data-icon="streamline:logout-1" data-inline="false"></i></a>
+                    <a href="/settings" data-action="router"><i class="iconify" data-icon="solar:settings-outline" data-inline="false"></i></a>
+                    <a href="/logout" data-action="router"><i class="iconify" data-icon="streamline:logout-1" data-inline="false"></i></a>
                 </div>
             </nav>
         </div>

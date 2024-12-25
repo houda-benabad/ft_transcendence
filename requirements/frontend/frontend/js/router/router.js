@@ -1,5 +1,12 @@
 import { ROUTES } from '../constants/routes.js'
 import { _tokenService } from '../utils/global.js'
+import { reset } from '../utils/utils.js'
+
+import '../views/homeView.js'
+import '../views/profileView.js'
+import '../views/gameSettingsView.js'
+import '../views/settingsView.js'
+import '../views/gameView.js'
 
 export class Router 
 {
@@ -7,13 +14,29 @@ export class Router
     {
         this._routes = ROUTES
 
+        this.init()
+    }
+   
+    async init() // this needs cleansing and to make it more maintenable
+    {
+        
+        if (_tokenService.isAuthenticated())
+        {
+            await reset()
+            document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
+            
+            const element = document.querySelector(`[href="${window.location.pathname}"]`)
+            
+            if (element)
+                element.classList.add('selected')
+        }
         window.addEventListener('popstate', this.handleRoute())
     }
     handleRoute(newPath=null)
     {
         const path = newPath || window.location.pathname
 
-        if (_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
+        if (!_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
         else if (_tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
             this.navigateTo('/')
@@ -47,5 +70,3 @@ export class Router
         container.replaceChildren(fragment)
     }
 }
-
-export default router

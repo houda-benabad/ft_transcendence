@@ -1,13 +1,18 @@
+import { ENDPOINTS } from '../constants/endpoints.js'
+import {_tokenService} from '../utils/global.js'
+import { modalService } from './modalService.js'
+
 class RequestConfiguration
 {
     constructor()
     {
         this._config = 
         {
+            url : '',
             method : 'GET',
             needsAuth : true,
             showModal : false,
-            modalMessage : '',
+            modalMessage : 'default modal message',
             body : null,
             params : null
         }
@@ -15,6 +20,11 @@ class RequestConfiguration
     get requestConfig()
     {
         return this._config
+    }
+    withUrl(url)
+    {
+        this._config.url = url
+        return this
     }
     withMethod(method)
     {
@@ -44,24 +54,117 @@ class RequestConfiguration
     }
 }
 
-const generateHttpRequests = () =>
-({
-    createPostRequest(endpoint, options = {})
-    {
-        return(body) => {
-            const request = new RequestConfiguration()
-                .withMethod('POST')
-                .withBody(body)
 
-            console.log(Object.entries(options).length)
-            if (Object.entries(options))
-                request.withAuth(options.needsAuth).withModal(options.modalMessage)
-                        
-            console.log('request  : ', request)
+class ApiService
+{
+    constructor()
+    {
+        this._requestConfig =  null
+        this._resolve = null
+    }
+    set requestConfig(newValue)
+    {
+        this._requestConfig =  newValue
+    }
+    set resolve(newValue)
+    {
+        this._resolve = newValue
+    }
+    async request()
+    {
+        let {
+            url,
+            method,
+            needsAuth,
+            showModal, 
+            modalMessage,
+            body,
+        } = this._requestConfig
+
+        try{
+            const response = await fetch(url , {
+                method,
+                headers : {
+                    "Content-Type": "application/json",
+                    "Authorization": needsAuth ? `token ${_tokenService.token}` : '',
+                },
+                body : body ? JSON.stringify(body) : ''
+            })
+            if (!response.ok && response.status === 500)
+                throw new Error(response.status)
+            
+            const contentType = response.headers.get('Content-Type');
+            if (!contentType)
+            {
+                console.log('value returned in here !!!')
+                return this._resolve()
+            }
+
+            const responseBody = await response.json()
+            if (response.ok)
+                this._resolve(responseBody)
+            else
+                modalMessage = this.updateModalMessaga(responseBody)
+            if (showModal)
+                console.log(modalMessage) // here replaced on later on by the showmodal service
+        }
+        catch(error)
+        {
+            console.log('the error that was caught in api service is ', error)
         }
     }
+    updateModalMessaga(responseBody)
+    {
+        const entries = Object.entries(responseBody)
+        const [key, value] = entries[0]
+
+        return `${key} : ${value}`
+    }
+}
+
+
+const generateHttpRequests = (api) =>
+({
+    createPostRequest(endpoint, {needsAuth, modalMessage}) // see if gotta make this object empty
+    {
+        return (body, resolve) => {
+            const request = new RequestConfiguration()
+                .withUrl(endpoint)
+                .withMethod('POST')
+                .withBody(body)
+                .withAuth(needsAuth)
+                .withModal(modalMessage)
+                        
+            api.requestConfig = request.requestConfig
+            api.resolve = resolve
+            api.request()
+        }
+    },
+    createGetRequest(endpoint, {needsAuth, modalMessage = null})
+    {
+        return (id)
+    }
 })
+const api = new ApiService()
+const generatedHttpRequests = generateHttpRequests(api)
 
-const generatedHttpRequests = generateHttpRequests()
-
-generatedHttpRequests.createPostRequest('endpoint OF SIGNUP', {needsAuth :  false, modalMessage : 'welcome to pingyyy !!!'})({username : 'john', password : 'test'}) // lets say here we are sign in
+export const apiService = 
+{
+    auth :
+    {
+        signin : (body) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_IN, {needsAuth : false, modalMessage: 'you logged in successffully'})(body, resolve)
+        }),
+        signup : (body) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : false, modalMessage: 'you logged in successffully'})(body, resolve)
+        })
+    },
+    user :
+    {
+        profile : (id) => new Promise (resolve => {
+            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : true})(id, resolve)
+        })
+    }
+}

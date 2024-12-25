@@ -1,9 +1,9 @@
-import router from "../router/router.js"
-import { formService } from "../services/formService.js"
-import { modalService } from "../services/modalService.js"
-import Local from "./localManagers.js"
-import { reset } from "../utils/utils.js"
-import { local } from "../mods/local.js"
+// import router from "../router/router.js"
+// import { formService } from "../services/formService.js"
+// import { modalService } from "../services/modalService.js"
+// import Local from "./localManagers.js"
+// import { reset } from "../utils/utils.js"
+// import { local } from "../mods/local.js"
 
 export class gameManager 
 {
