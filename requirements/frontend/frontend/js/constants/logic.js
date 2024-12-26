@@ -1,16 +1,16 @@
 export const VELOCITY = {
-    PLAYER : .05,
+    PLAYER : .09,
     BALL : {
-        x: (Math.random() * (0.07 - 0.02)) + 0.02,
+        x: 0.03,
         y:0,
-        z:(Math.random() * (0.05 - 0.02)) + 0.02
+        z:0.05
     }
 }
 
 export const ACTIONS  = {
     'api' : 'updateApi',
     'score' : 'updateScore',
-    'Connected' : 'updateConnection',
+    'start' : 'updateStart',
     'endGame' : 'updateState'
 }
 

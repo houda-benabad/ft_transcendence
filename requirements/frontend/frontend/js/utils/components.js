@@ -73,7 +73,7 @@ export default class Components {
         
         const textureLoader = new THREE.TextureLoader(  );
         textureLoader.load( 
-            `static/assets/background/${background}.png`,
+            `../../assets/background/${background}.png`,
             ( texture ) => {
                 texture.encoding = THREE.sRGBEncoding;
                 texture.minFilter = THREE.LinearMipmapLinearFilter;

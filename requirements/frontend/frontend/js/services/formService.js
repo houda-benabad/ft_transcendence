@@ -33,7 +33,7 @@ export const formService =
         return new Promise (resolve => {
             const form = document.querySelector('form')
     
-            eventListeners.on(form, 'submit', (event) => eventHandlers.form.tournamentFormHandler(event))
+            eventListeners.on(form, 'submit', (event) => eventHandlers.form.tournamentFormHandler(event, resolve))
         })
     },
     game()

@@ -1,9 +1,8 @@
 import { eventService } from "../services/eventService.js"
-import { searchService } from "../services/searchService.js"
 import { tokenService } from "../services/tokenService.js"
 
+//those variables are global, some data inside of them i dont want them to change .
 const eventListeners = new eventService()
 const token = new tokenService()
-const search = new searchService() // i dont know if this is gonna be proper or not
 
-export {eventListeners, token, search}
+export {eventListeners, token}

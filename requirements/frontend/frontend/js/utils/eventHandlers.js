@@ -6,103 +6,118 @@ import { MODE } from '../constants/engine.js'
 import { local } from '../mods/local.js'
 import { formService } from '../services/formService.js'
 import { eventListeners } from './global.js'
+import { gameManager } from '../managers/gameManager.js'
+import { remote } from '../mods/remote.js'
 
-//break it into small chunks
+//break it into small chunks and cleanse this out .
 export const eventHandlers = 
 {
     auth :
     {
-        signHandler(event)
+        signHandler( event )
         {
-            const signAnchor = document.getElementById('sign-anchor')
+            const signAnchor = document.getElementById( 'sign-anchor' )
 
-            event.preventDefault()
-            document.getElementById('signDiv').dataset.value = signAnchor.innerHTML
-            updateData()
+            event.preventDefault(  )
+            document.getElementById( 'signDiv' ).dataset.value = signAnchor.innerHTML
+            updateData(  )
         },
-        async intraHandler(event)
+        async intraHandler( event )
         {
-            event.preventDefault()
-            await apiService.auth.intra()
-            await reset()
-            router.init()
+            event.preventDefault(  )
+            await apiService.auth.intra(  )
+            await reset(  )
+            router.init(  )
         }
     },
     form :
     {
-        tournamentFormHandler(event)
+        tournamentFormHandler( event, resolve )
         {
-            const form = document.querySelector('form')
+            const form = document.querySelector( 'form' )
 
-            event.preventDefault()
+            event.preventDefault(  )
                 
-            let data = new FormData(form);
-            let playersObject = Object.fromEntries(data)
-            let players = Object.values(playersObject)
+            let data = new FormData( form );
+            let playersObject = Object.fromEntries( data )
+            let players = Object.values( playersObject )
+            resolve( players )
         },
-        gameFormHandler(event, resolve)
+        gameFormHandler( event, resolve )
         {
-            const form = document.querySelector('form')
+            const form = document.querySelector( 'form' )
 
-            event.preventDefault()
+            event.preventDefault(  )
 
-            let data = new FormData(form);
-            let gameSettings = Object.fromEntries(data)
-            resolve(gameSettings)
+            let data = new FormData( form );
+            let gameSettings = Object.fromEntries( data )
+            resolve( gameSettings )
         }
     },
     router : 
     {
-        anchorsNavHandler(event, e)
+        anchorsNavHandler( event, e )
         {
-            document.querySelectorAll('.static').forEach((item) => item.classList.remove('selected'))
-            e.classList.add('selected')
+            document.querySelectorAll( '.static' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
+            e.classList.add( 'selected' )
 
-            event.preventDefault()
-            const path = e.getAttribute('href')
-            router.navigateTo(path)
+            event.preventDefault(  )
+            const path = e.getAttribute( 'href' )
+            router.navigateTo( path )
         },
-        popstateHandler(event)
+        popstateHandler( event )
         {
-            const path = event.state ? event.state.path : './home'
+            const path = event.state ? event.state.path : '/home'
             router.navigateTo(path, false)
 
-            document.querySelectorAll('.static').forEach((item) => item.classList.remove('selected'))
-            document.querySelector(`a[href="${path}"]`).classList.add('selected')
+            document.querySelectorAll( '.static' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
+            document.querySelector( `a[href="${path}"]` ).classList.add( 'selected' )
         }
     },
     // i do think this as a constructor it would be a good idea - 
     home :
     {
-        async playGame(event)
+        async playGame( event )
         {
             const mode = event.target.dataset.mode
-            
-            if (mode === 'local')
-                {
-                console.log( "Clicked" )
-                // generic
-                await router.navigateTo('./game-settings')
-                const gameSettings = await formService.game()
-                router.navigateTo('./game')
-                // non generic
-                await local(gameSettings)
-                await modalService.show( 'Game over', 'hihi')
-                //generic
-                await reset()
-                router.navigateTo('./home')
+            const manager = new gameManager(  )
+            if ( mode === MODE.LOCAL ){
+                await router.navigateTo( '/game-settings' )
+                this.gameSettings = await formService.game(  )
+                router.navigateTo( './game' )
+                await local( this.gameSettings , ["player1", "player2"])
+                await modalService.show(  'Game over', 'hihi' )
+                await reset(  )
+                router.navigateTo( '/home' )
             }
+            else if ( mode == MODE.TOURNAMENT){
+                const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
+                await router.navigateTo( '/game-settings' )
+                this.gameSettings = await formService.game(  )
+                router.navigateTo( './game' )
+                const winners = []
+                winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
+                winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
+                const winner = await local(  this.gameSettings , winners )
+                await modalService.show(  'Game over', 'hihi' )
+                await reset(  )
+                router.navigateTo( '/home' )
+            }
+            else if ( mode == MODE.REMOTE ){
+                remote(  )
+            }
+
         }
     },
     game :
     {
-        slider(event, mode)
+        slider( event, mode )
         {
-            const num = document.getElementById('slider-number')
-            const modeInput = document.getElementById('slider-mode')
-            const input = document.getElementById('slider-input')
+            const num = document.getElementById( 'slider-number' )
+            const modeInput = document.getElementById( 'slider-mode' )
+            const input = document.getElementById( 'slider-input' )
 
-            if (mode.value === 'score')
+            if ( mode.value === 'score' )
                 {
                     input.min = 1
                     input.max = 5
@@ -117,50 +132,50 @@ export const eventHandlers =
                 num.innerHTML = `${input.value}`
                 modeInput.innerHTML = `${mode.value}`
         },
-        inputOfSlider()
+        inputOfSlider(  )
         {
-            const num = document.getElementById('slider-number')
-            const input = document.getElementById('slider-input')
+            const num = document.getElementById( 'slider-number' )
+            const input = document.getElementById( 'slider-input' )
 
             num.innerHTML = `${input.value}`
         }
     },
     settings :
     {
-        updateImage()
+        updateImage(  )
         {
-            console.log('the image is to be updated')
+            console.log( 'the image is to be updated' )
         },
-        deleteImage()
+        deleteImage(  )
         {
-            console.log('the image is to be deleted')
+            console.log( 'the image is to be deleted' )
         },
-        saveUsername()
+        saveUsername(  )
         {
-            console.log('a new username got to be updated')
+            console.log( 'a new username got to be updated' )
         },
-        addPassword()
+        addPassword(  )
         {
-            console.log('update the user password')
+            console.log( 'update the user password' )
         },
-        twofa()
+        twofa(  )
         {
-            console.log('two fa was activated or desactivated')
+            console.log( 'two fa was activated or desactivated' )
         },
-        deleteAccount()
+        deleteAccount(  )
         {
-            console.log('the account need to be deleted')
+            console.log( 'the account need to be deleted' )
         }
     },
-    removeModalHandler(event, resolve) // what type of function is this
+    removeModalHandler( event, resolve ) // what type of function is this
     {
-        const modalBackground = document.getElementById('modal-background')
+        const modalBackground = document.getElementById( 'modal-background' )
         
-        if (event.target === modalBackground)
+        if ( event.target === modalBackground )
         {
-            eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler)
-            modalBackground.remove()
-            resolve()
+            eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
+            modalBackground.remove(  )
+            resolve(  )
         }
     }
 }

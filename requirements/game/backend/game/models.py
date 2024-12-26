@@ -1,15 +1,18 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+
 
 class Player( models.Model ):
-	username = models.CharField( max_length=50 )
-	points = models.IntegerField( default=0 )
-	games = models.IntegerField( default=0 )
+	# user = models.ForeignKey( User, on_delete=models.CASCADE, null=True )
+	userId = models.IntegerField( blank=True, null=True  )
+	total_points = models.IntegerField( default=0 )
+	total_games = models.IntegerField( default=0 )
 	rank = models.IntegerField( default=0 )
 	level = models.IntegerField( default=0 )
 
 	def __str__( self ):
-		return f"{self.username}"
+		return f"player-{self.userId}"
 
 class Game( models.Model ):
 	date_time = models.DateTimeField( auto_now_add=True)

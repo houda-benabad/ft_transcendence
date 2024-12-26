@@ -5,10 +5,12 @@ import { token } from '../utils/global.js'
 
 const serverIp = 'http://localhost:8000/api/'
 
+//this need real update, it should be a generic function , should nt it be .
 export const apiService = 
 { 
     async fetchApi (url, options = {})
     {
+        // console.log('url  : ', url)
         // console.log('options :', options)
         return new Promise
         (async (resolve) => {
@@ -20,14 +22,18 @@ export const apiService =
                     ...options.headers
                 }
             })
+            const contentType = response.headers.get('Content-Type');
+            if (!contentType)
+            {
+                console.log('there is no body')
+                resolve()
+                return ;
+            }
             const responseBody = await response.json()
             const entries = Object.entries(responseBody)
-            //this is here the messages i show when login and sign up , should be customized since this is a generic function
+
             if (!response.ok && response.status === 500)
-            {
-                console.log('im hierrrr -- ')
                 throw new Error(response.status)
-            }
             else if (response.ok)
             {
                 
@@ -102,6 +108,41 @@ export const apiService =
             const url = `${ENDPOINTS.SEARCH}?search=${encodeURIComponent(query)}`
 
             return apiService.fetchApi(url, {
+                headers: 
+                {
+                    "Authorization": `token ${token.token}`,
+                }
+            })
+        }
+    },
+    profile :
+    {
+        postFriendship(id)
+        {
+            return apiService.fetchApi(ENDPOINTS.FRIENDSHIP + id, {
+                method: 'POST',
+                headers: 
+                {
+                    "Authorization": `token ${token.token}`,
+                }
+            })
+        },
+        deleteFriendship(id)
+        {
+            return apiService.fetchApi(ENDPOINTS.FRIENDSHIP + id, {
+                method: 'DELETE',
+                headers: 
+                {
+                    "Authorization": `token ${token.token}`,
+                }
+            })
+        }
+    },
+    home :
+    {
+        getLeaderboardData()
+        {
+            return apiService.fetchApi(ENDPOINTS.LEADERBOARD , {
                 headers: 
                 {
                     "Authorization": `token ${token.token}`,

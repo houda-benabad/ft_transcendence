@@ -1,3 +1,6 @@
+import { escapeHtml } from "../utils/security.js"
+import { Icons } from "../componants/customElements.js"
+
 export const profileTemplate  =
 {
     layout()
@@ -8,20 +11,33 @@ export const profileTemplate  =
             <div class="friends-box"></div>`
         )
     },
+    // gotta make this anchor box may contain two elements .
     profileBox(db)
     {
+        let dynamicPart = ""
+        
+        // console.log('im in here  : ', db.iconsActions) // this should be added as a div
+        // db.actions.forEach((action) =>
+        // {  
+        //     // dynamicPart += `
+        //     // <div class="anchor-box square">
+        //     //       <a href="#" data-action="${action}" data-user-id=${escapeHtml(db.userId)}><i class="iconify" data-icon="${icon}" data-inline="false"></i></a>
+        //     // </div>`
+        //     dynamicPart += `
+        //     <div class="anchor-box square">
+        //         <a href='#' is="custom-icon" action="${action}" userId="${db.userId}"><i class="iconify" data-inline="false"></i></a>
+        //     </div>`
+            
+        // })
         return (`
             <div id="box">
             <div id="profile-box1-top">
                 <div id="profile-box1-top1">
-                    <img src="${db.profilePic}">
+                    <img src="${escapeHtml(db.profilePic)}">
                     <div id="profile-box1-top-id">
-                        <h2 id="profile-box1-top-username">${db.username}</h2>
-                        <p class="status profile-box1-box-text">${db.status}</p>
+                        <h2 id="profile-box1-top-username">${escapeHtml(db.username)}</h2>
+                        <p class="status profile-box1-box-text">${escapeHtml(db.status)}</p>
                     </div>
-                </div>
-                <div class="anchor-box square">
-                    <a href="./edit-profile"><i class="iconify" data-icon="${db.iconType}" data-inline="false"></i></a>
                 </div>
             </div>
             <div id="profile-box1-middle">
@@ -36,22 +52,22 @@ export const profileTemplate  =
             <div id="profile-box1-bottom">
                 <div>
                     <p class="profile-box1-box-text">total Points</p>
-                    <p class="profile-box1-bottom-data">${db.totalPoints}</p>
+                    <p class="profile-box1-bottom-data">${escapeHtml(db.totalPoints)}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
                     <p class="profile-box1-box-text">total Games</p>
-                    <p class="profile-box1-bottom-data">${db.totalGames}</p>
+                    <p class="profile-box1-bottom-data">${escapeHtml(db.totalGames)}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
                     <p class="profile-box1-box-text">friends</p>
-                    <p class="profile-box1-bottom-data">${db.friendsCount}</p>
+                    <p class="profile-box1-bottom-data">${escapeHtml(db.friendsCount)}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
                     <p class="profile-box1-box-text">Rank</p>
-                    <p class="profile-box1-bottom-data">${db.rank}</p>
+                    <p class="profile-box1-bottom-data">${escapeHtml(db.rank)}</p>
                 </div>
             </div>
         </div>`)
@@ -65,10 +81,10 @@ export const profileTemplate  =
         db.forEach(e => {
             dynamicPart += 
             `<tr>
-                <td>${e.gameType}</td>
-                <td>${e.dateTime}</td>
-                <td>${e.gamePoints}</td>
-                <td>${e.gameStatus}</td>
+                <td>${escapeHtml(e.gameType)}</td>
+                <td>${escapeHtml(e.dateTime)}</td>
+                <td>${escapeHtml(e.gamePoints)}</td>
+                <td>${escapeHtml(e.gameStatus)}</td>
             </tr>
             `
         });
@@ -109,14 +125,16 @@ export const profileTemplate  =
 
         return `${dynamicPart}<div id="friends-box-container"></div>`
     },
-    friendsBoxConatainer(db) // need some cleansing ... and this is not a template .
+    friendsBoxConatainer(db) //rthis is not a template .
     {
         let friendsBoxConatainer = document.getElementById('friends-box-container')
         let fragment = document.createDocumentFragment()
         
-        if (db.length === 0)
+        if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
         {
-            const value = this.selectedChoice ? this.selectedChoice.id : 'friends'
+            const selectedChoice = document.querySelector('.selected-choice')
+            const value = selectedChoice ? selectedChoice.id : 'friends'
+
             friendsBoxConatainer.innerHTML = `<p>there is no ${value} at the moment</p>`
             return ;
         }
@@ -126,9 +144,9 @@ export const profileTemplate  =
             friendBoxItem.classList.add('friends-box-item')
             friendBoxItem.innerHTML =
             `
-                <img src='${e.profilePic}'>
+                <img src='${escapeHtml(e.profilePic)}'>
                 <div class="user-infos">
-                    <p class="username">${e.username}</p>
+                    <p class="username">${escapeHtml(e.username)}</p>
                     <p class="other">${e.other}</p>
                 </div>
             `
@@ -136,8 +154,9 @@ export const profileTemplate  =
 
             iconsDiv.classList.add('icons')
             iconsDiv.innerHTML = ''
-            e.icons.forEach((e, index) => {
-                iconsDiv.innerHTML += ` <a href="./play" ><i class="iconify ${index === 0 ? 'first' : 'second'}" data-icon="${e}" data-inline="false"></i></a>`
+            e.actions.forEach((action,index) =>
+            {  
+                iconsDiv.innerHTML += ` <a href="#" data-action="${action}" data-user-id="${e.userId}" is="custom-icon"><i class="iconify ${index === 0 ? 'first' : 'second'}" data-inline="false"></i></a>`
             })
             friendBoxItem.appendChild(iconsDiv)
 

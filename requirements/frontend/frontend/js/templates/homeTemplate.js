@@ -1,4 +1,5 @@
 import { HOME } from '../constants/home.js'
+import { escapeHtml } from '../utils/security.js'
 
 export const homeTemplate =
 {
@@ -39,5 +40,36 @@ export const homeTemplate =
                 <button class="button-type2 anchor-tmp" data-mode='${id}' data-action='play_game'>play now</button>
             </div>`
         )
+    },
+    leaderboard(db)
+    {
+        let dynamicPart = ''
+
+        if (!db.length)
+            dynamicPart = `<tr><td colspan="3" id="no-data">no players have played yet !!!</td></tr>`
+        db.forEach(e => {
+            dynamicPart += 
+            `<tr>
+                <td>${escapeHtml(e.rank)}</td>
+                <td>${escapeHtml(e.username)}</td>
+                <td>${escapeHtml(e.totalGames)}</td>
+            </tr>
+            `
+        });
+
+        return `
+        <h3>Leaderboard</h3>
+        <div id="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>rank</th>
+                    <th>player</th>
+                    <th>total games</th>
+                </tr>
+            </thead>
+            <tbody>
+            ${dynamicPart}
+            </tbody`        
     }
 }

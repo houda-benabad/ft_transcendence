@@ -5,7 +5,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -21,7 +20,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'game.apps.gameConfig',
     'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,10 +35,6 @@ INSTALLED_APPS = [
 ]
 
 STATIC_URL = "static/"
-
-# STATICFILES_DIRS = [
-#     os.path.join(  BASE_DIR / "static")
-# ]
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -83,6 +77,8 @@ CHANNEL_LAYERS = {
 }
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 DATABASES = {
     'default': {

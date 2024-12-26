@@ -33,7 +33,7 @@
       networks:
         - transcendence
       volumes:
-        - dbvolume:/var/lib/postgresql/data/
+        - ./data/:/var/lib/postgresql/data/
     
     frontend:
       build:
@@ -46,7 +46,7 @@
       networks:
         - transcendence
       volumes:
-        - frontVolume:/var/www 
+        - ./requirements/frontend:/var/www 
     
     nginx:
       build:
@@ -83,7 +83,7 @@
         postgres:
             condition: service_healthy
       volumes:
-        -  gamevolume:/usr/src/game
+        -  ./requirements/game/backend:/usr/src/game:cached
         # postgres:
         #   condition: service_healthy
     
@@ -100,10 +100,27 @@
       networks:
         - transcendence
       volumes:
+<<<<<<< HEAD
         - aggrvolume:/usr/src/aggregator
       depends_on:
         - user_management
         # - game
+=======
+        - aggrvolume:/usr/src/user_game_aggregator
+
+    notification:
+      container_name: notification
+      build:
+        context: ./requirements/notification/
+        dockerfile: Dockerfile
+      ports:
+        - 8005:8000
+      restart: on-failure
+      networks:
+        - transcendence
+      volumes:
+        - notifvolume:/usr/src/notification
+>>>>>>> ee60fdfbde3df97c3900a8b1f83a418efb73a30e
   
   networks:
     transcendence:
@@ -146,4 +163,9 @@
         o: bind
         device: ./requirements/user_game_aggregator/aggregator
 
-    
+    notifvolume:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ./requirements/notification/

@@ -7,7 +7,7 @@ export const modalService =
 {
     show(message, type = null)
     {  
-        return new Promise(resolve => {
+        return new Promise(async (resolve) =>  {
             const app = document.getElementById('app')
             const modalHtml = this.createModalHtml(type)
     
@@ -18,7 +18,13 @@ export const modalService =
             modalBackground.style.display = 'flex'
     
             if (type === 'tournament') // what is this - -
-                formService.handleTournament()
+            {
+                const players = await formService.handleTournament()
+                eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler)
+                modalBackground.remove()
+                resolve(players)
+
+            }
             eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve)) // dont know if we will be needsing this eventlistener
             modal.innerHTML = message
             resolve()
