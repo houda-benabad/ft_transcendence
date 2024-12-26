@@ -14,7 +14,7 @@ import logging
 
 User = get_user_model()
 logging.basicConfig(level=logging.DEBUG)  
-
+        
 logger = logging.getLogger("accounts.views")  
 
 class   IntraAuth(APIView):
