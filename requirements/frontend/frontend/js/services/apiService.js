@@ -8,7 +8,7 @@ class RequestConfiguration
     {
         this._config = 
         {
-            url : '',
+            endpoint : '',
             method : 'GET',
             needsAuth : true,
             showModal : false,
@@ -21,9 +21,9 @@ class RequestConfiguration
     {
         return this._config
     }
-    withUrl(url)
+    withEndpoint(endpoint)
     {
-        this._config.url = url
+        this._config.endpoint = endpoint
         return this
     }
     withMethod(method)
@@ -73,32 +73,32 @@ class ApiService
     async request()
     {
         let {
-            url,
+            endpoint,
             method,
             needsAuth,
             showModal, 
             modalMessage,
             body,
+            params
         } = this._requestConfig
 
+        const url = params ? `${endpoint}?${params.key}=${encodeURIComponent(params.value)}` : endpoint
+        // console.log('->>>> url : ', url)
         try{
             const response = await fetch(url , {
                 method,
                 headers : {
                     "Content-Type": "application/json",
-                    "Authorization": needsAuth ? `token ${_tokenService.token}` : '',
+                    "Authorization": needsAuth ? `token ${_tokenService.token}` : null,
                 },
-                body : body ? JSON.stringify(body) : ''
+                body : body ? JSON.stringify(body) : null
             })
             if (!response.ok && response.status === 500)
                 throw new Error(response.status)
             
             const contentType = response.headers.get('Content-Type');
             if (!contentType)
-            {
-                console.log('value returned in here !!!')
                 return this._resolve()
-            }
 
             const responseBody = await response.json()
             if (response.ok)
@@ -129,7 +129,7 @@ const generateHttpRequests = (api) =>
     {
         return (body, resolve) => {
             const request = new RequestConfiguration()
-                .withUrl(endpoint)
+                .withEndpoint(endpoint)
                 .withMethod('POST')
                 .withBody(body)
                 .withAuth(needsAuth)
@@ -140,9 +140,37 @@ const generateHttpRequests = (api) =>
             api.request()
         }
     },
-    createGetRequest(endpoint, {needsAuth, modalMessage = null})
+    createGetRequest(endpoint, modalMessage = null)
     {
-        return (id)
+        return (resolve, params = null) => 
+        {
+            // console.log('params  : ', params) // to add params later on
+            const request = new RequestConfiguration()
+                .withEndpoint(endpoint)
+            if (modalMessage)
+                request.withModal(modalMessage)
+            else if (params)
+                request.withParams(params)
+            api.requestConfig = request.requestConfig
+            api.resolve = resolve
+            api.request()
+        }
+    },
+    createDeleteRequest(endpoint, modalMessage = null)
+    {
+        return (resolve) => 
+        {
+            const request = new RequestConfiguration()
+                .withEndpoint(endpoint)
+                .withMethod('DELETE')
+                
+            if (modalMessage)
+                request.withModal(modalMessage)
+
+            api.requestConfig = request.requestConfig
+            api.resolve = resolve
+            api.request()
+        }
     }
 })
 const api = new ApiService()
@@ -163,8 +191,43 @@ export const apiService =
     },
     user :
     {
-        profile : (id) => new Promise (resolve => {
-            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : true})(id, resolve)
-        })
+        getProfileInfos : (id) => new Promise (resolve => {
+            generatedHttpRequests.createGetRequest(ENDPOINTS.PROFILE + id)(resolve)
+        }),
+        getUsers : (query) => new Promise (resolve => {
+            generatedHttpRequests.createGetRequest(ENDPOINTS.SEARCHED_USERS)(resolve, {key : 'search', value : query})
+        }),
+    },
+    friendship :
+    {
+        postFriendship : (action, userId) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPostRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${userId}`, {needsAuth : true, modalMessage: `the operation was successfull`})(null, resolve)
+        }),
+        deleteFriendship : (action, userId) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createDeleteRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${userId}`, {needsAuth : true, modalMessage: `the operation was successfull`})(resolve)
+        }),
     }
 }
+
+// postFriendship(id)
+    //     {
+    //         return apiService.fetchApi(ENDPOINTS.FRIENDSHIP + id, {
+    //             method: 'POST',
+    //             headers: 
+    //             {
+    //                 "Authorization": `token ${token.token}`,
+    //             }
+    //         })
+    //     },
+    //     deleteFriendship(id)
+    //     {
+    //         return apiService.fetchApi(ENDPOINTS.FRIENDSHIP + id, {
+    //             method: 'DELETE',
+    //             headers: 
+    //             {
+    //                 "Authorization": `token ${token.token}`,
+    //             }
+    //         })
+    //     }

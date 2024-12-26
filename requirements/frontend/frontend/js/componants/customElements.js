@@ -3,7 +3,6 @@ export class Icons extends HTMLDivElement
     constructor()
     {
         super()
-        // this._action = null
         this._data = {}
     }
     // set action(newValue)
@@ -18,31 +17,32 @@ export class Icons extends HTMLDivElement
     // }
     async connectedCallback() 
     {
-        console.log('im in the connected call back of connected call back - -')
-        // this._action = this.getAttribute('action')
         this.updateContent()
 
+        this.classList.add('icons')
     }
     set data(newValue)
     {
         this._data = newValue
+        console.log('the setter of custom element was fired : ', this._data)
+    }
+    set relationshipStatus(newValue)
+    {
+        this._data.relationship.status = newValue
 
-        console.log('im in the setter : ', this._data)
+        this.updateContent()
     }
     updateContent()
     {
        
-        console.log('relationship : ', this._data.relationship)
+        // console.log('relationship : ', this._data.relationship)
         const iconAction = this.determineActionAndIcon()
-        const fragement = document.createDocumentFragment('fragmenet')
+        const fragement = document.createDocumentFragment()
 
-        // for the momenet for the profile
         iconAction.forEach(e => {
             const div = document.createElement('div', )
             div.className = 'anchor-box square'
-            div.userId = this._data.userId
-            console.log('->>>>> div : ', div)
-            div.innerHTML = `<a href="#" data-action="${e.action}" class="static"><i class="iconify" data-icon="${e.icon}" data-inline="false"></i></a>`
+            div.innerHTML = `<a href="#" userId="${this._data.userId}"data-action="friendship" action-type="${e.action}"><i class="iconify" data-icon="${e.icon}" data-inline="false"></i></a>`
             fragement.appendChild(div)
         });
         this.appendChild(fragement)
@@ -50,6 +50,7 @@ export class Icons extends HTMLDivElement
     determineActionAndIcon()
     {
         const {id, relationship} = this._data
+
         let type
 
         if (id === 'profile')
@@ -59,6 +60,7 @@ export class Icons extends HTMLDivElement
         else 
             type = 'requests'
 
+        console.log('type :' , type)
         const iconActionType = {
         'friend'  : [{icon : 'eva:person-remove-outline', action :'remove_friend'}],
         'stranger' : [{icon : 'eva:person-add-outline', action : 'send_request'}],
@@ -67,24 +69,8 @@ export class Icons extends HTMLDivElement
         'me' : [{icon : 'mage:edit', action : 'edit_profile'}],
         'requests' : [{icon : 'dashicons:no', action : 'cancel_request'}, {icon : 'dashicons:yes', action : 'accept_request'}]
         }
-        // console.log('here in the extractor : ', IconType[type])
         return (iconActionType[type])
 
     }
 }
 customElements.define('custom-icons', Icons, { extends: 'div' }) 
-
-/////// let it go fo nowww
-// const IconType = {
-//     'friend'  : [{icon : 'eva:person-remove-outline', action :'remove_friend'}],
-//     'stranger' : [{icon : 'eva:person-add-outline', action : 'send_request'}],
-//     'pending' : [{icon : 'dashicons:no', action : 'cancel_request'}, {icon : 'dashicons:yes', action : 'accept_request'}],
-//     'requested' : [{icon : 'dashicons:no', action : 'cancel_request'}],
-//     'me' : [{icon : 'mage:edit', action : 'edit_profile'}],
-//     'requests' : [{icon : 'dashicons:no', action : 'cancel_request'}, {icon : 'dashicons:yes', action : 'accept_request'}]
-// }
-
-
-// data-icon="${icon}"
-
-//  data-icon="${icon}"

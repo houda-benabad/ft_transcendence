@@ -3,7 +3,6 @@ import { database } from "../constants/database.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
 import { addListenersForFriendsBox} from '../utils/eventListeners.js'
-// import { eventListeners } from "../utils/global.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 
 export class ProfileView extends HTMLElement
@@ -23,24 +22,29 @@ export class ProfileView extends HTMLElement
 
     async connectedCallback() 
     {
-        this._database = await apiService.user.getUserInfos(this._userId)
-        console.log(' =>>>>>>> database : ', this._database)
+        this._database = await apiService.user.getProfileInfos(this._userId)
 
-        // this._dataTransformer = new databaseExtractorService(this._database)
+        this._dataTransformer = new databaseExtractorService(this._database)
 
-        // this.innerHTML = profileTemplate.layout()
-        // this.addProfile()
-        // this.gameHistory()
-        // this.addFriendsBox()
-        // this.setupEventListenersAndAnimations()
+        this.innerHTML = profileTemplate.layout()
+        this.addProfile()
+        this.gameHistory()
+        this.addFriendsBox()
+        this.setupEventListenersAndAnimations()
+    }
+    disconnectedCallback()
+    {
+        window.removeEventListener('resize', animateProgressBar)
+
+        // if (this._userId === 'me')
+        //     removeListenersForFriendsBox.apply(this) // to remove the event listeners of friends
     }
     setupEventListenersAndAnimations()
     {
-        animateProgressBar()
-        eventListeners.on(window, 'resize', () => animateProgressBar())   
-        
+        window.addEventListener('resize', animateProgressBar)
+
         if (this._userId === 'me')
-            addListenersForFriendsBox.apply(this)
+            addListenersForFriendsBox.apply(this) // gotta remove the events after finishing up with it .
     }
     addProfile()
     {

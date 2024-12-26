@@ -11,13 +11,13 @@ export function addListenersForFriendsBox()
 
     document.querySelectorAll('.choice-item').forEach(e => {
         e.addEventListener('mouseover', (event) => {
-            slidingLine.style.width = `${e.offsetWidth}px` // do i need this .
+            slidingLine.style.width = `${e.offsetWidth}px`
             slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
             e.classList.add('hoovered')
             selectedChoice.classList.remove('selected-choice')
         })
         e.addEventListener('mouseout', (event) => {
-            slidingLine.style.width = `${selectedChoice.offsetWidth}px` // do i need this .
+            slidingLine.style.width = `${selectedChoice.offsetWidth}px`
             slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
             e.classList.remove('hoovered')
             selectedChoice.classList.add('selected-choice')

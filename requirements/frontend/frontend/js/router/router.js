@@ -35,7 +35,6 @@ export class Router
     handleRoute(newPath=null)
     {
         const path = newPath || window.location.pathname
-
         if (!_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
         else if (_tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
@@ -45,19 +44,32 @@ export class Router
     }
     navigateTo(path)
     {
-        const route = this._routes[path] || this._routes['/404']
-
         history.pushState(null, null, path)
-        this.updateContent(route)
+
+        this.updateContent(path)
     }
-    updateContent(route)
+    updateContent(path) // to make this more clean and maintenable
     {
+        let options 
+
+        if (path.includes('/profile'))
+        {
+            const str = path.split('/')
+            options = str[str.length - 1] === 'profile' ? 'me' : str[str.length - 1]
+            path = '/profile'
+        }
+        const route = this._routes[path] || this._routes['/404']
         let fragment = document.createDocumentFragment()
-        const app = document.getElementById('app')
-        const main = document.getElementById('main')
 
         if (route.customElement)
+        {
             fragment = document.createElement(route.customElement)
+            if (options)
+                fragment.userId = options
+
+            document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
+            document.querySelector(`[href="${path}"]`).classList.add('selected')
+        }
         else
         {
             const templateLitteral = route.template
@@ -66,7 +78,11 @@ export class Router
             template.innerHTML = templateLitteral
             fragment.appendChild(template.content)
         }
+
+        const app = document.getElementById('app')
+        const main = document.getElementById('main')
         const container = route.allScreen ? app : main
+
         container.replaceChildren(fragment)
     }
 }
