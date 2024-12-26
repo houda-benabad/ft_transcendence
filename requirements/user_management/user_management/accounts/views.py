@@ -132,3 +132,15 @@ class   IntraCallback(APIView):
 
 intra_callback_view = IntraCallback.as_view()
 
+
+
+
+class UserUsernameView(APIView):
+    def get(self, request, user_id):
+        user = User.objects.filter(id = user_id)
+        if not user.exists():
+            return Response("detail: user not found", status = 404)
+        user = user.first()
+        return Response({"username": user.username}, 200)
+    
+user_username_view = UserUsernameView.as_view()

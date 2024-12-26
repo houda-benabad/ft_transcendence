@@ -34,13 +34,17 @@ class	ProfileWithGameHistoryView(APIView):
                     logger.debug("fetch user_profile")
                     user_profile_response = await client.get(f"{settings.USER_PROFILE_URL}/{user_id}", headers={"Authorization": auth_token, "Host": "localhost"})
                     logger.debug("user_profile fetched")
-                    # game_history_response = await client.get(f"{settings.GAME_HISTORY_URL}/{user_id}", headers={"Host": "localhost"})
+                    game_history_response = await client.get(f"{settings.GAME_HISTORY_URL}/{user_id}", headers={"Host": "localhost"})
                     logger.debug("game_history fetched")
             if user_profile_response.status_code != 200:
                 return Response({"detail": "Failed to retrieve user profile "}, status=user_profile_response.status_code)
-            # if game_history_response.status_code != 200:
-            #     return Response({"detail": "Failed to retrieve game history"}, status=game_history_response.status_code)
-            return Response(user_profile_response.json(), status=status.HTTP_200_OK)
+            if game_history_response.status_code != 200:
+                return Response({"detail": "Failed to retrieve game history"}, status=game_history_response.status_code)
+            response = {
+                "user_profile": user_profile_response.json(),
+                "game_history": game_history_response.json()
+            }
+            return Response(response, status=status.HTTP_200_OK)
         except httpx.RequestError as e:
             return Response({"detail": f"An error occurred while fetching data in aggregation data user_profile and game_history: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except httpx.HTTPStatusError as e:

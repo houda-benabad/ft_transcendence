@@ -37,11 +37,10 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         return value
 
 
-class UserSerializer(BaseUserSerializer):
+# class UserSerializer(BaseUserSerializer):
 
-
-    class Meta(BaseUserSerializer.Meta):
-        model = User
-        fields = [
-            "username",
-        ]
+#     class Meta(BaseUserSerializer.Meta):
+#         model = User
+#         fields = [
+#             "username",
+#         ]
