@@ -126,7 +126,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 USER_PROFILE_URL = "http://user_management:8000/api/profiles"#os.environ.get("USER_PROFILE_URL")
-GAME_HISTORY_URL = os.environ.get("GAME_HISTORY_URL")
+GAME_HISTORY_URL = "http://game:8000/api/game/player_info"#os.environ.get("GAME_HISTORY_URL")
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ['Bearer'],

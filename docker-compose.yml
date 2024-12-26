@@ -1,171 +1,163 @@
-  services:
+services:
 
-    user_management:
-      container_name: user_management
-      depends_on:
-        postgres:
+  user_management:
+    container_name: user_management
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build:
+      context: ./requirements/user_management/
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    volumes:
+      - authvolume:/usr/src/user_management
+
+  postgres:
+    image: postgres:15.8
+    container_name: postgres
+    restart: on-failure
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-U", "$$POSTGRES_USER", "-d", "$$POSTGRES_DB"]
+      interval: 30s #test to see if we can minimize it
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    networks:
+      - transcendence
+    volumes:
+      - dbvolume:/var/lib/postgresql/data/
+  
+  frontend:
+    build:
+      context: ./requirements/frontend/
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    volumes:
+      - frontVolume:/var/www 
+  
+  nginx:
+    build:
+      context: ./requirements/nginx/
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: on-failure
+    ports:
+      - 443:443
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    depends_on:
+      - user_management
+      - frontend
+      - game
+      - user_game_aggregator
+
+  game:
+    container_name: game
+    depends_on:
+      postgres:
           condition: service_healthy
-      build:
-        context: ./requirements/user_management/
-        dockerfile: Dockerfile
-      ports:
-        - 8000:8000
-      restart: on-failure
-      env_file:
-        - .env
-      networks:
-        - transcendence
-      volumes:
-        - authvolume:/usr/src/user_management
-
-    postgres:
-      image: postgres:15.8
-      container_name: postgres
-      restart: on-failure
-      env_file:
-        - .env
-      healthcheck:
-        test: ["CMD-SHELL", "pg_isready", "-U", "$$POSTGRES_USER", "-d", "$$POSTGRES_DB"]
-        interval: 30s #test to see if we can minimize it
-        timeout: 60s
-        retries: 5
-        start_period: 80s
-      networks:
-        - transcendence
-      volumes:
-        - ./data/:/var/lib/postgresql/data/
-    
-    frontend:
-      build:
-        context: ./requirements/frontend/
-        dockerfile: Dockerfile
-      container_name: frontend
-      restart: on-failure
-      env_file:
-        - .env
-      networks:
-        - transcendence
-      volumes:
-        - ./requirements/frontend:/var/www 
-    
-    nginx:
-      build:
-        context: ./requirements/nginx/
-        dockerfile: Dockerfile
-      container_name: nginx
-      restart: on-failure
-      ports:
-        - 443:443
-      env_file:
-        - .env
-      networks:
-        - transcendence
-      depends_on:
-        - user_management
-        - frontend
-        - game
-      # volumes:
-      #   - frontVolume:/var/www
-
-    game:
-      build:
-        context: ./requirements/game/
-        dockerfile: Dockerfile
-      container_name: game
-      restart: on-failure
-      env_file:
-        - .env
-      networks:
-        - transcendence
-      ports:
-        - 8001:8000
-      depends_on:
-        postgres:
-            condition: service_healthy
-      volumes:
-        -  ./requirements/game/backend:/usr/src/game:cached
-        # postgres:
-        #   condition: service_healthy
-    
-    user_game_aggregator:
-      container_name: user_game_aggregator
-      build:
-        context: ./requirements/user_game_aggregator/
-        dockerfile: Dockerfile
-      ports:
-        - 8002:8000
-      env_file:
-        - .env
-      restart: on-failure
-      networks:
-        - transcendence
-      volumes:
-<<<<<<< HEAD
-        - aggrvolume:/usr/src/aggregator
-      depends_on:
-        - user_management
-        # - game
-=======
-        - aggrvolume:/usr/src/user_game_aggregator
-
-    notification:
-      container_name: notification
-      build:
-        context: ./requirements/notification/
-        dockerfile: Dockerfile
-      ports:
-        - 8005:8000
-      restart: on-failure
-      networks:
-        - transcendence
-      volumes:
-        - notifvolume:/usr/src/notification
->>>>>>> ee60fdfbde3df97c3900a8b1f83a418efb73a30e
+    build:
+      context: ./requirements/game/
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    ports:
+      - 8001:8000
+    volumes:
+      -  gamevolume:/usr/src/game
   
-  networks:
-    transcendence:
-      driver: bridge
-  
-  volumes:
+  user_game_aggregator:
+    container_name: user_game_aggregator
+    build:
+      context: ./requirements/user_game_aggregator/
+      dockerfile: Dockerfile
+    ports:
+      - 8002:8000
+    env_file:
+      - .env
+    restart: on-failure
+    networks:
+      - transcendence
+    volumes:
+      - aggrvolume:/usr/src/aggregator
+    depends_on:
+      - user_management
+      - game
 
-    authvolume:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: ./requirements/user_management/user_management
+  notification:
+    container_name: notification
+    build:
+      context: ./requirements/notification/
+      dockerfile: Dockerfile
+    ports:
+      - 8005:8000
+    restart: on-failure
+    networks:
+      - transcendence
+    volumes:
+      - notifvolume:/usr/src/notification
 
-    gamevolume:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: ./requirements/game/backend
+networks:
+  transcendence:
+    driver: bridge
 
-    dbvolume:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: ./data/
+volumes:
+  authvolume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./requirements/user_management/user_management
+
+  gamevolume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./requirements/game/backend
+
+  dbvolume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/
+
+  frontVolume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./requirements/frontend
     
-    frontVolume:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: ./requirements/frontend
-      
-    aggrvolume:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: ./requirements/user_game_aggregator/aggregator
+  aggrvolume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./requirements/user_game_aggregator/aggregator
 
-    notifvolume:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: ./requirements/notification/
+  notifvolume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./requirements/notification/

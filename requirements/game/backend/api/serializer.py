@@ -53,14 +53,14 @@ class PlayerSerializer( serializers.ModelSerializer ):
         ]
         
     def get_rank( self, obj ):
-        players = Player.objects.order_by( "-points" )
+        players = Player.objects.order_by( "-total_points" )
         rank = list(players).index(obj) + 1
         return rank
         
     def get_general_details( self, obj ):
         return {
-            "total_points": obj.points,
-            "total_games": obj.games,
+            "total_points": obj.total_points,
+            "total_games": obj.total_games,
             "rank": self.get_rank( obj ),
             "level": obj.level
         }

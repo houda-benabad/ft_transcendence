@@ -19,7 +19,7 @@ stop:
 	$(D_COMPOSE) -f ./docker-compose.yml stop
 
 clean :
-	$(D_COMPOSE) -f ./docker-compose.yml down -v --rmi all
+	$(D_COMPOSE) -f ./docker-compose.yml down -v
 	sudo rm -rf ./data
 
 fclean: clean
