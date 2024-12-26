@@ -93,7 +93,11 @@ class PlayerSerializer( serializers.ModelSerializer ):
     def get_general_details( self, obj ):
         return {
             "total_points": obj.total_points,
+<<<<<<< HEAD
             "total_games": obj.total_games,\
+=======
+            "total_games": obj.total_games,
+>>>>>>> refs/remotes/origin/game-backend
             "rank": self.get_rank( obj ),
             "level": obj.level
         }

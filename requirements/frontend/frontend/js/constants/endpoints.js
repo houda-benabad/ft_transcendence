@@ -1,7 +1,7 @@
 export const ENDPOINTS =
 {
-    SIGN_IN : '/auth/token/login',
-    SIGN_UP : '/auth/users/',
+    SIGN_IN : '/auth/users/signin',
+    SIGN_UP : '/auth/users/signup',
     INTRA : '/auth/oauth2/authorize',
     PROFILE: '/api/profiles/', // for friends pass username in the end for`
     SEARCH: '/api/profiles/search/', // i think i should modify this one
