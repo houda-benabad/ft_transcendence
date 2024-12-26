@@ -8,43 +8,16 @@ from collections import deque
 from . import game
 from .models import Player
 
-players = []
+remote_players = []
+multi_players = []
 
-class GameConsumer(AsyncWebsocketConsumer):
+class BaseConsumer( AsyncWebsocketConsumer ):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.keycode= 0
 		self.game_result = 'Won'
 		self.game_group_name = ''
 		self.playerModel = None
-
-	async def connect(self):
-		try:
-			userId = self.scope['url_route']['kwargs']['userId']
-
-			# send request to hind to check if user is authenticated
-
-			await self.accept()
-			players.append(self)
-			self.playerModel = await sync_to_async( Player.objects.get_or_create )( userId=userId )
-
-			if len(players) >= 2:
-				await self.start_game()
-
-		except Exception:
-			self.send_error( "Connection rejected" )
-
-	async def start_game(self):
-		players_set = [players.pop(0) for num in range(2)]
-		asyncio.create_task(game.startGame(self.channel_layer, players_set[0], players_set[1]))
-
-	async def send_error( self, error_message ):
-		await self.send( text_data=json.dumps( 
-            {
-				'type' : 'Error',
-				'data' : error_message
-			}
-        ) )
 
 	async def receive(self, text_data):
 		dataJson = json.loads(text_data)
@@ -67,6 +40,13 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'data': data
 		}))
   
+	async def receive(self, text_data):
+		dataJson = json.loads(text_data)
+		dataType = dataJson['type']
+
+		if (dataType == 'keycode'):
+			self.keycode = dataJson['data']
+
 	async def start(self, event):
 		data = event['data']
 		await self.send(text_data=json.dumps({
@@ -74,6 +54,71 @@ class GameConsumer(AsyncWebsocketConsumer):
 			'data': data
 		}))
 
+	async def send_error( self, error_message ):
+		await self.send( text_data=json.dumps( 
+            {
+				'type' : 'Error',
+				'data' : error_message
+			}
+        ) )
+
+
+class RemoteConsumer( BaseConsumer, AsyncWebsocketConsumer ):
+
+	async def connect(self):
+		try:
+			userId = self.scope['url_route']['kwargs']['userId']
+
+			# send request to hind to check if user is authenticated
+
+			await self.accept()
+			remote_players.append(self)
+			self.playerModel, created = await sync_to_async( Player.objects.get_or_create )( userId=userId )
+			# print( "remote len == ", len( remote_players ))
+			print( "player model = ", self.playerModel )
+			if len(remote_players) >= 2:
+				await self.start_game()
+
+		except Exception:
+			self.send_error( "Connection rejected" )
+
+	async def start_game(self):
+		players_set = [remote_players.pop(0) for num in range(2)]
+		asyncio.create_task(game.startRemoteGame(self.channel_layer, players_set[0], players_set[1]))
+
 	async def disconnect(self, close_code):
 		self.keycode =  -1
 		await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
+  
+  
+class MultiPlayerConsumer(AsyncWebsocketConsumer):
+
+	async def connect(self):
+		try:
+			userId = self.scope['url_route']['kwargs']['userId']
+
+			# send request to hind to check if user is authenticated
+
+			await self.accept()
+			multi_players.append(self)
+			self.playerModel = await sync_to_async( Player.objects.get_or_create )( userId=userId )
+
+			if len(multi_players) >= 4:
+				await self.start_game()
+
+		except Exception:
+			self.send_error( "Connection rejected" )
+
+	async def start_game(self, players):
+		players_set = [remote_players.pop(0) for num in range(4)]
+		asyncio.create_task(game.startMultiPlayerGame(self.channel_layer, players_set))
+
+	async def disconnect(self, close_code):
+		print('game name = ', self.game_group_name)
+		self.keycode =  -1
+		if ( self.game_group_name ):
+			await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
+		if multi_players:
+			multi_players.remove(self)
+		print( 'CONSUMERS = ', len(multi_players))
+

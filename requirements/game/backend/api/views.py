@@ -20,6 +20,6 @@ class PlayerDetailView( generics.RetrieveAPIView ):
         return super().retrieve(request, *args, **kwargs)
 
 class leaderBoardView( generics.ListAPIView ):
-    serializer_class =  PlayerRankSerializer
     queryset = Player.objects.order_by( "-total_points" )
+    serializer_class =  PlayerRankSerializer
 

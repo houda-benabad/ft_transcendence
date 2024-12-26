@@ -19,8 +19,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django_asgi_app = get_asgi_application()
 
 import game.routing
-import multiplayer.routing
-websockets = game.routing.websocket_urlpatterns + multiplayer.routing.websocket_urlpatterns 
+websockets = game.routing.websocket_urlpatterns
 application = ProtocolTypeRouter({
     'http':django_asgi_app,
     'websocket' : AuthMiddlewareStack(URLRouter(websockets))
