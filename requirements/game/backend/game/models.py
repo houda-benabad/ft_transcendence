@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class Player( models.Model ):
-	# user = models.ForeignKey( User, on_delete=models.CASCADE, null=True )
+	username = models.CharField( max_length=30, blank=True )
 	userId = models.IntegerField( blank=True, null=True  )
 	total_points = models.IntegerField( default=0 )
 	total_games = models.IntegerField( default=0 )

@@ -178,9 +178,12 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
+    'PERMISSIONS' : {
+        'user': ['rest_framework.permissions.AllowAny']
+        },
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer',
-        'user': 'djoser.serializers.UserSerializer',
+        'user': 'accounts.serializers.UserSerializer',
     },
 }
 
