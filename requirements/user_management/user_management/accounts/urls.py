@@ -4,9 +4,11 @@ from . import views
 from djoser.views import UserViewSet
 
 urlpatterns = [
-    # path('', include('djoser.urls')),
+    # path('users/', include('djoser.urls')),
     # path('', include('djoser.urls.authtoken')),
     path('users/signup/', UserViewSet.as_view({'post': 'create'}), name='user-create'),
+    # path('users/<int:id>', UserViewSet.as_view({'get': 'retrieve'}), name='user'),
+    path('users/<int:user_id>', views.user_username_view),
     # path("jwt/create/", jwt_views.TokenObtainPairView.as_view(), name="jwt-create"),
     path("users/signin/", jwt_views.TokenObtainPairView.as_view(), name="jwt-create"),
     path("jwt/refresh/", jwt_views.TokenRefreshView.as_view(), name="jwt-refresh"),

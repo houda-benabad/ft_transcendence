@@ -15,9 +15,13 @@ class PlayerDetailView( generics.RetrieveAPIView ):
         userId = kwargs.get( 'userId' )
         response = requests.get( f'http://user_management:8000/auth/users/{userId}' )
         if response.status_code != 200:
-            return Response( data={'detail': 'User not authenticated'}, status=401)
+            # return response
+            # print( "RESPONSE = ", response.json(  ))
+            # return Response({"detail": "none"}, status=response.status_code)
+            return Response({"detail":response.json()['detail']}, status=response.status_code)
+    
         user_info = response.json(  )
-        
+        print( " USER == ", user_info)
         user = User.objects.filter( id=userId).first(  )
         if not user:
             return Response( data={'detail': 'no userId was provided'}, status=404)
