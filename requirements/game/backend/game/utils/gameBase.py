@@ -47,11 +47,11 @@ class Game():
 		gameModel.player1_points = self.p1.score
 		gameModel.player2_points = self.p2.score
 
-		hoster.playerModel.games += 1
-		invited.playerModel.games += 1
+		hoster.playerModel.total_games += 1
+		invited.playerModel.total_games += 1
   
-		hoster.playerModel.points += self.p1.score
-		invited.playerModel.points += self.p2.score
+		hoster.playerModel.total_points += self.p1.score
+		invited.playerModel.total_points += self.p2.score
 
 		# hoster.playerModel.level += hoster.playerModel.games / hoster.playerModel.points
 		# invited.playerModel.level += invited.playerModel.games / invited.playerModel.points

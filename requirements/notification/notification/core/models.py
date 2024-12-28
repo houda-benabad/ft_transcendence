@@ -11,3 +11,6 @@ class Notification( models.Model ):
 	content = models.TextField( max_length=150 , default="sent you a playing request")
 	time = models.TimeField( auto_now_add=True)
 	status = models.CharField( choices=statusChoices, default=statusChoices.D, max_length=10 )
+ 
+	def __str__(self):
+		return f"notification{self.id}"
