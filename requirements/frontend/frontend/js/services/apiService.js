@@ -89,13 +89,16 @@ class ApiService
                 method,
                 headers : {
                     "Content-Type": "application/json",
-                    "Authorization": needsAuth ? `token ${_tokenService.token}` : null,
+                    "Authorization": needsAuth ? `bearer ${_tokenService.token}` : null,
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            if (!response.ok && response.status === 500)
+            if (response.status === 500)
                 throw new Error(response.status)
-            
+            else if (response.status === 401)
+            {
+                console.log('call refresh api and save it')
+            }
             const contentType = response.headers.get('Content-Type');
             if (!contentType)
                 return this._resolve()
