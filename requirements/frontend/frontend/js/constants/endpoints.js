@@ -6,7 +6,8 @@ export const ENDPOINTS =
     PROFILE: '/api/profiles/', // for friends pass username in the end for`
     SEARCHED_USERS: '/api/profiles/search/', // i think i should modify this one
     LEADERBOARD: '/api/game/leaderboard',
-    FRIENDSHIP: '/api/friendship/'
+    FRIENDSHIP: '/api/friendship/',
+    REFRESH_TOKEN : '/auth/jwt/refresh/'
 }
 
 // /api/game/player_info/username // save username .

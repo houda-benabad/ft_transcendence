@@ -24,7 +24,7 @@ export class Icons extends HTMLDivElement
     set data(newValue)
     {
         this._data = newValue
-        console.log('the setter of custom element was fired : ', this._data)
+        // console.log('the setter of custom element was fired : ', this._data)
     }
     set relationshipStatus(newValue)
     {
@@ -60,7 +60,7 @@ export class Icons extends HTMLDivElement
         else 
             type = 'requests'
 
-        console.log('type :' , type)
+        // console.log('type :' , type)
         const iconActionType = {
         'friend'  : [{icon : 'eva:person-remove-outline', action :'remove_friend'}],
         'stranger' : [{icon : 'eva:person-add-outline', action : 'send_request'}],

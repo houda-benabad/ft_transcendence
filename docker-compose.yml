@@ -16,7 +16,7 @@ services:
     networks:
       - transcendence
     volumes:
-      - ./requirements/user_management/user_management:/usr/src/user_management
+        - authvolume:/usr/src/user_management
 
   postgres:
     image: postgres:15.8
@@ -33,7 +33,7 @@ services:
     networks:
       - transcendence
     volumes:
-      - ./data/:/var/lib/postgresql/data/
+      - dbvolume:/var/lib/postgresql/data/
   
   frontend:
     build:
@@ -46,7 +46,7 @@ services:
     networks:
       - transcendence
     volumes:
-      - ./requirements/frontende:/var/www 
+      - frontVolume:/var/www 
   
   nginx:
     build:
@@ -69,6 +69,8 @@ services:
   game:
     container_name: game
     depends_on:
+      user_management:
+          condition: service_started
       postgres:
           condition: service_healthy
     build:
@@ -82,7 +84,7 @@ services:
     ports:
       - 8001:8000
     volumes:
-      -  ./requirements/game/backend:/usr/src/game
+      -  gamevolume:/usr/src/game
   
   user_game_aggregator:
     container_name: user_game_aggregator
@@ -97,7 +99,7 @@ services:
     networks:
       - transcendence
     volumes:
-      - ./requirements/user_game_aggregator/aggregator:/usr/src/aggregator
+      - aggrvolume:/usr/src/aggregator
     depends_on:
       - user_management
       - game
@@ -113,7 +115,7 @@ services:
     networks:
       - transcendence
     volumes:
-      - ./requirements/notification/:/usr/src/notification
+      - notifvolume:/usr/src/notification
 
 networks:
   transcendence:

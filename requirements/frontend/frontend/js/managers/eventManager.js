@@ -2,6 +2,7 @@ import { apiService } from '../services/apiService.js'
 import { searchService } from '../services/searchService.js'
 import { _tokenService } from '../utils/global.js'
 import { reset } from '../utils/utils.js'
+import { router } from '../utils/global.js'
 
 export class EventManager
 {
@@ -11,7 +12,6 @@ export class EventManager
         document.addEventListener('submit', this.handleEventDelegation.bind(this))
         document.addEventListener('input', this.handleEventDelegation.bind(this))
         document.addEventListener('focusout', this.handleEventDelegation.bind(this))
-        this._router = router
         this._actionType = 
         {
             'router' : this.handleNavigation.bind(this),
@@ -60,12 +60,13 @@ export class EventManager
             const response = await apiService.auth[action](formObject)
 
             if (action  === 'signup')
-                this._router.handleRoute('/signin')
+                router.handleRoute('/signin')
             else
             {
-                _tokenService.token = response.auth_token
+                _tokenService.tokens= response
+                console.log('response : ', response)
                 await reset()
-                this._router.handleRoute('/')
+                router.handleRoute('/')
             }
         }
     }
@@ -143,7 +144,7 @@ export class EventManager
 
         searchResults.classList.add('clicked')
         searchService.clear()
-        this._router.handleRoute(`/profile/${id}`)
+        router.handleRoute(`/profile/${id}`)
     }
     handleSearchInput(event, target)
     {
@@ -162,7 +163,7 @@ export class EventManager
         const action = target.getAttribute("data-action")
 
         if (link)
-            this._router.handleRoute(link)
+            router.handleRoute(link)
         else if (action)
         {
             // console.log('action : ', action)
@@ -175,10 +176,10 @@ export class EventManager
     {
         const newPath = target.getAttribute('href')
 
-        this._router.handleRoute(newPath)
+        router.handleRoute(newPath)
     }
     handleEdit()
     {
-        this._router.handleRoute('/settings')
+        router.handleRoute('/settings')
     }
 }

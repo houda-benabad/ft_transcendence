@@ -2,24 +2,43 @@ export class TokenService
 {
     constructor()
     {
-        this._token = localStorage.getItem('authToken')
+        this._accessToken = localStorage.getItem('accessToken')
+        this._refreshToken = localStorage.getItem('refreshToken')
     }
-    set token(newToken)
+    set tokens({refresh , access})
     {
-        this._token = newToken
-        localStorage.setItem('authToken', newToken)
+        console.log('refresh : ' , refresh)
+        console.log('access : ' , access)
+        
+        this._accessToken = access
+        localStorage.setItem('accessToken', access)
+
+        this._refreshToken = refresh
+        localStorage.setItem('refreshToken', refresh)
     }
-    get token()
+    set accessToken(newValue)
     {
-        return (this._token)
+        this._accessToken = newValue
+        localStorage.setItem('accessToken', newValue)
+    }
+    get accessToken()
+    {
+        return (this._accessToken)
+    }
+    get refreshToken()
+    {
+        return (this._refreshToken)
     }
     isAuthenticated()
     {
-        return(this._token ? true : false)
+        return(this._accessToken ? true : false)
     }
-    clearToken()
+    clear()
     {
-        this._token = null
-        localStorage.removeItem('authToken')
+        this._accessToken = null
+        this._refreshToken = null
+
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
     }
 }

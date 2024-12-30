@@ -1,6 +1,7 @@
 import { ENDPOINTS } from '../constants/endpoints.js'
-import {_tokenService} from '../utils/global.js'
+import { _tokenService } from '../utils/global.js'
 import { modalService } from './modalService.js'
+import { router } from '../utils/global.js'
 
 class RequestConfiguration
 {
@@ -84,21 +85,40 @@ class ApiService
 
         const url = params ? `${endpoint}?${params.key}=${encodeURIComponent(params.value)}` : endpoint
         // console.log('->>>> url : ', url)
+        // console.log('config : ', this._requestConfig)
         try{
             const response = await fetch(url , {
                 method,
                 headers : {
                     "Content-Type": "application/json",
-                    "Authorization": needsAuth ? `bearer ${_tokenService.token}` : null,
+                    "Authorization": needsAuth ? `Bearer ${_tokenService.accessToken}` : null, // for the moment no token variable does exist.
                 },
                 body : body ? JSON.stringify(body) : null
             })
+            if (response.status === 401) // this needs to be implemented in a maintenabale and cleam way
+                {
+                    console.log('access token was expired')
+                    const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
+                        method : 'POST',
+                        headers : {
+                            "Content-Type": "application/json"
+                        },
+                        body : JSON.stringify({"refresh" : _tokenService.refreshToken})
+                    })
+                    if (response.status === 401)
+                    {
+                        console.log('refresh token was expired')
+                        _tokenService.clear()
+                        router.handleRoute('/signin')
+                        return ; 
+                    }
+                    const responseBody = await response.json()
+                    _tokenService.accessToken = responseBody.access
+                    this.request()
+                    return ;    
+            }
             if (response.status === 500)
                 throw new Error(response.status)
-            else if (response.status === 401)
-            {
-                console.log('call refresh api and save it')
-            }
             const contentType = response.headers.get('Content-Type');
             if (!contentType)
                 return this._resolve()
@@ -136,8 +156,9 @@ const generateHttpRequests = (api) =>
                 .withMethod('POST')
                 .withBody(body)
                 .withAuth(needsAuth)
-                .withModal(modalMessage)
-                        
+
+            if (modalMessage)
+                request.withModal(modalMessage)        
             api.requestConfig = request.requestConfig
             api.resolve = resolve
             api.request()
@@ -147,7 +168,6 @@ const generateHttpRequests = (api) =>
     {
         return (resolve, params = null) => 
         {
-            // console.log('params  : ', params) // to add params later on
             const request = new RequestConfiguration()
                 .withEndpoint(endpoint)
             if (modalMessage)
@@ -211,26 +231,12 @@ export const apiService =
         {
             generatedHttpRequests.createDeleteRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${userId}`, {needsAuth : true, modalMessage: `the operation was successfull`})(resolve)
         }),
+    },
+    jwt : 
+    {
+        refreshToken : (body) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPostRequest(ENDPOINTS.REFRESH_TOKEN, {needsAuth : false, modalMessage: null})(body, resolve)
+        }),// gotta use it to make code simplified but ..
     }
 }
-
-// postFriendship(id)
-    //     {
-    //         return apiService.fetchApi(ENDPOINTS.FRIENDSHIP + id, {
-    //             method: 'POST',
-    //             headers: 
-    //             {
-    //                 "Authorization": `token ${token.token}`,
-    //             }
-    //         })
-    //     },
-    //     deleteFriendship(id)
-    //     {
-    //         return apiService.fetchApi(ENDPOINTS.FRIENDSHIP + id, {
-    //             method: 'DELETE',
-    //             headers: 
-    //             {
-    //                 "Authorization": `token ${token.token}`,
-    //             }
-    //         })
-    //     }
