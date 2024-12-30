@@ -1,7 +1,7 @@
 import { database } from '../constants/database.js'
 // import { apiService } from '../services/apiService.js'
 import { homeTemplate } from '../templates/homeTemplate.js'
-// import { eventListeners } from '../utils/global.js'
+import { eventListeners } from '../utils/global.js'
 import { databaseExtractorService } from '../services/databaseExtractorService.js'
 export class homeView extends HTMLElement
 {
@@ -31,14 +31,14 @@ export class homeView extends HTMLElement
         //this is for the leaderboard
         this.addLeaderBoard()
 
-        //setting up the eventlisteners
+        //setting up the eventlisteners for the moment
         // this.buttons = document.querySelectorAll('.anchor-tmp')
         // eventListeners.setAllByType(this.buttons, 'click')
     }
-    // disconnectedCallback()
-    // {
-    //     eventListeners.removeAllByType(this.buttons, 'click')
-    // }
+    disconnectedCallback()
+    {
+        // eventListeners.removeAllByType(this.buttons, 'click')
+    }
     addLeaderBoard()
     {
         const leaderboardDb = this._dataTransformer.extractData('leaderboard')

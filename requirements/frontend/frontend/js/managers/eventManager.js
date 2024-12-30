@@ -16,7 +16,8 @@ export class EventManager
         {
             'router' : this.handleNavigation.bind(this),
             'edit_profile'  : this.handleEdit.bind(this),
-            'friendship' : this.handleFriendship.bind(this)
+            'friendship' : this.handleFriendship.bind(this),
+            'play_game' : this.handleGame.bind(this)
         }
     }
     async handleFriendship(target)
@@ -118,6 +119,8 @@ export class EventManager
             this.handleSearchFocus()
         else if (target.matches('a'))
             this.handleAnchorEvents(event, target)
+        else if (eventType === 'click' && target.matches('button'))
+            this.handleButtonEvents(target)
         else if (target.matches('form') && eventType === 'submit') // do not need that eventType submit
             this.handleformEvents(event, target)
         else if (eventType === 'input' && target.id === 'search-input')
@@ -171,6 +174,24 @@ export class EventManager
 
             runAction(target)
         }
+    }
+    handleButtonEvents(target)
+    {
+        const action = target.getAttribute("data-action")
+
+        if (action)
+        {
+            const runAction = this._actionType[action]
+
+            runAction(target)
+        }
+    }
+    handleGame(target)
+    {
+        const gameMode = target.getAttribute("data-game-mode")
+
+        console.log('in hereee hajar u should take the functions from event handlers and out it in here: ' , gameMode)
+
     }
     handleNavigation(target)
     {

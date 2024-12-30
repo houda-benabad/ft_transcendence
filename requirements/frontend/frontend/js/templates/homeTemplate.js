@@ -23,7 +23,7 @@ export const homeTemplate =
                         <h2>join the <span>tournament</span></h2>
                         <p>${HOME.DESCRIPTION.TOURNAMENT_DESCRIPTION}</p>
                     </div>
-                    <button class="button-type2 anchor-tmp" data-mode='tournament' data-action='play_game'>play</button>
+                    <button class="button-type2 anchor-tmp" data-game-mode='tournament' data-action='play_game'>play</button>
                 <div>
             </cover>
             <img src='${HOME.IMG.TOURNAMENT_IMAGE}'>
@@ -37,7 +37,7 @@ export const homeTemplate =
              <div>
                 <h3>${h3}</h3>
                 <p>${p}</p>
-                <button class="button-type2 anchor-tmp" data-mode='${id}' data-action='play_game'>play now</button>
+                <button class="button-type2 anchor-tmp" data-game-mode='${id}' data-action='play_game'>play now</button>
             </div>`
         )
     },

@@ -97,7 +97,7 @@ class ApiService
             })
             if (response.status === 401) // this needs to be implemented in a maintenabale and cleam way
                 {
-                    console.log('access token was expired')
+                    // console.log('access token was expired')
                     const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
                         method : 'POST',
                         headers : {
@@ -107,7 +107,7 @@ class ApiService
                     })
                     if (response.status === 401)
                     {
-                        console.log('refresh token was expired')
+                        // console.log('refresh token was expired')
                         _tokenService.clear()
                         router.handleRoute('/signin')
                         return ; 

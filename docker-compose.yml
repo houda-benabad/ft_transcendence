@@ -55,7 +55,7 @@ services:
     container_name: nginx
     restart: on-failure
     ports:
-      - 443:443
+      - 8010:443
     env_file:
       - .env
     networks:
@@ -72,7 +72,7 @@ services:
       user_management:
           condition: service_started
       postgres:
-          condition: service_healthy
+        condition: service_healthy
     build:
       context: ./requirements/game/
       dockerfile: Dockerfile

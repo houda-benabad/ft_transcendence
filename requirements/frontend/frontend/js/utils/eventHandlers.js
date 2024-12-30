@@ -6,7 +6,7 @@
 // import { local } from '../mods/local.js'
 // import { formService } from '../services/formService.js'
 // import { eventListeners } from './global.js'
-// import { gameManager } from '../managers/gameManager.js'
+import { gameManager } from '../managers/gameManager.js'
 // import { remote } from '../mods/remote.js'
 
 //break it into small chunks and cleanse this out .
