@@ -65,7 +65,7 @@ export class EventManager
             else
             {
                 _tokenService.tokens= response
-                console.log('response : ', response)
+                // console.log('response : ', response)
                 await reset()
                 router.handleRoute('/')
             }
