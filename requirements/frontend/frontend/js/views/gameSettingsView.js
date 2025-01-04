@@ -7,7 +7,7 @@ import Local from "../managers/localManagers.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 // import router from "../router/router.js"
-// import { eventListeners } from "../utils/global.js"
+import { eventListeners } from "../utils/global.js"
 
 export class gameSettingsView extends HTMLElement
 {
@@ -27,15 +27,15 @@ export class gameSettingsView extends HTMLElement
         this.input = document.getElementById('slider-input')
         this.modes = document.querySelectorAll('input[name="mode"]')
 
-        // eventListeners.setAllByType(this.modes, 'change')
-        // eventListeners.on(this.input, 'input', (event) => eventHandlers.game.inputOfSlider())   
+        eventListeners.setAllByType(this.modes, 'change')
+        eventListeners.on(this.input, 'input', (event) => eventHandlers.game.inputOfSlider())   
     }
-    // disconnectedCallback()
-    // {
-    //     // do i need to remove all of this event listeners, im gonna reset  - -
-    //     eventListeners.removeAllByType(this.modes, 'change')
-    //     eventListeners.off(this.input, 'input')
-    // }
+    disconnectedCallback()
+    {
+        // do i need to remove all of this event listeners, im gonna reset  - -
+        eventListeners.removeAllByType(this.modes, 'change')
+        eventListeners.off(this.input, 'input')
+    }
 }
 
 customElements.define('game-settings-view', gameSettingsView)
