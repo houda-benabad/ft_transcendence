@@ -7,7 +7,6 @@ export const modalService =
 {
     show(message, type = null)
     {  
-        console.log('the message im trying to show is : ', message)
         return new Promise(async (resolve) =>  {
             const app = document.getElementById('app')
             const modalHtml = this.createModalHtml(type)

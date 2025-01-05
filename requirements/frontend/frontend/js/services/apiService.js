@@ -110,7 +110,6 @@ class ApiService
                 this._resolve(responseBody)
             if (showModal)
                 await modalService.show(modalMessage)
-            console.log('my message is  : ', modalMessage)
         }
         catch(error)
         {
