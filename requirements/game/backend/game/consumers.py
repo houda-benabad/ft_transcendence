@@ -65,7 +65,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 	async def start_game(self):
 		players_set = [remote_players.pop(0) for num in range(2)]
-		asyncio.create_task(game.startRemoteGame( players_set ))
+		asyncio.create_task(game.startRemoteGame( self.channel_layer, players_set[0], players_set[1] ))
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1
@@ -91,7 +91,7 @@ class MultiPlayerConsumer(GameConsumer, AsyncWebsocketConsumer):
 
 	async def start_game(self, players):
 		players_set = [remote_players.pop(0) for num in range(4)]
-		asyncio.create_task(game.startMultiPlayerGame(self.channel_layer, players_set))
+		asyncio.create_task(game.startMultiPlayerGame(self.channel_layer, players_set[0], players_set[1]))
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1
