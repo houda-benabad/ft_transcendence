@@ -4,13 +4,18 @@ from .ball import Ball
 from .gameObjects import Plane
 from asgiref.sync import async_to_sync, sync_to_async
 
+WINNING_SCORE = 2
+TWO_PLAYERS = "2P"
+MULTI_PLAYERS = "4P"
 
 class Game():
-	def __init__(self):
-	#  P V D
+
+	def __init__( self ):
 		self.ball = Ball( [ 0 ,  0 ], [ .01,-.07,.1 ], [ .2,.2,.2 ] )
+
 		self.ball.velocity[0] *= random.choice([-1, 1]) 
 		self.ball.velocity[1] *= random.choice([-1, 1])
+	
 		self.plane = Plane([0,0], [.01,.01,.05], [4,.2,6])
 
 		self.p1 = Player([0,self.plane.dimension[2]/2], [0,-.1,.05], [1,.3,.1])
@@ -21,8 +26,8 @@ class Game():
 		self.p2.update()
 		self.ball.update(self.plane, self.p1, self.p2)
 
-	async def is_game_over(self):
-		return self.p1.score >= 10 or self.p2.score >= 10
+	async def is_over(self):
+		return self.p1.score >= WINNING_SCORE or self.p2.score >= WINNING_SCORE
 
 	def get_coordinates(self):
 		return{
@@ -35,7 +40,7 @@ class Game():
 			"p2":{
 				"position": self.p2.position,
 				}
-		}
+	}
 
 	def move_players(self, hoster, invited):
 		self.p1.move(hoster.keycode, self.plane)

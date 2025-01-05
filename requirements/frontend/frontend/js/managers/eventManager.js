@@ -4,6 +4,8 @@ import { _tokenService } from '../utils/global.js'
 import { reset } from '../utils/utils.js'
 import { router } from '../utils/global.js'
 import { MODE } from '../constants/engine.js'
+import { remote } from '../mods/remote.js'
+
 
 export class EventManager
 {
@@ -213,10 +215,13 @@ export class EventManager
             const winner = await local(  this.gameSettings , winners )
             await modalService.show(  'Game over', 'hihi' )
             await reset(  )
-            router.navigateTo( '/home' )
+            router.navigateTo( '/' )
         }
         else if ( gameMode == MODE.REMOTE ){
-            remote(  )
+            await remote( )
+            // await modalService.show(  'Game over', 'hihi' )
+            await reset(  )
+            router.navigateTo( '/' )
         }
         console.log('in hereee hajar u should take the functions from event handlers and out it in here: ' , gameMode)
 

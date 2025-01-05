@@ -28,17 +28,16 @@ export default class Remote{
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
 
-	update( id ){
-
-		this.engine.socket.onmessage = ( e ) => this.updateData( e, id )
+	update( id, resolve ){
+		this.engine.socket.onmessage = ( e ) => this.updateData( e, id, resolve )
 		this.input.movePlayers( this.engine.socket )
 		this.visual.updatePosition( )
 
 	}
 
-	updateData( e, id ){
+	updateData( e, id, resolve ){
 		const { type, data } = JSON.parse( e.data )
-		this[ACTIONS[type]]( data, id)
+		this[ACTIONS[type]]( data, id, resolve)
 	}
 
 	updateApi( data ){
@@ -55,7 +54,9 @@ export default class Remote{
 		this.canva.remove( "waiting" )
 	}
 
-	updateState( data, id ){
+	updateState( data, id, resolve ){
+		console.log( typeof( resolve ) )
+		resolve( )
 		cancelAnimationFrame( id )
 	}
 
@@ -65,14 +66,15 @@ export default class Remote{
 		this.engine.camera.lookAt( this.engine.scene.position )
 	}
 
-	animate(  ) {
-		let id = requestAnimationFrame( (  ) => this.animate() )
+	animate( resolve ) {
+		console.log( "the type is = ", typeof( resolve ))
+		let id = requestAnimationFrame( (  ) => this.animate( resolve ) )
 		this.engine.world.step( WORLD.TIMESTAMP) 
 
 		if ( this.animationProgress < 1 )
 			this.initialAnimation(  )
 		else
-			this.update( id )
+			this.update( id, resolve )
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
 	
 	}
