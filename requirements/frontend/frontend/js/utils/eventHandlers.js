@@ -5,7 +5,7 @@
 // import { MODE } from '../constants/engine.js'
 // import { local } from '../mods/local.js'
 // import { formService } from '../services/formService.js'
-// import { eventListeners } from './global.js'
+import { eventListeners } from './global.js'
 import { gameManager } from '../managers/gameManager.js'
 // import { remote } from '../mods/remote.js'
 

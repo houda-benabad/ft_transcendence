@@ -4,6 +4,9 @@ import { _tokenService } from '../utils/global.js'
 import { reset } from '../utils/utils.js'
 import { router } from '../utils/global.js'
 import { MODE } from '../constants/engine.js'
+import { formService } from '../services/formService.js'
+import { local } from '../mods/local.js'
+import { modalService } from '../services/modalService.js'
 
 export class EventManager
 {
@@ -48,31 +51,35 @@ export class EventManager
     }
     async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
     {
-        // console.log('im in handle formEvents')
         event.preventDefault()
         
         const action = target.getAttribute("data-action")
         const form = document.querySelector('form')
 
         const formData = new FormData(form)
-        const formObject = {}
-
-        formData.forEach((value, key) => { formObject[key] = value }) // add the tournament form  and the game one .
         if (action === 'signin' || action === 'signup')
         {
+            const formObject = {}
+    
+            formData.forEach((value, key) => { formObject[key] = value }) // add the tournament form  and the game one .
             // console.log('action : ', action)
             const response = await apiService.auth[action](formObject)
 
             if (action  === 'signup')
-                router.handleRoute('/signin')
-            else
+                setTimeout(() => router.handleRoute('/signin'), 1000)
+             else
             {
                 _tokenService.tokens= response
-                // console.log('response : ', response)
+                console.log('response : ', response)
                 await reset()
                 router.handleRoute('/')
             }
         }
+        // else if (action === 'game-settings')
+        // {
+        //     let gameSettings = Object.fromEntries(formData) // what is the difference
+        //     console.log('->>>here : ', gameSettings)
+        // }
     }
     // async handleSendRequest(target)
     // {
@@ -120,7 +127,7 @@ export class EventManager
 
         if (eventType === 'focusout' && target.id === 'search-input')
             this.handleSearchFocus()
-        else if (target.matches('a'))
+        else if (eventType === 'click' && target.matches('a'))
             this.handleAnchorEvents(event, target)
         else if (eventType === 'click' && target.matches('button'))
             this.handleButtonEvents(target)
@@ -200,7 +207,7 @@ export class EventManager
             await local( this.gameSettings , ["player1", "player2"])
             await modalService.show(  'Game over', 'hihi' )
             await reset(  )
-            router.navigateTo( '/home' )
+            router.navigateTo( '/' )
         }
         else if ( gameMode == MODE.TOURNAMENT){
             const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
@@ -213,7 +220,7 @@ export class EventManager
             const winner = await local(  this.gameSettings , winners )
             await modalService.show(  'Game over', 'hihi' )
             await reset(  )
-            router.navigateTo( '/home' )
+            router.navigateTo( '/' )
         }
         else if ( gameMode == MODE.REMOTE ){
             remote(  )

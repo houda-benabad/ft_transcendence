@@ -27,6 +27,7 @@ export class gameSettingsView extends HTMLElement
         this.input = document.getElementById('slider-input')
         this.modes = document.querySelectorAll('input[name="mode"]')
 
+        // change later on and add on my event managers
         eventListeners.setAllByType(this.modes, 'change')
         eventListeners.on(this.input, 'input', (event) => eventHandlers.game.inputOfSlider())   
     }

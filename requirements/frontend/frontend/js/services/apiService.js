@@ -95,29 +95,8 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            if (response.status === 401) // this needs to be implemented in a maintenabale and cleam way
-                {
-                    console.log('->>>>>>> access token was expired')
-                    const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
-                        method : 'POST',
-                        headers : {
-                            "Content-Type": "application/json"
-                        },
-                        body : JSON.stringify({"refresh" : _tokenService.refreshToken})
-                    })
-                    if (response.status === 401)
-                    {
-                        console.log('->>>>>> refresh token was expired')
-                        _tokenService.clear()
-                        document.getElementById('app').classList.remove('active')
-                        router.handleRoute('/signin')
-                        return ; 
-                    }
-                    const responseBody = await response.json()
-                    _tokenService.accessToken = responseBody.access
-                    this.request()
-                    return ;    
-            }
+            if (needsAuth && response.status === 401)
+                await this.manageExpiredTokens()
             if (response.status === 500)
                 throw new Error(response.status)
             const contentType = response.headers.get('Content-Type');
@@ -125,18 +104,43 @@ class ApiService
                 return this._resolve()
 
             const responseBody = await response.json()
-            if (response.ok)
-                this._resolve(responseBody)
-            else
+            if (!response.ok)
                 modalMessage = this.updateModalMessaga(responseBody)
+            else 
+                this._resolve(responseBody)
             if (showModal)
-                console.log(modalMessage) // here replaced on later on by the showmodal service
+                await modalService.show(modalMessage)
+            console.log('my message is  : ', modalMessage)
         }
         catch(error)
         {
             console.log('the error that was caught in api service is ', error)
         }
     }
+   async manageExpiredTokens()
+    {
+        // console.log('->>>>>> access token was expired')
+        const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
+            method : 'POST',
+            headers : {
+                "Content-Type": "application/json"
+            },
+            body : JSON.stringify({"refresh" : _tokenService.refreshToken})
+        })
+        if (response.status === 401)
+        {
+            console.log('->>>>>> refresh token was expired')
+            _tokenService.clear()
+            document.getElementById('app').classList.remove('active')
+            router.handleRoute('/signin')
+            this._resolve()
+        }
+        console.log('im in here doing some work')
+        const responseBody = await response.json()
+        _tokenService.accessToken = responseBody.access
+        this.request()
+        this._resolve 
+    }    
     updateModalMessaga(responseBody)
     {
         const entries = Object.entries(responseBody)
@@ -151,7 +155,7 @@ const generateHttpRequests = (api) =>
 ({
     createPostRequest(endpoint, {needsAuth, modalMessage}) // see if gotta make this object empty
     {
-        return (body, resolve) => {
+        return async (body, resolve) => {
             const request = new RequestConfiguration()
                 .withEndpoint(endpoint)
                 .withMethod('POST')
@@ -162,7 +166,7 @@ const generateHttpRequests = (api) =>
                 request.withModal(modalMessage)        
             api.requestConfig = request.requestConfig
             api.resolve = resolve
-            api.request()
+            await api.request()
         }
     },
     createGetRequest(endpoint, modalMessage = null)
@@ -206,11 +210,11 @@ export const apiService =
     {
         signin : (body) => new Promise (resolve => 
         {
-            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_IN, {needsAuth : false, modalMessage: 'you logged in successffully'})(body, resolve)
+            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_IN, {needsAuth : false, modalMessage: 'welcome to pingy !!!'})(body, resolve)
         }),
         signup : (body) => new Promise (resolve => 
         {
-            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : false, modalMessage: 'you logged in successffully'})(body, resolve)
+            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : false, modalMessage: 'you signed up successffully'})(body, resolve)
         })
     },
     user :
@@ -239,5 +243,12 @@ export const apiService =
         {
             generatedHttpRequests.createPostRequest(ENDPOINTS.REFRESH_TOKEN, {needsAuth : false, modalMessage: null})(body, resolve)
         }),// gotta use it to make code simplified but ..
-    }
+    },
+    // home :
+    // {
+    //     getLeaderboardData :  () => new Promise (resolve => 
+    //     {
+    //         generatedHttpRequests.createGetRequest(ENDPOINTS.LEADERBOARD, {needsAuth : false, modalMessage: null})(body, resolve)
+    //     })
+    // }
 }

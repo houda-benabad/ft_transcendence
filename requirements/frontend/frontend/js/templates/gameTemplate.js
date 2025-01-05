@@ -1,7 +1,7 @@
 export function gameTemplate()
 {
     return (`
-         <form id='game-settings'>
+         <form id='game-settings' data-action="game-settings">
                 <h2>Game Settings</h2>
                 <div class="settings-row">
                     <p  class="settings-label">modes</p>
