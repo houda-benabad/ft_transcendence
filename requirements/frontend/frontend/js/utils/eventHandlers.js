@@ -81,31 +81,6 @@ export const eventHandlers =
         {
             const mode = event.target.dataset.mode
             const manager = new gameManager(  )
-            if ( mode === MODE.LOCAL ){
-                await router.navigateTo( '/game-settings' )
-                this.gameSettings = await formService.game(  )
-                router.navigateTo( './game' )
-                await local( this.gameSettings , ["player1", "player2"])
-                await modalService.show(  'Game over', 'hihi' )
-                await reset(  )
-                router.navigateTo( '/home' )
-            }
-            else if ( mode == MODE.TOURNAMENT){
-                const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
-                await router.navigateTo( '/game-settings' )
-                this.gameSettings = await formService.game(  )
-                router.navigateTo( './game' )
-                const winners = []
-                winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
-                winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
-                const winner = await local(  this.gameSettings , winners )
-                await modalService.show(  'Game over', 'hihi' )
-                await reset(  )
-                router.navigateTo( '/home' )
-            }
-            else if ( mode == MODE.REMOTE ){
-                remote(  )
-            }
 
         }
     },

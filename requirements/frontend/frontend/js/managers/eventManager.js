@@ -3,6 +3,7 @@ import { searchService } from '../services/searchService.js'
 import { _tokenService } from '../utils/global.js'
 import { reset } from '../utils/utils.js'
 import { router } from '../utils/global.js'
+import { MODE } from '../constants/engine.js'
 
 export class EventManager
 {
@@ -12,6 +13,8 @@ export class EventManager
         document.addEventListener('submit', this.handleEventDelegation.bind(this))
         document.addEventListener('input', this.handleEventDelegation.bind(this))
         document.addEventListener('focusout', this.handleEventDelegation.bind(this))
+        // document.addEventListener('change', this.handleEventDelegation.bind(this))
+
         this._actionType = 
         {
             'router' : this.handleNavigation.bind(this),
@@ -65,7 +68,7 @@ export class EventManager
             else
             {
                 _tokenService.tokens= response
-                console.log('response : ', response)
+                // console.log('response : ', response)
                 await reset()
                 router.handleRoute('/')
             }
@@ -186,10 +189,35 @@ export class EventManager
             runAction(target)
         }
     }
-    handleGame(target)
+    async handleGame(target)
     {
         const gameMode = target.getAttribute("data-game-mode")
 
+        if ( gameMode === MODE.LOCAL ){
+            await router.navigateTo( '/game-settings' )
+            this.gameSettings = await formService.game(  )
+            router.navigateTo( './game' )
+            await local( this.gameSettings , ["player1", "player2"])
+            await modalService.show(  'Game over', 'hihi' )
+            await reset(  )
+            router.navigateTo( '/home' )
+        }
+        else if ( gameMode == MODE.TOURNAMENT){
+            const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
+            await router.navigateTo( '/game-settings' )
+            this.gameSettings = await formService.game(  )
+            router.navigateTo( './game' )
+            const winners = []
+            winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
+            winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
+            const winner = await local(  this.gameSettings , winners )
+            await modalService.show(  'Game over', 'hihi' )
+            await reset(  )
+            router.navigateTo( '/home' )
+        }
+        else if ( gameMode == MODE.REMOTE ){
+            remote(  )
+        }
         console.log('in hereee hajar u should take the functions from event handlers and out it in here: ' , gameMode)
 
     }
