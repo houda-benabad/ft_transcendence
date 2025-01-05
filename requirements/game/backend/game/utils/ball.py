@@ -5,37 +5,49 @@ from dataclasses import dataclass
 TWO_PLAYERS = 2
 MULTI_PLAYERS = 4
 
+@dataclass
+class Vector3:
+    x: float
+    y: float
+    z: float
+
+
 class Ball( GameObject ):
 	def reset( self ):
-		self.velocity.x *= random.choice([-1, 1])
-		self.velocity.z *= random.choice([-1, 1]) 
+		self.position = Vector3( 0, 0 ,0)
+		self.velocity.x *= random.choice([-.5, .5])
+		self.velocity.z *= random.choice([-.5, .5]) 
 
 	def update_z_velocity(self):
 		self.velocity.z *= -1
-		if self.velocity.z < 0 and self.velocity.z > -0.1:
+		MIN_VELOCITY = 0.1
+
+		if self.velocity.z < 0 and self.velocity.z > -MIN_VELOCITY:
 			self.velocity.z -= .01
-		elif self.velocity.z > 0 and self.velocity.z < 0.1:
+		elif self.velocity.z > 0 and self.velocity.z < MIN_VELOCITY:
 			self.velocity.z += .01
 
 	def check_ground_sides( self, plane ):
-		if self.left <= plane.left or self.right >= plane.right:
+		BUFFER = 0.01
+
+		if self.left <= ( plane.left + BUFFER )or self.right >= ( plane.right - BUFFER ):
 			self.velocity.x *= -1
 
-	def check_out_ground( self, plane, p1, p2 ):
+	def check_out_ground( self, plane, players):
 		if (  self.back >= plane.back ):
-			p2.score+= 1
+			players[1].score+= 1
 			self.reset()
 		elif (  self.front <=  plane.front):
-			p1.score += 1
+			players[0].score += 1
 			self.reset()
    
-	def check_player_collision( self, p1, p2):
-		if (self.back >= p1.front):
-			if (self.right >= p1.left and self.left <= p1.right):
+	def check_player_collision( self, players):
+		if (self.back >= players[0].front):
+			if (self.right >= players[0].left and self.left <= players[0].right):
 				self.update_z_velocity()
 
-		elif (self.front <= p2.back):
-			if (self.right >= p2.left and self.left <= p2.right):
+		elif (self.front <= players[1].back):
+			if (self.right >= players[1].left and self.left <= players[1].right):
 				self.update_z_velocity()
 
 	def update(self, plane, players):
@@ -45,5 +57,7 @@ class Ball( GameObject ):
 		self.check_out_ground( plane, players ) # sometimes get out ground for no reason, up: fixed
 		self.check_player_collision( players ) # sometime reset when not needed
 
-		for i in range( self.mode ):
-			self.position[i] += self.velocity[i]
+		for i in range( TWO_PLAYERS ):
+			print( self.velocity.z, self.position.z )
+			self.position.x += self.velocity.x
+			self.position.z += self.velocity.z

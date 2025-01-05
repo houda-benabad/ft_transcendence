@@ -7,14 +7,14 @@ export default class visualsManager {
 		// for remote
 		updateCoordinates( data ) {
 			const { ball } = this.components.bodies;
-			ball.position.x = data.ball.position[0];
-			ball.position.z = data.ball.position[1];
+			ball.position.x = data.ball.position.x;
+			ball.position.z = data.ball.position.z;
 	
 			const { bodies } = this.components;
 
 			const playerNumber = Object.keys( data ).length - 1
 			for (  let i =0; i< playerNumber; i++  ){
-				bodies[ `player${i+1}` ].position.x = data[ `p${i+1}` ].position[0]
+				bodies[ `player${i+1}` ].position.x = data[ `p${i+1}` ].position.x
 			}
 
 		}

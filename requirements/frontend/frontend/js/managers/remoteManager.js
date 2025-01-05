@@ -6,6 +6,7 @@ import Engine from "../utils/engine.js"
 import Components from "../utils/components.js"
 import appCanva from "./canvaManager.js"
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
+// import { modalService } from "../services/modalService.js"
 
 
 export default class Remote{
@@ -41,7 +42,8 @@ export default class Remote{
 	}
 
 	updateApi( data ){
-		this.visual.updateCoordinates( data.coordinates )
+		console.log(data)
+		this.visual.updateCoordinates( data )
 	}
 
 	updateScore( data ){
@@ -49,6 +51,7 @@ export default class Remote{
 	}
 
 	updateStart(  ){
+		// modalService.show( " You won" )
 		console.log( "starting game" )
 		this.canva.add( "score" )
 		this.canva.remove( "waiting" )
@@ -56,6 +59,7 @@ export default class Remote{
 
 	updateState( data, id, resolve ){
 		console.log( typeof( resolve ) )
+
 		resolve( )
 		cancelAnimationFrame( id )
 	}
@@ -67,7 +71,6 @@ export default class Remote{
 	}
 
 	animate( resolve ) {
-		console.log( "the type is = ", typeof( resolve ))
 		let id = requestAnimationFrame( (  ) => this.animate( resolve ) )
 		this.engine.world.step( WORLD.TIMESTAMP) 
 

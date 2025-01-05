@@ -43,7 +43,6 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 	async def connect(self):
 		try:
-			print( "REMOTE 11 ONE" )
 			userId = self.scope['url_route']['kwargs']['userId']
 
 			# send request to hind to check if user is authenticated
@@ -56,7 +55,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			# user_info = response.json(  )
 
 			self.playerModel, created = await self._get_or_create_player_( userId )
-			print( "player model = ", self.playerModel )
+			print( "PLAYER CONNECTED" )
 			remote_players.append(self)
 			if len(remote_players) >= 2:
 				await self.start_game()
@@ -95,11 +94,9 @@ class MultiPlayerConsumer(GameConsumer, AsyncWebsocketConsumer):
 		asyncio.create_task(game.startMultiPlayerGame(self.channel_layer, players_set))
 
 	async def disconnect(self, close_code):
-		print('game name = ', self.game_group_name)
 		self.keycode =  -1
 		if ( self.game_group_name ):
 			await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
 		if multi_players:
 			multi_players.remove(self)
-		print( 'CONSUMERS = ', len(multi_players))
 

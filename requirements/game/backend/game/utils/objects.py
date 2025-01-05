@@ -14,15 +14,15 @@ class GameObject( ):
 	velocity : Vector3
 
  
-	def __init__(self, position, velocity, dimension, mode):
+	def __init__(self, position, velocity, dimension):
 		self.position = position
 		self.velocity = velocity
 		self.dimension = dimension
 		self.updateBounds()
 
 	def updateBounds(self) :
-		self.back = self.position.y + self.dimension.z / 2
-		self.front = self.position.y - self.dimension.z / 2
+		self.back = self.position.z + self.dimension.z / 2
+		self.front = self.position.z - self.dimension.z / 2
 
 		self.left = self.position.x - self.dimension.x / 2
 		self.right = self.position.x + self.dimension.x / 2

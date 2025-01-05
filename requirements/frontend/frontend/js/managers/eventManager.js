@@ -62,7 +62,7 @@ export class EventManager
         formData.forEach((value, key) => { formObject[key] = value }) // add the tournament form  and the game one .
         if (action === 'signin' || action === 'signup')
         {
-            // console.log('action : ', action)
+            console.log('action : ', action)
             const response = await apiService.auth[action](formObject)
 
             if (action  === 'signup')

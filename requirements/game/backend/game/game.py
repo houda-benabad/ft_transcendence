@@ -51,9 +51,9 @@ class GameServer(  ):
 			if self.consumers[0].keycode == -1 or self.consumers[1].keycode == -1:
 				break
 			
-			self.game.move_players(self.consumers[0], self.consumers[1])
+			self.game.move_players( self.consumers )
 
-			await self.__send_group_msg_( 'api', {'coordinates' : self.game.get_coordinates()} )
+			await self.__send_group_msg_( 'api', self.game.get_coordinates() )
 			await self.__send_group_msg_( 'score', self.get_score(  ))
 
 			if await self.game.is_over():
@@ -69,8 +69,8 @@ class GameServer(  ):
 				'p2' :	self.consumers[1].playerModel.username
 			},
 			'score' :{
-				'p1' : self.game.p1.score,
-				'p2' : self.game.p2.score,
+				'p1' : self.game.players[0].score,
+				'p2' : self.game.players[1].score,
 			}
 		}
 
@@ -170,7 +170,6 @@ async def startMultiPlayerGame(channel_layer, consumers):
 	# game.end_game_results(consumers[0], consumers[2])
 
 	# for i in range(len(consumers)):
-	# 	print( 'msg sent to player ', i)
 	# 	if i < 2:
 	# 		state = consumers[0].game_result
 	# 	else:
