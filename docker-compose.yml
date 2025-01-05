@@ -46,7 +46,7 @@ services:
     networks:
       - transcendence
     volumes:
-      - frontVolume:/var/www 
+      - frontVolume:/var/www/frontend/
   
   nginx:
     build:
@@ -65,6 +65,7 @@ services:
       - frontend
       - game
       - user_game_aggregator
+      # - notification
 
   game:
     container_name: game
@@ -148,7 +149,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./requirements/frontend
+      device: ./requirements/frontend/frontend/
     
   aggrvolume:
     driver: local

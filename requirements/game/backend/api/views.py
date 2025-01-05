@@ -16,8 +16,7 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 
     def retrieve( self, request, *args, **kwargs ):
         userId = kwargs.get( 'userId' )
-        response = requests.get( f'http://user_management:8000/auth/users/{userId}', headers={"Host": "localhost"})
-        
+        response = requests.get( f'http://user_management:8000/api/users/{userId}', headers={"Host": "localhost"})
         if response.status_code != 200:
             return Response({"detail":response.json()['detail']}, status=response.status_code)
         
