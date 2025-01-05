@@ -65,7 +65,7 @@ services:
       - frontend
       - game
       - user_game_aggregator
-      - notification
+      # - notification
 
   game:
     container_name: game
