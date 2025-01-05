@@ -6,15 +6,18 @@ export default class visualsManager {
 
 		// for remote
 		updateCoordinates( data ) {
+			console.log( "data = ", data.ball.position.x)
 			const { ball } = this.components.bodies;
-			ball.position.x = data.ball.position.x;
-			ball.position.z = data.ball.position.z;
+			// ball.position.x = data.ball.position.x;
+			ball.position.x = data.ball.position[0];
+			// ball.position.z = data.ball.position.z;
+			ball.position.z = data.ball.position[1];
 	
 			const { bodies } = this.components;
 
 			const playerNumber = Object.keys( data ).length - 1
 			for (  let i =0; i< playerNumber; i++  ){
-				bodies[ `player${i+1}` ].position.x = data[ `p${i+1}` ].position.x
+				bodies[ `player${i+1}` ].position.x = data[ `p${i+1}` ].position[0]
 			}
 
 		}
