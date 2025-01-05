@@ -29,9 +29,9 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('swagger/', schema_view.with_ui('swagger'), name='api_docs'),
-    path('auth/', include('accounts.urls')),
     path('api/profiles/', include('Profiles.urls')),
     path('api/friendship/', include('friends.urls')),
+    path('', include('accounts.urls'))
 ]
 
 if settings.DEBUG:

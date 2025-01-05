@@ -6,16 +6,17 @@ from Profiles.models import Profile
 from rest_framework.response import Response
 import urllib
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import status, permissions
 from django.conf import settings
 from django.urls import reverse
 from .permissions import IsNotAuthenticated
-import logging
+from djoser.views import UserViewSet
 
 User = get_user_model()
-logging.basicConfig(level=logging.DEBUG)  
-        
-logger = logging.getLogger("accounts.views")  
+
+class   CustomUserViewSet(UserViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class   IntraAuth(APIView):
     
@@ -31,7 +32,6 @@ class   IntraAuth(APIView):
             }
         
         auth_url = settings.INTRA_AUTH_URL + '?' + urllib.parse.urlencode(params)
-        logger.debug(f"Redirecting to auth URL: {auth_url}") 
         return redirect(auth_url)
 
 intra_auth_view = IntraAuth.as_view()
