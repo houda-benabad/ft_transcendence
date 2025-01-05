@@ -15,17 +15,17 @@ class Vector3:
 class Ball( GameObject ):
 	def reset( self ):
 		self.position = Vector3( 0, 0 ,0)
-		self.velocity.x *= random.choice([-.5, .5])
-		self.velocity.z *= random.choice([-.5, .5]) 
+		self.velocity.x *= random.choice([-1, 1])
+		self.velocity.z *= random.choice([-1, 1]) 
 
 	def update_z_velocity(self):
 		self.velocity.z *= -1
 		MIN_VELOCITY = 0.1
 
-		if self.velocity.z < 0 and self.velocity.z > -MIN_VELOCITY:
-			self.velocity.z -= .01
-		elif self.velocity.z > 0 and self.velocity.z < MIN_VELOCITY:
-			self.velocity.z += .01
+		# if self.velocity.z < 0 and self.velocity.z > -MIN_VELOCITY:
+		# 	self.velocity.z -= .01
+		# elif self.velocity.z > 0 and self.velocity.z < MIN_VELOCITY:
+		# 	self.velocity.z += .01
 
 	def check_ground_sides( self, plane ):
 		BUFFER = 0.01

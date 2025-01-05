@@ -5,7 +5,7 @@ from .ball import Ball
 from .objects import Plane
 # from asgiref.sync import async_to_sync, sync_to_async
 
-WINNING_SCORE = 2
+WINNING_SCORE = 20
 TWO_PLAYERS = "2P"
 MULTI_PLAYERS = "4P"
 
@@ -20,7 +20,7 @@ class Game(  ):
 
 	def __init__( self ):
 		# self.mode = mode
-		self.ball = Ball( Vector3( 0, 0, 0 ), Vector3( .01,-.07,.1 ), Vector3( .2,.2,.2 ) )
+		self.ball = Ball( Vector3( 0, 0, 0 ), Vector3( .01,-.07,.1 ), Vector3( .1,.1,.1 ) )
 
 		self.ball.velocity.x *= random.choice([-1, 1]) 
 		self.ball.velocity.z *= random.choice([-1, 1])
