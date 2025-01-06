@@ -96,10 +96,10 @@ export class Icons extends HTMLDivElement
         const iconActionType = {
         'friend'  : [{icon : 'eva:person-remove-outline', action :'remove_friend'}],
         'stranger' : [{icon : 'eva:person-add-outline', action : 'send_request'}],
-        'pending' : [{icon : 'dashicons:no', action : 'cancel_request'}, {icon : 'dashicons:yes', action : 'accept_request'}],
+        'pending' : [{icon : 'dashicons:no', action : 'reject_request'}, {icon : 'dashicons:yes', action : 'accept_request'}],
         'requested' : [{icon : 'dashicons:no', action : 'cancel_request'}],
         'me' : [{icon : 'mage:edit', action : 'edit_profile'}],
-        'request' : [{icon : 'dashicons:no', action : 'cancel_request'}, {icon : 'dashicons:yes', action : 'accept_request'}]
+        'request' : [{icon : 'dashicons:no', action : 'reject_request'}, {icon : 'dashicons:yes', action : 'accept_request'}]
         }
         return (iconActionType[type])
 

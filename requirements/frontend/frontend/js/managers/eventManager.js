@@ -69,7 +69,7 @@ export class EventManager
             else
                 mainElement.relationshipStatus = 'friend'
         }
-        else if (action === 'remove_friend' || action === 'cancel_request')
+        else if (action === 'remove_friend' || action === 'cancel_request' || action === 'reject_request')
         {
             await apiService.friendship.deleteFriendship(action, id)
             mainElement.relationshipStatus = 'stranger'
@@ -86,7 +86,7 @@ export class EventManager
         console.log('target : ', target)
         if (action === 'send_request' || action === 'accept_request')
             await apiService.friendship.postFriendship(action, id)
-        else if (action === 'remove_friend' || action === 'cancel_request')
+        else
             await apiService.friendship.deleteFriendship(action, id)
     }
     async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .

@@ -262,7 +262,7 @@ export const apiService =
         deleteFriendship : (action, id) => new Promise (resolve => 
         {
             const messageIdentifier = action.replace('_',' the ')
-            // console.log('here : ', messageIdentifier)
+            console.log('here : ', messageIdentifier)
             generatedHttpRequests.createDeleteRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${id}`, `you did ${messageIdentifier} successfully`)(resolve)
         }),
     },
