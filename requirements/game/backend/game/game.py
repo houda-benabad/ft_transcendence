@@ -54,7 +54,7 @@ class GameServer(  ):
 				'state' : consumers[1].game_result,
 			} 
 		}))
-
+	
 	async def run( self ):
 		await self.__send_group_msg_( 'start', 'game is starting' )
 
@@ -90,6 +90,20 @@ class GameServer(  ):
 				break
 
 			await asyncio.sleep( GAME_TICK_RATE )
+			
+	async def saving_to_database( self ):
+		self.game.end_game_results(self.consumers[0], self.consumers[1], self.gameModel)
+
+		await sync_to_async( self.gameModel.save )()
+		await sync_to_async( self.consumers[0].playerModel.save )()
+		await sync_to_async( self.consumers[1].playerModel.save )()
+
+
+	async def send_results( self ):
+		await self.consumers[0]._send_message_( 'endGame',{ 'state' : self.consumers[0].game_result } )
+		await self.consumers[1]._send_message_( 'endGame',{ 'state' : self.consumers[1].game_result } )
+
+
 
 
 async def startRemoteGame( consumers):
@@ -100,8 +114,8 @@ async def startRemoteGame( consumers):
 	await asyncio.sleep( GAME_START_DELAY )
 
 	await server.run(  )
-	# await server.saving_to_database(  )
-	# await server.send_results(  )
+	await server.saving_to_database(  )
+	await server.send_results(  )
 
 
 

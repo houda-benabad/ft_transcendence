@@ -79,6 +79,12 @@ from .objects import Plane
 from asgiref.sync import async_to_sync, sync_to_async
 
 
+# @dataclass
+# class Vector3:
+#     x: float
+#     y: float
+#     z: float
+
 class Game():
 	def __init__(self):
 	#  P V D

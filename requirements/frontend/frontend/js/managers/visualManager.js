@@ -6,7 +6,6 @@ export default class visualsManager {
 
 		// for remote
 		updateCoordinates( data ) {
-			console.log( "data = ", data.ball.position.x)
 			const { ball } = this.components.bodies;
 			// ball.position.x = data.ball.position.x;
 			ball.position.x = data.ball.position[0];

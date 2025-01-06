@@ -42,7 +42,6 @@ export default class Remote{
 	}
 
 	updateApi( data ){
-		console.log(data)
 		this.visual.updateCoordinates( data )
 	}
 
@@ -58,7 +57,7 @@ export default class Remote{
 	}
 
 	updateState( data, id, resolve ){
-		console.log( typeof( resolve ) )
+		console.log( "result = ", data )
 
 		resolve( )
 		cancelAnimationFrame( id )
