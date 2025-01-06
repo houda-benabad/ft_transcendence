@@ -7,97 +7,104 @@ from channels.layers import get_channel_layer
 GAME_TICK_RATE = 0.02
 GAME_START_DELAY = 5
 
-import json, asyncio, uuid
-from .utils.gameBase import Game
-from asgiref.sync import async_to_sync, sync_to_async
-from . import models
 
-async def startRemoteGame(channel_layer, hoster, invited):
-	id = uuid.uuid4()
-	group_name = f"game-{id}"
-	hoster.game_group_name = group_name
-	invited.game_group_name = group_name 
- 
-	print( "hoster = ", hoster.game_group_name)
-	print( "invited = ", invited.game_group_name)
+class GameServer(  ):
+	def __init__( self, consumers ):
+		self.channel_layer = get_channel_layer(  )
+		self.consumers = consumers
+		self.game = Game(  )
 
-	await channel_layer.group_add(hoster.game_group_name,hoster.channel_name)
-	await channel_layer.group_add(invited.game_group_name,invited.channel_name)
-
-	gameModel = await sync_to_async( models.RemoteGame.objects.create )( 
-		player1=hoster.playerModel,
-		player2=invited.playerModel
-	)
-	await asyncio.sleep(5)
-
-	await channel_layer.group_send(group_name,
-	{
-		'type': 'start',
-		'data': "game is starting"
-	}
-	)
-	game = Game()
-	while True:
-		#  ELEMETS UPDATE
-		game.update()
-
-		if (hoster.keycode == -1 or invited.keycode == -1):
-			break
-		
-		# MOVEMENT 
-		game.move_players(hoster, invited)
-		
-  
-	
-			# SEND ALL INFO (COORDINATES = SCORE = TIME)
-		await channel_layer.group_send( group_name,
-				{
-					'type': 'api',
-					'data': game.get_coordinates(),
-				}
-			)
-
-		await channel_layer.group_send( group_name, 
-		{
-			'type': 'score',
-			'data': {
-				'name' :{
-					'p1' :'kouaz',
-					'p2' : 'hajar'
-				},
-				'score' :{
-					'p1' : game.p1.score,
-					'p2' : game.p2.score,
-				}
-		}
+	async def __send_group_msg_( self, type, data ):
+		await self.channel_layer.group_send( self.group_name,
+			{
+				'type': type,
+				'data': data
 			}
 		)
-		# GAME OVER CHECK
-		if await game.is_game_over():
-			break
 
-		await asyncio.sleep(0.02)
+	async def setup( self ):
+		self.gameModel = await sync_to_async( models.RemoteGame.objects.create )( 
+			player1=self.consumers[0].playerModel,
+			player2=self.consumers[1].playerModel
+		)
+	
+		self.group_name = f"game-{self.gameModel.id}"
+	
+		for consumer in self.consumers:
+			consumer.game_group_name = self.group_name
+			await self.channel_layer.group_add( self.group_name, consumer.channel_name )
+			
+
+	async def _save_to_database( consumers ):
+		game.end_game_results(consumers[0], consumers[1], gameModel)
+		await sync_to_async( gameModel.save )()
+		await sync_to_async( consumers[0].playerModel.save )()
+		await sync_to_async( consumers[1].playerModel.save )()
+		print( "Everythin is saved up")
+		await consumers[0].send(text_data=json.dumps({
+			'type' : 'endGame',
+			'data' :{
+				'state' : consumers[0].game_result,
+			} 
+		}))
+
+		await consumers[1].send(text_data=json.dumps({
+			'type' : 'endGame',
+			'data' :{
+				'state' : consumers[1].game_result,
+			} 
+		}))
+
+	async def run( self ):
+		await self.__send_group_msg_( 'start', 'game is starting' )
+
+		while True:
+			self.game.update()
+
+			if ( any( consumer.keycode == -1 for consumer in self.consumers )):
+				break
+			
+			# MOVEMENT 
+			self.game.move_players(self.consumers[0], self.consumers[1])
+			
+
+			await self.__send_group_msg_( 'api', self.game.get_coordinates() )
+
+			await self.channel_layer.group_send( self.group_name, 
+			{
+				'type': 'score',
+				'data': {
+					'name' :{
+						'p1' :'kouaz',
+						'p2' : 'hajar'
+					},
+					'score' :{
+						'p1' : self.game.p1.score,
+						'p2' : self.game.p2.score,
+					}
+			}
+				}
+			)
+			# self.GAME OVER CHECK
+			if await self.game.is_game_over():
+				break
+
+			await asyncio.sleep( GAME_TICK_RATE )
 
 
-	# SAVE TO DATABASE
-	game.end_game_results(hoster, invited, gameModel)
-	await sync_to_async( gameModel.save )()
-	await sync_to_async( hoster.playerModel.save )()
-	await sync_to_async( invited.playerModel.save )()
-	print( "Everuthin is saved up")
-	await hoster.send(text_data=json.dumps({
-		'type' : 'endGame',
-		'data' :{
-	  		'state' : hoster.game_result,
-	  	} 
-	}))
+async def startRemoteGame( consumers):
+	server = GameServer( consumers )
 
-	await invited.send(text_data=json.dumps({
-		'type' : 'endGame',
-		'data' :{
-	  		'state' : invited.game_result,
-	  	} 
-	}))
+	await server.setup(  )
+
+	await asyncio.sleep( GAME_START_DELAY )
+
+	await server.run(  )
+	# await server.saving_to_database(  )
+	# await server.send_results(  )
+
+
+
 
 
 # class GameServer(  ):
@@ -192,84 +199,3 @@ async def startRemoteGame(channel_layer, hoster, invited):
 # 	await server.saving_to_database(  )
 # 	await server.send_results(  )
 
-
-async def startMultiPlayerGame(channel_layer, consumers):
-	# id = uuid.uuid4()
-	# group_name = f"game-{id}"
-
-	# for consumer in consumers:
-	# 	consumer.game_group_name = group_name
-	# 	await channel_layer.group_add(consumer.game_group_name,consumer.channel_name)
-	# gameModel = await sync_to_async( models.RemoteGame.objects.create )( 
-	# 	player1=consumer[0].playerModel,
-	# 	player2=consumer[1].playerModel,
-	# 	player3=consumer[2].playerModel,
-	# 	player4=consumer[3].playerModel
-	# )
-	await asyncio.sleep(5)
- 
-	# await channel_layer.group_send(group_name,
-	# {
-	# 	'type': 'start',
-	# 	'data': "game is starting"
-	# }
-	# )
-
-	# game = Game()
-	# while True:
-	# 	#  ELEMETS UPDATE
-	# 	game.update()
-
-	# 	if any(consumer.keycode == -1 for consumer in consumers):
-	# 		break
-		
-	# 	# MOVEMENT 
-	# 	game.move_players(consumers)
-	# 	for consumer in consumers:
-	# 		consumer.keycode = 0 
-	
-	# 	# GAME OVER CHECK
-		
-
-	# 	# SEND ALL INFO (COORDINATES = SCORE)	
-	# 	await channel_layer.group_send(consumers[0].game_group_name,
-	# 		{
-	# 			'type': 'api',
-	# 			'data': {
-	# 				'coordinates' : game.get_coordinates(),
-	# 	}
-	# 		}
-	# 	)
-
-	# 	await channel_layer.group_send(consumers[0].game_group_name,
-	# 		{
-	# 			'type': 'score',
-	# 			'data': {
-	# 				'p1' : {
-	# 					'name' : 'team1',
-	# 					'score' : game.p1.score
-	# 				},
-	# 				'p2' : {
-	# 					'name' : 'team1',
-	# 					'score' : game.p3.score
-	# 				},
-	# 			}
-	# 		}
-	# 	)
-	# 	if await game.is_over():
-	# 		break
-	# 	await asyncio.sleep(0.04)
-
-	# game.end_game_results(consumers[0], consumers[2])
-
-	# for i in range(len(consumers)):
-	# 	if i < 2:
-	# 		state = consumers[0].game_result
-	# 	else:
-	# 		state = consumers[2].game_result
-	# 	await consumers[i].send(text_data=json.dumps({
-	# 		'type' : 'endGame',
-	# 		'data' :{
-	# 			'state' : state,
-	# 		} 
-	# 	}))
