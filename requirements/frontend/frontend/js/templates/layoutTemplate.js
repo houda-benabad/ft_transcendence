@@ -17,7 +17,7 @@ export function layoutTemplate()
                 <div id="nav-top">
                     <a href="/" data-action="router" class="selected"><i class="iconify" data-icon="hugeicons:home-02" data-inline="false"></i></a>
                     <a href="/profile" data-action="router"><i class="iconify" data-icon="fluent:person-20-regular" data-inline="false"></i></a>
-                    <a href="/game" data-action="router"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
+                    <a href="/game-settings" data-action="router"><i class="iconify" data-icon="solar:gamepad-old-linear" data-inline="false"></i></a>
                 </div>
                 <div id="nav-btm">
                     <a href="/settings" data-action="router"><i class="iconify" data-icon="solar:settings-outline" data-inline="false"></i></a>

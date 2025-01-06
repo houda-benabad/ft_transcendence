@@ -45,7 +45,7 @@ export class EventManager
             this.handleAnchorEvents(event, target)
         else if (eventType === 'click' && target.matches('button'))
             this.handleButtonEvents(target)
-        else if (target.matches('form') && eventType === 'submit') // do not need that eventType submit
+        else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
             this.handleformEvents(event, target)
         else if (eventType === 'input' && target.id === 'search-input')
             this.handleSearchInput(event, target)
@@ -179,7 +179,7 @@ export class EventManager
 
         if ( gameMode === MODE.LOCAL ){
             await router.navigateTo( '/game-settings' )
-            this.gameSettings = await formService.game(  )
+            this.gameSettings = await formService.game()
             router.navigateTo( './game' )
             await local( this.gameSettings , ["player1", "player2"])
             await modalService.show(  'Game over', 'hihi' )
@@ -187,7 +187,7 @@ export class EventManager
             router.navigateTo( '/' )
         }
         else if ( gameMode == MODE.TOURNAMENT){
-            const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
+            const players = await modalService.show(  '', false, 'tournament' ) // the alias names for the players 
             await router.navigateTo( '/game-settings' )
             this.gameSettings = await formService.game(  )
             router.navigateTo( './game' )

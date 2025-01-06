@@ -1,10 +1,8 @@
 import { apiService } from "../services/apiService.js"
-import { database } from "../constants/database.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
 import { addListenersForFriendsBox} from '../utils/eventListeners.js'
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
-
 export class ProfileView extends HTMLElement
 {
     constructor()
@@ -36,8 +34,8 @@ export class ProfileView extends HTMLElement
     {
         window.removeEventListener('resize', animateProgressBar)
 
-        if (this._userId === 'me')
-            removeListenersForFriendsBox.apply(this) // to remove the event listeners of friends
+        // if (this._userId === 'me') // to check later on how to do it
+        //     removeListenersForFriendsBox.apply(this) // to remove the event listeners of friends
     }
     setupEventListenersAndAnimations()
     {

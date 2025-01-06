@@ -9,7 +9,7 @@ export function signTemplate(type)
      <div id="image-cover"></div>
     <div id="signDiv" class="container">
         <h1>${escapeHtml(db.sign)}</h1>
-        <form data-action="${type}">
+        <form data-action="${type}" id="sign">
             <label for="username">Username</label>
             <input name="username" id="username" required/>
             <label for="password" type="password">Password</label>

@@ -4,11 +4,11 @@ export class TokenService
     {
         this._accessToken = localStorage.getItem('accessToken')
         this._refreshToken = localStorage.getItem('refreshToken')
+
     }
     set tokens({refresh , access})
     {
         // console.log('refresh : ' , refresh)
-        // console.log('access : ' , access)
         
         this._accessToken = access
         localStorage.setItem('accessToken', access)

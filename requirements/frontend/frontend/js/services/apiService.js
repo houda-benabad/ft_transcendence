@@ -96,8 +96,6 @@ class ApiService
                 body : body ? JSON.stringify(body) : null
             })
             // console.log('response : ', response)
-            // console.log('this config : ', this._requestConfig)
-            // return ;
             if (needsAuth && response.status === 401)
                 return await this.manageExpiredTokens()
             if (response.status === 500)
