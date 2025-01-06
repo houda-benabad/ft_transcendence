@@ -1,11 +1,11 @@
-# import random
-# from dataclasses import dataclass, asdict
-# from .player import Player
-# from .ball import Ball
-# from .objects import Plane
-# # from asgiref.sync import async_to_sync, sync_to_async
+import random
+from dataclasses import dataclass, asdict, astuple
+from .player import Player
+from .ball import Ball
+from .objects import Plane
+# from asgiref.sync import async_to_sync, sync_to_async
 
-# WINNING_SCORE = 20
+WINNING_SCORE = 20
 # TWO_PLAYERS = "2P"
 # MULTI_PLAYERS = "4P"
 
@@ -79,22 +79,22 @@ from .objects import Plane
 from asgiref.sync import async_to_sync, sync_to_async
 
 
-# @dataclass
-# class Vector3:
-#     x: float
-#     y: float
-#     z: float
+@dataclass
+class Vector3:
+    x: float
+    y: float
+    z: float
 
 class Game():
 	def __init__(self):
 	#  P V D
-		self.ball = Ball( [ 0 ,  0 ], [ .01,-.07,.1 ], [ .2,.2,.2 ] )
-		self.ball.velocity[0] *= random.choice([-1, 1]) 
-		self.ball.velocity[1] *= random.choice([-1, 1])
-		self.plane = Plane([0,0], [.01,.01,.05], [4,.2,6])
+		self.ball = Ball( Vector3( 0 , 0, 0), Vector3( .01,-.07,.1 ), Vector3( .2,.2,.2 ) )
+		self.ball.velocity.x *= random.choice([-1, 1]) 
+		self.ball.velocity.z *= random.choice([-1, 1])
+		self.plane = Plane( Vector3(0,0,0), Vector3(.01,.01,.05), Vector3(4,.2,6) )
 
-		self.p1 = Player([0,self.plane.dimension[2]/2], [0,-.1,.05], [1,.3,.1])
-		self.p2 = Player([0,-self.plane.dimension[2]/2], [0,-.1,.05], [1,.3,.1])
+		self.p1 = Player( Vector3( 0, 0,self.plane.dimension.z/2),  Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) )
+		self.p2 = Player( Vector3( 0, 0,-self.plane.dimension.z/2), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) )
 
 	def update(self):
 		self.p1.update()
@@ -102,18 +102,18 @@ class Game():
 		self.ball.update(self.plane, self.p1, self.p2)
 
 	async def is_game_over(self):
-		return self.p1.score >= 10 or self.p2.score >= 10
+		return self.p1.score >= WINNING_SCORE or self.p2.score >= WINNING_SCORE
 
 	def get_coordinates(self):
 		return{
 			"ball" :{
-	   			"position": self.ball.position
+	   			"position": astuple( self.ball.position )
 		  	},
 			"p1":{
-				"position":self.p1.position, 
+				"position": astuple( self.p1.position ),
 			},
 			"p2":{
-				"position": self.p2.position,
+				"position": astuple( self.p2.position )
 				}
 		}
 

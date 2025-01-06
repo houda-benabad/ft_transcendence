@@ -10,7 +10,7 @@ export default class visualsManager {
 			// ball.position.x = data.ball.position.x;
 			ball.position.x = data.ball.position[0];
 			// ball.position.z = data.ball.position.z;
-			ball.position.z = data.ball.position[1];
+			ball.position.z = data.ball.position[2];
 	
 			const { bodies } = this.components;
 
