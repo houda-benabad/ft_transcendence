@@ -42,9 +42,11 @@ export default class Components {
     createPlane(  ){
         let plane = new THREE.Mesh(
             new THREE.BoxGeometry( 
-                this.mode == MODE.MULTIPLAYER ? DIMENSION.PLANE.x*2 : DIMENSION.PLANE.x, 
+                this.mode == MODE.MULTIPLAYER ? DIMENSION.PLANE.x+1 : DIMENSION.PLANE.x, 
                 DIMENSION.PLANE.y,
-                DIMENSION.PLANE.z ), 
+                this.mode == MODE.MULTIPLAYER ? DIMENSION.PLANE.z+1 : DIMENSION.PLANE.z, 
+
+            ), 
             new THREE.MeshLambertMaterial( { color: COLORS.PLANE } ) ) 
 
         plane.position.set( ...Object.values( POSITION.PLANE ) )

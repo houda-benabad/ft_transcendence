@@ -57,7 +57,6 @@ export class gameView extends HTMLElement
 	{
 	}
 	add(element){
-		console.log(this)
 		switch (element) {
 			case 'waiting':
 				this.appendChild(this.waiting)

@@ -8,7 +8,7 @@ export default class inputManager{
 		this.keys = {}
 		this.bounds = {
 			max : DIMENSION.PLANE.x /2 - DIMENSION.PLAYER.x/2,
-			min : -DIMENSION.PLANE.x/2 + DIMENSION.PLAYER.x/2
+			min : -DIMENSION.PLANE.x/2 + DIMENSION.PLAYER.x/2 + 0.1
 		}
 		this.mode = mode
 		this.components = components
@@ -22,7 +22,7 @@ export default class inputManager{
 
 	localMovements(  ){
 		let {player1 , player2} = this.components.bodies
-		if ( this.keys[KEYS.DOWN] && player1.position.x > this.bounds.min )  player1.position.x -= VELOCITY.PLAYER
+		if ( this.keys[KEYS.DOWN] && player1.position.x > this.bounds.min  )  player1.position.x -= VELOCITY.PLAYER
 		if ( this.keys[KEYS.UP] && player1.position.x < this.bounds.max ) player1.position.x += VELOCITY.PLAYER
 
 		if ( this.keys[KEYS.S] && player2.position.x > this.bounds.min ) player2.position.x -= VELOCITY.PLAYER

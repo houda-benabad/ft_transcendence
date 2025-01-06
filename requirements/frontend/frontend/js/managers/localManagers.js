@@ -35,7 +35,7 @@ export default class Local{
 		this.canva.add( 'score')
 		if (this.options.mode == 'time' )
 			this.canva.add( 'time' )
-		this.physics.setupBallCollisionEvent(  )
+
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
@@ -69,7 +69,7 @@ export default class Local{
 	}
 
 	isGameover(  ){
-		return this.state.isGameover( this.physics.score )
+		return this.state.isGameover( this.physics.userInfo )
 	}
 
 	clean(){
