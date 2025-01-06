@@ -31,6 +31,7 @@ class DetailedUserProfileSerializer(serializers.Serializer):
     user_details = UserProfileSerializer(source='*', read_only=True)
     friends = serializers.SerializerMethodField(read_only=True)
     requests = serializers.SerializerMethodField(read_only=True)
+    friends_count = serializers.SerializerMethodField(read_only=True)
     
     def get_friends(self, obj):
         friends_qs = Friend.objects.friends(obj.user)
@@ -41,6 +42,11 @@ class DetailedUserProfileSerializer(serializers.Serializer):
         requests_qs = Friend.objects.requests(obj.user)
         return FriendshipRequestSerializer(requests_qs, many=True, context=self.context).data
 
+    def get_friends_count(self, obj):
+        friends_qs = Friend.objects.friends(obj.user)
+        friends_count = len(friends_qs)
+        return friends_count
+
 
 from friends.serializers import OtherUserProfileSerializer
 
@@ -48,9 +54,15 @@ class	DetailedotherUserProfileSerializer(OtherUserProfileSerializer):
     
     user_details =  UserProfileSerializer(source='*', read_only=True)
     friends = serializers.SerializerMethodField(read_only=True)
+    friends_count = serializers.SerializerMethodField(read_only=True)
     
     def get_friends(self, obj):
         
         friends_qs = Friend.objects.friends(obj.user)
         friends_profiles_qs = Profile.objects.filter(user__in=friends_qs)
         return OtherUserProfileSerializer(friends_profiles_qs, many=True, context=self.context).data
+    
+    def get_friends_count(self, obj):
+        friends_qs = Friend.objects.friends(obj.user)
+        friends_count = len(friends_qs)
+        return friends_count

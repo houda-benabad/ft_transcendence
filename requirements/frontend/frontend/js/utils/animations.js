@@ -3,8 +3,9 @@ export function animateProgressBar()
     console.log('im in animateProgress')
     const startTime = performance.now()
     const levelBar = document.getElementById('level-progress')
-    const levelPercentage = 67 // for now it is like this i will make it dynamic later on
-    
+    const levelPercentage = levelBar.getAttribute('data-value')
+
+    console.log('here : ', levelPercentage)
     function update(currentTime)
     {
         const elapsedTime = currentTime - startTime

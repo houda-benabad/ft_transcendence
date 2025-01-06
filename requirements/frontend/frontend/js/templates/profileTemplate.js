@@ -29,9 +29,9 @@ export const profileTemplate  =
                 <p class="profile-box1-box-text">Level</p>
                 <div>
                     <div id="level-wrap" class="progress">
-                        <div id="level-progress" class="progress"></div>
+                        <div id="level-progress" class="progress" data-value=${escapeHtml(db.level)}></div>
                     </div>
-                    <p class="profile-box1-box-text">67%</p>
+                    <p class="profile-box1-box-text">${escapeHtml(db.level)}%</p>
                 </div>
             </div>
             <div id="profile-box1-bottom">

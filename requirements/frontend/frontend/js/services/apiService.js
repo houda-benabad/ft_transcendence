@@ -231,7 +231,14 @@ export const apiService =
             generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : false, modalMessage: 'you signed up successffully'})(body, resolve)
         }),
         intraCall :() => new Promise (resolve => {
-            window.open(ENDPOINTS.INTRA, 'loginWithIntra', 'height=500,width=700')
+            const popup = window.open(ENDPOINTS.INTRA, 'loginWithIntra', 'height=500,width=700')
+
+            console.log('test : ', popup)
+            window.addEventListener('message' , (event) => 
+            {
+                console.log('test2', event.target)
+                console.log('test3', event.data)
+            })
             // and here after the call hind got to do something 
         }),
     },

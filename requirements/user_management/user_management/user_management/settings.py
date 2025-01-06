@@ -189,7 +189,7 @@ DJOSER = {
 }
 
 CORS_URLS_REGEX = r'^/auth/.*'
-CORS_ALLOWED_ORIGINS = ["https://localhost:443", "http://user_game_aggregator:8002"]#, "https://api.intra.42.fr"]
+CORS_ALLOWED_ORIGINS = ["https://localhost:8010", "http://user_game_aggregator:8002"]#, "https://api.intra.42.fr"]
 
 
 # CORS_ALLOW_HEADERS = [

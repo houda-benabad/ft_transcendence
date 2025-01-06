@@ -43,9 +43,13 @@ class	ProfileWithGameHistoryView(APIView):
                 return Response({"detail": "Failed to retrieve user profile "}, status=user_profile_response.status_code)
             if game_history_response.status_code != 200:
                 return Response({"detail": "Failed to retrieve game history"}, status=game_history_response.status_code)
+            user_profile_data = user_profile_response.json()
+            game_history_data = game_history_response.json()
+            game_history_data['general_details']['friends_count'] = user_profile_data['friends_count']
+            user_profile_data.pop('friends_count', None)
             combined_response = {
-                **user_profile_response.json(),
-                **game_history_response.json()
+                **user_profile_data,
+                **game_history_data
             }
             return Response(combined_response, status=status.HTTP_200_OK)
         except httpx.RequestError as e:

@@ -21,14 +21,14 @@ export class databaseExtractorService
         const {
             user_details : { user_id, username, profile_pic_url},
             general_details : {
-                friends_count = 0,
-                total_games = 0,
-                total_points = 0,
-                rank = 0,
+                friends_count,
+                total_games,
+                total_points,
+                rank,
+                level,
             } = {},
             relationship,
         } = this._database
-
         // console.log('in here : ', this.determineIconsAndActions(relationship))
         return ({
             userId : user_id,
@@ -39,6 +39,7 @@ export class databaseExtractorService
             totalGames : total_games,
             totalPoints : total_points,
             rank,
+            level,
             relationship,
             // actions : this.determineActions('profile', relationship)
         })

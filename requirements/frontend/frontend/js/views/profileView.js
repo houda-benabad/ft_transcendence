@@ -36,8 +36,8 @@ export class ProfileView extends HTMLElement
     {
         window.removeEventListener('resize', animateProgressBar)
 
-        // if (this._userId === 'me')
-        //     removeListenersForFriendsBox.apply(this) // to remove the event listeners of friends
+        if (this._userId === 'me')
+            removeListenersForFriendsBox.apply(this) // to remove the event listeners of friends
     }
     setupEventListenersAndAnimations()
     {
@@ -45,6 +45,7 @@ export class ProfileView extends HTMLElement
 
         if (this._userId === 'me')
             addListenersForFriendsBox.apply(this) // gotta remove the events after finishing up with it .
+        animateProgressBar()
     }
     addProfile()
     {
