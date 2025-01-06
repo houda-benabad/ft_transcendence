@@ -21,15 +21,41 @@ export class EventManager
         this._actionType = 
         {
             'router' : this.handleNavigation.bind(this),
-            'edit_profile'  : this.handleEdit.bind(this),
-            'friendship' : this.handleFriendship.bind(this),
-            'play_game' : this.handleGame.bind(this)
+            'profile' : this.handleProfileIcons.bind(this),
+            'friends' : this.handleFriendsIcons.bind(this),
+            'play_game' : this.handleGame.bind(this),
+            'intra' : this.handleIntraCall.bind(this)
         }
+    } 
+    async handleIntraCall(target)
+    {
+        apiService.auth.intraCall()
     }
-    async handleFriendship(target)
+    handleEventDelegation(event)
+    {
+        const eventType = event.type
+        const target = event.target
+
+        // console.log('event type : ', eventType)
+        // console.log('event target : ', target)
+
+        if (eventType === 'focusout' && target.id === 'search-input')
+            this.handleSearchFocus()
+        else if (eventType === 'click' && target.matches('a'))
+            this.handleAnchorEvents(event, target)
+        else if (eventType === 'click' && target.matches('button'))
+            this.handleButtonEvents(target)
+        else if (target.matches('form') && eventType === 'submit') // do not need that eventType submit
+            this.handleformEvents(event, target)
+        else if (eventType === 'input' && target.id === 'search-input')
+            this.handleSearchInput(event, target)
+        else if (eventType === 'click' && target.classList.contains('search-item'))
+            this.handleSearchItem(target)
+    }
+    async handleProfileIcons(target)
     {
         const action = target.getAttribute('action-type')
-        const userId = target.getAttribute('userId')
+        const id = target.getAttribute('id')
         const mainElement = target.closest(['[class="icons"]'])
 
         // console.log('main Element : ', mainElement)
@@ -37,7 +63,7 @@ export class EventManager
         // console.log('target : ', target)
         if (action === 'send_request' || action === 'accept_request')
         {
-            await apiService.friendship.postFriendship(action, userId)
+            await apiService.friendship.postFriendship(action, id)
             if (action === 'send_request')
                 mainElement.relationshipStatus = 'requested'
             else
@@ -45,9 +71,23 @@ export class EventManager
         }
         else if (action === 'remove_friend' || action === 'cancel_request')
         {
-            await apiService.friendship.deleteFriendship(action, userId)
+            await apiService.friendship.deleteFriendship(action, id)
             mainElement.relationshipStatus = 'stranger'
         }
+        else 
+            router.handleRoute('/settings')
+    }   
+    async handleFriendsIcons(target)
+    {
+        const action = target.getAttribute('action-type')
+        const id = target.getAttribute('id')
+
+        console.log('here  id  : ', id)
+        console.log('target : ', target)
+        if (action === 'send_request' || action === 'accept_request')
+            await apiService.friendship.postFriendship(action, id)
+        else if (action === 'remove_friend' || action === 'cancel_request')
+            await apiService.friendship.deleteFriendship(action, id)
     }
     async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
     {
@@ -74,68 +114,6 @@ export class EventManager
                 router.handleRoute('/')
             }
         }
-        // else if (action === 'game-settings')
-        // {
-        //     let gameSettings = Object.fromEntries(formData) // what is the difference
-        //     console.log('->>>here : ', gameSettings)
-        // }
-    }
-    // async handleSendRequest(target)
-    // {
-    //     // dry
-    //     const action = target.getAttribute('action')
-    //     const userId = target.getAttribute('userId')
-
-    //     await apiService.profile.postFriendship(`${action}/${userId}`)
-    //     target.action = 'cancel_request'
-    // }
-    // async handleAcceptRequest(target)
-    // {
-    //     // dry
-    //     const action = target.getAttribute('action')
-    //     const userId = target.getAttribute('userId')
-        
-    //     await apiService.profile.postFriendship(`${action}/${userId}`)
-    //     target.action = 'to_profile'
-    // }
-    // async handleRemoveFriend(target)
-    // {
-    //     //dry
-    //     const action = target.getAttribute('action')
-    //     const userId = target.getAttribute('userId')
-
-    //     await apiService.profile.deleteFriendship(`${action}/${userId}`)
-    //     target.action = 'send_request'
-    // }
-    // async handleCancelRequest()
-    // {
-    //     //dry
-    //     const action = target.getAttribute('action')
-    //     const userId = target.getAttribute('userId')
-
-    //     await apiService.profile.deleteFriendship(`${action}/${userId}`)
-    //     target.action = 'send_request'
-    // }
-    handleEventDelegation(event)
-    {
-        const eventType = event.type
-        const target = event.target
-
-        // console.log('event type : ', eventType)
-        // console.log('event target : ', target)
-
-        if (eventType === 'focusout' && target.id === 'search-input')
-            this.handleSearchFocus()
-        else if (eventType === 'click' && target.matches('a'))
-            this.handleAnchorEvents(event, target)
-        else if (eventType === 'click' && target.matches('button'))
-            this.handleButtonEvents(target)
-        else if (target.matches('form') && eventType === 'submit') // do not need that eventType submit
-            this.handleformEvents(event, target)
-        else if (eventType === 'input' && target.id === 'search-input')
-            this.handleSearchInput(event, target)
-        else if (eventType === 'click' && target.classList.contains('search-item'))
-            this.handleSearchItem(target)
     }
     handleSearchFocus()
     {
@@ -178,7 +156,7 @@ export class EventManager
             router.handleRoute(link)
         else if (action)
         {
-            // console.log('action : ', action)
+            console.log('action : ', action)
             const runAction = this._actionType[action]
 
             runAction(target)
@@ -231,10 +209,16 @@ export class EventManager
     {
         const newPath = target.getAttribute('href')
 
+        if (newPath === '/logout')
+            this.handleLogout()
+        else
+       
         router.handleRoute(newPath)
     }
-    handleEdit()
+    handleLogout()
     {
-        router.handleRoute('/settings')
+        document.getElementById('app').classList.remove('active')
+        _tokenService.clear()
+        router.handleRoute('/signin')
     }
 }

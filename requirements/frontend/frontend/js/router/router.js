@@ -19,7 +19,6 @@ export class Router
    
     async init() // this needs cleansing and to make it more maintenable
     {
-        
         if (_tokenService.isAuthenticated())
         {
             await reset()
@@ -30,7 +29,8 @@ export class Router
             if (element)
                 element.classList.add('selected')
         }
-        window.addEventListener('popstate', this.handleRoute())
+        window.addEventListener('popstate', () => this.handleRoute())
+        this.handleRoute()
     }
     handleRoute(newPath=null)
     {
@@ -44,7 +44,6 @@ export class Router
     }
     navigateTo(path)
     {
-        // console.log( "path = ", path)
         history.pushState(null, null, path)
 
         this.updateContent(path)
@@ -69,7 +68,7 @@ export class Router
                 fragment.userId = options
 
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
-            document.querySelector(`[data-action="router"],[href="${path}"]`).classList.add('selected')
+            document.querySelector(`[data-action="router"][href="${path}"]`).classList.add('selected')
         }
         else
         {

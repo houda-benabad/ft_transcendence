@@ -56,7 +56,7 @@ export class ProfileView extends HTMLElement
         const icons = document.createElement('div', {is : 'custom-icons'})
         const profileBoxTop = profileBox.querySelector('#profile-box1-top')
 
-        icons.data = {userId : profileDb.userId, relationship : profileDb.relationship, id : 'profile'}
+        icons.data = {id : profileDb.userId, relationship : profileDb.relationship, iconId: 'profile'}
         profileBoxTop.appendChild(icons)
     }
     gameHistory()
@@ -73,6 +73,7 @@ export class ProfileView extends HTMLElement
         friendsBox.innerHTML = profileTemplate.friendsBox(this._userId)
 
         const friendsDb = this._dataTransformer.extractData('friends')
+
         profileTemplate.friendsBoxConatainer(friendsDb)
     }
    

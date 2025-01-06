@@ -5,7 +5,7 @@ import { eventListeners } from '../utils/global.js'
 
 export const modalService = 
 {
-    show(message, type = null)
+    show(message, automatised =  false , type = null)
     {  
         return new Promise(async (resolve) =>  {
             const app = document.getElementById('app')
@@ -25,9 +25,14 @@ export const modalService =
                 resolve(players)
 
             }
-            eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve)) // dont know if we will be needsing this eventlistener
             modal.innerHTML = message
-            resolve()
+            if (!automatised)
+                eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve)) // dont know if we will be needsing this eventlistener
+            else
+            {
+                await new Promise ((resolve) => setTimeout(resolve, 1000))
+                eventHandlers.removeModalHandler(null, resolve)
+            }
         })
     },
 

@@ -1,0 +1,44 @@
+// async handleSendRequest(target)
+    // {
+    //     // dry
+    //     const action = target.getAttribute('action')
+    //     const userId = target.getAttribute('userId')
+
+    //     await apiService.profile.postFriendship(`${action}/${userId}`)
+    //     target.action = 'cancel_request'
+    // }
+    // async handleAcceptRequest(target)
+    // {
+    //     // dry
+    //     const action = target.getAttribute('action')
+    //     const userId = target.getAttribute('userId')
+        
+    //     await apiService.profile.postFriendship(`${action}/${userId}`)
+    //     target.action = 'to_profile'
+    // }
+    // async handleRemoveFriend(target)
+    // {
+    //     //dry
+    //     const action = target.getAttribute('action')
+    //     const userId = target.getAttribute('userId')
+
+    //     await apiService.profile.deleteFriendship(`${action}/${userId}`)
+    //     target.action = 'send_request'
+    // }
+    // async handleCancelRequest()
+    // {
+    //     //dry
+    //     const action = target.getAttribute('action')
+    //     const userId = target.getAttribute('userId')
+
+    //     await apiService.profile.deleteFriendship(`${action}/${userId}`)
+    //     target.action = 'send_request'
+    // }
+
+        jwt : 
+    {
+        refreshToken : (body) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPostRequest(ENDPOINTS.REFRESH_TOKEN, {needsAuth : false, modalMessage: null})(body, resolve)
+        }),// gotta use it to make code simplified but ..
+    },

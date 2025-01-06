@@ -13,7 +13,7 @@ class RequestConfiguration
             method : 'GET',
             needsAuth : true,
             showModal : false,
-            modalMessage : 'default modal message',
+            modalMessage : '',
             body : null,
             params : null
         }
@@ -66,6 +66,8 @@ class ApiService
     set requestConfig(newValue)
     {
         this._requestConfig =  newValue
+
+        // console.log('im setting the value of new config : ', this._requestConfig)
     }
     set resolve(newValue)
     {
@@ -77,8 +79,6 @@ class ApiService
             endpoint,
             method,
             needsAuth,
-            showModal, 
-            modalMessage,
             body,
             params
         } = this._requestConfig
@@ -95,26 +95,36 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
+            // console.log('response : ', response)
+            // console.log('this config : ', this._requestConfig)
+            // return ;
             if (needsAuth && response.status === 401)
-                await this.manageExpiredTokens()
+                return await this.manageExpiredTokens()
             if (response.status === 500)
                 throw new Error(response.status)
             const contentType = response.headers.get('Content-Type');
             if (!contentType)
-                return this._resolve()
+                return await this.finishingUp()
 
             const responseBody = await response.json()
             if (!response.ok)
-                modalMessage = this.updateModalMessaga(responseBody)
+                this.handleMessaageErrors(responseBody)
             else 
-                this._resolve(responseBody)
-            if (showModal)
-                await modalService.show(modalMessage)
+                return await this.finishingUp(responseBody)
         }
         catch(error)
         {
             console.log('the error that was caught in api service is ', error)
         }
+    }
+    async finishingUp(response =  null)
+    {
+        const {showModal , modalMessage} = this._requestConfig
+
+        if (showModal)
+            await modalService.show(modalMessage, true)
+
+        this._resolve(response)
     }
    async manageExpiredTokens()
     {
@@ -128,24 +138,25 @@ class ApiService
         })
         if (response.status === 401)
         {
-            console.log('->>>>>> refresh token was expired')
+            // console.log('->>>>>> refresh token was expired')
             _tokenService.clear()
             document.getElementById('app').classList.remove('active')
             router.handleRoute('/signin')
-            this._resolve()
+            return ;
         }
-        console.log('im in here doing some work')
+        // console.log('im in here doing some work')
         const responseBody = await response.json()
         _tokenService.accessToken = responseBody.access
         this.request()
-        this._resolve 
     }    
-    updateModalMessaga(responseBody)
+    async handleMessaageErrors(responseBody)
     {
+        const {showModal} = this._requestConfig
         const entries = Object.entries(responseBody)
         const [key, value] = entries[0]
 
-        return `${key} : ${value}`
+        if (showModal)
+            await modalService.show(`${key} : ${value}`)
     }
 }
 
@@ -168,15 +179,18 @@ const generateHttpRequests = (api) =>
             await api.request()
         }
     },
-    createGetRequest(endpoint, modalMessage = null)
+    createGetRequest(endpoint,  needsAuth = null)
     {
         return (resolve, params = null) => 
         {
             const request = new RequestConfiguration()
                 .withEndpoint(endpoint)
-            if (modalMessage)
-                request.withModal(modalMessage)
-            else if (params)
+            
+            
+            // console.log('->>> ', needsAuth)
+            if (needsAuth !== null)
+                request.withAuth(needsAuth)
+            if (params)
                 request.withParams(params)
             api.requestConfig = request.requestConfig
             api.resolve = resolve
@@ -195,6 +209,7 @@ const generateHttpRequests = (api) =>
                 request.withModal(modalMessage)
 
             api.requestConfig = request.requestConfig
+            // console.log('here config : ', request.requestConfig)
             api.resolve = resolve
             api.request()
         }
@@ -214,7 +229,11 @@ export const apiService =
         signup : (body) => new Promise (resolve => 
         {
             generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : false, modalMessage: 'you signed up successffully'})(body, resolve)
-        })
+        }),
+        intraCall :() => new Promise (resolve => {
+            window.open(ENDPOINTS.INTRA, 'loginWithIntra', 'height=500,width=700')
+            // and here after the call hind got to do something 
+        }),
     },
     user :
     {
@@ -227,21 +246,18 @@ export const apiService =
     },
     friendship :
     {
-        postFriendship : (action, userId) => new Promise (resolve => 
+        postFriendship : (action, id) => new Promise (resolve => 
         {
-            generatedHttpRequests.createPostRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${userId}`, {needsAuth : true, modalMessage: `the operation was successfull`})(null, resolve)
+            const messageIdentifier = action.replace('_',' the ')
+            // console.log('here : ', messageIdentifier)
+            generatedHttpRequests.createPostRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${id}`, {needsAuth : true, modalMessage: `you did ${messageIdentifier} successfully`})(null, resolve)
         }),
-        deleteFriendship : (action, userId) => new Promise (resolve => 
+        deleteFriendship : (action, id) => new Promise (resolve => 
         {
-            generatedHttpRequests.createDeleteRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${userId}`, {needsAuth : true, modalMessage: `the operation was successfull`})(resolve)
+            const messageIdentifier = action.replace('_',' the ')
+            // console.log('here : ', messageIdentifier)
+            generatedHttpRequests.createDeleteRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${id}`, `you did ${messageIdentifier} successfully`)(resolve)
         }),
-    },
-    jwt : 
-    {
-        refreshToken : (body) => new Promise (resolve => 
-        {
-            generatedHttpRequests.createPostRequest(ENDPOINTS.REFRESH_TOKEN, {needsAuth : false, modalMessage: null})(body, resolve)
-        }),// gotta use it to make code simplified but ..
     },
     // home :
     // {

@@ -146,7 +146,13 @@ export const eventHandlers =
     {
         const modalBackground = document.getElementById( 'modal-background' )
         
-        if ( event.target === modalBackground )
+        if (event && event.target === modalBackground )
+        {
+            eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
+            modalBackground.remove(  )
+            resolve(  )
+        }
+        else if (!event)
         {
             eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
             modalBackground.remove(  )

@@ -60,8 +60,10 @@ export class databaseExtractorService
     {
         const selectedChoice = document.querySelector('.selected-choice') 
 
+        // console.log('selected choice : ', selectedChoice.id)
         const type = selectedChoice ? (selectedChoice.id === 'friends' ? 'friendsList' : 'friendsRequests') : 'friendsList'
 
+        // console.log('type : ', type)
         if (type === 'friendsList')
             return this.extractDataForFriendsList()
         else
@@ -71,13 +73,15 @@ export class databaseExtractorService
     {
         const { friends, relationship } = this._database
 
+        // console.log('friends here  : ', friends)
+        // console.log('database: ', this._database)
         return friends.map(friend => ({
-            userId : friend.user_details.user_id,
+            id : friend.user_details.user_id,
             username : friend.relationship ? friend.user_details.username : 'Me',
             profilePic : friend.user_details.profile_pic_url,
-            removeFriend : friend.user_details.remove_friend,
+            relationship : friend.relationship,
             other : 'online',
-            actions : this.determineActions('friends', friend.relationship)
+            type : 'friend'
             //here gotta link the icons with the convenient urls.
         }))
     }
@@ -85,15 +89,14 @@ export class databaseExtractorService
     {
         const { requests } = this._database
     
+        // console.log('requests : ', requests)
+        // console.log('database : ', this._database.requests)
         return requests.map(request => ({
-            requestId : request.id,
-            userId : request.from_user.user_id,
+            id : request.from_user.user_id,
             username : request.from_user.username,
             profilePic : request.from_user.profile_pic_url,
-            acceptRequest : request.accept_request, // do not need this anymore
-            rejectRequest : request.reject_request,
-            other : '2 min ago', // need to find a solution for this ..
-            actions : this.determineActions('requests')
+            other :  '2 min ago',
+            type : 'request'
         }))
     }
     extractDataForLeaderboard()

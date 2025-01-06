@@ -39,7 +39,7 @@ export class gameManager
         this.#denit()
     }
     async tournament( ){
-        const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
+        const players = await modalService.show(  '', false,'tournament' ) // the alias names for the players 
         this.#init( )
         const winners = []
         winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )

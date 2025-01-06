@@ -50,6 +50,10 @@
             font-size: 20px;
             font-weight:900;
         }
+        p, img
+        {
+            pointer-events: none;
+        }
     }
     #redirect 
     {
