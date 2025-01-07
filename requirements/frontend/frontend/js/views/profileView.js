@@ -21,7 +21,6 @@ export class ProfileView extends HTMLElement
     async connectedCallback() 
     {
         this._database = await apiService.user.getProfileInfos(this._userId)
-
         this._dataTransformer = new databaseExtractorService(this._database)
 
         this.innerHTML = profileTemplate.layout()

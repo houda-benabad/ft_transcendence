@@ -13,6 +13,7 @@ export const settingsTemplate =
             <div id="user-picture">
                 <img src='../static/assets/componants/user.jpeg'>
                 <div id="user-picture-buttons">
+                    <input type="file" id="user-input-img" accept="image/*">
                     <button class="anchor-tmp button-type4" data-action="update_image">Update</button>
                     <button class="anchor-tmp button-type3" data-action="delete_image">Delete</button>
                 </div>
