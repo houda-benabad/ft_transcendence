@@ -85,33 +85,27 @@ class Ball(GameObject):
 			self.velocity.x *= -1
 
 	def check_out_ground( self, plane, p1, p2 ):
-		if (  self.back >= plane.back ):
+		if (  self.back >= plane.back + .05):
 			p2.score+= 1
 			self.reset()
-		elif (  self.front <=  plane.front):
+		elif (  self.front <=  plane.front - .05):
 			p1.score += 1
 			self.reset()
    
 	def check_player_collision( self, p1, p2):
 
-		if (self.back >= p1.front):
-			if (self.right >= p1.left and self.left <= p1.right):
-				print(f"Self: back={self.back}, front={self.front}, left={self.left}, right={self.right}")
-				print(f"P1: back={p1.back}, front={p1.front}, left={p1.left}, right={p1.right}")
-				# print( "7eyed balak" )
+		if (self.back >= p1.front and self.right >= p1.left and self.left <= p1.right):
 				self.update_z_velocity()
 
-		elif (self.front <= p2.back):
-			if (self.right >= p2.left and self.left <= p2.right):
-				print( "7eyed balak 3utani" )
+		elif (self.front <= p2.back and self.right >= p2.left and self.left <= p2.right):
 				self.update_z_velocity()
 
 	def update(self, plane, p1, p2):
 		self.updateBounds()
 
 		self.check_ground_sides( plane ) # does a perfect job
-		self.check_out_ground( plane, p1, p2 ) # sometimes get out ground for no reason, up: fixed
 		self.check_player_collision( p1, p2 ) # does a perfect job 
+		self.check_out_ground( plane, p1, p2 ) # sometimes get out ground for no reason, up: fixed
 
 		# for i in range(2):
 		self.position.x += self.velocity.x
