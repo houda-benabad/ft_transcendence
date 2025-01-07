@@ -1,9 +1,9 @@
-# import random
-# from .objects import GameObject
+import random
+from .objects import GameObject
 from dataclasses import dataclass
 
-# TWO_PLAYERS = 2
-# MULTI_PLAYERS = 4
+TWO_PLAYERS = 2
+MULTI_PLAYERS = 4
 
 @dataclass
 class Vector3:
@@ -11,102 +11,55 @@ class Vector3:
     y: float
     z: float
 
-
-# class Ball( GameObject ):
-# 	def reset( self ):
-# 		self.position = Vector3( 0, 0 ,0)
-# 		self.velocity.x *= random.choice([-1, 1])
-# 		self.velocity.z *= random.choice([-1, 1]) 
-
-# 	def update_z_velocity(self):
-# 		self.velocity.z *= -1
-# 		MIN_VELOCITY = 0.1
-
-# 		# if self.velocity.z < 0 and self.velocity.z > -MIN_VELOCITY:
-# 		# 	self.velocity.z -= .01
-# 		# elif self.velocity.z > 0 and self.velocity.z < MIN_VELOCITY:
-# 		# 	self.velocity.z += .01
-
-# 	def check_ground_sides( self, plane ):
-# 		BUFFER = 0.01
-
-# 		if self.left <= ( plane.left + BUFFER )or self.right >= ( plane.right - BUFFER ):
-# 			self.velocity.x *= -1
-
-# 	def check_out_ground( self, plane, players):
-# 		if (  self.back >= plane.back ):
-# 			players[1].score+= 1
-# 			self.reset()
-# 		elif (  self.front <=  plane.front):
-# 			players[0].score += 1
-# 			self.reset()
-   
-# 	def check_player_collision( self, players):
-# 		if (self.back >= players[0].front):
-# 			if (self.right >= players[0].left and self.left <= players[0].right):
-# 				self.update_z_velocity()
-
-# 		elif (self.front <= players[1].back):
-# 			if (self.right >= players[1].left and self.left <= players[1].right):
-# 				self.update_z_velocity()
-
-# 	def update(self, plane, players):
-# 		self.updateBounds()
-
-# 		self.check_ground_sides( plane ) # does a perfect job
-# 		self.check_out_ground( plane, players ) # sometimes get out ground for no reason, up: fixed
-# 		self.check_player_collision( players ) # sometime reset when not needed
-
-# 		for i in range( TWO_PLAYERS ):
-# 			print( self.velocity.z, self.position.z )
-# 			self.position.x += self.velocity.x
-# 			self.position.z += self.velocity.z
-
-
-
-import random
-from .objects import GameObject
-
 class Ball(GameObject):
+	MIN_VELOCITY = 0.1  
+    
 	def reset(self):
 		self.position = Vector3( 0, 0, 0)
 		self.velocity.z *= random.choice([-1, 1])
 		self.velocity.x *= random.choice([-1, 1]) 
 
-	def update_z_velocity(self):
+	def adjust_z_velocity(self):
 		self.velocity.z *= -1
-		if self.velocity.z < 0 and self.velocity.z > -0.1:
+		if self.velocity.z < 0 and self.velocity.z > -self.MIN_VELOCITY:
 			self.velocity.z -= .01
-		elif self.velocity.z > 0 and self.velocity.z < 0.1:
+		elif self.velocity.z > 0 and self.velocity.z < self.MIN_VELOCITY:
 			self.velocity.z += .01
 
-	def check_ground_sides( self, plane ):
+	def reflect_side_collision( self, plane ):
 		if self.left <= plane.left or self.right >= plane.right:
 			self.velocity.x *= -1
 
-	def check_out_ground( self, plane, p1, p2 ):
+	def handle_out_of_bounds_remote( self, plane, players ):
 		if (  self.back >= plane.back + .05):
-			p2.score+= 1
+			players[1].score+= 1
 			self.reset()
 		elif (  self.front <=  plane.front - .05):
-			p1.score += 1
+			players[0].score += 1
 			self.reset()
    
-	def check_player_collision( self, p1, p2):
+	def handle_player_collision_remote( self, players ):
 
-		if (self.back >= p1.front and self.right >= p1.left and self.left <= p1.right):
-				self.update_z_velocity()
+		if (self.back >= players[0].front and self.right >= players[0].left and self.left <= players[0].right):
+				self.adjust_z_velocity()
 
-		elif (self.front <= p2.back and self.right >= p2.left and self.left <= p2.right):
-				self.update_z_velocity()
+		elif (self.front <= players[1].back and self.right >= players[1].left and self.left <= players[1].right):
+				self.adjust_z_velocity()
 
-	def update(self, plane, p1, p2):
-		self.updateBounds()
-
-		self.check_ground_sides( plane ) # does a perfect job
-		self.check_player_collision( p1, p2 ) # does a perfect job 
-		self.check_out_ground( plane, p1, p2 ) # sometimes get out ground for no reason, up: fixed
-
-		# for i in range(2):
+	def update_position( self ):
 		self.position.x += self.velocity.x
 		self.position.z += self.velocity.z
+
+	def update( self, plane, players ):
+		self.updateBounds()
+
+		self.reflect_side_collision( plane ) # does a perfect job
+		# if mode == TWO_PLAYERS:
+		self.handle_player_collision_remote( players ) # does a perfect job 
+		self.handle_out_of_bounds_remote( plane, players ) # does  perfect job
+		# else:
+		# 	self.handle_player_collision_multi( players ) # does a perfect job 
+		# 	self.handle_out_of_bounds_multi( plane, players ) # does  perfect job
+
+		self.update_position(  )
+		

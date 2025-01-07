@@ -38,7 +38,7 @@ class GameConsumer( AsyncWebsocketConsumer ):
 	async def score(self, event):await self._send_message_( 'score', event['data'] )
 
 	# Player handle
-	async def _get_or_create_player_( self, userId): return await sync_to_async( Player.objects.get_or_create )( userId=userId )
+	async def _get_or_create_player_( self, userId, username): return await sync_to_async( Player.objects.get_or_create )( userId=userId, defaults={'username':username} )
 
 class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
@@ -55,7 +55,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			await self.accept()
 			user_info = response.json(  )
 
-			self.playerModel, created = await self._get_or_create_player_( userId )
+			self.playerModel, created = await self._get_or_create_player_( userId , user_info.get('username') )
 			print( "PLAYER CONNECTED" )
 			remote_players.append(self)
 			if len(remote_players) >= 2:

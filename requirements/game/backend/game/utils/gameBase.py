@@ -86,42 +86,35 @@ class Vector3:
     z: float
 
 class Game():
-	def __init__(self):
+	def __init__( self ):
 	#  P V D
 		self.ball = Ball( Vector3( 0 , 0, 0), Vector3( .01,-.07,.1 ), Vector3( .2,.2,.2 ) )
 		self.ball.velocity.x *= random.choice([-1, 1]) 
 		self.ball.velocity.z *= random.choice([-1, 1])
 		self.plane = Plane( Vector3(0,0,0), Vector3(.01,.01,.05), Vector3(4,.2,6) )
 
-		self.p1 = Player( Vector3( 0, 0,self.plane.dimension.z/2),  Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) )
-		self.p2 = Player( Vector3( 0, 0,-self.plane.dimension.z/2), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) )
+		self.players = [ Player( Vector3( 0, 0,self.plane.dimension.z/2),  Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ),
+		Player( Vector3( 0, 0,-self.plane.dimension.z/2), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ) ]
 
 	def update(self):
-		self.p1.update()
-		self.p2.update()
-		self.ball.update(self.plane, self.p1, self.p2)
+		for player in self.players:
+			player.update()
+		self.ball.update(self.plane, self.players )
 
-	async def is_game_over(self):
-		return self.p1.score >= WINNING_SCORE or self.p2.score >= WINNING_SCORE
+	async def is_over(self):
+		return any( player.score == WINNING_SCORE for player in self.players )
 
 	def get_coordinates(self):
-		return{
-			"ball" :{
-	   			"position": astuple( self.ball.position )
-		  	},
-			"p1":{
-				"position": astuple( self.p1.position ),
-			},
-			"p2":{
-				"position": astuple( self.p2.position )
-				}
-		}
+		coords = { "ball" :{ "position": astuple( self.ball.position ) } }
+		for i, player in enumerate( self.players ):
+			coords[f"p{i+1}"] = { "position" : astuple( player.position ) }
+		return coords
 
-	def move_players(self, hoster, invited):
-		self.p1.move(hoster.keycode, self.plane)
-		self.p2.move(invited.keycode, self.plane)
-		hoster.keycode= 0
-		invited.keycode = 0
+	def move_players(self, consumers):
+		for player, consumer in zip( self.players, consumers ):
+			player.move( consumer.keycode, self.plane )
+			consumer.keycode = 0
+
   
 	def end_game_results(self, hoster, invited, gameModel):
 		gameModel.player1_points = self.p1.score

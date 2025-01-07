@@ -33,28 +33,19 @@ class GameServer(  ):
 		for consumer in self.consumers:
 			consumer.game_group_name = self.group_name
 			await self.channel_layer.group_add( self.group_name, consumer.channel_name )
-			
-
-	async def _save_to_database( consumers ):
-		game.end_game_results(consumers[0], consumers[1], gameModel)
-		await sync_to_async( gameModel.save )()
-		await sync_to_async( consumers[0].playerModel.save )()
-		await sync_to_async( consumers[1].playerModel.save )()
-		print( "Everythin is saved up")
-		await consumers[0].send(text_data=json.dumps({
-			'type' : 'endGame',
-			'data' :{
-				'state' : consumers[0].game_result,
-			} 
-		}))
-
-		await consumers[1].send(text_data=json.dumps({
-			'type' : 'endGame',
-			'data' :{
-				'state' : consumers[1].game_result,
-			} 
-		}))
 	
+	def get_score(  self, ):
+		return {
+			'name' :{
+				'p1' :	self.consumers[0].playerModel.username,
+				'p2' :	self.consumers[1].playerModel.username
+			},
+			'score' :{
+				'p1' : self.game.players[0].score,
+				'p2' : self.game.players[1].score,
+			}
+		}
+ 		
 	async def run( self ):
 		await self.__send_group_msg_( 'start', 'game is starting' )
 
@@ -65,28 +56,13 @@ class GameServer(  ):
 				break
 			
 			# MOVEMENT 
-			self.game.move_players(self.consumers[0], self.consumers[1])
+			self.game.move_players( self.consumers )
 			
 
 			await self.__send_group_msg_( 'api', self.game.get_coordinates() )
-
-			await self.channel_layer.group_send( self.group_name, 
-			{
-				'type': 'score',
-				'data': {
-					'name' :{
-						'p1' :'kouaz',
-						'p2' : 'hajar'
-					},
-					'score' :{
-						'p1' : self.game.p1.score,
-						'p2' : self.game.p2.score,
-					}
-			}
-				}
-			)
+			await self.__send_group_msg_( 'score', self.get_score(  ) )
 			# self.GAME OVER CHECK
-			if await self.game.is_game_over():
+			if await self.game.is_over():
 				break
 
 			await asyncio.sleep( GAME_TICK_RATE )
@@ -114,8 +90,8 @@ async def startRemoteGame( consumers):
 	await asyncio.sleep( GAME_START_DELAY )
 
 	await server.run(  )
-	await server.saving_to_database(  )
-	await server.send_results(  )
+	# await server.saving_to_database(  )
+	# await server.send_resultsj(  )
 
 
 
