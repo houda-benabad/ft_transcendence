@@ -1,7 +1,7 @@
 import { DIMENSION, POSITION } from "../constants/components.js"
 import { MODE } from "../constants/engine.js"
 import { KEYS, VELOCITY } from "../constants/logic.js"
-// import { eventListeners } from "../utils/global.js"
+import { eventListeners } from "../utils/global.js"
 
 export default class inputManager{
 	constructor( components, mode ){
@@ -28,7 +28,6 @@ export default class inputManager{
 		if ( this.keys[KEYS.S] && player2.position.x > this.bounds.min ) player2.position.x -= VELOCITY.PLAYER
 		if ( this.keys[KEYS.W] && player2.position.x < this.bounds.max ) player2.position.x += VELOCITY.PLAYER
 	}
-2
 	remoteMovements(  socket  ){
 		if ( this.keys[KEYS.UP] ){
 			socket.send( JSON.stringify( {

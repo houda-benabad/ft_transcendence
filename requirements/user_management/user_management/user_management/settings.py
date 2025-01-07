@@ -172,7 +172,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ['Bearer'],
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=5),
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=5),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=3),
     "SIGNING_KEY": os.getenv('JWT_SIGNING_KEY')
 }
