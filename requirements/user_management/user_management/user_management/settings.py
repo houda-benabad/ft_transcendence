@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-1a2w^3#t04l!!bx(hg)60&-h45g15g2a-ns)3vogg5uki@i8-^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','user_management:8000', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #'user_management:8000'
 
 
 # Application definition
@@ -42,7 +42,6 @@ DJANGO_APPS = [
 
 PACKAGES = [
     'rest_framework',
-    # 'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'djoser',
     'corsheaders',
@@ -153,11 +152,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
@@ -189,18 +188,7 @@ DJOSER = {
 }
 
 CORS_URLS_REGEX = r'^/auth/.*'
-CORS_ALLOWED_ORIGINS = ["https://localhost:8010", "http://user_game_aggregator:8002"]#, "https://api.intra.42.fr"]
-
-
-# CORS_ALLOW_HEADERS = [
-#     "Content-Type",
-#     "Authorization",
-# ]
-# if DEBUG:
-#     CORS_ALLOWED_ORIGINS += [
-#     "http://localhost:80",
-#     # "https://localhost:8111"
-# ]
+CORS_ALLOWED_ORIGINS = ["http://user_game_aggregator:8002"]#, "https://api.intra.42.fr"]
     
 APPEND_SLASH = True
 

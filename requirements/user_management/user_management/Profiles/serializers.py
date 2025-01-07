@@ -2,6 +2,10 @@ from rest_framework import serializers
 from .models import Profile#, Friendship
 from django.core.validators import validate_image_file_extension
 from friendship.models import Friend
+import logging
+logging.basicConfig(level=logging.DEBUG)  
+        
+logger = logging.getLogger("accounts.views")
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
@@ -20,6 +24,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def get_profile_pic_url(self, obj):
         if obj.image_url == "":
             request = self.context.get('request')
+            logger.debug(request.build_absolute_uri("/redirect"))
+            logger.debug(f"---------------->host {request.get_host()}")
+            logger.debug(obj.avatar.url)
+            for header, value in request.headers.items():
+                (f"{header}: {value}")
             return request.build_absolute_uri(obj.avatar.url)
         return (obj.image_url)
 
