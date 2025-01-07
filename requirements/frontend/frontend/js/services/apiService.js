@@ -95,11 +95,12 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            // console.log('response : ', response)
             if (needsAuth && response.status === 401)
                 return await this.manageExpiredTokens()
             if (response.status === 500)
                 throw new Error(response.status)
+            else if (response.status === 404)
+                this._resolve('not found')
             const contentType = response.headers.get('Content-Type');
             if (!contentType)
                 return await this.finishingUp()

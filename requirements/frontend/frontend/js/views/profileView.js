@@ -3,6 +3,8 @@ import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
 import { addListenersForFriendsBox} from '../utils/eventListeners.js'
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
+import { router  } from "../utils/global.js"
+
 export class ProfileView extends HTMLElement
 {
     constructor()
@@ -22,6 +24,8 @@ export class ProfileView extends HTMLElement
     {
         this._database = await apiService.user.getProfileInfos(this._userId)
 
+        if (this._database === 'not found')
+            router.handleRoute('/404')
         this._dataTransformer = new databaseExtractorService(this._database)
 
         this.innerHTML = profileTemplate.layout()
