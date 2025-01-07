@@ -49,8 +49,10 @@ export class EventManager
             this.handleButtonEvents(target)
         else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
             this.handleformEvents(event, target)
-        else if (eventType === 'input' && target.id === 'search-input')
+        else if (eventType === 'input' && target.id === 'search-input') // when cleansing
             this.handleSearchInput(event, target)
+        else if (eventType === 'input' && target.id === 'user-input-img')
+            this.handleInputFiles(target)
         else if (eventType === 'click' && target.classList.contains('search-item'))
             this.handleSearchItem(target)
     }
@@ -229,15 +231,15 @@ export class EventManager
         const input = document.getElementById('user-input-img')
 
         input.click()
-        input.addEventListener('change', () => //im adding two times, only one time
-        {
-            const file = input.files[0]
-            const formData = new FormData()
+        // input.addEventListener('change', this.handleInputFiles(input)) // not clean at all
+    }
+    handleInputFiles(target)
+    {
+        const file = target.files[0]
+        const formData = new FormData()
 
-            formData.append('image', file)
-            console.log('formData : ', formData)
-            //some work needs to be done in here
-        })
+        formData.append('image', file)
+        console.log('formData : ', file)
     }
     handleNewUsername(target)
     {
