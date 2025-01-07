@@ -4,9 +4,8 @@ import { _tokenService } from '../utils/global.js'
 import { reset } from '../utils/utils.js'
 import { router } from '../utils/global.js'
 import { MODE } from '../constants/engine.js'
-import { formService } from '../services/formService.js'
-import { local } from '../mods/local.js'
-import { modalService } from '../services/modalService.js'
+import { remote } from '../mods/remote.js'
+
 
 export class EventManager
 {
@@ -100,9 +99,7 @@ export class EventManager
         if (action === 'signin' || action === 'signup')
         {
             const formObject = {}
-    
-            formData.forEach((value, key) => { formObject[key] = value }) // add the tournament form  and the game one .
-            // console.log('action : ', action)
+            formData.forEach((value, key) => { formObject[key] = value})
             const response = await apiService.auth[action](formObject)
 
             if (action  === 'signup')
@@ -200,7 +197,10 @@ export class EventManager
             router.navigateTo( '/' )
         }
         else if ( gameMode == MODE.REMOTE ){
-            remote(  )
+            await remote( )
+            // await modalService.show(  'Game over', 'hihi' )
+            await reset(  )
+            router.navigateTo( '/' )
         }
         console.log('in hereee hajar u should take the functions from event handlers and out it in here: ' , gameMode)
 

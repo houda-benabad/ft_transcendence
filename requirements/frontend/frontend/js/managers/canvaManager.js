@@ -69,7 +69,6 @@ class appCanva{
                     document.getElementById('user1').innerHTML = data.name.p2
                     document.getElementById('user2').innerHTML = data.name.p1
                 }
-		        console.log( data )
                 document.getElementById('score').innerHTML = `${data.score.p2} : ${data.score.p1}`
                 break;
             case 'time':

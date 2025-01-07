@@ -6,6 +6,7 @@ import Engine from "../utils/engine.js"
 import Components from "../utils/components.js"
 import appCanva from "./canvaManager.js"
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
+// import { modalService } from "../services/modalService.js"
 
 
 export default class Remote{
@@ -28,21 +29,20 @@ export default class Remote{
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
 
-	update( id ){
-
-		this.engine.socket.onmessage = ( e ) => this.updateData( e, id )
+	update( id, resolve ){
+		this.engine.socket.onmessage = ( e ) => this.updateData( e, id, resolve )
 		this.input.movePlayers( this.engine.socket )
 		this.visual.updatePosition( )
 
 	}
 
-	updateData( e, id ){
+	updateData( e, id, resolve ){
 		const { type, data } = JSON.parse( e.data )
-		this[ACTIONS[type]]( data, id)
+		this[ACTIONS[type]]( data, id, resolve)
 	}
 
 	updateApi( data ){
-		this.visual.updateCoordinates( data.coordinates )
+		this.visual.updateCoordinates( data )
 	}
 
 	updateScore( data ){
@@ -50,12 +50,16 @@ export default class Remote{
 	}
 
 	updateStart(  ){
+		// modalService.show( " You won" )
 		console.log( "starting game" )
 		this.canva.add( "score" )
 		this.canva.remove( "waiting" )
 	}
 
-	updateState( data, id ){
+	updateState( data, id, resolve ){
+		console.log( "result = ", data )
+
+		resolve( )
 		cancelAnimationFrame( id )
 	}
 
@@ -65,14 +69,14 @@ export default class Remote{
 		this.engine.camera.lookAt( this.engine.scene.position )
 	}
 
-	animate(  ) {
-		let id = requestAnimationFrame( (  ) => this.animate() )
+	animate( resolve ) {
+		let id = requestAnimationFrame( (  ) => this.animate( resolve ) )
 		this.engine.world.step( WORLD.TIMESTAMP) 
 
 		if ( this.animationProgress < 1 )
 			this.initialAnimation(  )
 		else
-			this.update( id )
+			this.update( id, resolve )
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
 	
 	}
