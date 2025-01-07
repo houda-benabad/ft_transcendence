@@ -12,7 +12,7 @@ class Player( models.Model ):
 	level = models.IntegerField( default=0 )
 
 	def __str__( self ):
-		return f"player-{self.userId}"
+		return f"{self.username}"
 
 class RemoteGame( models.Model ):
 	date_time = models.DateTimeField( auto_now_add=True)

@@ -64,7 +64,6 @@ class NotifConsumer(AsyncWebsocketConsumer):
 			dataJson = json.loads(text_data)
 			message_type = dataJson['type']
 			data = dataJson["data"]
-			print( "data = ", data )
 			if message_type == 'notification':
 				print( "got a new notification" )
 				await self.send_notification_( data )

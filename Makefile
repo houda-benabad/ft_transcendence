@@ -20,7 +20,7 @@ stop:
 
 clean :
 	$(D_COMPOSE) -f ./docker-compose.yml down -v
-	#  sudo rm -rf ./data
+	sudo rm -rf ./data
 
 fclean: clean
 	docker system prune -af

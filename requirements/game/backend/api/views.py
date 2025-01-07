@@ -16,15 +16,21 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 
     def retrieve( self, request, *args, **kwargs ):
         userId = kwargs.get( 'userId' )
-        response = requests.get( f'http://user_management:8000/api/users/{userId}', headers={"Host": "localhost"})
+        # ADD IT ENV FILE
+        response = requests.get( f'http://user_management:8000/auth/users/{userId}', headers={"Host": "localhost"})
+        
         if response.status_code != 200:
             return Response({"detail":response.json()['detail']}, status=response.status_code)
         
         user_info = response.json(  )
-        Player.objects.get_or_create( userId=userId, username=user_info.get( 'username' ) )
+        player, created = Player.objects.get_or_create( 
+            userId=userId, 
+            defaults={
+                "username" : user_info.get( 'username' ),
+                "userId" : userId })
+
         return super().retrieve(request, *args, **kwargs)
 
 class leaderBoardView( generics.ListAPIView ):
     queryset = Player.objects.order_by( "-total_points" )
     serializer_class =  PlayerRankSerializer
-

@@ -85,7 +85,7 @@ class ApiService
 
         const url = params ? `${endpoint}?${params.key}=${encodeURIComponent(params.value)}` : endpoint
         // console.log('->>>> url : ', url)
-        // console.log('config : ', this._requestConfig)
+        console.log('config : ', this._requestConfig)
         try{
             const response = await fetch(url , {
                 method,
@@ -95,11 +95,39 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            // console.log('response : ', response)
+<<<<<<< HEAD
             if (needsAuth && response.status === 401)
                 return await this.manageExpiredTokens()
+=======
+            console.log('response : ', response)
+            if (needsAuth && response.status === 401) // this needs to be implemented in a maintenabale and cleam way
+                {
+                    console.log('->>>>>>> access token was expired')
+                    const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
+                        method : 'POST',
+                        headers : {
+                            "Content-Type": "application/json"
+                        },
+                        body : JSON.stringify({"refresh" : _tokenService.refreshToken})
+                    })
+                    if (response.status === 401)
+                    {
+                        console.log('->>>>>> refresh token was expired')
+                        _tokenService.clear()
+                        document.getElementById('app').classList.remove('active')
+                        router.handleRoute('/signin')
+                        return ; 
+                    }
+                    const responseBody = await response.json()
+                    _tokenService.accessToken = responseBody.access
+                    this.request()
+                    return ;    
+            }
+>>>>>>> 376b29a4e08487cbdcf7688770fdc68c0f7af1cf
             if (response.status === 500)
                 throw new Error(response.status)
+            else if (response.status === 404)
+                this._resolve('not found')
             const contentType = response.headers.get('Content-Type');
             if (!contentType)
                 return await this.finishingUp()

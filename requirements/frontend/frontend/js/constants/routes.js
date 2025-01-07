@@ -32,12 +32,6 @@ export const ROUTES = {
         protected: true,
         allScreen : false
     },
-    '/game' :
-    {
-        customElement : 'game-view',
-        protected: true,
-        allScreen : true
-    },
     '/settings' :
     {
         customElement : 'settings-view',

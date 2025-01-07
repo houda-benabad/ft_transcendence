@@ -1,0 +1,15 @@
+#error-container
+{
+    h1 
+    {
+        font-size: 10rem;
+        background: var(--profile-btm);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+    }
+    p
+    {
+        font-size: 1.3rem;
+        color : #9E23A4;
+    }
+}
