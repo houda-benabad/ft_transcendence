@@ -264,11 +264,11 @@ export const apiService =
             generatedHttpRequests.createDeleteRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${id}`, `you did ${messageIdentifier} successfully`)(resolve)
         }),
     },
-    // home :
-    // {
-    //     getLeaderboardData :  () => new Promise (resolve => 
-    //     {
-    //         generatedHttpRequests.createGetRequest(ENDPOINTS.LEADERBOARD, {needsAuth : false, modalMessage: null})(body, resolve)
-    //     })
-    // }
+    home :
+    {
+        getLeaderboardData :  () => new Promise (resolve => 
+        {
+            generatedHttpRequests.createGetRequest(ENDPOINTS.LEADERBOARD, {needsAuth : false, modalMessage: null})(resolve)
+        })
+    }
 }

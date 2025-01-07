@@ -1,5 +1,5 @@
 import { database } from '../constants/database.js'
-// import { apiService } from '../services/apiService.js'
+import { apiService } from '../services/apiService.js'
 import { homeTemplate } from '../templates/homeTemplate.js'
 import { eventListeners } from '../utils/global.js'
 import { databaseExtractorService } from '../services/databaseExtractorService.js'
@@ -13,9 +13,7 @@ export class homeView extends HTMLElement
     }
     async connectedCallback()
     {
-        // this._database = await apiService.home.getLeaderboardData()
-
-        this._database = database
+        this._database = await apiService.home.getLeaderboardData()
         this._dataTransformer = new databaseExtractorService(this._database)
 
 
