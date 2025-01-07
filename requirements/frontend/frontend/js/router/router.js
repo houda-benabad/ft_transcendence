@@ -37,29 +37,37 @@ export class Router
     handleRoute(newPath=null)
     {
         const path = newPath || window.location.pathname
+
         if (!_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
         else if (_tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
+            this.navigateTo('/')
+        else if (path === '/game')
             this.navigateTo('/')
         else
             this.navigateTo(path)
     }
     navigateTo(path)
     {
-        history.pushState(null, null, path)
-
-        this.updateContent(path)
-    }
-    updateContent(path) // to make this more clean and maintenable
-    {
-        let options 
+        let options
 
         if (path.includes('/profile'))
         {
-            const str = path.split('/')
-            options = str[str.length - 1] === 'profile' ? 'me' : str[str.length - 1]
-            path = '/profile'
+            if (path === '/profile' || path.includes('/profile/'))
+            {
+                const str = path.split('/')
+                options = str[str.length - 1] === 'profile' ? 'me' : str[str.length - 1]
+                path = '/profile'
+            }
+            else 
+                path = '/404'
         }
+        history.pushState(null, null, path)
+
+        this.updateContent(path, options)
+    }
+    updateContent(path, options) // to make this more clean and maintenable
+    {
         const route = this._routes[path] || this._routes['/404']
         let fragment = document.createDocumentFragment()
 

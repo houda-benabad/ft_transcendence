@@ -95,6 +95,10 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
+<<<<<<< HEAD
+            if (needsAuth && response.status === 401)
+                return await this.manageExpiredTokens()
+=======
             console.log('response : ', response)
             if (needsAuth && response.status === 401) // this needs to be implemented in a maintenabale and cleam way
                 {
@@ -119,8 +123,11 @@ class ApiService
                     this.request()
                     return ;    
             }
+>>>>>>> 376b29a4e08487cbdcf7688770fdc68c0f7af1cf
             if (response.status === 500)
                 throw new Error(response.status)
+            else if (response.status === 404)
+                this._resolve('not found')
             const contentType = response.headers.get('Content-Type');
             if (!contentType)
                 return await this.finishingUp()

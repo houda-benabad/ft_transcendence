@@ -177,7 +177,7 @@ export class EventManager
         if ( gameMode === MODE.LOCAL ){
             await router.navigateTo( '/game-settings' )
             this.gameSettings = await formService.game()
-            router.navigateTo( './game' )
+            router.navigateTo( '/game' )
             await local( this.gameSettings , ["player1", "player2"])
             await modalService.show(  'Game over', 'hihi' )
             await reset(  )
@@ -187,7 +187,7 @@ export class EventManager
             const players = await modalService.show(  '', false, 'tournament' ) // the alias names for the players 
             await router.navigateTo( '/game-settings' )
             this.gameSettings = await formService.game(  )
-            router.navigateTo( './game' )
+            router.navigateTo( '/game' )
             const winners = []
             winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
             winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
