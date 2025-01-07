@@ -108,7 +108,7 @@ class PlayerSerializer( serializers.ModelSerializer ):
 
         return serializedMultiGame + serializedRemoteGame
 
-class PlayerRankSerializer( serializers.ModelSerializer ):
+class RankSerializer( serializers.ModelSerializer ):
     rank = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
     class Meta:
