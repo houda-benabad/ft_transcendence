@@ -29,7 +29,6 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             Profile.objects.create(user=user)
         else:
             Profile.objects.create(user=user, avatar=avatar)
-        # requests.post(settings.NEW_PLAYER_URL, data={"userId": user.id, "username": user.username})
         return user
     
     def validate_username(self, value):

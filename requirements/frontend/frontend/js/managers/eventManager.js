@@ -35,8 +35,8 @@ export class EventManager
         const eventType = event.type
         const target = event.target
 
-        // console.log('event type : ', eventType)
-        // console.log('event target : ', target)
+        console.log('event type : ', eventType)
+        console.log('event target : ', target)
 
         if (eventType === 'focusout' && target.id === 'search-input')
             this.handleSearchFocus()

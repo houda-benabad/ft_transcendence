@@ -11,11 +11,24 @@ from django.conf import settings
 from django.urls import reverse
 from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
+import logging
 
+logging.basicConfig(level=logging.DEBUG)  
+
+logger = logging.getLogger("accounts.views") 
 User = get_user_model()
 
 class   CustomUserViewSet(UserViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
+    
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, args, kwargs)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        user_data = serializer.data
+        requests.post(settings.NEW_PLAYER_URL, data={"userId": user_data.get('id'), "username": user_data.get('username')})
+        return response
+        
 
 
 class   IntraAuth(APIView):

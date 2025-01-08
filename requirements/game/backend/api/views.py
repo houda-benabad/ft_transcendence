@@ -47,8 +47,7 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 		except Exception as e:
 			Response({'detail' : 'Error ocurred during operation'})
 
-
-class NewPlayer( APIView ):
+class NewPlayerView( APIView ):
    def  post(self, request, *args, **kwargs):
        print( "REQUEST = ", request )
 
