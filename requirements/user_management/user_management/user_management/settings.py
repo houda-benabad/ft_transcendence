@@ -198,4 +198,4 @@ INTRA_AUTH_URL = os.environ.get('INTRA_AUTH_URL')
 INTRA_TOKEN_URI = os.environ.get('INTRA_TOKEN_URI')
 USER_INFO_URI = os.environ.get('USER_INFO_URI')
 
-NEW_PLAYER_URL = os.environ.get('NEW_PLAYER_URL')
+NEW_PLAYER_URL = "http://game:8001/api/game/new_player" #os.environ.get('NEW_PLAYER_URL')
