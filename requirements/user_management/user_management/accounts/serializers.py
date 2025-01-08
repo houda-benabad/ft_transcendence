@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from Profiles.models import Profile
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+import requests
+from django.conf import settings
 
 
 User = get_user_model()
@@ -27,6 +29,7 @@ class UserCreateSerializer(BaseUserCreateSerializer):
             Profile.objects.create(user=user)
         else:
             Profile.objects.create(user=user, avatar=avatar)
+        # requests.post(settings.NEW_PLAYER_URL, data={"userId": user.id, "username": user.username})
         return user
     
     def validate_username(self, value):

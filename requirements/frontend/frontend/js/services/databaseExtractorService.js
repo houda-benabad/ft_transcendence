@@ -50,8 +50,8 @@ export class databaseExtractorService
 
         return game_history.map(game => (
             {
-                gameType : game.game_type,
-                dateTime : game.data_time,
+                gameType : game.type,
+                dateTime : game.date_time,
                 gamePoints : game.points,
                 gameStatus : game.status
             })
@@ -107,7 +107,7 @@ export class databaseExtractorService
             userId : row.user_id,
             username : row.username,
             rank : row.rank,
-            totalGames : row.total_games
+            totalPoints : row.total_points
         })
         )
     }

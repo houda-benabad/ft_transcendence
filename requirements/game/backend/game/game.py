@@ -74,10 +74,6 @@ class GameServer(  ):
    
 	@database_sync_to_async
 	def saving_to_database( self ):
-		players = models.Player.objects.order_by( "total_points" )
-		self.consumers[0].playerModel.rank = list(players).index(self.consumers[0].playerModel) + 1
-		self.consumers[1].playerModel.rank = list(players).index(self.consumers[1].playerModel) + 1
-
 		self.consumers[0].playerModel.save()
 		self.consumers[1].playerModel.save()
 

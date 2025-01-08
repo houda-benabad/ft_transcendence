@@ -52,7 +52,7 @@ export const homeTemplate =
             `<tr>
                 <td>${escapeHtml(e.rank)}</td>
                 <td>${escapeHtml(e.username)}</td>
-                <td>${escapeHtml(e.totalGames)}</td>
+                <td>${escapeHtml(e.totalPoints)}</td>
             </tr>
             `
         });
@@ -65,11 +65,11 @@ export const homeTemplate =
                 <tr>
                     <th>rank</th>
                     <th>player</th>
-                    <th>total games</th>
+                    <th>total points</th>
                 </tr>
             </thead>
             <tbody>
             ${dynamicPart}
-            </tbody`        
+            </tbody>`        
     }
 }

@@ -1,82 +1,47 @@
 from rest_framework import serializers
 from game.models import Player, RemoteGame, MultiplayerGame
 from django.db.models import Q
-from django.contrib.auth.models import User
+from itertools import chain
 
 
 # PLAYER INFO 
 
-class BaseGameSerializer( serializers.ModelSerializer ):
-	date_time = serializers.SerializerMethodField()
+class GameSerializer( serializers.ModelSerializer ):
+	date_time = serializers.SerializerMethodField( )
+	status = serializers.SerializerMethodField()
+	points = serializers.SerializerMethodField()
+ 
+	def __init__(self, *args, **kwargs):
+		model = kwargs.pop('model', None)
+		if model:
+			self.Meta.model = model
+		super().__init__(*args, **kwargs)
 
 	class Meta:
+		model = None
 		fields = [
 			'id',
 			'date_time',
+			'type',
+			'points',
+			'status'
 		]
 
 	def get_date_time( self, obj ):
 		return obj.formatted_date_time()
-		
-class RemoteGameSerializer(  BaseGameSerializer ):
-	status = serializers.SerializerMethodField()
-	points = serializers.SerializerMethodField()
-	type = serializers.CharField( default='remote')
-
-	class Meta( BaseGameSerializer.Meta ):
-		model = RemoteGame
-		fields = BaseGameSerializer.Meta.fields +  [
-			'type',
-			'points',
-			'status'
-		]
 
 	def get_points( self, obj ):
 		current_player = self.context.get('current_player')
 		if not current_player:
-			raise ValueError("Current player not found in serializer context")
-		if (obj.player1 == current_player):
-			return obj.player1_points
-		if (obj.player2 == current_player):
-			return obj.player2_points
+			raise ValueError( 'Current player not found in serializer context' )
+		return obj.get_point( current_player  )
 	
 	def get_status( self, obj ):
 		current_player = self.context.get('current_player')
 		if not current_player:
 			raise ValueError( 'Current player not found in serializer context' )
-		if current_player == obj.winner:
-			return 'Won'
-		return 'Lost'
-	
-class MultiGameSerializer(  BaseGameSerializer ):
-	status = serializers.SerializerMethodField()
-	points = serializers.SerializerMethodField()
-	type = serializers.CharField( default='multiplayer')
+		return obj.get_status( current_player )
 
-	class Meta( BaseGameSerializer.Meta ):
-		model = MultiplayerGame
-		fields = BaseGameSerializer.Meta.fields +  [
-			'type',
-			'points',
-			'status'
-		]
-
-	def get_points( self, obj ):
-		current_player = self.context.get('current_player')
-		if not current_player:
-			raise ValueError("Current player not found in serializer context")
-		if obj.player1 == current_player or obj.player2 == current_player:
-			return obj.team1_points
-		if obj.player3 == current_player or obj.player4 == current_player:
-			return obj.team2_points
-	
-	def get_status( self, obj ):
-		current_player = self.context.get('current_player')
-		if not current_player:
-			raise ValueError( 'Current player not found in serializer context' )
-		if current_player == obj.winner1 or current_player == obj.winner2:
-			return 'Won'
-		return 'Lost'
 
 class PlayerSerializer( serializers.ModelSerializer ):
 	game_history = serializers.SerializerMethodField()
@@ -99,12 +64,19 @@ class PlayerSerializer( serializers.ModelSerializer ):
 
 	def get_game_history( self, obj ):
 		remoteGame = RemoteGame.objects.filter( Q( player1=obj ) | Q( player2=obj ) )
-		serializedRemoteGame = RemoteGameSerializer( remoteGame, many=True, context={ "current_player" : obj } ).data
-	
 		multiGame = MultiplayerGame.objects.filter( Q( player1=obj ) | Q( player2=obj ) | Q( player3=obj ) | Q( player4=obj ) )
-		serializedMultiGame = MultiGameSerializer( multiGame, many=True, context={ "current_player" : obj } ).data
+		combined_data = list(chain(remoteGame , multiGame))
 
-		return serializedMultiGame + serializedRemoteGame
+		combined_data.sort( key=lambda game: game.date_time , reverse=True)
+		serializedGameHistory = []
+		for game in combined_data :
+			if isinstance(game, RemoteGame):
+				serializer = GameSerializer(game, context={"current_player": obj}, model=RemoteGame).data
+			elif isinstance(game, MultiplayerGame):
+				serializer = GameSerializer(game, context={"current_player": obj}, model=MultiplayerGame).data
+			serializedGameHistory.append( serializer )
+		print( "DATA = ", serializedGameHistory )
+		return serializedGameHistory
 
 # LEADERBORAD
 class RankSerializer( serializers.ModelSerializer ):

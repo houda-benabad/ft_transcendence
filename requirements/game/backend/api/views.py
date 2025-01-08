@@ -1,13 +1,11 @@
-from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.response import Response
 from .serializer import PlayerSerializer, RankSerializer
 from game.models import Player
-from django.contrib.auth.models import User
 import requests
 from django.conf import settings
 from .permissions import AuthenticationUsingJWT
-from django.urls import reverse
+from rest_framework.views import APIView
 
 class MeDetailView( generics.RetrieveAPIView ):
 	queryset = Player.objects.all(  )
@@ -48,6 +46,11 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 			return super().retrieve(request, *args, **kwargs)
 		except Exception as e:
 			Response({'detail' : 'Error ocurred during operation'})
+
+
+class NewPlayer( APIView ):
+   def  post(self, request, *args, **kwargs):
+       print( "REQUEST = ", request )
 
 # working fine
 class leaderBoardView( generics.ListAPIView ):
