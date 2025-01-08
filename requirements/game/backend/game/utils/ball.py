@@ -17,7 +17,7 @@ class Ball(GameObject):
 	def reset(self):
 		self.position = Vector3( 0, 0, 0)
 		self.velocity.z *= random.choice([-1, 1])
-		self.velocity.x *= random.choice([-1, 1]) 
+		self.velocity.x *= random.choice([-1.1, 1.1]) 
 
 	def adjust_z_velocity(self):
 		self.velocity.z *= -1

@@ -6,7 +6,7 @@ import math
 from .objects import Plane
 # from asgiref.sync import async_to_sync, sync_to_async
 
-WINNING_SCORE = 2
+WINNING_SCORE = 10
 
 
 @dataclass
