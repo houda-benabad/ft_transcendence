@@ -17,6 +17,14 @@ export const modalService =
     
             modalBackground.style.display = 'flex'
     
+            if (!automatised)
+                eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve)) // dont know if we will be needsing this eventlistener
+            else
+            {
+                await new Promise ((resolve) => setTimeout(resolve, 1000))
+                eventHandlers.removeModalHandler(null, resolve)
+            }
+            
             if (type === 'tournament') // what is this - -
             {
                 const players = await formService.handleTournament()
@@ -25,14 +33,14 @@ export const modalService =
                 resolve(players)
 
             }
-            modal.innerHTML = message
-            if (!automatised)
-                eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve)) // dont know if we will be needsing this eventlistener
-            else
+            else if (type === 'add-password')
             {
-                await new Promise ((resolve) => setTimeout(resolve, 1000))
-                eventHandlers.removeModalHandler(null, resolve)
+                const response = await formService.handleAddPassword()
+                eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler)
+                modalBackground.remove()
+                resolve(response)
             }
+            modal.innerHTML = message
         })
     },
 
@@ -40,6 +48,8 @@ export const modalService =
     {
         if (type === 'tournament')
             return modalTemplate.tournamentForm()
+        else if (type === 'add-password')
+            return modalTemplate.addPasswordForm()
         else
         {
             return (`

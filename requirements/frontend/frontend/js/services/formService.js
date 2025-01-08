@@ -42,4 +42,12 @@ export const formService =
             eventListeners.on(form, 'submit', (event) => FUNCTIONNAME.GAME_FORM(event, resolve))
         })
     },
+    handleAddPassword()
+    {
+        return new Promise (resolve => {
+            const form = document.querySelector('form')
+    
+            eventListeners.on(form, 'submit', (event) => eventHandlers.form.addPasswordForm(event, resolve))
+        })
+    }
 }

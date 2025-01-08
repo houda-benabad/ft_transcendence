@@ -52,6 +52,17 @@ export const eventHandlers =
             let data = new FormData( form );
             let gameSettings = Object.fromEntries( data )
             resolve( gameSettings )
+        },
+        addPasswordForm(event, resolve)
+        {
+            event.preventDefault()
+
+            const form = document.querySelector( 'form' )
+            const data = new FormData(form)
+            let   formObject = {}
+            
+            data.forEach((value, key) => { formObject[key] = value })
+            resolve(formObject)
         }
     },
     router : 
@@ -150,13 +161,13 @@ export const eventHandlers =
         {
             eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
             modalBackground.remove(  )
-            resolve(  )
+            // resolve(  ) // do i really need to resolve
         }
         else if (!event)
         {
             eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
             modalBackground.remove(  )
-            resolve(  )
+            // resolve(  )
         }
     }
 }

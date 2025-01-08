@@ -26,7 +26,9 @@ export class EventManager
             'play_game' : this.handleGame.bind(this),
             'intra' : this.handleIntraCall.bind(this),
             'update_image' : this.handleImgUpdate.bind(this),
-            'save_username' : this.handleNewUsername.bind(this)
+            'save_username' : this.handleNewUsername.bind(this),
+            'delete_image' : this.handleDeleteOfImage.bind(this),
+            'add_password' : this.handleAddOfPassword.bind(this),
         }
     } 
     async handleIntraCall(target)
@@ -63,8 +65,8 @@ export class EventManager
         const mainElement = target.closest(['[class="icons"]'])
 
         // console.log('main Element : ', mainElement)
-        console.log('in here : ', userId)
-        console.log('target : ', target)
+        // console.log('in here : ', userId)
+        // console.log('target : ', target)
         if (action === 'send_request' || action === 'accept_request')
         {
             await apiService.friendship.postFriendship(action, id)
@@ -86,8 +88,8 @@ export class EventManager
         const action = target.getAttribute('action-type')
         const id = target.getAttribute('id')
 
-        console.log('here  id  : ', id)
-        console.log('target : ', target)
+        // console.log('here  id  : ', id)
+        // console.log('target : ', target)
         if (action === 'send_request' || action === 'accept_request')
             await apiService.friendship.postFriendship(action, id)
         else
@@ -160,7 +162,7 @@ export class EventManager
             router.handleRoute(link)
         else if (action)
         {
-            console.log('action : ', action)
+            // console.log('action : ', action)
             const runAction = this._actionType[action]
 
             runAction(target)
@@ -172,6 +174,7 @@ export class EventManager
 
         if (action)
         {
+            console.log('action : ', action)
             const runAction = this._actionType[action]
 
             runAction(target)
@@ -238,16 +241,39 @@ export class EventManager
         const file = target.files[0]
         const formData = new FormData()
 
-        formData.append('image', file)
-        console.log('formData : ', file)
+        formData.append('image', file) // this would be sent to backend with its original form (binary)
+        const temporaryFilePath = URL.createObjectURL(file)
+        const img = document.getElementById('tobe-updated-img')
+
+        img.src = temporaryFilePath
+
+        modalService.show('updated the image successfully', true)
     }
-    handleNewUsername(target)
+    handleDeleteOfImage(target)
+    {
+        //fetch to backend to delete image, and the final response i will take that and apply it as image
+        //for now
+
+        const img = document.getElementById('tobe-updated-img')
+
+        img.src = ''
+        modalService.show('deleted the image successfully', true)
+    }
+    async handleAddOfPassword(target)
+    {
+        const response = await modalService.show('', false, 'add-password')
+
+        console.log('response : ', response) // to be fetched to backend
+    }
+    async handleNewUsername(target)
     {
         const input = document.getElementById('username-to-save')
-        const inputValue = input.value // this is the value we will be sending to the backend.8
+        const inputValue = input.value
 
-        if (!inputValue || inputValue.includes(' ')) // valid username
+        if (!inputValue || inputValue.includes(' '))
             return modalService.show('enter a valid username')
-        console.log('value  : ', inputValue)
+        console.log('value  : ', inputValue) // fetch to backend with this one
+        await modalService.show('updated the image successfully', true)
+        input.value = ""
     }
 }
