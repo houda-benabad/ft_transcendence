@@ -5,11 +5,14 @@ from django.contrib.auth.models import User
 
 class Player( models.Model ):
 	username = models.CharField( max_length=30, blank=True )
-	userId = models.IntegerField( blank=True, null=True  )
-	total_points = models.IntegerField( default=0 )
-	total_games = models.IntegerField( default=0 )
-	rank = models.IntegerField( default=0 )
-	level = models.IntegerField( default=0 )
+	userId = models.PositiveIntegerField( blank=True, null=True  )
+	total_points = models.PositiveIntegerField( default=0 )
+	total_games = models.PositiveIntegerField( default=0 )
+	level = models.PositiveIntegerField( default=0 )
+ 
+	def get_rank( self ):
+		players = Player.objects.order_by( "-total_points" )
+		return list(players).index(self) + 1
 
 	def __str__( self ):
 		return f"{self.username}"

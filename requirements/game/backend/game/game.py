@@ -3,6 +3,9 @@ from .utils.gameBase import Game
 from asgiref.sync import async_to_sync, sync_to_async
 from . import models
 from channels.layers import get_channel_layer
+from channels.db import database_sync_to_async
+
+
 
 GAME_TICK_RATE = 0.02
 GAME_START_DELAY = 5
@@ -68,15 +71,21 @@ class GameServer(  ):
 
 			await asyncio.sleep( GAME_TICK_RATE )
 			
-	async def saving_to_database( self ):
-		self.game.end_game_results(self.consumers[0], self.consumers[1], self.gameModel)
+   
+	@database_sync_to_async
+	def saving_to_database( self ):
+		players = models.Player.objects.order_by( "total_points" )
+		self.consumers[0].playerModel.rank = list(players).index(self.consumers[0].playerModel) + 1
+		self.consumers[1].playerModel.rank = list(players).index(self.consumers[1].playerModel) + 1
 
-		await sync_to_async( self.gameModel.save )()
-		await sync_to_async( self.consumers[0].playerModel.save )()
-		await sync_to_async( self.consumers[1].playerModel.save )()
+		self.consumers[0].playerModel.save()
+		self.consumers[1].playerModel.save()
+
+		self.gameModel.save()
 
 
 	async def send_results( self ):
+		self.game.end_game_results(self.consumers[0], self.consumers[1], self.gameModel)
 		await self.consumers[0]._send_message_( 'endGame',{ 'state' : self.consumers[0].game_result } )
 		await self.consumers[1]._send_message_( 'endGame',{ 'state' : self.consumers[1].game_result } )
 
@@ -91,7 +100,7 @@ async def startRemoteGame( consumers):
 	await asyncio.sleep( GAME_START_DELAY )
 
 	await server.run(  )
-	await server.saving_to_database(  )
 	await server.send_results(  )
+	await server.saving_to_database(  )
 
 

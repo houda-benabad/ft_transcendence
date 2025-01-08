@@ -35,10 +35,10 @@ class	ProfileWithGameHistoryView(APIView):
                     user_profile_response = await client.get(f"{settings.USER_PROFILE_URL}/{user_id}", headers={"Authorization": auth_token, "Host": "localhost"})
                     game_history_response = await client.get(f"{settings.GAME_HISTORY_URL}/{user_id}", headers={"Authorization": auth_token, "Host": "localhost"})
             else:
-                user_id = 1
+                # user_id = 1
                 async with httpx.AsyncClient() as client:
                     user_profile_response = await client.get(f"{settings.USER_PROFILE_URL}/me", headers={"Authorization": auth_token, "Host": "localhost"})
-                    game_history_response = await client.get(f"{settings.GAME_HISTORY_URL}/{user_id}", headers={"Authorization": auth_token, "Host": "localhost"})
+                    game_history_response = await client.get(f"{settings.GAME_HISTORY_URL}/me", headers={"Authorization": auth_token, "Host": "localhost"})
             if user_profile_response.status_code != 200:
                 return Response({"detail": "Failed to retrieve user profile "}, status=user_profile_response.status_code)
             if game_history_response.status_code != 200:
