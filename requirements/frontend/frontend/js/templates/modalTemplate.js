@@ -26,6 +26,7 @@ export const modalTemplate =
     },
     addPasswordForm()
     {
+        console.log('i, ihejkej')
         return (`
             <div id="modal-background">
                <div id="modal" class="modal-special">

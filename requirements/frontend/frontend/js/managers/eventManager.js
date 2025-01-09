@@ -273,7 +273,7 @@ export class EventManager
         if (!inputValue || inputValue.includes(' '))
             return modalService.show('enter a valid username')
         console.log('value  : ', inputValue) // fetch to backend with this one
-        await modalService.show('updated the image successfully', true)
+        await modalService.show('updated the username successfully', true)
         input.value = ""
     }
 }

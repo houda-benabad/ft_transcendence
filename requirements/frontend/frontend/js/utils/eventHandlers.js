@@ -134,13 +134,13 @@ export const eventHandlers =
         {
             eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
             modalBackground.remove(  )
-            // resolve(  ) // do i really need to resolve
+            resolve(  ) // do i really need to resolve
         }
         else if (!event)
         {
             eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
             modalBackground.remove(  )
-            // resolve(  )
+            resolve(  )
         }
     }
 }

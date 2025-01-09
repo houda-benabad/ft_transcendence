@@ -7,10 +7,12 @@ export const modalService =
 {
     show(message, automatised =  false , type = null)
     {  
+        console.log('in here  : ', message)
         return new Promise(async (resolve) =>  {
             const app = document.getElementById('app')
             const modalHtml = this.createModalHtml(type)
     
+            console.log('modal : ', modalHtml)
             app.insertAdjacentHTML('beforeend', modalHtml)
             const modalBackground = document.getElementById('modal-background')
             const modal = document.getElementById('modal')
@@ -46,6 +48,7 @@ export const modalService =
 
     createModalHtml(type)
     {
+        console.log('type : ', type)
         if (type === 'tournament')
             return modalTemplate.tournamentForm()
         else if (type === 'add-password')
