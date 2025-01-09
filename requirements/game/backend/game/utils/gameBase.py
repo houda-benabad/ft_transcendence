@@ -4,7 +4,10 @@ from .player import Player
 from .ball import Ball
 import math
 from .objects import Plane
-# from asgiref.sync import async_to_sync, sync_to_async
+
+TWO_PLAYERS = 2
+MULTI_PLAYERS = 4
+
 
 WINNING_SCORE = 10
 
@@ -16,36 +19,53 @@ class Vector3:
     z: float
 
 class Game():
-	def __init__( self ):
-	#  P V D
+    # GENERIC
+	def __init__( self, mode ):
+		#  P V D
+		self.mode = mode
 		self.ball = Ball( Vector3( 0 , 0, 0), Vector3( .01,-.07,.1 ), Vector3( .2,.2,.2 ) )
 		self.ball.velocity.x *= random.choice([-1, 1]) 
 		self.ball.velocity.z *= random.choice([-1, 1])
-		self.plane = Plane( Vector3(0,0,0), Vector3(.01,.01,.05), Vector3(4,.2,6) )
 
-		self.players = [ Player( Vector3( 0, 0,self.plane.dimension.z/2),  Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ),
-		Player( Vector3( 0, 0,-self.plane.dimension.z/2), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ) ]
+		if self.mode == TWO_PLAYERS :
+			self.plane = Plane( Vector3(0,0,0), Vector3(.01,.01,.05), Vector3(4,.2,6) )
+		elif self.mode == MULTI_PLAYERS :
+			self.plane = Plane( Vector3(0,0,0), Vector3(.01,.01,.05), Vector3(5,.2,7) )
 
+		if self.mode == TWO_PLAYERS :
+			self.players = [ Player( Vector3( 0, 0,self.plane.dimension.z/2 ),  Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ),
+							 Player( Vector3( 0, 0,-self.plane.dimension.z/2), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ) ]
+		elif self.mode == MULTI_PLAYERS :
+			self.players = [ Player( Vector3( 1.5, 0, self.plane.dimension.z/2  ) ,Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ),
+							 Player( Vector3( -1.5, 0, self.plane.dimension.z/2 ), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ),
+							 Player( Vector3( -1.5, 0, -self.plane.dimension.z/2), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ),
+							 Player( Vector3( 1.5, 0, -self.plane.dimension.z/2 ), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ) ]
+
+
+	# GENERIC
 	def update(self):
 		for player in self.players:
 			player.update()
-		self.ball.update(self.plane, self.players )
+		self.ball.update(self.plane, self.players, self.mode )
 
+	# GENERIC
 	async def is_over(self):
 		return any( player.score == WINNING_SCORE for player in self.players )
 
+	# GENERIC
 	def get_coordinates(self):
 		coords = { "ball" :{ "position": astuple( self.ball.position ) } }
 		for i, player in enumerate( self.players ):
 			coords[f"p{i+1}"] = { "position" : astuple( player.position ) }
 		return coords
 
+	# GENERIC
 	def move_players(self, consumers):
 		for player, consumer in zip( self.players, consumers ):
 			player.move( consumer.keycode, self.plane )
 			consumer.keycode = 0
 
-  
+	# STILL SOME ISSUES
 	def end_game_results(self, hoster, invited, gameModel):
 		gameModel.player1_points = self.players[0].score
 		gameModel.player2_points = self.players[1].score

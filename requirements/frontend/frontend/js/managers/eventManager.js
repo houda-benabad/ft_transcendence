@@ -5,6 +5,7 @@ import { reset } from '../utils/utils.js'
 import { router } from '../utils/global.js'
 import { MODE } from '../constants/engine.js'
 import { remote } from '../mods/remote.js'
+import { multiplayer } from '../mods/multiplayer.js'
 
 
 export class EventManager
@@ -198,6 +199,12 @@ export class EventManager
         }
         else if ( gameMode == MODE.REMOTE ){
             await remote( )
+            // await modalService.show(  'Game over', 'hihi' )
+            await reset(  )
+            router.navigateTo( '/' )
+        }
+        else if ( gameMode == MODE.MULTIPLAYER ){
+            await multiplayer( )
             // await modalService.show(  'Game over', 'hihi' )
             await reset(  )
             router.navigateTo( '/' )

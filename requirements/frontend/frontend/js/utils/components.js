@@ -64,7 +64,7 @@ export default class Components {
     createPlayer( position, color ){
         let player = new THREE.Mesh( 
             new THREE.BoxGeometry( ...Object.values( DIMENSION.PLAYER ) ), 
-            new THREE.MeshLambertMaterial( { color: color } ) )
+            new THREE.MeshLambertMaterial( { color:  color } ) )
         player.position.set( ...position )
         return player
     }
@@ -99,7 +99,11 @@ export default class Components {
         const players = {};
 
         for ( let i =0;i < PLAYERS.length;i++ ){
-            players[`player${i + 1}`] = this.createPlayer( Object.values(MULTIPLAYERPOSITION[PLAYERS[i]]) )
+            if ( i < 2)
+                color = COLORS.PLAYER1
+            else
+                color = COLORS.PLAYER2
+            players[`player${i + 1}`] = this.createPlayer( Object.values(MULTIPLAYERPOSITION[PLAYERS[i]]), color)
         }
 
         return {ball, plane, ...players}

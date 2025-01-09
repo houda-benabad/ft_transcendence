@@ -1,6 +1,6 @@
 import { MODE} from "../constants/engine.js"
 import { TEXTURE } from "../constants/components.js"
-import Local from "../managers/localManagers.js"
+import Local from "../managers/localManager.js"
 
 
 export async function local( options , players) {

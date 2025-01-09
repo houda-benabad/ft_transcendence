@@ -19,8 +19,6 @@ export class Router
    
     async init() // this needs cleansing and to make it more maintenable
     {
-        
-        console.log('token : ', _tokenService.isAuthenticated())
         if (_tokenService.isAuthenticated())
         {
             await reset()
