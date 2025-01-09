@@ -11,12 +11,22 @@ from django.conf import settings
 from django.urls import reverse
 from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
+import logging
+logging.basicConfig(level=logging.DEBUG)  
 
+logger = logging.getLogger("accounts.views")
 User = get_user_model()
 
 class   CustomUserViewSet(UserViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-
+    # permission_classes = [permissions.IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        try :
+            requests.get("http://game:8001/api/game/new_player", headers={"Host":"localhost"})
+        except Exception as e:
+            logger.debug("connection refused")
+            
 
 class   IntraAuth(APIView):
     

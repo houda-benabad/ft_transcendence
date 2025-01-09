@@ -4,6 +4,7 @@ from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync, sync_to_async
 from abc import ABC, abstractmethod
 from channels.db import database_sync_to_async
+from django.conf import settings
 from collections import deque
 from . import game
 import requests
@@ -32,7 +33,8 @@ class GameConsumer( ABC, AsyncWebsocketConsumer ):
 	async def score(self, event):await self._send_message_( 'score', event['data'] )
 
 	# Player handle
-	async def _get_or_create_player_( self, userId, username): return await sync_to_async( Player.objects.get_or_create )( userId=userId, username=username )
+	@database_sync_to_async
+	def _get_or_create_player_( self, userId, username): return Player.objects.get_or_create( userId=userId, username=username )
 
 class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 	async def connect(self):
@@ -43,7 +45,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 	async def __handle_auth( self, token ):
 		try:
-			response = requests.get( f'http://user_management:8000/api/users/me', headers={"Host": "localhost", 'authorization': f"Bearer {token}" })
+			response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'authorization': f"Bearer {token}" })
 
 			if response.status_code != 200:
 				self.disconnect( 404 )
@@ -51,9 +53,10 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 			user_info = response.json(  )
 			print( "userinfo = ", user_info)
-			self.playerModel, created = await self._get_or_create_player_( user_info.get('userId') , user_info.get('username') )
+			self.playerModel, created = await self._get_or_create_player_( user_info.get('id') , user_info.get('username') )
 
 			print( "this is user username = ", self.playerModel.username)
+			print( "this is user userId = ", self.playerModel.userId)
 			remote_players.append(self)
 			if len(remote_players) >= 2:
 				await self.start_game()

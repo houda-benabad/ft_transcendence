@@ -2,10 +2,11 @@ import random
 from dataclasses import dataclass, asdict, astuple
 from .player import Player
 from .ball import Ball
+import math
 from .objects import Plane
 # from asgiref.sync import async_to_sync, sync_to_async
 
-WINNING_SCORE = 2
+WINNING_SCORE = 10
 
 
 @dataclass
@@ -55,15 +56,17 @@ class Game():
 		hoster.playerModel.total_points += self.players[0].score
 		invited.playerModel.total_points += self.players[1].score
 
-		# hoster.playerModel.level += hoster.playerModel.games / hoster.playerModel.points
-		# invited.playerModel.level += invited.playerModel.games / invited.playerModel.points
 
 		if (invited.keycode == -1 or self.players[0].score > self.players[1].score):
 			hoster.game_result = "won"
 			invited.game_result = "lost"
 			gameModel.winner = hoster.playerModel
+			hoster.playerModel.level = round( math.sqrt( hoster.playerModel.total_points ) * .7, 2)
+			print( "level = ", hoster.playerModel.level)
 		elif (self.players[0].score < self.players[1].score):
 			invited.game_result = "won"
 			hoster.game_result = "lost"
+			invited.playerModel.level =  round(math.sqrt( invited.playerModel.total_points ) * .7, )
+			print( "level = ", hoster.playerModel.level)
 			gameModel.winner = invited.playerModel
 

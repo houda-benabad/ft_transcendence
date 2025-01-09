@@ -42,8 +42,8 @@ export class Router
             this.navigateTo('/signin')
         else if (_tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
             this.navigateTo('/')
-        else if (path === '/game')
-            this.navigateTo('/')
+        // else if (path === '/game')
+        //     this.navigateTo('/')
         else
             this.navigateTo(path)
     }
