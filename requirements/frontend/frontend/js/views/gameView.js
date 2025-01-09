@@ -1,5 +1,5 @@
 import { TEXTURE } from "../constants/components.js"
-import Local from "../managers/localManagers.js"
+import Local from "../managers/localManager.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 // import router from "../router/router.js"

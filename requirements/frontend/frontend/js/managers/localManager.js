@@ -69,7 +69,7 @@ export default class Local{
 	}
 
 	isGameover(  ){
-		return this.state.isGameover( this.physics.userInfo )
+		return this.state.isGameover( this.physics.score )
 	}
 
 	clean(){
