@@ -23,7 +23,7 @@ class Game():
 	def __init__( self, mode ):
 		#  P V D
 		self.mode = mode
-		self.ball = Ball( Vector3( 0 , 0, 0), Vector3( .01,-.07,.1 ), Vector3( .2,.2,.2 ) )
+		self.ball = Ball( Vector3( 0 , 0, 0), Vector3( .05,-.07,.1 ), Vector3( .2,.2,.2 ) )
 		self.ball.velocity.x *= random.choice([-1, 1]) 
 		self.ball.velocity.z *= random.choice([-1, 1])
 
