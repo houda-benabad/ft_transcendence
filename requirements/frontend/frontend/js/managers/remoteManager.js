@@ -46,6 +46,7 @@ export default class Remote{
 	}
 
 	updateApi( data ){
+		console.log( "api = ", data )
 		this.visual.updateCoordinates( data )
 	}
 

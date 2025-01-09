@@ -97,6 +97,16 @@ class GameServer(  ):
 	# GENERIC
 	@database_sync_to_async
 	def saving_to_database( self ):
+		if self.mode == TWO_PLAYERS:
+			self.gameModel.player1_points = self.game.players[0].score
+			self.gameModel.player2_points = self.game.players[1].score
+		elif self.mode == MULTI_PLAYERS:
+			self.gameModel.team1_points = self.game.players[0].score
+			self.gameModel.team2_points = self.game.players[2].score
+	
+		for i, consumer in enumerate( self.consumers ):
+			consumer.playerModel.total_games += 1
+			consumer.playerModel.total_points += self.game.players[i].score
 		for consumer in self.consumers :
 			consumer.playerModel.save()
 
@@ -104,7 +114,7 @@ class GameServer(  ):
 
 	# GENERIC
 	async def send_results( self ):
-		self.game.end_game_results(self.consumers[0], self.consumers[1], self.gameModel)
+		self.game.end_game_results(self.consumers, self.gameModel)
 		for consumer in self.consumers:
 			await consumer._send_message_( 'endGame',{ 'state' : consumer.game_result } )
 

@@ -20,6 +20,8 @@ export default class Engine {
 		this.world = new CANNON.World(  );
 		if ( this.mode == MODE.REMOTE || this.mode == MODE.MULTIPLAYER )
 			this.socket = this.setupSocket(  )
+		const axesHelper = new THREE.AxesHelper( 10 );
+		this.scene.add( axesHelper );
 	}
 
 	onWindowResize(  ) {

@@ -67,15 +67,18 @@ class Ball(GameObject):
 	# NON GENERIC BUT GOOD
 	def __single_team1_collision( self, player) :
 		return self.back >= player.front and self.right >= player.left and self.left <= player.right
+
 	def __single_team2_collision( self, player) :
 		return self.front <= player.back and self.right >= player.left and self.left <= player.right
    
 	# NON GENERIC BUT GOOD
 	def __handle_player_collision_multi( self, players ):
 			if self.__single_team1_collision( players[0] ) or self.__single_team1_collision( players[1] ):
-				self.__adjust_z_velocity()
-			if self.__single_team2_collision( players[2] ) or self.__single_team1_collision( players[3] ):
-				self.__adjust_z_velocity()
+				print( "first team collsion")
+				self.__adjust_z_velocity(  )
+			if self.__single_team2_collision( players[2] ) or self.__single_team2_collision( players[3] ):
+				print( "second team collsion")
+				self.__adjust_z_velocity(  )
 
 	# GENERIC
 	def __update_position( self ):
@@ -86,13 +89,13 @@ class Ball(GameObject):
 	def update( self, plane, players, mode ):
 		self.updateBounds()
 
-		self.__reflect_side_collision( plane ) # does a perfect job
+		self.__reflect_side_collision( plane )
 		if mode == TWO_PLAYERS:
-			self.__handle_player_collision_remote( players ) # does a perfect job 
-			self.__handle_out_of_bounds_remote( plane, players ) # does  perfect job
+			self.__handle_player_collision_remote( players ) 
+			self.__handle_out_of_bounds_remote( plane, players )
 		elif mode == MULTI_PLAYERS :
-			self.__handle_player_collision_multi( players ) # does a perfect job 
-			self.__handle_out_of_bounds_multi( plane, players ) # does  perfect job
+			self.__handle_player_collision_multi( players )
+			self.__handle_out_of_bounds_multi( plane, players )
 
 		self.__update_position(  )
 		

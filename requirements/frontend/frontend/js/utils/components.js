@@ -69,40 +69,17 @@ export default class Components {
         return player
     }
 
-    createBackgroundSphere( background ){
-        const geometry = new THREE.SphereGeometry( ...Object.values( BACKGROUND.DIMENSION ) );
-        geometry.scale( ...Object.values( BACKGROUND.SCALE ) );
-        
-        const textureLoader = new THREE.TextureLoader(  );
-        textureLoader.load( 
-            `../../assets/background/${background}.png`,
-            ( texture ) => {
-                texture.encoding = THREE.sRGBEncoding;
-                texture.minFilter = THREE.LinearMipmapLinearFilter;
-                texture.magFilter = THREE.LinearFilter;
-                texture.anisotropy = this.engine.renderer.capabilities.getMaxAnisotropy(  );
-                
-                const material = new THREE.MeshBasicMaterial( { map: texture } );
-                const sphere = new THREE.Mesh( geometry, material );
-                this.engine.scene.add( sphere );
-            },
-            undefined,
-            ( error ) => {
-                console.error( 'An error occurred while loading the texture:', error );
-            }
-         );
-    }
-
     createMultiModeObjects(  ){
         let ball = this.createBall(  )
         let plane = this.createPlane(  )
         const players = {};
-
+        let color;
         for ( let i =0;i < PLAYERS.length;i++ ){
             if ( i < 2)
                 color = COLORS.PLAYER1
             else
                 color = COLORS.PLAYER2
+            console.log( `player num ${i} position = (${MULTIPLAYERPOSITION[PLAYERS[i]].x}, ${MULTIPLAYERPOSITION[PLAYERS[i]].z})` )
             players[`player${i + 1}`] = this.createPlayer( Object.values(MULTIPLAYERPOSITION[PLAYERS[i]]), color)
         }
 
@@ -130,7 +107,6 @@ export default class Components {
         const ground = new CANNON.Body( {
             shape: new CANNON.Plane(  ),
             type: CANNON.Body.STATIC,
-            position: new CANNON.Vec3( ...Object.values( POSITION.PLANE ) ),
             position: new CANNON.Vec3( 0, DIMENSION.PLANE.y/2, 0 ),
         } );
         ground.quaternion.setFromEuler( -Math.PI / 2, 0, 0 ); 
@@ -165,9 +141,10 @@ export default class Components {
 
     }
 
+    // MULTIPLAYER BODIES
     createMultiModeBodies(  ){
         let ball = this.createBallBody(  )
-        let plane = this.createPlaneBody( MODE.MULTIPLAYER )
+        let plane = this.createPlaneBody( )
         const playerKeys = ['PLAYER1', 'PLAYER2', 'PLAYER3', 'PLAYER4']
         const players = {};
 
@@ -178,6 +155,7 @@ export default class Components {
         return {ball, plane, ...players}
     }
 
+    // REMOTE BODIES
     createBodies(  ){
         let ball = this.createBallBody(  )
         let plane = this.createPlaneBody(  )
@@ -188,6 +166,31 @@ export default class Components {
             Object.values( POSITION.PLAYER2 ), 
          )
         return {ball, plane, player1, player2}
+    }
+
+
+    createBackgroundSphere( background ){
+        const geometry = new THREE.SphereGeometry( ...Object.values( BACKGROUND.DIMENSION ) );
+        geometry.scale( ...Object.values( BACKGROUND.SCALE ) );
+        
+        const textureLoader = new THREE.TextureLoader(  );
+        textureLoader.load( 
+            `../../assets/background/${background}.png`,
+            ( texture ) => {
+                texture.encoding = THREE.sRGBEncoding;
+                texture.minFilter = THREE.LinearMipmapLinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+                texture.anisotropy = this.engine.renderer.capabilities.getMaxAnisotropy(  );
+                
+                const material = new THREE.MeshBasicMaterial( { map: texture } );
+                const sphere = new THREE.Mesh( geometry, material );
+                this.engine.scene.add( sphere );
+            },
+            undefined,
+            ( error ) => {
+                console.error( 'An error occurred while loading the texture:', error );
+            }
+         );
     }
 
 }
