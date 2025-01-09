@@ -50,6 +50,7 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 class NewPlayerView( APIView ):
    def  post(self, request, *args, **kwargs):
        print( "REQUEST = ", request )
+	   return Response( {"test"})
 
 # working fine
 class leaderBoardView( generics.ListAPIView ):
