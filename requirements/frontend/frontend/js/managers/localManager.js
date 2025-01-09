@@ -36,6 +36,7 @@ export default class Local{
 		if (this.options.mode == 'time' )
 			this.canva.add( 'time' )
 
+		this.physics.setupBallCollisionEvent(  )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
