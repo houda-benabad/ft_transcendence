@@ -65,9 +65,9 @@ class	ProfileWithGameHistoryView(APIView):
         async with httpx.AsyncClient() as client:
             user_profile_response = await client.get(user_profile_url, headers=headers)
             game_history_response = await client.get(game_history_url, headers=headers)
-        if user_profile_response.status_code != 200:
+        if user_profile_response.status_code != status.HTTP_200_OK:
             raise Error("Failed to retrieve user profile", status_code=user_profile_response.status_code)
-        if game_history_response.status_code != 200:
+        if game_history_response.status_code != status.HTTP_200_OK:
             raise Error("Failed to retrieve game history", status_code=game_history_response.status_code)
         return (user_profile_response.json(), game_history_response.json())
 
@@ -75,10 +75,10 @@ class	ProfileWithGameHistoryView(APIView):
     def _validate_authorization_header(self, auth_token):
 
         if not auth_token or not auth_token.startswith("Bearer"):
-            raise Error(message="Authorization header missing", status_code=401)
+            raise Error(message="Authorization header missing", status_code=status.HTTP_401_UNAUTHORIZED)
         token = auth_token.split(" ")
         if len(token) == 1:
-            raise Error(message="missing token", status_code=401)
+            raise Error(message="missing token", status_code=status.HTTP_401_UNAUTHORIZED)
         return token[1]
         
             
@@ -90,7 +90,7 @@ class	ProfileWithGameHistoryView(APIView):
                 json={"token": token},
                 headers={"Host": "localhost"}
             )
-            if response.status_code != 200:
+            if response.status_code != status.HTTP_200_OK:
                 raise Error("Token is invalid or expired", status_code=response.status_code)
             return (response.json(), response.status_code)
 
