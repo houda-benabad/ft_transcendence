@@ -37,7 +37,7 @@ class   CustomUserViewSet(UserViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
         try :
-            response = requests.post("http://game:8000/api/game/new_player", headers={"Host":"localhost"})
+            response = requests.post("http://game:8000/api/game/new_player", data = {"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
             if response.status_code != status.HTTP_200_OK:
                 raise Error(detail="error in the new_player response", status_code = response.status_code)
         except requests.RequestException as e:
