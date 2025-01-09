@@ -6,12 +6,9 @@ import requests
 from django.conf import settings
 from .permissions import AuthenticationUsingJWT
 from rest_framework.views import APIView
-import logging
+
 from game.models import Player
 
-logging.basicConfig(level=logging.DEBUG)  
-
-logger = logging.getLogger("game.views") 
 class MeDetailView( generics.RetrieveAPIView ):
 	queryset = Player.objects.all(  )
 	serializer_class = PlayerSerializer

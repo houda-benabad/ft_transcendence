@@ -39,7 +39,7 @@ class GameConsumer( ABC, AsyncWebsocketConsumer ):
 
 			user_info = response.json(  )
 			print( "userinfo = ", user_info)
-			self.playerModel, created = await self._get_or_create_player_( user_info.get('id') , user_info.get('username') )
+			self.playerModel= await self._get_player_( user_info.get('id') , user_info.get('username') )
 
 			print( "this is user username = ", self.playerModel.username)
 			print( "this is user userId = ", self.playerModel.userId)
@@ -66,11 +66,15 @@ class GameConsumer( ABC, AsyncWebsocketConsumer ):
 		if (dataType == 'keycode'):
 			self.keycode = dataJson['data']
 		elif dataType == 'auth' :
+			print( "AUTHHHH" )
 			await self._handle_auth( dataJson['data'])
 			await self._update_players(  )
 	# Player handle
 	@database_sync_to_async
-	def _get_or_create_player_( self, userId, username): return Player.objects.get_or_create( userId=userId, username=username )
+	def _get_player_( self, userId, username): 
+		player = Player.objects.get( userId=userId )
+		print( f"user with id = {userId} == {player}" )
+		return player
 
 class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 	async def _update_players( self ):
@@ -86,7 +90,8 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1
-		remote_players.remove( self )
+		if self in remote_players :
+			remote_players.remove( self )
 		print( "LEN PLAYERS = ", len( remote_players) )
 		if self.game_group_name:
 			print(f"Game group name: {self.game_group_name}")
@@ -112,9 +117,12 @@ class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1
-		multi_players.remove( self )
-		print(f"Game group name: {self.game_group_name}")
+		if self in multi_players :
+			multi_players.remove( self )
+		print( "LEN PLAYERS = ", len( multi_players) )
 		if self.game_group_name:
+			print(f"Game group name: {self.game_group_name}")
 			await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
+
 
 

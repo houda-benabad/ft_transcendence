@@ -88,7 +88,7 @@ class Game():
 				print( "level = ", consumers[0].playerModel.level)
 
 		elif self.mode == MULTI_PLAYERS:
-			if (consumers[1].keycode == -1 or consumers[1].keycode == -1 or self.players[0].score > self.players[2].score):
+			if ( consumers[0].keycode == -1 or consumers[1].keycode == -1 or self.players[0].score > self.players[2].score):
 				consumers[0].game_result = "won"
 				consumers[1].game_result = "won"
 				consumers[2].game_result = "lost"
