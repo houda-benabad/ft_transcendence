@@ -88,7 +88,6 @@ class GameServer(  ):
 			await self.__send_group_msg_( 'score', self.get_score(  ) )
 			# self.GAME OVER CHECK
 			if await self.game.is_over():
-				print( "GAME OVER" )
 				break
 
 			await asyncio.sleep( GAME_TICK_RATE )

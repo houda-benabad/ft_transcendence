@@ -47,7 +47,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
 		notification.status = data['status']
 		await database_sync_to_async( notification.save )()
 		await self.send_confirmation(  notification )
-		print( "Done" )
+
 
 	async def send_confirmation( self, notification ):
 		sender = await self.get_notification_info( notification )

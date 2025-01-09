@@ -74,10 +74,8 @@ class Ball(GameObject):
 	# NON GENERIC BUT GOOD
 	def __handle_player_collision_multi( self, players ):
 			if self.__single_team1_collision( players[0] ) or self.__single_team1_collision( players[1] ):
-				print( "first team collsion")
 				self.__adjust_z_velocity(  )
 			if self.__single_team2_collision( players[2] ) or self.__single_team2_collision( players[3] ):
-				print( "second team collsion")
 				self.__adjust_z_velocity(  )
 
 	# GENERIC

@@ -31,6 +31,7 @@ export class EventManager
             'save_username' : this.handleNewUsername.bind(this),
             'delete_image' : this.handleDeleteOfImage.bind(this),
             'add_password' : this.handleAddOfPassword.bind(this),
+            'cancel' : this.handleCancelButton.bind(this),
         }
     } 
     async handleIntraCall(target)
@@ -168,13 +169,17 @@ export class EventManager
             runAction(target)
         }
     }
+    handleCancelButton( target ){
+        console.log( " waaaa3")
+    }
     handleButtonEvents(target)
     {
         const action = target.getAttribute("data-action")
 
         if (action)
         {
-            // console.log('action : ', action)
+            console.log('action : ', action)
+            console.log('target : ', target)
             const runAction = this._actionType[action]
 
             runAction(target)

@@ -79,13 +79,11 @@ class Game():
 				consumers[1].game_result = "lost"
 				gameModel.winner = consumers[0].playerModel
 				consumers[0].playerModel.level = round( math.sqrt( consumers[0].playerModel.total_points ) * .7, 2)
-				print( "level = ", consumers[0].playerModel.level)
 			elif (self.players[0].score < self.players[1].score):
 				consumers[1].game_result = "won"
 				consumers[0].game_result = "lost"
 				consumers[1].playerModel.level =  round(math.sqrt( consumers[1].playerModel.total_points ) * .7, )
 				gameModel.winner = consumers[1].playerModel
-				print( "level = ", consumers[0].playerModel.level)
 
 		elif self.mode == MULTI_PLAYERS:
 			if ( consumers[0].keycode == -1 or consumers[1].keycode == -1 or self.players[0].score > self.players[2].score):

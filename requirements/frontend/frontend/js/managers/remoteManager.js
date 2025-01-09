@@ -7,6 +7,10 @@ import appCanva from "./canvaManager.js"
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { modalService } from "../services/modalService.js"
 import { MODE, WORLD } from "../constants/engine.js"
+import { router } from '../utils/global.js'
+import { reset } from '../utils/utils.js'
+
+
 
 
 export default class Remote{
@@ -21,7 +25,6 @@ export default class Remote{
 		if( this.mode == MODE.REMOTE )
 			this.canva = new appCanva( ["player1", "player2"] )
 		else
-			console.log( "ye3ni" )
 			this.canva = new appCanva( ["team1", "team2"] )
 	}
 
@@ -29,6 +32,11 @@ export default class Remote{
 		this.engine.setup( )
 		this.components.setup( )
 		this.canva.add( 'waiting' )
+		document.getElementById( "cancel-btn" ).addEventListener( 'click', async ( )=>{
+			this.engine.socket.close( 4000 )
+			await reset(  )
+			router.navigateTo( '/' )
+		} )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
