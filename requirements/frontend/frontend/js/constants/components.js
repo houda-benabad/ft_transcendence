@@ -44,16 +44,7 @@ export const POSITION = {
         y:.4,
         z:-DIMENSION.PLANE.z/2
     },
-    PLAYER3 : {
-        x:1.5,
-        y:.4,
-        z:DIMENSION.PLANE/2
-    },
-    PLAYER4 : {
-        x:1.5,
-        y:.4,
-        z:-DIMENSION.PLANE/2
-    }
+
 }
 
 export const MULTIPLAYERPOSITION = {

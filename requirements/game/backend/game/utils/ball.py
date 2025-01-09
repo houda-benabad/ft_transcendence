@@ -5,6 +5,8 @@ from dataclasses import dataclass
 TWO_PLAYERS = 2
 MULTI_PLAYERS = 4
 
+
+
 @dataclass
 class Vector3:
     x: float
@@ -14,52 +16,86 @@ class Vector3:
 class Ball(GameObject):
 	MIN_VELOCITY = 0.1  
     
-	def reset(self):
+    # GENERIC
+	def __reset(self):
 		self.position = Vector3( 0, 0, 0)
 		self.velocity.z *= random.choice([-1, 1])
 		self.velocity.x *= random.choice([-1.1, 1.1]) 
 
-	def adjust_z_velocity(self):
+	#GENERIC
+	def __adjust_z_velocity(self):
 		self.velocity.z *= -1
 		if self.velocity.z < 0 and self.velocity.z > -self.MIN_VELOCITY:
 			self.velocity.z -= .01
 		elif self.velocity.z > 0 and self.velocity.z < self.MIN_VELOCITY:
 			self.velocity.z += .01
 
-	def reflect_side_collision( self, plane ):
+	#GENERIC
+	def __reflect_side_collision( self, plane ):
 		if self.left <= plane.left or self.right >= plane.right:
 			self.velocity.x *= -1
-
-	def handle_out_of_bounds_remote( self, plane, players ):
+	
+	# NON GENERIC BUT GOOD
+	def __handle_out_of_bounds_remote( self, plane, players ):
 		if (  self.back >= plane.back + .05):
 			players[1].score+= 1
-			self.reset()
+			self.__reset()
 		elif (  self.front <=  plane.front - .05):
 			players[0].score += 1
-			self.reset()
+			self.__reset()
    
-	def handle_player_collision_remote( self, players ):
+	# NON GENERIC BUT GOOD
+	def __handle_player_collision_remote( self, players ):
 
 		if (self.back >= players[0].front and self.right >= players[0].left and self.left <= players[0].right):
-				self.adjust_z_velocity()
+				self.__adjust_z_velocity()
 
 		elif (self.front <= players[1].back and self.right >= players[1].left and self.left <= players[1].right):
-				self.adjust_z_velocity()
+				self.__adjust_z_velocity()
 
-	def update_position( self ):
+	# NON GENERIC BUT GOOD
+	def __handle_out_of_bounds_multi( self, plane, players ):
+		if (  self.back >= plane.back + .05):
+			players[2].score+= 1
+			players[3].score+= 1
+			self.__reset()
+		elif (  self.front <=  plane.front - .05):
+			players[0].score += 1
+			players[1].score += 1
+			self.__reset()
+   
+	# NON GENERIC BUT GOOD
+	def __single_team1_collision( self, player) :
+		return self.back >= player.front and self.right >= player.left and self.left <= player.right
+
+	def __single_team2_collision( self, player) :
+		return self.front <= player.back and self.right >= player.left and self.left <= player.right
+   
+	# NON GENERIC BUT GOOD
+	def __handle_player_collision_multi( self, players ):
+			if self.__single_team1_collision( players[0] ) or self.__single_team1_collision( players[1] ):
+				print( "first team collsion")
+				self.__adjust_z_velocity(  )
+			if self.__single_team2_collision( players[2] ) or self.__single_team2_collision( players[3] ):
+				print( "second team collsion")
+				self.__adjust_z_velocity(  )
+
+	# GENERIC
+	def __update_position( self ):
 		self.position.x += self.velocity.x
 		self.position.z += self.velocity.z
 
-	def update( self, plane, players ):
+	# GENERIC
+	def update( self, plane, players, mode ):
 		self.updateBounds()
 
-		self.reflect_side_collision( plane ) # does a perfect job
-		# if mode == TWO_PLAYERS:
-		self.handle_player_collision_remote( players ) # does a perfect job 
-		self.handle_out_of_bounds_remote( plane, players ) # does  perfect job
-		# else:
-		# 	self.handle_player_collision_multi( players ) # does a perfect job 
-		# 	self.handle_out_of_bounds_multi( plane, players ) # does  perfect job
+		self.__reflect_side_collision( plane )
+		if mode == TWO_PLAYERS:
+			self.__handle_player_collision_remote( players ) 
+			self.__handle_out_of_bounds_remote( plane, players )
+		elif mode == MULTI_PLAYERS :
+			self.__handle_player_collision_multi( players )
+			self.__handle_out_of_bounds_multi( plane, players )
 
-		self.update_position(  )
+		self.__update_position(  )
 		

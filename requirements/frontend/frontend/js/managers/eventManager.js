@@ -5,6 +5,7 @@ import { reset } from '../utils/utils.js'
 import { router } from '../utils/global.js'
 import { MODE } from '../constants/engine.js'
 import { remote } from '../mods/remote.js'
+import { multiplayer } from '../mods/multiplayer.js'
 import { modalService } from '../services/modalService.js'
 import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
@@ -41,8 +42,8 @@ export class EventManager
         const eventType = event.type
         const target = event.target
 
-        // console.log('event type : ', eventType)
-        // console.log('event target : ', target)
+        console.log('event type : ', eventType)
+        console.log('event target : ', target)
 
         if (eventType === 'focusout' && target.id === 'search-input')
             this.handleSearchFocus()
@@ -207,6 +208,12 @@ export class EventManager
         }
         else if ( gameMode == MODE.REMOTE ){
             await remote( )
+            // await modalService.show(  'Game over', 'hihi' )
+            await reset(  )
+            router.navigateTo( '/' )
+        }
+        else if ( gameMode == MODE.MULTIPLAYER ){
+            await multiplayer( )
             // await modalService.show(  'Game over', 'hihi' )
             await reset(  )
             router.navigateTo( '/' )

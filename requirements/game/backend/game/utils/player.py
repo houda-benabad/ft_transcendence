@@ -1,24 +1,8 @@
-# from .objects import GameObject
-
-# class Player(GameObject):
-# 	score = 0
-
-# 	def update(self):
-		
-# 		self.updateBounds()
-	
-# 	def move(self, keycode, plane):
-# 		target = self.position.x
-# 		if (keycode == 40 and self.position.x > -plane.dimension.x / 2 + self.dimension.x / 2):
-# 			target = -0.09
-# 		elif (keycode == 38 and self.position.x < plane.dimension.x / 2 - self.dimension.x / 2):
-# 			target = 0.09
-# 		else:
-# 			target = 0
-# 		self.position.x += target
-
-
 from .objects import GameObject
+
+TWO_PLAYERS = 2
+MULTI_PLAYERS = 4
+
 
 class Player(GameObject):
 	score = 0
@@ -27,12 +11,22 @@ class Player(GameObject):
 		
 		self.updateBounds()
 	
-	def move(self, keycode, plane):
-		target = self.position.x
-		if (keycode == 40 and self.position.x > -plane.dimension.x / 2 + self.dimension.x / 2):
-			target = -0.09
-		elif (keycode == 38 and self.position.x < plane.dimension.x / 2 - self.dimension.x / 2):
-			target = 0.09
-		else:
+	def move(self, consumer, plane,  mode, player=None):
+		if mode == TWO_PLAYERS:
 			target = 0
-		self.position.x += target
+			if consumer.keycode == 40 and self.position.x > -plane.dimension.x / 2 + self.dimension.x / 2 :
+				target = -0.09
+			elif (consumer.keycode == 38 and self.position.x < plane.dimension.x / 2 - self.dimension.x / 2 ):
+				target = 0.09
+			self.position.x += target
+		if mode == MULTI_PLAYERS:
+			target = self.position.x
+			if consumer.keycode == 40 and self.position.x > -plane.dimension.x / 2 + self.dimension.x / 2 :
+				target -= 0.09
+			elif (consumer.keycode == 38 and self.position.x < plane.dimension.x / 2 - self.dimension.x / 2 ):
+				target += 0.09
+			new_pos = self.position.x + (target - self.position.x )
+			if abs( new_pos - player.position.x ) >= self.dimension.x:
+				self.position.x = new_pos
+		consumer.keycode = 0
+

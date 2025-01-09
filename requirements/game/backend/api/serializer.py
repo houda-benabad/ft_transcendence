@@ -75,7 +75,6 @@ class PlayerSerializer( serializers.ModelSerializer ):
 			elif isinstance(game, MultiplayerGame):
 				serializer = GameSerializer(game, context={"current_player": obj}, model=MultiplayerGame).data
 			serializedGameHistory.append( serializer )
-		print( "DATA = ", serializedGameHistory )
 		return serializedGameHistory
 
 # LEADERBORAD

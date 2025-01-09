@@ -7,6 +7,8 @@ from django.conf import settings
 from .permissions import AuthenticationUsingJWT
 from rest_framework.views import APIView
 
+from game.models import Player
+
 class MeDetailView( generics.RetrieveAPIView ):
 	queryset = Player.objects.all(  )
 	serializer_class = PlayerSerializer
@@ -14,12 +16,7 @@ class MeDetailView( generics.RetrieveAPIView ):
 
 	def get_object( self ):
 		user_info = self.request.user_info
-		player = Player.objects.all( ).first( )
-		player, created = Player.objects.get_or_create( 
-			userId=user_info.get('id'), 
-			defaults={
-				"username" : user_info.get( 'username' ),
-				"userId" : user_info.get('id') })
+		player = Player. objects.get( userId=user_info.get('id') )
 		return player
 
 class PlayerDetailView( generics.RetrieveAPIView ):
@@ -27,30 +24,27 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 	queryset = Player.objects.all(  )
 	serializer_class = PlayerSerializer
 
-	def retrieve( self, request, *args, **kwargs ):
+	def get_object( self ):
 		try: 
 			userId = kwargs.get( 'userId' )
-			# ADD IT ENV FILE
 			response = requests.get( settings.USER_INFO_URL + str( userId ), headers={"Host": "localhost"})
 			
 			if response.status_code != 200:
 				return Response({"detail":response.json()['detail']}, status=response.status_code)
 			
 			user_info = response.json(  )
-			player, created = Player.objects.get_or_create( 
-				userId=userId, 
-				defaults={
-					"username" : user_info.get( 'username' ),
-					"userId" : userId })
-			
-			return super().retrieve(request, *args, **kwargs)
+			return Player.objects.get( userId=userId )
+
 		except Exception as e:
 			Response({'detail' : 'Error ocurred during operation'})
 
-
 class NewPlayerView( APIView ):
-   def  post(self, request, *args, **kwargs):
-       print( "REQUEST = ", request )
+	def  post(self, request, *args, **kwargs):
+		userId = request.POST.get('userId')
+		username = request.POST.get('username')
+		new_player = Player.objects.create( userId=userId, username=username )
+		new_player.save( )
+		return Response({"detail" : "player created successfully"})
 
 # working fine
 class leaderBoardView( generics.ListAPIView ):

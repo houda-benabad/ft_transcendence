@@ -1,12 +1,12 @@
 import { ACTIONS } from "../constants/logic.js"
-import { WORLD } from "../constants/engine.js"
 import visualsManager from "./visualManager.js"
 import inputManager from "./inputManager.js"
 import Engine from "../utils/engine.js"
 import Components from "../utils/components.js"
 import appCanva from "./canvaManager.js"
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
-// import { modalService } from "../services/modalService.js"
+import { modalService } from "../services/modalService.js"
+import { MODE, WORLD } from "../constants/engine.js"
 
 
 export default class Remote{
@@ -18,7 +18,11 @@ export default class Remote{
 		this.components = new Components(this.engine, this.mode)
 		this.visual = new visualsManager(this.components, this.mode)
 		this.input = new inputManager( this.components, this.mode )
-		this.canva = new appCanva( ["player1", "player2"] )
+		if( this.mode == MODE.REMOTE )
+			this.canva = new appCanva( ["player1", "player2"] )
+		else
+			console.log( "ye3ni" )
+			this.canva = new appCanva( ["team1", "team2"] )
 	}
 
 	setup(){
@@ -42,6 +46,7 @@ export default class Remote{
 	}
 
 	updateApi( data ){
+		console.log( "api = ", data )
 		this.visual.updateCoordinates( data )
 	}
 
@@ -50,8 +55,6 @@ export default class Remote{
 	}
 
 	updateStart(  ){
-		// modalService.show( " You won" )
-		console.log( "starting game" )
 		this.canva.add( "score" )
 		this.canva.remove( "waiting" )
 	}

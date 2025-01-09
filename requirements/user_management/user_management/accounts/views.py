@@ -6,27 +6,44 @@ from Profiles.models import Profile
 from rest_framework.response import Response
 import urllib
 from rest_framework.views import APIView
-from rest_framework import status, permissions
+from rest_framework import status, permissions, exceptions
 from django.conf import settings
 from django.urls import reverse
 from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
 import logging
+
 logging.basicConfig(level=logging.DEBUG)  
 
-logger = logging.getLogger("accounts.views")
+logger = logging.getLogger("accounts.views") 
 User = get_user_model()
 
-class   CustomUserViewSet(UserViewSet):
-    # permission_classes = [permissions.IsAuthenticated]
+class   OAuthError(Exception):
     
+    def __init__(self, detail, status_code):
+        self.detail = detail
+        self.status_code = status_code
+        super().__init__(self.detail)
+
+class Error(exceptions.APIException):
+
+    def __init__(self, detail, status_code):
+        self.detail = detail
+        self.status_code = status_code
+        super().__init__(self.detail)
+
+class   CustomUserViewSet(UserViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
         try :
-            requests.get("http://game:8001/api/game/new_player", headers={"Host":"localhost"})
+            response = requests.post("http://game:8000/api/game/new_player", data = {"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
+            if response.status_code != status.HTTP_200_OK:
+                raise Error(detail="error in the new_player response", status_code = response.status_code)
+        except requests.RequestException as e:
+            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
         except Exception as e:
-            logger.debug("connection refused")
-            
+            raise Error(detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class   IntraAuth(APIView):
     
@@ -46,13 +63,6 @@ class   IntraAuth(APIView):
 
 intra_auth_view = IntraAuth.as_view()
 
-
-class   OAuthError(Exception):
-    
-    def __init__(self, message, status_code):
-        self.message = message
-        self.status_code = status_code
-        super().__init__(self.message)
 
 class   IntraCallback(APIView):
     
@@ -81,9 +91,9 @@ class   IntraCallback(APIView):
             refresh = RefreshToken.for_user(intra_user)
             access = refresh.access_token
         except OAuthError as e:
-            return Response({"detail": str(e.message)}, status=e.status_code)
+            return Response({"detail": str(e.detail)}, status=e.status_code)
         except Exception as e:  
-            return Response({"detail": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": f"Internal server error {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({"refresh": str(refresh), "access": str(access)}, status=status.HTTP_200_OK)
     
@@ -109,8 +119,8 @@ class   IntraCallback(APIView):
             if not access_token:
                 raise OAuthError('No access token in response', status.HTTP_401_UNAUTHORIZED)
         
-        except requests.exceptions.HTTPError as http_err:
-            raise OAuthError("code exchange with access token failed", http_err.response.status_code)
+        except requests.exceptions.HTTPOAuthError as http_err:
+            raise OAuthError(f"code exchange with access token failed {str(HTTPOAuthError)}", http_err.response.status_code)
         except requests.exceptions.RequestException as e:
             raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
         
@@ -132,11 +142,11 @@ class   IntraCallback(APIView):
                 "image_url" : ((user_info["image"])["versions"])["medium"]
             }
         
-        except requests.exceptions.HTTPError as http_err:
-            raise OAuthError("getting user info failed", http_err.response.status_code)
+        except requests.exceptions.HTTPOAuthError as http_err:
+            raise OAuthError(f"getting user info failed {str(http_err)}", http_err.response.status_code)
         except requests.exceptions.RequestException as e:
             raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
-        except KeyError as key_err:
+        except KeyOAuthError as key_err:
             raise OAuthError(f"Invalid user info structure received {str(key_err)}", status.HTTP_500_INTERNAL_SERVER_ERROR)
         return data
 
