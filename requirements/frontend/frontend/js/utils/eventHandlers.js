@@ -45,6 +45,7 @@ export const eventHandlers =
         },
         gameFormHandler( event, resolve )
         {
+            console.log('im in hereeee')
             const form = document.querySelector( 'form' )
 
             event.preventDefault(  )
@@ -52,6 +53,17 @@ export const eventHandlers =
             let data = new FormData( form );
             let gameSettings = Object.fromEntries( data )
             resolve( gameSettings )
+        },
+        addPasswordForm(event, resolve)
+        {
+            event.preventDefault()
+
+            const form = document.querySelector( 'form' )
+            const data = new FormData(form)
+            let   formObject = {}
+            
+            data.forEach((value, key) => { formObject[key] = value })
+            resolve(formObject)
         }
     },
     router : 
@@ -115,33 +127,6 @@ export const eventHandlers =
             num.innerHTML = `${input.value}`
         }
     },
-    settings :
-    {
-        updateImage(  )
-        {
-            console.log( 'the image is to be updated' )
-        },
-        deleteImage(  )
-        {
-            console.log( 'the image is to be deleted' )
-        },
-        saveUsername(  )
-        {
-            console.log( 'a new username got to be updated' )
-        },
-        addPassword(  )
-        {
-            console.log( 'update the user password' )
-        },
-        twofa(  )
-        {
-            console.log( 'two fa was activated or desactivated' )
-        },
-        deleteAccount(  )
-        {
-            console.log( 'the account need to be deleted' )
-        }
-    },
     removeModalHandler( event, resolve ) // what type of function is this
     {
         const modalBackground = document.getElementById( 'modal-background' )
@@ -150,7 +135,7 @@ export const eventHandlers =
         {
             eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
             modalBackground.remove(  )
-            resolve(  )
+            resolve(  ) // do i really need to resolve
         }
         else if (!event)
         {

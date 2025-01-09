@@ -20,7 +20,7 @@ export class Router
     async init() // this needs cleansing and to make it more maintenable
     {
         
-        console.log('token : ', _tokenService.isAuthenticated())
+        // console.log('token : ', _tokenService.isAuthenticated())
         if (_tokenService.isAuthenticated())
         {
             await reset()
@@ -36,14 +36,15 @@ export class Router
     }
     handleRoute(newPath=null)
     {
+        // console.log('new path is : ', newPath)
         const path = newPath || window.location.pathname
 
         if (!_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
         else if (_tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
             this.navigateTo('/')
-        // else if (path === '/game')
-        //     this.navigateTo('/')
+        else if (path === '/game')
+            this.navigateTo('/')
         else
             this.navigateTo(path)
     }

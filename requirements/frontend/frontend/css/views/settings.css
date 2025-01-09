@@ -36,6 +36,10 @@ settings-view
                 gap : 1vw;
             }
           
+            input 
+            {
+                display: none;
+            }
         }
         #user-username
         {

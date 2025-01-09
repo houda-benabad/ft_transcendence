@@ -23,5 +23,26 @@ export const modalTemplate =
                     </form>
                 </div>
             </div>`)
+    },
+    addPasswordForm()
+    {
+        console.log('i, ihejkej')
+        return (`
+            <div id="modal-background">
+               <div id="modal" class="modal-special">
+                   <h2>add password</h2>
+                   <form id="add-password">
+                        <label for='current-password'>current Password</label>
+                        <input type='password' id='current-password' name='current-password' required>
+
+                        <label for='new-password'>new Password</label>
+                        <input type='password' id='new-password' name='new-password' required>
+
+                         <label for='confirm-password'>confirm Password</label>
+                        <input type='password' id='confirm-password' name='confirm-password' required>
+                        <button type='submit' id='submit' class='button-type4'>Save</button>
+                   </form>
+               </div>
+           </div>`)
     }
 }

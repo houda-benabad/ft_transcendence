@@ -85,7 +85,7 @@ class ApiService
 
         const url = params ? `${endpoint}?${params.key}=${encodeURIComponent(params.value)}` : endpoint
         // console.log('->>>> url : ', url)
-        console.log('config : ', this._requestConfig)
+        // console.log('config : ', this._requestConfig)
         try{
             const response = await fetch(url , {
                 method,
@@ -95,7 +95,7 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            console.log('response : ', response)
+            // console.log('response : ', response)
             if (needsAuth && response.status === 401) // this needs to be implemented in a maintenabale and cleam way
                 {
                     console.log('->>>>>>> access token was expired')

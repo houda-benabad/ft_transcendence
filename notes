@@ -4,10 +4,9 @@ import { _tokenService } from '../utils/global.js'
 import { reset } from '../utils/utils.js'
 import { router } from '../utils/global.js'
 import { MODE } from '../constants/engine.js'
-import { remote } from '../mods/remote.js'
-import { modalService } from '../services/modalService.js'
 import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
+import { modalService } from '../services/modalService.js'
 
 export class EventManager
 {
@@ -22,20 +21,104 @@ export class EventManager
         this._actionType = 
         {
             'router' : this.handleNavigation.bind(this),
-            'profile' : this.handleProfileIcons.bind(this),
-            'friends' : this.handleFriendsIcons.bind(this),
+            'edit_profile'  : this.handleEdit.bind(this),
+            'friendship' : this.handleFriendship.bind(this),
             'play_game' : this.handleGame.bind(this),
-            'intra' : this.handleIntraCall.bind(this),
             'update_image' : this.handleImgUpdate.bind(this),
-            'save_username' : this.handleNewUsername.bind(this),
-            'delete_image' : this.handleDeleteOfImage.bind(this),
-            'add_password' : this.handleAddOfPassword.bind(this),
+            'save_username' : this.handleNewUsername.bind(this)
         }
-    } 
-    async handleIntraCall(target)
-    {
-        apiService.auth.intraCall()
     }
+    async handleFriendship(target)
+    {
+        const action = target.getAttribute('action-type')
+        const userId = target.getAttribute('userId')
+        const mainElement = target.closest(['[class="icons"]'])
+
+        // console.log('main Element : ', mainElement)
+        // console.log('in here : ', userId)
+        // console.log('target : ', target)
+        if (action === 'send_request' || action === 'accept_request')
+        {
+            await apiService.friendship.postFriendship(action, userId)
+            if (action === 'send_request')
+                mainElement.relationshipStatus = 'requested'
+            else
+                mainElement.relationshipStatus = 'friend'
+        }
+        else if (action === 'remove_friend' || action === 'cancel_request')
+        {
+            await apiService.friendship.deleteFriendship(action, userId)
+            mainElement.relationshipStatus = 'stranger'
+        }
+    }
+    async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
+    {
+        event.preventDefault()
+        
+        const action = target.getAttribute("data-action")
+        const form = document.querySelector('form')
+
+        const formData = new FormData(form)
+        if (action === 'signin' || action === 'signup')
+        {
+            const formObject = {}
+    
+            formData.forEach((value, key) => { formObject[key] = value }) // add the tournament form  and the game one .
+            // console.log('action : ', action)
+            const response = await apiService.auth[action](formObject)
+
+            if (action  === 'signup')
+                setTimeout(() => router.handleRoute('/signin'), 1000)
+             else
+            {
+                _tokenService.tokens= response
+                console.log('response : ', response)
+                await reset()
+                router.handleRoute('/')
+            }
+        }
+        // else if (action === 'game-settings')
+        // {
+        //     let gameSettings = Object.fromEntries(formData) // what is the difference
+        //     console.log('->>>here : ', gameSettings)
+        // }
+    }
+    // async handleSendRequest(target)
+    // {
+    //     // dry
+    //     const action = target.getAttribute('action')
+    //     const userId = target.getAttribute('userId')
+
+    //     await apiService.profile.postFriendship(`${action}/${userId}`)
+    //     target.action = 'cancel_request'
+    // }
+    // async handleAcceptRequest(target)
+    // {
+    //     // dry
+    //     const action = target.getAttribute('action')
+    //     const userId = target.getAttribute('userId')
+        
+    //     await apiService.profile.postFriendship(`${action}/${userId}`)
+    //     target.action = 'to_profile'
+    // }
+    // async handleRemoveFriend(target)
+    // {
+    //     //dry
+    //     const action = target.getAttribute('action')
+    //     const userId = target.getAttribute('userId')
+
+    //     await apiService.profile.deleteFriendship(`${action}/${userId}`)
+    //     target.action = 'send_request'
+    // }
+    // async handleCancelRequest()
+    // {
+    //     //dry
+    //     const action = target.getAttribute('action')
+    //     const userId = target.getAttribute('userId')
+
+    //     await apiService.profile.deleteFriendship(`${action}/${userId}`)
+    //     target.action = 'send_request'
+    // }
     handleEventDelegation(event)
     {
         const eventType = event.type
@@ -50,75 +133,12 @@ export class EventManager
             this.handleAnchorEvents(event, target)
         else if (eventType === 'click' && target.matches('button'))
             this.handleButtonEvents(target)
-        else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
+        else if (target.matches('form') && eventType === 'submit') // do not need that eventType submit
             this.handleformEvents(event, target)
-        else if (eventType === 'input' && target.id === 'search-input') // when cleansing
+        else if (eventType === 'input' && target.id === 'search-input')
             this.handleSearchInput(event, target)
-        else if (eventType === 'input' && target.id === 'user-input-img')
-            this.handleInputFiles(target)
         else if (eventType === 'click' && target.classList.contains('search-item'))
             this.handleSearchItem(target)
-    }
-    async handleProfileIcons(target)
-    {
-        const action = target.getAttribute('action-type')
-        const id = target.getAttribute('id')
-        const mainElement = target.closest(['[class="icons"]'])
-
-        // console.log('main Element : ', mainElement)
-        // console.log('in here : ', userId)
-        // console.log('target : ', target)
-        if (action === 'send_request' || action === 'accept_request')
-        {
-            await apiService.friendship.postFriendship(action, id)
-            if (action === 'send_request')
-                mainElement.relationshipStatus = 'requested'
-            else
-                mainElement.relationshipStatus = 'friend'
-        }
-        else if (action === 'remove_friend' || action === 'cancel_request' || action === 'reject_request')
-        {
-            await apiService.friendship.deleteFriendship(action, id)
-            mainElement.relationshipStatus = 'stranger'
-        }
-        else 
-            router.handleRoute('/settings')
-    }   
-    async handleFriendsIcons(target)
-    {
-        const action = target.getAttribute('action-type')
-        const id = target.getAttribute('id')
-
-        // console.log('here  id  : ', id)
-        // console.log('target : ', target)
-        if (action === 'send_request' || action === 'accept_request')
-            await apiService.friendship.postFriendship(action, id)
-        else
-            await apiService.friendship.deleteFriendship(action, id)
-    }
-    async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
-    {
-        event.preventDefault()
-        
-        const action = target.getAttribute("data-action")
-        const form = document.querySelector('form')
-
-        const formData = new FormData(form)
-        if (action === 'signin' || action === 'signup')
-        {
-            const formObject = {}
-            formData.forEach((value, key) => { formObject[key] = value})
-            const response = await apiService.auth[action](formObject)
-
-            if (action  === 'signup')
-                setTimeout(() => router.handleRoute('/signin'), 1000)
-             else
-            {
-                _tokenService.tokens= response
-                await reset()
-                router.handleRoute('/')
-            }
-        }
     }
     handleSearchFocus()
     {
@@ -173,7 +193,7 @@ export class EventManager
 
         if (action)
         {
-            // console.log('action : ', action)
+            console.log('->>>action : ', action)
             const runAction = this._actionType[action]
 
             runAction(target)
@@ -185,18 +205,18 @@ export class EventManager
 
         if ( gameMode === MODE.LOCAL ){
             await router.navigateTo( '/game-settings' )
-            this.gameSettings = await formService.game()
-            router.navigateTo( '/game' )
+            this.gameSettings = await formService.game(  )
+            router.navigateTo( './game' )
             await local( this.gameSettings , ["player1", "player2"])
             await modalService.show(  'Game over', 'hihi' )
             await reset(  )
             router.navigateTo( '/' )
         }
         else if ( gameMode == MODE.TOURNAMENT){
-            const players = await modalService.show(  '', false, 'tournament' ) // the alias names for the players 
+            const players = await modalService.show(  '', 'tournament' ) // the alias names for the players 
             await router.navigateTo( '/game-settings' )
             this.gameSettings = await formService.game(  )
-            router.navigateTo( '/game' )
+            router.navigateTo( './game' )
             const winners = []
             winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
             winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
@@ -206,10 +226,7 @@ export class EventManager
             router.navigateTo( '/' )
         }
         else if ( gameMode == MODE.REMOTE ){
-            await remote( )
-            // await modalService.show(  'Game over', 'hihi' )
-            await reset(  )
-            router.navigateTo( '/' )
+            remote(  )
         }
         console.log('in hereee hajar u should take the functions from event handlers and out it in here: ' , gameMode)
 
@@ -218,64 +235,34 @@ export class EventManager
     {
         const newPath = target.getAttribute('href')
 
-        if (newPath === '/logout')
-            this.handleLogout()
-        else
-       
         router.handleRoute(newPath)
     }
-    handleLogout()
+    handleEdit()
     {
-        document.getElementById('app').classList.remove('active')
-        _tokenService.clear()
-        router.handleRoute('/signin')
+        router.handleRoute('/settings')
     }
     handleImgUpdate(target)
     {
-        console.log('hallo im here')
         const input = document.getElementById('user-input-img')
 
         input.click()
-        // input.addEventListener('change', this.handleInputFiles(input)) // not clean at all
+        input.addEventListener('change', () =>
+        {
+            const file = input.files[0]
+            const formData = new FormData()
+
+            formData.append('image', file)
+
+            //some work needs to be done in here
+        })
     }
-    handleInputFiles(target)
-    {
-        const file = target.files[0]
-        const formData = new FormData()
-
-        formData.append('image', file) // this would be sent to backend with its original form (binary)
-        const temporaryFilePath = URL.createObjectURL(file)
-        const img = document.getElementById('tobe-updated-img')
-
-        img.src = temporaryFilePath
-
-        modalService.show('updated the image successfully', true)
-    }
-    handleDeleteOfImage(target)
-    {
-        //fetch to backend to delete image, and the final response i will take that and apply it as image
-        //for now
-
-        const img = document.getElementById('tobe-updated-img')
-
-        img.src = ''
-        modalService.show('deleted the image successfully', true)
-    }
-    async handleAddOfPassword(target)
-    {
-        const response = await modalService.show('', false, 'add-password')
-
-        console.log('response : ', response) // to be fetched to backend
-    }
-    async handleNewUsername(target)
+    handleNewUsername(target)
     {
         const input = document.getElementById('username-to-save')
-        const inputValue = input.value
+        const inputValue = input.value // this is the value we will be sending to the backend.8
 
-        if (!inputValue || inputValue.includes(' '))
+        if (!inputValue || inputValue.includes(' ')) // valid username
             return modalService.show('enter a valid username')
-        console.log('value  : ', inputValue) // fetch to backend with this one
-        await modalService.show('updated the username successfully', true)
-        input.value = ""
+        console.log('value  : ', inputValue)
     }
 }
