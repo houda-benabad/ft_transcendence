@@ -6,6 +6,7 @@ import { Notification } from "./notification.js"
 const _tokenService = new TokenService()
 const router = new Router()
 const eventListeners = new eventService()
-const notificationSocket = new Notification( )
+// const notificationSocket = new Notification( )
 
-export {_tokenService, router, eventListeners, notificationSocket}
+export {_tokenService, router, eventListeners}
+// export {_tokenService, router, eventListeners, notificationSocket}

@@ -9,7 +9,8 @@ import { multiplayer } from '../mods/multiplayer.js'
 import { modalService } from '../services/modalService.js'
 import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
-import { notificationSocket } from '../utils/global.js'
+// import { notificationSocket } from '../utils/global.js'
+import notificationSocket from '../app.js'
 
 export class EventManager
 {
@@ -91,6 +92,7 @@ export class EventManager
 
         if (action === 'send_request')
         {
+            console.log( "notif = ", notificationSocket)
             notificationSocket.send( JSON.stringify( {
                 "type": "notification",
                 "data" : {
@@ -146,7 +148,7 @@ export class EventManager
             console.log('->>>>>>>>>>>my searched results after lost focus : ', searchResults)
             if (!searchResults.classList.contains('clicked'))
                 searchService.clear()
-        }, 1000)
+        }, 5000)
         console.log('IM OUT OF FOCUSSSSS OUYTTTTTT')
     }
     handleSearchItem(target)
