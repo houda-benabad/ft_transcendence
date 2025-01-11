@@ -112,6 +112,11 @@ services:
 
   notification:
     container_name: notification
+    depends_on:
+      user_management:
+          condition: service_started
+      postgres:
+        condition: service_healthy
     build:
       context: ./requirements/notification/
       dockerfile: Dockerfile
@@ -120,8 +125,11 @@ services:
     restart: on-failure
     networks:
       - transcendence
-    # volumes:
-    #   - notifvolume:/usr/src/notification
+    env_file:
+      - .env
+    volumes:
+      - ./requirements/notification/:/usr/src/notification
+      # - .notifvolume:/usr/src/notification
 
 networks:
   transcendence:

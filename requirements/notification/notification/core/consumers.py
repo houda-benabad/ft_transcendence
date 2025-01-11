@@ -3,15 +3,17 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import Notification
 from .utils import *
-
+import requests
+from django.conf import settings
 
 class NotifConsumer(AsyncWebsocketConsumer):
 
 	async def setup( self ) -> None:
 		try:
-			self.username =  self.scope['url_route']['kwargs']['username']
 			self.group_name = f"group_{self.username}"
 			await self.channel_layer.group_add( self.group_name, self.channel_name )
+			notifications = await get_all_notifications( self.username )
+			await self.send( text_data=json.dumps(notifications) )
 		except Exception as e:
 			print( f"setup failed: {e}" )
 			self.close( 400 )
@@ -19,10 +21,6 @@ class NotifConsumer(AsyncWebsocketConsumer):
 	async def connect( self ):
 		try:
 			await self.accept(  )
-			await self.setup(  )
-			if self.username:
-				notifications = await get_all_notifications( self.username )
-				await self.send( text_data=json.dumps(notifications) )
 		except Exception as e:
 			print( f"Connection failed: {e}")
 			self.close( 400 )
@@ -57,7 +55,22 @@ class NotifConsumer(AsyncWebsocketConsumer):
 			'type' : "update_notification",
 			'data' : serialize_notifications( notification, many=False)
 		} ))
-  
+	
+	async def _handle_auth( self, token ):
+		# try:
+			response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'authorization': f"Bearer {token}" })
+			print("token = ", token)
+			if response.status_code != 200:
+				self.disconnect( 404 )
+				# raise( "Connection rejected" )
+
+			user_info = response.json(  )
+			print("info = ", user_info)
+			# self.userId = user_info.get('id') , 
+			# self.username = user_info.get('username')
+		# except Exception:
+		# 	print( "connection rejected" )
+		# 	# raise( "Connection rejected" )
 
 	async def receive(self, text_data):
 		try:
@@ -69,6 +82,10 @@ class NotifConsumer(AsyncWebsocketConsumer):
 				await self.send_notification_( data )
 			elif message_type == 'update':
 				await self.update_notification( data )
+			elif message_type == 'auth' :
+				print(" toekn = ", dataJson['data'])
+				await self._handle_auth( dataJson['data'])
+				await self.setup(  )
 
 		except Exception as e:
 			print( f"Error happned: {e}")
