@@ -22,6 +22,7 @@ export class ProfileView extends HTMLElement
 
     async connectedCallback() 
     {
+        // console.log('im in heree --- : ', this._userId)
         this._database = await apiService.user.getProfileInfos(this._userId)
 
         if (this._database === 'not found')

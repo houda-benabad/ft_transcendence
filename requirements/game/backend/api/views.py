@@ -15,7 +15,9 @@ class MeDetailView( generics.RetrieveAPIView ):
 	permission_classes = [ AuthenticationUsingJWT ]
 
 	def get_object( self ):
+		
 		user_info = self.request.user_info
+		print( " user = ", user_info)
 		player = Player. objects.get( userId=user_info.get('id') )
 		return player
 
@@ -26,7 +28,8 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 
 	def get_object( self ):
 		try: 
-			userId = kwargs.get( 'userId' )
+			userId = self.kwargs.get( 'userId' )
+			# print( "hhi = ", self.kwargs.get( "userId" ))
 			response = requests.get( settings.USER_INFO_URL + str( userId ), headers={"Host": "localhost"})
 			
 			if response.status_code != 200:

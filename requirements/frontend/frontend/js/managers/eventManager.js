@@ -9,6 +9,7 @@ import { multiplayer } from '../mods/multiplayer.js'
 import { modalService } from '../services/modalService.js'
 import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
+import { notificationSocket } from '../utils/global.js'
 
 export class EventManager
 {
@@ -54,7 +55,7 @@ export class EventManager
             this.handleButtonEvents(target)
         else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
             this.handleformEvents(event, target)
-        else if (eventType === 'input' && target.id === 'search-input') // when cleansing
+        if (eventType === 'input' && target.id === 'search-input') // when cleansing
             this.handleSearchInput(event, target)
         else if (eventType === 'input' && target.id === 'user-input-img')
             this.handleInputFiles(target)
@@ -63,6 +64,7 @@ export class EventManager
     }
     async handleProfileIcons(target)
     {
+        // send new request notification
         const action = target.getAttribute('action-type')
         const id = target.getAttribute('id')
         const mainElement = target.closest(['[class="icons"]'])
@@ -85,6 +87,19 @@ export class EventManager
         }
         else 
             router.handleRoute('/settings')
+
+
+        if (action === 'send_request')
+        {
+            notificationSocket.send( JSON.stringify( {
+                "type": "notification",
+                "data" : {
+                "sender" : "hind",
+                "receiver" : "hajar",
+                "content" : "lets play a game"
+                }
+            } ) )
+        }
     }   
     async handleFriendsIcons(target)
     {
@@ -128,14 +143,15 @@ export class EventManager
         {
             const searchResults = document.getElementById('search-results') // dry
 
-            // console.log('my searched results after lost focus : ', searchResults)
+            console.log('->>>>>>>>>>>my searched results after lost focus : ', searchResults)
             if (!searchResults.classList.contains('clicked'))
                 searchService.clear()
-        }, 100)
+        }, 1000)
+        console.log('IM OUT OF FOCUSSSSS OUYTTTTTT')
     }
     handleSearchItem(target)
     {
-        // console.log('im in hereee !!!')
+        console.log('im in hereee !!!')
         const searchResults = document.getElementById('search-results')
         const id = target.id
 
