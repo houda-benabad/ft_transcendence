@@ -1,111 +1,59 @@
 export const database = 
  [
     {
-    rank : 1,
-    username : 'hello',
-    user_id : 2,
-    total_games : 1200
+        sender : "houda",
+        content : "sent you a friend request",
+        profile_pic : "../assets/componants/user.jpeg",
+        time : "2 min ago",
+        seen : false
     },
     {
-        rank : 1,
-        username : 'hello',
-        user_id : 2,
-        total_games : 1200
+        sender : "houda",
+        content : "sent you a friend request",
+        profile_pic : "../assets/componants/user.jpeg",
+        time : "2 min ago",
+        seen : false
     },
     {
-        rank : 1,
-        username : 'hello',
-        user_id : 2,
-        total_games : 1200
+        sender : "houda",
+        content : "sent you a friend request",
+        profile_pic : "../assets/componants/user.jpeg",
+        time : "2 min ago",
+        seen : true
     },
     {
-        rank : 1,
-        username : 'hello',
-        user_id : 2,
-        total_games : 1200
-        },
-        {
-            rank : 1,
-            username : 'hello',
-            user_id : 2,
-            total_games : 1200
-        },
-        {
-            rank : 1,
-            username : 'hello',
-            user_id : 2,
-            total_games : 1200
-        },
-        {
-            rank : 1,
-            username : 'hello',
-            user_id : 2,
-            total_games : 1200
-            },
-            {
-                rank : 1,
-                username : 'hello',
-                user_id : 2,
-                total_games : 1200
-            },
-            {
-                rank : 1,
-                username : 'hello',
-                user_id : 2,
-                total_games : 1200
-            },
-            {
-                rank : 1,
-                username : 'hello',
-                user_id : 2,
-                total_games : 1200
-                },
-                {
-                    rank : 1,
-                    username : 'hello',
-                    user_id : 2,
-                    total_games : 1200
-                },
-                {
-                    rank : 1,
-                    username : 'hello',
-                    user_id : 2,
-                    total_games : 1200
-                },
-                {
-                    rank : 1,
-                    username : 'hello',
-                    user_id : 2,
-                    total_games : 1200
-                    },
-                    {
-                        rank : 1,
-                        username : 'hello',
-                        user_id : 2,
-                        total_games : 1200
-                    },
-                    {
-                        rank : 1,
-                        username : 'hello',
-                        user_id : 2,
-                        total_games : 1200
-                    },
-                    {
-                        rank : 1,
-                        username : 'hello',
-                        user_id : 2,
-                        total_games : 1200
-                        },
-                        {
-                            rank : 1,
-                            username : 'hello',
-                            user_id : 2,
-                            total_games : 1200
-                        },
-                        {
-                            rank : 1,
-                            username : 'hello',
-                            user_id : 2,
-                            total_games : 1200
-                        }
+        sender : "houda",
+        content : "sent you a friend request",
+        profile_pic : "../assets/componants/user.jpeg",
+        time : "2 min ago",
+        seen : true
+    },
+    {
+        sender : "houda",
+        content : "sent you a friend request",
+        profile_pic : "../assets/componants/user.jpeg",
+        time : "2 min ago",
+        seen : true
+    },
+    {
+        sender : "houda",
+        content : "sent you a friend request",
+        profile_pic : "../assets/componants/user.jpeg",
+        time : "2 min ago",
+        seen : true
+    },
+    {
+        sender : "houda",
+        content : "sent you a friend request",
+        profile_pic : "../assets/componants/user.jpeg",
+        time : "2 min ago",
+        seen : true
+    },
+    {
+        sender : "houda",
+        content : "sent you a friend request",
+        profile_pic : "../assets/componants/user.jpeg",
+        time : "2 min ago",
+        seen : true
+    },
 ]

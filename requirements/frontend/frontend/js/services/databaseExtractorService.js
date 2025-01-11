@@ -10,7 +10,8 @@ export class databaseExtractorService
             'profile' : this.extractDataForProfile.bind(this),
             'gameHistory' : this.extractDataForGameHistory.bind(this),
             'friends' : this.extractDataForFriends.bind(this),
-            'leaderboard' : this.extractDataForLeaderboard.bind(this)
+            'leaderboard' : this.extractDataForLeaderboard.bind(this),
+            'notifications' : this.extractDataForNotifications.bind(this),
         }
 
         const extracted = extractionType[type]
@@ -135,6 +136,18 @@ export class databaseExtractorService
         }
         // console.log('here in the extractor : ', IconType[type])
         return (ActionType[type])
+    }
+    extractDataForNotifications()
+    {
+        return this._database.map(obj => (
+        {
+            sender : obj.sender,
+            content : obj.content,
+            profilePic : obj.profile_pic,
+            time : obj.time,
+            seen : obj.seen
+        })
+        )
     }
 }
 

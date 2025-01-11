@@ -132,7 +132,7 @@ export const profileTemplate  =
                 <img src='${escapeHtml(e.profilePic)}'>
                 <div class="user-infos">
                     <p class="username">${escapeHtml(e.username)}</p>
-                    <p class="other">${e.other}</p>
+                    <p class="other">${escapeHtml(e.other)}</p>
                 </div>
             `
             const icons = document.createElement('div', {is : 'custom-icons'})

@@ -9,7 +9,14 @@ import { multiplayer } from '../mods/multiplayer.js'
 import { modalService } from '../services/modalService.js'
 import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
+import { database } from '../constants/database.js'
+import { databaseExtractorService } from '../services/databaseExtractorService.js'
+import { eventListeners } from '../utils/global.js'
+import { escapeHtml } from '../utils/security.js'
 
+
+
+/// this is not maintenable and messy
 export class EventManager
 {
     constructor(router)
@@ -32,6 +39,7 @@ export class EventManager
             'delete_image' : this.handleDeleteOfImage.bind(this),
             'add_password' : this.handleAddOfPassword.bind(this),
             'cancel' : this.handleCancelButton.bind(this),
+            'handle-notifications' : this.handleNotifications.bind(this)
         }
     } 
     async handleIntraCall(target)
@@ -43,13 +51,15 @@ export class EventManager
         const eventType = event.type
         const target = event.target
 
-        console.log('event type : ', eventType)
-        console.log('event target : ', target)
+        // console.log('event type : ', eventType)
+        // console.log('event target : ', target)
 
         if (eventType === 'focusout' && target.id === 'search-input')
             this.handleSearchFocus()
         else if (eventType === 'click' && target.matches('a'))
             this.handleAnchorEvents(event, target)
+        else if (eventType === 'click' && target.getAttribute('data-action') === 'clear-notifications')
+            this.handleClearNotifications(event, target)
         else if (eventType === 'click' && target.matches('button'))
             this.handleButtonEvents(target)
         else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
@@ -168,6 +178,13 @@ export class EventManager
 
             runAction(target)
         }
+    }
+    handleClearNotifications(event, target)
+    {
+
+        const action = target.getAttribute("data-action")
+        
+        console.log('action  : ', action)
     }
     handleCancelButton( target ){
         console.log( " waaaa3")
@@ -290,4 +307,57 @@ export class EventManager
         await modalService.show('updated the username successfully', true)
         input.value = ""
     }
+   handleNotifications(target)
+   {
+        const db1 = database
+        const databaseExtractor = new databaseExtractorService(db1)
+        const db = databaseExtractor.extractData('notifications')
+
+        const notificationResults = document.getElementById('notification-results')
+
+        const html = '<div id="modal-background" style="display : block;"</div>'
+
+        app.insertAdjacentHTML('beforeend', html)
+        notificationResults.style.display = 'block'
+
+        const modalBackground = document.getElementById('modal-background')
+        
+        modalBackground.addEventListener('click', (event) => {
+            if (event && event.target === modalBackground)
+                {
+                    modalBackground.remove( )
+                    notificationResults.style.display = 'none'
+                }
+            })
+            
+            
+        const down = document.getElementById('down')
+        const clear = document.getElementById('clear')
+        if (!db.length)
+        {
+            clear.style.display = 'none'
+            down.innerHTML = "no Notifications at the moment"
+        }
+        else 
+        {
+            db.forEach(e => {
+                const notificationItem = document.createElement('div')
+                notificationItem.classList.add('notification-item')
+
+                const display = e.seen ? 'none' : 'block'
+                notificationItem.innerHTML = 
+                `<img src='${escapeHtml(e.profilePic)}'>
+                <div class="notification-info">
+                    <p class="username">${escapeHtml(e.sender)}</p>
+                    <p class="content">${escapeHtml(e.content)}</p>
+                </div>
+                <div class="other">
+                    <div class="seen" style="display : ${display};"></div>
+                    <p class="notification-time">${escapeHtml(e.time)}</p>
+                </div>
+                `
+                down.appendChild(notificationItem)
+            })
+        }
+   }
 }
