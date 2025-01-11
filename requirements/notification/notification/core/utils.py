@@ -2,13 +2,14 @@ from asgiref.sync import  sync_to_async
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
 from .models import Notification
+from channels.layers import get_channel_layer
 from .serializer import NotificationSerializer
 
-async def create_notification( self, sender_username, data ):
+async def create_notification( userId, data ):
 	receiverId = data['receiver']
 	notification = await sync_to_async( Notification.objects.create )( 
-		sender=self.userId,
-		receiver=receiverId,
+		senderId=userId,
+		receiverId=receiverId,
 		content=data['content']
 	)
 	await sync_to_async( notification.save )(  )
@@ -16,22 +17,24 @@ async def create_notification( self, sender_username, data ):
 
 
 @database_sync_to_async
-def get_all_notifications( userId ):
-	notifications = Notification.objects.filter( receiver=userId )
-	data = serialize_notifications( notifications )
+def get_all_notifications( userId, token ):
+	notifications = Notification.objects.filter( receiverId=userId )
+	data = serialize_notifications( notifications, token )
 	return data
 
 
-def serialize_notifications( notifications, many=True):
-	serializer = NotificationSerializer(notifications, many=many)
+def serialize_notifications( notifications, token, many=True ):
+	serializer = NotificationSerializer(notifications, many=many, token=token)
 	return serializer.data
 
 
-async def send_notification_( self, data ):
+async def send_notification_( data, userId, token ):
+	print( "receiver =",data['receiver'] )
+	channel_layer = get_channel_layer( )
 	group_name = f"group_{data['receiver']}"
-	notification = await self.create_notification( self.username, data )
-	serialized_notification = self.serialize_notifications( notification, many=False)
-	await self.channel_layer.group_send( group_name,{
+	notification = await create_notification( userId, data )
+	serialized_notification = serialize_notifications( notification,token, many=False )
+	await channel_layer.group_send( group_name,{
 		"type" : 'send_notification',
 		'data' : serialized_notification
 	} )

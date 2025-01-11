@@ -17,10 +17,14 @@ export class Notification {
 
     #message( message ){
         const  notifications = JSON.parse( message.data )
+        console.log( message.data )
         notifications.forEach(element => {
-            // console.log( element.keys)
             console.log( `notification form ${element.sender}` )
         });
+    }
+
+    send_msg( type, data ){
+        this.notifSocket.send( JSON.stringify({'type' : type, 'data' : data}) )
     }
 }
     

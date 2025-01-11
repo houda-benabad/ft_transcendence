@@ -112,53 +112,45 @@ from django.conf import settings
 
 class NotifConsumer(AsyncWebsocketConsumer):
 	async def connect( self ):
-		try:
-			await self.accept(  )
-		except Exception as e:
-			print( f"Connection failed: {e}")
-			self.close( 400 )
+		await self.accept(  )
 
 	async def receive(self, text_data):
-		try:
-			dataJson = json.loads(text_data)
-			message_type = dataJson['type']
-			data = dataJson["data"]
-			print( "GOT NEW MESSAAGEE")
-			if message_type == 'notification':
-				print( " WIWIWIWIWI ")
-				await self.send_notification_( data )
+		dataJson = json.loads(text_data)
+		message_type = dataJson['type']
+		data = dataJson["data"]
+		if message_type == 'notification':
+			await send_notification_( data, self.userId , self.token)
+		elif message_type == 'new notification':
+			print("no bliiiz")
+		elif message_type == 'auth' :
+			self.token = dataJson['data']
+			await self._handle_auth( )
+			await self.setup(  )
 
-			elif message_type == 'auth' :
-				await self._handle_auth( dataJson['data'])
-				await self.setup(  )
+	async def _handle_auth( self ):
+		response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'authorization': f"Bearer {self.token}" })
+		if response.status_code != 200:
+			self.disconnect( 404 )
 
-		except Exception as e:
-			print( f"Error happned: {e}")
-			self.close( 400 )
-
-	async def _handle_auth( self, token ):
-		try:
-			response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'authorization': f"Bearer {token}" })
-			if response.status_code != 200:
-				self.disconnect( 404 )
-
-			user_info = response.json(  )
-			self.userId = user_info.get('id') , 
-			self.username = user_info.get('username')
-		except Exception as e:
-			print( f"connection rejected : {e}" )
+		user_info = response.json(  )
+		self.userId = user_info.get('id')
+		self.username = user_info.get('username')
 
 	async def setup( self ) -> None:
-		try:
-			self.group_name = f"group_{self.username}"
-			await self.channel_layer.group_add( self.group_name, self.channel_name )
-			notifications = await get_all_notifications( self.userId )
-			print( "notifications = ", notifications  )
-			await self.send( text_data=json.dumps(notifications) )
-		except Exception as e:
-			print( f"setup failed: {e}" )
-			self.close( 400 )
+		self.group_name = f"group_{self.username}"
+		await self.channel_layer.group_add( self.group_name, self.channel_name )
+		notifications = await get_all_notifications( self.userId, self.token )
+		await self.send( text_data=json.dumps(notifications) )
   
+
+	async def send_notification( self, event ):
+		data = event.get( 'data' )
+		print("no bliiiz")
+		await self.send( text_data=json.dumps({
+			'type' : 'new_notification',
+			'data' : data
+			}))
+     
 
 	async def disconnect(self, close_code):
 		print( "disconnected" )
