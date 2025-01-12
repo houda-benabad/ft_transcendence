@@ -43,6 +43,7 @@ async def send_notification_( data, userId, token ):
 		"type" : 'send_notification',
 		'data' : serialized_notification
 	} )
+	print( "notification sent" )
 
 @database_sync_to_async
 def get_notification_info( self, notification ):

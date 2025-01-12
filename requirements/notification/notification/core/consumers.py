@@ -134,6 +134,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
 		user_info = response.json(  )
 		self.userId = user_info.get('id')
 		self.username = user_info.get('username')
+		print( f"user {self.username} with id = {self.userId} is connected")
 
 	async def setup( self ) -> None:
 		self.group_name = f"user_{self.userId}"
