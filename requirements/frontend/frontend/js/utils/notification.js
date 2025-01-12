@@ -17,10 +17,15 @@ export class Notification {
 
     #message( message ){
         const  notifications = JSON.parse( message.data )
-        console.log( message.data )
-        notifications.forEach(element => {
-            console.log( `notification form ${element.sender}` )
-        });
+        const { type, data } = notifications
+        console.log( "type = ", type)
+        if (type == "all_notifications")
+            data.forEach(element => {
+                console.log( `notification form ${element.sender}` )
+            });
+        else if ( type == 'new_notification'){
+            console.log( `new notification form ${data.sender}` )
+        }
     }
 
     send_msg( type, data ){

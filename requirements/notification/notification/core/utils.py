@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from .models import Notification
 from channels.layers import get_channel_layer
 from .serializer import NotificationSerializer
+# from channels import Group
+import json
 
 async def create_notification( userId, data ):
 	receiverId = data['receiver']
@@ -31,8 +33,11 @@ def serialize_notifications( notifications, token, many=True ):
 async def send_notification_( data, userId, token ):
 	print( "receiver =",data['receiver'] )
 	channel_layer = get_channel_layer( )
-	group_name = f"group_{data['receiver']}"
+
+	group_name = f"user_{data['receiver']}"
+
 	notification = await create_notification( userId, data )
+
 	serialized_notification = serialize_notifications( notification,token, many=False )
 	await channel_layer.group_send( group_name,{
 		"type" : 'send_notification',

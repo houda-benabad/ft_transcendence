@@ -120,8 +120,7 @@ class NotifConsumer(AsyncWebsocketConsumer):
 		data = dataJson["data"]
 		if message_type == 'notification':
 			await send_notification_( data, self.userId , self.token)
-		elif message_type == 'new notification':
-			print("no bliiiz")
+
 		elif message_type == 'auth' :
 			self.token = dataJson['data']
 			await self._handle_auth( )
@@ -137,19 +136,21 @@ class NotifConsumer(AsyncWebsocketConsumer):
 		self.username = user_info.get('username')
 
 	async def setup( self ) -> None:
-		self.group_name = f"group_{self.username}"
+		self.group_name = f"user_{self.userId}"
 		await self.channel_layer.group_add( self.group_name, self.channel_name )
 		notifications = await get_all_notifications( self.userId, self.token )
-		await self.send( text_data=json.dumps(notifications) )
+		await self.send( text_data=json.dumps({
+			'type' : "all_notifications",
+			'data' : notifications
+		}) )
   
-
+ 
 	async def send_notification( self, event ):
 		data = event.get( 'data' )
-		print("no bliiiz")
 		await self.send( text_data=json.dumps({
 			'type' : 'new_notification',
 			'data' : data
-			}))
+	}))
      
 
 	async def disconnect(self, close_code):
