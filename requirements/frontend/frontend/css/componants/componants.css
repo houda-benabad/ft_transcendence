@@ -133,7 +133,7 @@ form {
     background-color: var(--secondary2-hover);
   }     
 }
-.active::before
+.active-notification::before
   {
       content: "";
       height: 12px;
@@ -231,7 +231,7 @@ form {
   }
 }
 
-@media (max-width : 1024px)
+@media (max-width : 750px)
 {
     .iconify
     {

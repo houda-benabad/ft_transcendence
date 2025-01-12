@@ -1,7 +1,7 @@
 export function errorTemplate(type)
 {
     return (`
-        <div class="container" id="error-container">
+        <div id="error-container">
             <h1>404</h1>
             <p>Page not found - -</p>
         </div>
