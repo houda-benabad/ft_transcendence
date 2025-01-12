@@ -9,7 +9,15 @@ export function layoutTemplate()
                 <div id="search-results"></div>
             </div>
             <div class="anchor-box circle">
-                <a href="/notify"><i class="iconify" data-icon="clarity:notification-line" data-inline="false"></i></a>
+                <a href="/notify" data-action="handle-notifications" id="notification"><i class="iconify" data-icon="clarity:notification-line" data-inline="false"></i></a>
+                <div id="notification-results">
+                    <div id="top">
+                        <h2>Notifications</h2>
+                        <p id="clear" data-action="clear-notifications">Clear</p>
+                    </div>
+                    <div id="down">
+                    </div>
+                </div>
             </div>
         </div>
         <div id="navbar">

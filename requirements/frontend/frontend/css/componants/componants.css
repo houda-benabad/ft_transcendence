@@ -127,11 +127,24 @@ form {
 {
   border-radius: 50%;
   background-color: var(--secondary2);
+  position: relative;
   &:hover
   {
     background-color: var(--secondary2-hover);
-  }
+  }     
 }
+.active::before
+  {
+      content: "";
+      height: 12px;
+      width: 12px;
+      background-color: var(--highlight);
+      
+      position: absolute;
+      border-radius: 50%;
+      left: 0;
+      bottom: 0;
+  }    
 .square 
 {
   background-color: var(--secondary);

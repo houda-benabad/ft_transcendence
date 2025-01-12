@@ -47,7 +47,7 @@ export const modalService =
 
     createModalHtml(type, message)
     {
-        console.log('type : ', type)
+        // console.log('type : ', type)
         if (type === 'tournament')
             return modalTemplate.tournamentForm()
         else if (type === 'add-password')

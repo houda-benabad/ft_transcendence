@@ -70,6 +70,114 @@
             }
         }
     }
+    #notification-results
+    {
+        background : rgba(0, 0, 0, 0.7);
+        border: solid 1px var(--border-type2);
+        position: absolute;
+        width: 30vw;
+        right: 2%;
+        top: 10%;
+        margin-top: 0;
+        z-index: 1;
+        border: solid 1px var(--secondary);
+        border-radius: 12px;
+        display: none;
+        box-sizing: border-box;
+        padding: 1.5vw;
+        #top 
+        {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            #clear {
+                color: var(--highlight);
+                cursor: pointer;
+                font-weight: 700;
+            }
+        }
+        #down
+        {
+            display: flex;
+            overflow-y: auto;
+            max-height: 55vh;
+            flex-direction: column;
+            gap : 1vh;
+            box-sizing: border-box;
+            padding: 1vw 0;
+
+            &::-webkit-scrollbar 
+            {
+                display: none;
+            }
+            .notification-item
+            {
+                padding:0.7vw;
+                box-sizing: border-box;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                gap: 1vw;
+                border : solid 1px rgba(128,86,222, 0.4);
+                /* &:hover
+                {
+                    cursor: pointer;
+                    background-color: var(--secondary2-hover);
+                } */
+                img
+                {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                }
+                img,p
+                {
+                    pointer-events: none;
+                }
+                .notification-info
+                {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.7vh;
+
+                    .username 
+                    {
+                        font-weight: 700;
+                    }
+                    .content
+                    {
+                        color : var(--text2);
+                        font-size: 0.7em;
+                    }
+                }
+                .other
+                {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.7vh;
+                    padding-left: 15%;
+                    box-sizing: border-box;
+                    p
+                    {
+                        color : var(--text2);
+                        font-size: 0.7em;
+                    }
+
+                    .seen
+                    {
+                        background-color : var(--highlight);
+                        height : 7px;
+                        width: 7px;
+                        border-radius: 50%;
+                        margin-left : 90%;
+                    }  
+                }
+
+            }
+        }
+        
+    }
     @media (max-width : 750px)
     {
         padding: 0px 10px;

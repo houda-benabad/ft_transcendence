@@ -11,7 +11,14 @@ import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
 // import { notificationSocket } from '../utils/global.js'
 import notificationSocket from '../app.js'
+import { database } from '../constants/database.js'
+import { databaseExtractorService } from '../services/databaseExtractorService.js'
+import { eventListeners } from '../utils/global.js'
+import { escapeHtml } from '../utils/security.js'
 
+
+
+/// this is not maintenable and messy
 export class EventManager
 {
 	constructor(router)
@@ -22,53 +29,55 @@ export class EventManager
 		document.addEventListener('focusout', this.handleEventDelegation.bind(this))
 		// document.addEventListener('change', this.handleEventDelegation.bind(this))
 
-		this._actionType = 
-		{
-			'router' : this.handleNavigation.bind(this),
-			'profile' : this.handleProfileIcons.bind(this),
-			'friends' : this.handleFriendsIcons.bind(this),
-			'play_game' : this.handleGame.bind(this),
-			'intra' : this.handleIntraCall.bind(this),
-			'update_image' : this.handleImgUpdate.bind(this),
-			'save_username' : this.handleNewUsername.bind(this),
-			'delete_image' : this.handleDeleteOfImage.bind(this),
-			'add_password' : this.handleAddOfPassword.bind(this),
-			'cancel' : this.handleCancelButton.bind(this),
-		}
-	} 
-	async handleIntraCall(target)
-	{
-		apiService.auth.intraCall()
-	}
-	handleEventDelegation(event)
-	{
-		const eventType = event.type
-		const target = event.target
+        this._actionType = 
+        {
+            'router' : this.handleNavigation.bind(this),
+            'profile' : this.handleProfileIcons.bind(this),
+            'friends' : this.handleFriendsIcons.bind(this),
+            'play_game' : this.handleGame.bind(this),
+            'intra' : this.handleIntraCall.bind(this),
+            'update_image' : this.handleImgUpdate.bind(this),
+            'save_username' : this.handleNewUsername.bind(this),
+            'delete_image' : this.handleDeleteOfImage.bind(this),
+            'add_password' : this.handleAddOfPassword.bind(this),
+            'cancel' : this.handleCancelButton.bind(this),
+            'handle-notifications' : this.handleNotifications.bind(this)
+        }
+    } 
+    async handleIntraCall(target)
+    {
+        apiService.auth.intraCall()
+    }
+    handleEventDelegation(event)
+    {
+        const eventType = event.type
+        const target = event.target
 
-		// console.log('event type : ', eventType)
-		// console.log('event target : ', target)
+        // console.log('event type : ', eventType)
+        // console.log('event target : ', target)
 
-		if (eventType === 'focusout' && target.id === 'search-input')
-			this.handleSearchFocus()
-		else if (eventType === 'click' && target.matches('a'))
-			this.handleAnchorEvents(event, target)
-		else if (eventType === 'click' && target.matches('button'))
-			this.handleButtonEvents(target)
-		else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
-			this.handleformEvents(event, target)
-		if (eventType === 'input' && target.id === 'search-input') // when cleansing
-			this.handleSearchInput(event, target)
-		else if (eventType === 'input' && target.id === 'user-input-img')
-			this.handleInputFiles(target)
-		else if (eventType === 'click' && target.classList.contains('search-item'))
-			this.handleSearchItem(target)
-	}
-	async handleProfileIcons(target)
-	{
-		// send new request notification
-		const action = target.getAttribute('action-type')
-		const id = target.getAttribute('id')
-		const mainElement = target.closest(['[class="icons"]'])
+        if (eventType === 'focusout' && target.id === 'search-input')
+            this.handleSearchFocus()
+        else if (eventType === 'click' && target.matches('a'))
+            this.handleAnchorEvents(event, target)
+        else if (eventType === 'click' && target.getAttribute('data-action') === 'clear-notifications')
+            this.handleClearNotifications(event, target)
+        else if (eventType === 'click' && target.matches('button'))
+            this.handleButtonEvents(target)
+        else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
+            this.handleformEvents(event, target)
+        else if (eventType === 'input' && target.id === 'search-input') // when cleansing
+            this.handleSearchInput(event, target)
+        else if (eventType === 'input' && target.id === 'user-input-img')
+            this.handleInputFiles(target)
+        else if (eventType === 'click' && target.classList.contains('search-item'))
+            this.handleSearchItem(target)
+    }
+    async handleProfileIcons(target)
+    {
+        const action = target.getAttribute('action-type')
+        const id = target.getAttribute('id')
+        const mainElement = target.closest(['[class="icons"]'])
 
 		// console.log('main Element : ', mainElement)
 		// console.log('in here : ', userId)
@@ -171,8 +180,8 @@ export class EventManager
 	{
 		event.preventDefault()
 
-		const link = target.getAttribute('data-link')
-		const action = target.getAttribute("data-action")
+        const link = target.getAttribute('data-link')
+        const action = target.getAttribute("data-action")
 
 		if (link)
 			router.handleRoute(link)
@@ -190,6 +199,21 @@ export class EventManager
 	handleButtonEvents(target)
 	{
 		const action = target.getAttribute("data-action")
+            runAction(target)
+    }
+    handleClearNotifications(event, target)
+    {
+
+        const action = target.getAttribute("data-action")
+        
+        console.log('action  : ', action)
+    }
+    handleCancelButton( target ){
+        console.log( " waaaa3")
+    }
+    handleButtonEvents(target)
+    {
+        const action = target.getAttribute("data-action")
 
 		if (action)
 		{
@@ -285,12 +309,12 @@ export class EventManager
 
 		const img = document.getElementById('tobe-updated-img')
 
-		img.src = ''
-		modalService.show('deleted the image successfully', true)
-	}
-	async handleAddOfPassword(target)
-	{
-		const response = await modalService.show('', false, 'add-password')
+        img.src = ''
+        modalService.show('deleted the image successfully', true)
+    }
+    async handleAddOfPassword(target)
+    {
+        const response = await modalService.show('', false, 'add-password')
 
 		console.log('response : ', response) // to be fetched to backend
 	}
@@ -299,10 +323,37 @@ export class EventManager
 		const input = document.getElementById('username-to-save')
 		const inputValue = input.value
 
-		if (!inputValue || inputValue.includes(' '))
-			return modalService.show('enter a valid username')
-		console.log('value  : ', inputValue) // fetch to backend with this one
-		await modalService.show('updated the username successfully', true)
-		input.value = ""
-	}
+        if (!inputValue || inputValue.includes(' '))
+            return modalService.show('enter a valid username')
+        console.log('value  : ', inputValue) // fetch to backend with this one
+        await modalService.show('updated the username successfully', true)
+        input.value = ""
+    }
+   handleNotifications(target)
+   {
+	   
+	   const html = '<div id="modal-background" style="display : block;"</div>'
+	   app.insertAdjacentHTML('beforeend', html)
+	   const modalBackground = document.getElementById('modal-background')
+	   modalBackground.addEventListener('click', (event) => {
+		   if (event && event.target === modalBackground)
+			{
+				modalBackground.remove( )
+				notificationResults.style.display = 'none'
+			}
+		})
+		
+		
+		const notificationResults = document.getElementById('notification-results')
+		notificationResults.style.display = 'block'
+
+        const down = document.getElementById('down')
+        // const clear = document.getElementById('clear') //later
+        // if (!db.length)
+        // {
+        //     clear.style.display = 'none'
+        //     down.innerHTML = "no Notifications at the moment"
+        // } // later
+       down.appendChild(notificationSocket.notificationsHtml)
+   }
 }
