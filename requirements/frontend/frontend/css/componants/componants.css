@@ -56,10 +56,10 @@ form {
 
 .button-type2
 {
-  width: min(10vw, 10vh);
-  height: min(6vw, 6vh);
+  width: max(10px, 20%);
+  height: max(5px, 20%);
 
-  border-radius: 3vw;
+  border-radius: 1vw;
   background-color: var(--highlight);
   color: white;
   font-size: 1.6rem;
