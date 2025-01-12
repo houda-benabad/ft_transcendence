@@ -6,7 +6,7 @@ h1
 
 p,label
 {
-    font-size: 0.8rem;
+    font-size: max(1vw, 0.4rem);
 }
 .iconify
 {
@@ -59,7 +59,7 @@ form {
   width: min(10vw, 10vh);
   height: min(6vw, 6vh);
 
-  border-radius: 12px;
+  border-radius: 3vw;
   background-color: var(--highlight);
   color: white;
   font-size: 1.6rem;
@@ -250,10 +250,10 @@ form {
       height: 40px;
       width: 40px;
     }
-    p,label
+    /* p,label
     {
         font-size: 0.5rem;
-    }
+    } */
     .button-type2
     {
       width: 70px;

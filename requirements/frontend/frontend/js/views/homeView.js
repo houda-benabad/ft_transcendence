@@ -22,14 +22,14 @@ export class homeView extends HTMLElement
         const tournament = document.getElementById('tournament')
         tournament.innerHTML = homeTemplate.tournament()
         
-        // the mini boxes
-        const miniBoxes = document.querySelectorAll('.home-mini-box').forEach(e => {
-            e.innerHTML = homeTemplate.miniBox(e.id)
-        })
-        //this is for the leaderboard
-        this.addLeaderBoard()
+        // // the mini boxes
+        // const miniBoxes = document.querySelectorAll('.home-mini-box').forEach(e => {
+        //     e.innerHTML = homeTemplate.miniBox(e.id)
+        // })
+        // //this is for the leaderboard
+        // this.addLeaderBoard()
 
-        //setting up the eventlisteners for the moment
+        // // setting up the eventlisteners for the moment
         // this.buttons = document.querySelectorAll('.anchor-tmp')
         // eventListeners.setAllByType(this.buttons, 'click')
     }

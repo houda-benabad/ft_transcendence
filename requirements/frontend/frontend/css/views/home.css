@@ -32,22 +32,24 @@ home-view
 
         img
         {
-            height : 115%;
+            height : 113%;
             position: absolute;
-            right: 17px;
             bottom: 0;
+            right : max(1.2%, 1.5vw);
         }
         #tournament-infos
         {
-            height: 100%;
-            padding-left: 30px;
-            padding-top: 30px;
+            padding-left: 3%;
+            padding-top: 3%;
             display: flex;
-            width : 45%;
+            width : 55%;
             height: 100%;
             flex-direction: column;
             justify-content: space-between;
-
+            box-sizing: border-box;
+            p{
+                width: 85%;
+            }
             div 
             {
                 display: flex;
@@ -61,7 +63,7 @@ home-view
             }
         }
     }
-    @media (max-width : 750px)
+    @media (max-width : 1024px) and (min-height : 650px)
     {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1.5fr 1fr 1fr 1fr;
@@ -76,21 +78,52 @@ home-view
         {
             grid-column: 1 / 3;
 
-            img
+            /* img
             {
                 right : 5px;
-                /* width: 60%; */
             }
             #tournament-infos
             {
                 padding: 10px 10px;
                 width: 50%;
-            }
+            } */
         }
         .table-box
         {
             grid-row: 2 / 5;
             grid-column: 1 / 2;
+        }
+    }
+    @media (max-width : 450px) and (min-height : 800px)
+    {
+        #tournament
+        {
+            img
+            {
+                display: none;
+            }
+            .cover
+            {
+                background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0,0,0, 0.7));
+            }
+            #tournament-infos
+            {
+                width: 95%;
+                padding-left: 5%;
+                padding-top: 5%;
+                button
+                {
+                    justify-self: flex-end;
+                }
+                p
+                {
+                    font-size: 0.6rem;
+                    width: 100%;
+                }
+                h2 {
+                    font-size: 1.5rem;
+                }
+            }
         }
     }
 }
