@@ -169,11 +169,8 @@ form {
       margin: 0 auto;
       width: 90%;
       overflow-y: auto;
-      /* overflow: hidden; */
-      /* height: auto;
-      min-height: 200px
-      max-height: 550px; */
-      height: clamp(200px, 60vh, 550px);
+      height: clamp(300px, 60vh, 550px); 
+      /* something for thsi height  */
       &::-webkit-scrollbar
       {
           width: 10px;
