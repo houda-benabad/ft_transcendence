@@ -13,7 +13,8 @@ export class homeView extends HTMLElement
     }
     async connectedCallback()
     {
-        this._database = await apiService.home.getLeaderboardData()
+        // this._database = await apiService.home.getLeaderboardData()
+        this._database = database
         this._dataTransformer = new databaseExtractorService(this._database)
 
 
@@ -23,15 +24,15 @@ export class homeView extends HTMLElement
         tournament.innerHTML = homeTemplate.tournament()
         
         // // the mini boxes
-        // const miniBoxes = document.querySelectorAll('.home-mini-box').forEach(e => {
-        //     e.innerHTML = homeTemplate.miniBox(e.id)
-        // })
+        const miniBoxes = document.querySelectorAll('.home-mini-box').forEach(e => {
+            e.innerHTML = homeTemplate.miniBox(e.id)
+        })
         // //this is for the leaderboard
-        // this.addLeaderBoard()
+        this.addLeaderBoard()
 
-        // // setting up the eventlisteners for the moment
-        // this.buttons = document.querySelectorAll('.anchor-tmp')
-        // eventListeners.setAllByType(this.buttons, 'click')
+        // setting up the eventlisteners for the moment
+        this.buttons = document.querySelectorAll('.anchor-tmp')
+        eventListeners.setAllByType(this.buttons, 'click')
     }
     disconnectedCallback()
     {
