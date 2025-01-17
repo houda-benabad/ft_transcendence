@@ -54,6 +54,10 @@ home-view
                 {
                     color: var(--highlight);
                 }
+                h2
+                {
+                    font-size: max(2.8vw, 2.5vh);
+                }
             }
         }
     }

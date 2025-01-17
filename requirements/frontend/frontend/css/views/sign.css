@@ -77,7 +77,8 @@
             border-radius: 12px;
             border: solid var(--border) 1px;
     
-            padding-left: 7px;
+            padding: 0 3%;
+            box-sizing: border-box;
             font-size: 1.1rem;
         }
     }

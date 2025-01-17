@@ -56,7 +56,7 @@ export class EventManager
         // console.log('event type : ', eventType)
         // console.log('event target : ', target)
 
-        if (eventType === 'focusout' && target.id === 'search-input')
+        if (eventType === 'focusout' && target.id === '')
             this.handleSearchFocus()
         else if (eventType === 'click' && target.matches('a'))
             this.handleAnchorEvents(event, target)
@@ -66,7 +66,7 @@ export class EventManager
             this.handleButtonEvents(target)
         else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
             this.handleformEvents(event, target)
-        else if (eventType === 'input' && target.id === 'search-input') // when cleansing
+        else if (eventType === 'input' && target.id === '') // when cleansing
             this.handleSearchInput(event, target)
         else if (eventType === 'input' && target.id === 'user-input-img')
             this.handleInputFiles(target)
