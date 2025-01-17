@@ -3,7 +3,10 @@ h1
     font-size: 2.7rem;
     font-weight: bold;
 }
-
+h2
+{
+  font-size: max(3vw, 2.9vh)
+}
 p,label
 {
     font-size: max(0.8vw, 0.9vh);
@@ -64,7 +67,7 @@ p,label
     height: min(7vw, 7vh);
     border : none;
     border-radius: 7px;
-    font-size: 0.9rem;
+    font-size: max(2vw, 1.5vh);
     font-weight: 700;
     cursor: pointer;
     background-color : var(--delete);
@@ -85,7 +88,7 @@ p,label
     height: min(7vw, 7vh);
     border : none;
     border-radius: 7px;
-    font-size: 0.9rem;
+    font-size: max(2vw, 1.5vh);
     font-weight: 700;
     cursor: pointer;
     background-color : var(--secondary);
@@ -225,10 +228,10 @@ p,label
     {
       font-size: 20px;
     }
-    h2
+    /* h2
     {
         font-size: 16px;
-    }
+    } */
     h3 
     {
       font-size: 12px;
