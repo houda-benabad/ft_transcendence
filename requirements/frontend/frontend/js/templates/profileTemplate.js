@@ -76,6 +76,7 @@ export const profileTemplate  =
 
         return `
         <h3>Game History</h3>
+        <div id="table">
         <table>
             <thead>
                 <tr>
@@ -87,7 +88,8 @@ export const profileTemplate  =
             </thead>
             <tbody>
             ${dynamicPart}
-            </tbody`        
+            </tbody
+            </div>`        
     },
     friendsBox(userId)
     {
