@@ -1,0 +1,71 @@
+.table-box
+{
+  h3 {
+    padding: 20px 0px 20px 20px;
+  }
+  #table
+  {
+      margin: 0 auto;
+      width: 90%;
+      height: 100%;
+      table
+      {
+          border-collapse: collapse;
+          margin: 0 auto;
+
+          height: 100%;
+          width : 100%;
+          overflow-y: auto;
+
+          &::-webkit-scrollbar
+          {
+              width: 10px;
+          }
+          &::-webkit-scrollbar-thumb
+          {
+              background-color: var(--secondary2);
+              border-radius: 10px;
+          }
+          tbody 
+          {
+            height: calc(100% - 40px);  /* Adjust height for the table body to allow scrolling */
+            overflow-y: auto;
+          }
+          thead
+          {
+              border: 1px solid rgba(255,255,255, 0.2);
+              font-size: 0.8rem;
+          }
+          th
+          {
+              background-color: var(--secondary2);
+          }
+          th, td
+          {
+              padding: 10px;
+              text-align: left;
+            }
+            
+            td
+            {
+              font-size: 0.7rem;
+              border-bottom: 1px solid rgba(255,255,255, 0.1);
+
+            }
+            #no-data
+            {
+              text-align: center;
+              padding: 30px;
+              border-bottom: none;
+              font-size: 1rem;
+            }
+          
+          td[class="message-info"]
+          {
+              /* padding-top: 50px; */
+              border: none;
+              text-align: center;
+          }
+      }
+  }
+}

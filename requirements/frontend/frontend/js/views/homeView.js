@@ -20,13 +20,13 @@ export class homeView extends HTMLElement
 
         this.innerHTML = homeTemplate.layout()
         //for tournament
-        const tournament = document.getElementById('tournament')
-        tournament.innerHTML = homeTemplate.tournament()
+        // const tournament = document.getElementById('tournament')
+        // tournament.innerHTML = homeTemplate.tournament()
         
         // // the mini boxes
-        const miniBoxes = document.querySelectorAll('.home-mini-box').forEach(e => {
-            e.innerHTML = homeTemplate.miniBox(e.id)
-        })
+        // const miniBoxes = document.querySelectorAll('.home-mini-box').forEach(e => {
+        //     e.innerHTML = homeTemplate.miniBox(e.id)
+        // })
         // //this is for the leaderboard
         this.addLeaderBoard()
 
