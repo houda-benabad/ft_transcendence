@@ -91,6 +91,10 @@
             align-items: center;
             justify-content: space-between;
 
+            h2
+            {
+                font-size : max(1.3vw, 0.9vh)
+            }
             #clear {
                 color: var(--highlight);
                 cursor: pointer;

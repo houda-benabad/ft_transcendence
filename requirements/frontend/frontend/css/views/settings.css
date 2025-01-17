@@ -11,7 +11,7 @@ settings-view
         border: solid 1px var(--border-type2);
         border-radius: 3vw;
         padding: 2vh;
-        overflow: hidden;
+        box-sizing: border-box;
         p
         {
             font-size: max(1.2vw, 1.5vh);
@@ -21,7 +21,7 @@ settings-view
     {
         #box-container
         {
-            border: solid 1px red;
+            /* border: solid 1px red; */
             display: flex;
             flex-direction: column;
             gap: 3vw;
@@ -31,7 +31,7 @@ settings-view
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                border: solid 1px yellow;
+                /* border: solid 1px yellow; */
                 gap: 3vh;
                 img 
                 {
@@ -47,13 +47,14 @@ settings-view
                 }
                 div 
                 {
-                    border: solid 1px red;
+                    /* border: solid 1px red; */
                     flex-grow: 1;
                     display: flex;
+                    gap : 1vh;
                     justify-content: space-evenly;
                 }
             }
-            /* #user-username
+            #user-username
             {
                 p 
                 {
@@ -70,7 +71,7 @@ settings-view
                         border: none;
                         background-color: var(--secondary2);
                         color: white;
-                        padding-left: 1vw;
+                        /* padding-left: 1vw; */
                         position: relative;
                         width: 100%;
                     }
@@ -84,7 +85,7 @@ settings-view
                         border-top-left-radius: 0;
                     }
                 }
-            } */
+            }
         }
     }
     #settings-box3
@@ -166,7 +167,7 @@ settings-view
     }
 }
 
-@media (max-width : 1024px)
+@media (max-width : 1024px)  and (min-height : 650px)
 {
     settings-view
     {
