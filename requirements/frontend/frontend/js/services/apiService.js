@@ -1,7 +1,7 @@
 import { ENDPOINTS } from '../constants/endpoints.js'
 import { _tokenService } from '../utils/global.js'
 import { modalService } from './modalService.js'
-import { router } from '../utils/global.js'
+// import { router } from '../utils/global.js'
 
 class RequestConfiguration
 {
@@ -83,6 +83,7 @@ class ApiService
             params
         } = this._requestConfig
 
+        // console.log('here  : ', this._requestConfig)
         const url = params ? `${endpoint}?${params.key}=${encodeURIComponent(params.value)}` : endpoint
         try{
             const response = await fetch(url , {
@@ -197,19 +198,19 @@ const generateHttpRequests = (api) =>
             await api.request()
         }
     },
-    createGetRequest(endpoint,  needsAuth = null)
+    createGetRequest(endpoint, {needsAuth, modalMessage})
     {
         return (resolve, params = null) => 
         {
             const request = new RequestConfiguration()
                 .withEndpoint(endpoint)
-            
+                .withAuth(needsAuth)
             
             // console.log('->>> ', needsAuth)
-            if (needsAuth !== null)
-                request.withAuth(needsAuth)
             if (params)
                 request.withParams(params)
+            if (modalMessage)
+                request.withModal(modalMessage)
             api.requestConfig = request.requestConfig
             api.resolve = resolve
             api.request()
@@ -248,22 +249,18 @@ export const apiService =
         {
             generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : false, modalMessage: 'you signed up successffully'})(body, resolve)
         }),
-        intraCall :() => new Promise (async resolve => {
-            const popup = await window.open(ENDPOINTS.INTRA, 'loginWithIntra', 'height=500,width=700')
-
-            console.log('test : ', popup)
-            window.addEventListener('message' , (event) => 
-            {
-                console.log('test2', event.target)
-                console.log('test3', event.data)
-            })
-            // and here after the call hind got to do something 
+        intraAuthorize :() => new Promise (async resolve => {
+            generatedHttpRequests.createGetRequest(ENDPOINTS.INTRA_AUTHORIZE, {needsAuth : false, modalMessage: null})(resolve)
+        }),
+        intraCallback :  (body) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPostRequest(ENDPOINTS.INTRA_CALLBACK, {needsAuth : false, modalMessage: 'welcome to pingy !!!'})(body, resolve)
         }),
     },
     user :
     {
         getProfileInfos : (id) => new Promise (resolve => {
-            generatedHttpRequests.createGetRequest(ENDPOINTS.PROFILE + id)(resolve)
+            generatedHttpRequests.createGetRequest(ENDPOINTS.PROFILE + id, {needsAuth : true, modalMessage: null})(resolve)
         }),
         getUsers : (query) => new Promise (resolve => {
             generatedHttpRequests.createGetRequest(ENDPOINTS.SEARCHED_USERS)(resolve, {key : 'search', value : query})

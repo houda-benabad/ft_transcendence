@@ -1,7 +1,7 @@
-import { formService } from './formService.js'
+// import { formService } from './formService.js'
 import { eventHandlers } from '../utils/eventHandlers.js'
 import { modalTemplate } from '../templates/modalTemplate.js'
-import { eventListeners } from '../utils/global.js'
+import { eventListeners } from '../utils/global2.js'
 
 export const modalService = 
 {

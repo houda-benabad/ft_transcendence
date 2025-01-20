@@ -155,7 +155,8 @@ p,label
       margin: 0 auto;
       width: 90%;
       overflow-y: auto;
-      height: clamp(300px, 60vh, 550px); 
+      /* height: clamp(300px, 60vh, 550px);  */
+      height: 100%;
       /* something for thsi height  */
       &::-webkit-scrollbar
       {

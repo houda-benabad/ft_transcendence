@@ -8,7 +8,6 @@ export const ENDPOINTS =
     LEADERBOARD: '/api/game/leaderboard',
     FRIENDSHIP: '/api/friendship/',
     REFRESH_TOKEN : '/auth/jwt/refresh/',
-    INTRA : '/auth/oauth2/authorize'
+    INTRA_AUTHORIZE : '/auth/oauth2/authorize',
+    INTRA_CALLBACK : '/auth/oauth2/callback'
 }
-
-// /api/game/player_info/username // save username .p 

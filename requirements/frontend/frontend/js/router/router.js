@@ -1,3 +1,4 @@
+import { apiService } from '../services/apiService.js'
 import { ROUTES } from '../constants/routes.js'
 import { _tokenService } from '../utils/global.js'
 import { reset } from '../utils/utils.js'
@@ -32,10 +33,20 @@ export class Router
         window.addEventListener('popstate', () => this.handleRoute())
         this.handleRoute()
     }
-    handleRoute(newPath=null)
+    async handleRoute(newPath=null)
     {
         const path = newPath || window.location.pathname
+        const query = window.location.search
+        if (query)
+        {
+            const params = new URLSearchParams(query)
+            const code = params.get('code')
 
+            const response = await apiService.auth.intraCallback({code : code})
+            _tokenService.tokens= response
+            await reset()
+            // this.handleRoute('/')
+        }
         if (!_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
         else if (_tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))

@@ -10,11 +10,11 @@ import { modalService } from '../services/modalService.js'
 import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
 // import { notificationSocket } from '../utils/global.js'
-import notificationSocket from '../app.js'
-import { database } from '../constants/database.js'
-import { databaseExtractorService } from '../services/databaseExtractorService.js'
-import { eventListeners } from '../utils/global.js'
-import { escapeHtml } from '../utils/security.js'
+// import notificationSocket from '../app.js'
+// import { database } from '../constants/database.js'
+// import { databaseExtractorService } from '../services/databaseExtractorService.js'
+// import { eventListeners } from '../utils/global.js'
+// import { escapeHtml } from '../utils/security.js'
 
 
 
@@ -46,7 +46,8 @@ export class EventManager
     } 
     async handleIntraCall(target)
     {
-        apiService.auth.intraCall()
+        const response = await apiService.auth.intraAuthorize()
+		window.location.href = response.intra_auth_url
     }
     handleEventDelegation(event)
     {
@@ -99,15 +100,15 @@ export class EventManager
 			router.handleRoute('/settings')
 
 
-		if (action === 'send_request')
-		{
-			notificationSocket.send_msg( "notification",
-				{
-				"receiver" : id,
-				"content" : "lets play a game"
-				} 
-		)
-		}
+		// if (action === 'send_request')
+		// {
+		// 	notificationSocket.send_msg( "notification",
+		// 		{
+		// 		"receiver" : id,
+		// 		"content" : "lets play a game"
+		// 		} 
+		// )
+		// }
 	}   
 	async handleFriendsIcons(target)
 	{

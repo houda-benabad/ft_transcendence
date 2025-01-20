@@ -1,7 +1,7 @@
 import { database } from '../constants/database.js'
 import { apiService } from '../services/apiService.js'
 import { homeTemplate } from '../templates/homeTemplate.js'
-import { eventListeners } from '../utils/global.js'
+import { eventListeners } from '../utils/global2.js'
 import { databaseExtractorService } from '../services/databaseExtractorService.js'
 export class homeView extends HTMLElement
 {
