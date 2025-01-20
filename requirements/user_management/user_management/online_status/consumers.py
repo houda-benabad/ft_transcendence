@@ -6,15 +6,15 @@ from asgiref.sync import async_to_sync
 class OnlineStatusConsumer(WebsocketConsumer):
 
     def connect(self):
-        self.group_name = self.user.username + "_friends"
+        self.group_name = self.scope["user"].username + "_friends"
         async_to_sync(self.channel_layer.group_add(self.group_name, self.channel_name))
 
-        friends_qs = Friend.objects.friends(self.user)
+        friends_qs = Friend.objects.friends(self.scope["user"])
         for friend in friends_qs:
             async_to_sync(self.channel_layer.group_add(friend.username + "_friends", self.channel_name))
 
         async_to_sync(self.channel_layer.group_send(
-            self.group_name, {"type": "friend.status", "friend_username": self.user.username, "status": "online"}
+            self.group_name, {"type": "friend.status", "friend_username": self.scope["user"].username, "status": "online"}
         ))
         
         self.accept()
@@ -24,7 +24,7 @@ class OnlineStatusConsumer(WebsocketConsumer):
         friends_qs = Friend.objects.friends(self.user)
 
         async_to_sync(self.channel_layer.group_send(
-            self.group_name, {"type": "friend.status", "friend_username": self.user.username, "status": "offline"}
+            self.group_name, {"type": "friend.status", "friend_username": self.scope["user"].username, "status": "offline"}
         ))
     
     def friend_status(self, event):
