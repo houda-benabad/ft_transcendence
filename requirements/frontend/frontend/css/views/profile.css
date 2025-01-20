@@ -8,7 +8,7 @@ profile-view
     height: 100%;
     #table
     {
-        height : 180px;
+        height : 180px !important;
         table 
         {
             width: 95%;

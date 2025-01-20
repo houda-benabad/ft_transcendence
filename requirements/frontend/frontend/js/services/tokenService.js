@@ -1,9 +1,11 @@
 export class TokenService
 {
-    constructor()
+    constructor(global)
     {
         this._accessToken = localStorage.getItem('accessToken')
         this._refreshToken = localStorage.getItem('refreshToken')
+
+        this._global = global
     }
     set tokens({refresh , access})
     {

@@ -1,8 +1,6 @@
-import { database } from '../constants/database.js'
-import { apiService } from '../services/apiService.js'
-import { homeTemplate } from '../templates/homeTemplate.js'
-import { eventListeners } from '../utils/global2.js'
 import { databaseExtractorService } from '../services/databaseExtractorService.js'
+import { homeTemplate } from '../templates/homeTemplate.js'
+import { eventListeners } from '../managers/globalManager.js'
 export class homeView extends HTMLElement
 {
     constructor()
@@ -13,10 +11,8 @@ export class homeView extends HTMLElement
     }
     async connectedCallback()
     {
-        // this._database = await apiService.home.getLeaderboardData()
-        this._database = database
+        this._database = await apiService.home.getLeaderboardData()
         this._dataTransformer = new databaseExtractorService(this._database)
-
 
         this.innerHTML = homeTemplate.layout()
         //for tournament

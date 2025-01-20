@@ -11,8 +11,9 @@ import '../views/gameView.js'
 
 export class Router 
 {
-    constructor()
+    constructor(global)
     {
+        this._global = global
         this._routes = ROUTES
 
         this.init()

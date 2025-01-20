@@ -1,11 +1,11 @@
-import { eventHandlers } from "../utils/eventHandlers.js"
 import { FUNCTIONNAME } from "../constants/functionName.js"
 
-export class eventService
+export class EventService
 {
-    constructor()
+    constructor(global)
     {
         this._listeners = new Map()
+        this._global = global
     }
     on(element, eventType, handler)
     {

@@ -21,7 +21,7 @@ import { local } from '../mods/local.js'
 /// this is not maintenable and messy
 export class EventManager
 {
-	constructor(router)
+	constructor(global)
 	{
 		document.addEventListener('click', this.handleEventDelegation.bind(this))
 		document.addEventListener('submit', this.handleEventDelegation.bind(this))
@@ -43,6 +43,7 @@ export class EventManager
             'cancel' : this.handleCancelButton.bind(this),
             'handle-notifications' : this.handleNotifications.bind(this)
         }
+		this._global = global
     } 
     async handleIntraCall(target)
     {
