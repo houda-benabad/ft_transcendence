@@ -1,7 +1,7 @@
 import { DIMENSION, POSITION } from "../constants/components.js"
 import { MODE } from "../constants/engine.js"
 import { KEYS, VELOCITY } from "../constants/logic.js"
-import { eventListeners } from "../utils/global2.js"
+import { eventListeners } from "../managers/globalManager.js"
 
 export default class inputManager{
 	constructor( components, mode ){

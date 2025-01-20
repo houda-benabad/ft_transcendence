@@ -1,7 +1,4 @@
-import { apiService } from '../services/apiService.js'
 import { ROUTES } from '../constants/routes.js'
-import { _tokenService } from '../utils/global.js'
-import { reset } from '../utils/utils.js'
 
 import '../views/homeView.js'
 import '../views/profileView.js'
@@ -13,17 +10,19 @@ export class Router
 {
     constructor(global)
     {
-        this._global = global
+        this._apiService = global._apiService
+        this._tokenService = global._tokenService
+        this._reset = global._reset
         this._routes = ROUTES
-
+        
         this.init()
     }
    
     async init() // this needs cleansing and to make it more maintenable
     {
-        if (_tokenService.isAuthenticated())
+        if (this._tokenService.isAuthenticated())
         {
-            await reset()
+            await this._reset()
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
             
             const element = document.querySelector(`[href="${window.location.pathname}"]`)
@@ -43,14 +42,13 @@ export class Router
             const params = new URLSearchParams(query)
             const code = params.get('code')
 
-            const response = await apiService.auth.intraCallback({code : code})
-            _tokenService.tokens= response
-            await reset()
-            // this.handleRoute('/')
+            const response = await this._apiService.auth.intraCallback({code : code})
+            this._tokenService.tokens = response
+            await this._reset()
         }
-        if (!_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
+        if (!this._tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
-        else if (_tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
+        else if (this._tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
             this.navigateTo('/')
         else if (path === '/game')
             this.navigateTo('/')

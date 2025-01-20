@@ -2,7 +2,7 @@ import { apiService } from './apiService.js'
 import { eventHandlers } from '../utils/eventHandlers.js'
 // import { sendData, reset} from '../utils/utils.js'
 import { FUNCTIONNAME } from '../constants/functionName.js'
-import { eventListeners } from '../utils/global2.js'
+import { eventListeners } from '../managers/globalManager.js'
 
 // do i need this service anymore or ?
 export const formService =

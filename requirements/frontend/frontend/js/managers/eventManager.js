@@ -1,24 +1,4 @@
-import { apiService } from '../services/apiService.js'
-import { searchService } from '../services/searchService.js'
-import { _tokenService } from '../utils/global.js'
-import { reset } from '../utils/utils.js'
-import { router } from '../utils/global.js'
-import { MODE } from '../constants/engine.js'
-import { remote } from '../mods/remote.js'
-import { multiplayer } from '../mods/multiplayer.js'
-import { modalService } from '../services/modalService.js'
-import { formService } from '../services/formService.js'
-import { local } from '../mods/local.js'
-// import { notificationSocket } from '../utils/global.js'
-// import notificationSocket from '../app.js'
-// import { database } from '../constants/database.js'
-// import { databaseExtractorService } from '../services/databaseExtractorService.js'
-// import { eventListeners } from '../utils/global.js'
-// import { escapeHtml } from '../utils/security.js'
 
-
-
-/// this is not maintenable and messy
 export class EventManager
 {
 	constructor(global)
@@ -43,11 +23,11 @@ export class EventManager
             'cancel' : this.handleCancelButton.bind(this),
             'handle-notifications' : this.handleNotifications.bind(this)
         }
-		this._global = global
+		this._apiService = global._apiService
     } 
     async handleIntraCall(target)
     {
-        const response = await apiService.auth.intraAuthorize()
+        const response = await this._apiService.auth.intraAuthorize()
 		window.location.href = response.intra_auth_url
     }
     handleEventDelegation(event)
@@ -86,7 +66,7 @@ export class EventManager
 		// console.log('target : ', target)
 		if (action === 'send_request' || action === 'accept_request')
 		{
-			await apiService.friendship.postFriendship(action, id)
+			await this._apiService.friendship.postFriendship(action, id)
 			if (action === 'send_request')
 				mainElement.relationshipStatus = 'requested'
 			else
@@ -94,7 +74,7 @@ export class EventManager
 		}
 		else if (action === 'remove_friend' || action === 'cancel_request' || action === 'reject_request')
 		{
-			await apiService.friendship.deleteFriendship(action, id)
+			await this._apiService.friendship.deleteFriendship(action, id)
 			mainElement.relationshipStatus = 'stranger'
 		}
 		else 
@@ -119,9 +99,9 @@ export class EventManager
 		// console.log('here  id  : ', id)
 		// console.log('target : ', target)
 		if (action === 'send_request' || action === 'accept_request')
-			await apiService.friendship.postFriendship(action, id)
+			await this._apiService.friendship.postFriendship(action, id)
 		else
-			await apiService.friendship.deleteFriendship(action, id)
+			await this._apiService.friendship.deleteFriendship(action, id)
 	}
 	async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
 	{
@@ -135,7 +115,7 @@ export class EventManager
 		{
 			const formObject = {}
 			formData.forEach((value, key) => { formObject[key] = value})
-			const response = await apiService.auth[action](formObject)
+			const response = await this._apiService.auth[action](formObject)
 
 			if (action  === 'signup')
 				setTimeout(() => router.handleRoute('/signin'), 1000)

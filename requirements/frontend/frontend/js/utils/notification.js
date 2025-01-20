@@ -1,4 +1,4 @@
-import { _tokenService } from './global.js'
+// import { _tokenService } from './global.js'
 import { escapeHtml } from './security.js'
 
 export class Notification {

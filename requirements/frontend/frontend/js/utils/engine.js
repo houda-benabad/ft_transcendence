@@ -3,7 +3,7 @@ import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cann
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js'
 import { CAMERA, WORLD, LIGHT } from "../constants/engine.js";
 import { MODE } from '../constants/engine.js';
-import { _tokenService } from '../utils/global.js'
+// import { _tokenService } from '../utils/global.js'
 
 export default class Engine {
 

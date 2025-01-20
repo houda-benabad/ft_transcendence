@@ -1,7 +1,5 @@
 import { ENDPOINTS } from '../constants/endpoints.js'
-import { _tokenService } from '../utils/global.js'
 import { modalService } from './modalService.js'
-// import { router } from '../utils/global.js'
 
 class RequestConfiguration
 {
@@ -54,7 +52,6 @@ class RequestConfiguration
         return this
     }
 }
-
 
 class ApiService
 {
@@ -109,7 +106,7 @@ class ApiService
                         console.log('->>>>>> refresh token was expired')
                         _tokenService.clear()
                         document.getElementById('app').classList.remove('active')
-                        router.handleRoute('/signin')
+                        GlobalManager._router.handleRoute('/signin')
                         return ; 
                     }
                     const responseBody = await response.json()
@@ -160,7 +157,7 @@ class ApiService
             // console.log('->>>>>> refresh token was expired')
             _tokenService.clear()
             document.getElementById('app').classList.remove('active')
-            router.handleRoute('/signin')
+            GlobalManager._router.handleRoute('/signin')
             return ;
         }
         // console.log('im in here doing some work')

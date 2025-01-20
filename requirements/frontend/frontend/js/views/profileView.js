@@ -3,7 +3,7 @@ import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
 import { addListenersForFriendsBox} from '../utils/eventListeners.js'
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
-import { router  } from "../utils/global.js"
+// import { router  } from "../utils/global.js"
 
 export class ProfileView extends HTMLElement
 {

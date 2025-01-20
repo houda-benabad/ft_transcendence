@@ -1,6 +1,7 @@
 import { databaseExtractorService } from '../services/databaseExtractorService.js'
 import { homeTemplate } from '../templates/homeTemplate.js'
 import { eventListeners } from '../managers/globalManager.js'
+
 export class homeView extends HTMLElement
 {
     constructor()
