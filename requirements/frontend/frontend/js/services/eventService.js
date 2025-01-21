@@ -1,6 +1,5 @@
 import { eventHandlers } from "../utils/eventHandlers.js"
 import { FUNCTIONNAME } from "../constants/functionName.js"
-import { eventListeners } from "../utils/global.js"
 
 export class eventService
 {
@@ -30,9 +29,9 @@ export class eventService
         elements.forEach(e => {
             const functionKey = e.dataset.action.toUpperCase()
             if (functionKey === 'MODE' || functionKey === "ROUTER")
-                eventListeners.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event, e))
+                this.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event, e))
             else
-                eventListeners.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event))
+               this.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event))
         })
     }
     removeAllByType(elements, eventType)
@@ -40,7 +39,7 @@ export class eventService
         elements.forEach(e => {
             const functionKey = e.dataset.action
             
-            eventListeners.off(e, eventType)
+            this.off(e, eventType)
         })
         
     }

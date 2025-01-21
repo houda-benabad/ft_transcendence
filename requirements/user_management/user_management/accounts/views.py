@@ -12,6 +12,7 @@ from django.urls import reverse
 from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
 import logging
+import json
 
 logging.basicConfig(level=logging.DEBUG)  
 
@@ -53,13 +54,13 @@ class   IntraAuth(APIView):
         
         params = {
             "client_id": settings.UID,
-            "redirect_uri": request.build_absolute_uri(reverse('intra-callback')),
+            "redirect_uri": f"{request.scheme}://{request.get_host()}",
             "response_type": "code",
             "scope": "public"
             }
         
         auth_url = settings.INTRA_AUTH_URL + '?' + urllib.parse.urlencode(params)
-        return redirect(auth_url)
+        return Response({"intra_auth_url": auth_url}, status=status.HTTP_200_OK)
 
 intra_auth_view = IntraAuth.as_view()
 
@@ -68,15 +69,14 @@ class   IntraCallback(APIView):
     
     permission_classes = [IsNotAuthenticated]
     
-    def get(self, request):
-        
-        code = request.GET.get('code')
-        
-        if not code:
-            error = request.GET.get('error', 'Unknown error')
-            return Response({"detail": error}, status= status.HTTP_400_BAD_REQUEST)
-        
+    def post(self, request):
+
         try:
+            body = request.body.decode('utf-8')
+            data = json.loads(body)
+            code = data.get('code', '')
+            if not code:
+                return Response({"detail": "missing code"}, status= status.HTTP_400_BAD_REQUEST)
             access_token = self.exchange_code(request, code)
             user_data = self.get_user_data(access_token)
             intra_user, created = User.objects.get_or_create(username=user_data["username"])
@@ -90,6 +90,8 @@ class   IntraCallback(APIView):
                 Profile.objects.create(user=intra_user, image_url = user_data["image_url"], is_oauth2=True)
             refresh = RefreshToken.for_user(intra_user)
             access = refresh.access_token
+        except json.JSONDecodeError:
+            return Response({'detail': 'Invalid JSON data'}, status=HTTP_400_BAD_REQUEST)
         except OAuthError as e:
             return Response({"detail": str(e.detail)}, status=e.status_code)
         except Exception as e:  
@@ -105,7 +107,7 @@ class   IntraCallback(APIView):
             "client_secret": settings.SECRET,
             "grant_type": "authorization_code",
             "code": code,
-            "redirect_uri": request.build_absolute_uri(reverse('intra-callback')),
+            "redirect_uri": f"{request.scheme}://{request.get_host()}",
         }
         headers = {
             "Content-type": 'application/x-www-form-urlencoded'

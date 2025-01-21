@@ -70,6 +70,7 @@ export const homeTemplate =
             </thead>
             <tbody>
             ${dynamicPart}
-            </tbody>`        
+            </tbody>
+            </div>`        
     }
 }

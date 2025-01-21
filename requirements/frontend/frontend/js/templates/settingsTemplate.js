@@ -10,21 +10,22 @@ export const settingsTemplate =
     settingsBox1()
     {
         return (` <h2>Profile</h2>
-            <div id="user-picture">
-                <img src='../static/assets/componants/user.jpeg' id="tobe-updated-img">
-                <div id="user-picture-buttons">
-                    <input type="file" id="user-input-img" accept="image/*">
-                    <button class="anchor-tmp button-type4" data-action="update_image">Update</button>
-                    <button class="anchor-tmp button-type3" data-action="delete_image">Delete</button>
+            <div id="box-container">
+                <div id="user-picture">
+                    <img src='../assets/componants/user.jpeg' id="tobe-updated-img">
+                    <div id="user-picture-buttons">
+                        <input type="file" id="user-input-img" accept="image/*">
+                        <button class="anchor-tmp button-type4" data-action="update_image">Update</button>
+                        <button class="anchor-tmp button-type3" data-action="delete_image">Delete</button>
+                    </div>
                 </div>
-            </div>
-            <div id='user-username'>
-                <p>username</p>
-                <div>
-                    <input type='text' placeholder='new username' id="username-to-save">
-                    <button class="anchor-tmp button-type4" data-action="save_username">Save</button>
-                </div>
-            </div>`)
+                <div id='user-username'>
+                    <p>username</p>
+                    <div>
+                        <input type='text' placeholder='new username' id="username-to-save">
+                        <button class="anchor-tmp button-type4" data-action="save_username">Save</button>
+                    </div>
+                </div></div>`)
     },
     settingsBox2()
     {

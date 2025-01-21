@@ -5,7 +5,6 @@ home-view
     height: 100%;
     grid-template-columns: 1.5fr 1fr 1fr 1fr;
     grid-template-rows: 1.1fr 1fr;
-    color : white;
     table 
     {
         width: 85%;
@@ -13,16 +12,12 @@ home-view
     > div
     {
         border: solid 1px var(--border-type2);
-        border-radius: 35px;
+        border-radius: 3vw;
     }
 
     .table-box
     {
         grid-row: 1 / 3;
-        #table
-        {
-            height : 550px;
-        }
     }
     #tournament
     { 
@@ -32,22 +27,23 @@ home-view
 
         img
         {
-            height : 115%;
+            height : 113%;
             position: absolute;
-            right: 17px;
             bottom: 0;
+            right : max(1.5%, 2vw);
         }
         #tournament-infos
         {
-            height: 100%;
-            padding-left: 30px;
-            padding-top: 30px;
+            padding : 3%;
             display: flex;
-            width : 45%;
+            width : 55%;
             height: 100%;
             flex-direction: column;
             justify-content: space-between;
-
+            box-sizing: border-box;
+            p{
+                width: 85%;
+            }
             div 
             {
                 display: flex;
@@ -58,39 +54,60 @@ home-view
                 {
                     color: var(--highlight);
                 }
+                h2
+                {
+                    font-size: max(2.8vw, 2.5vh);
+                }
             }
         }
     }
-    @media (max-width : 750px)
+    @media (max-width : 1024px) and (min-height : 650px)
     {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1.5fr 1fr 1fr 1fr;
         gap: 3vw;
         height: 100%;
 
-        > div 
-        {
-            border-radius: 12px;
-        }
         #tournament
         {
             grid-column: 1 / 3;
-
-            img
-            {
-                right : 5px;
-                /* width: 60%; */
-            }
-            #tournament-infos
-            {
-                padding: 10px 10px;
-                width: 50%;
-            }
         }
         .table-box
         {
             grid-row: 2 / 5;
             grid-column: 1 / 2;
+        }
+    }
+    @media (max-width : 450px) and (min-height : 800px)
+    {
+        #tournament
+        {
+            img
+            {
+                display: none;
+            }
+            .cover
+            {
+                background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0,0,0, 0.7));
+            }
+            #tournament-infos
+            {
+                width: 95%;
+                padding-left: 5%;
+                padding-top: 5%;
+                button
+                {
+                    justify-self: flex-end;
+                }
+                p
+                {
+                    font-size: 0.6rem;
+                    width: 100%;
+                }
+                h2 {
+                    font-size: 1.5rem;
+                }
+            }
         }
     }
 }
@@ -109,8 +126,6 @@ home-view
 }
 .home-mini-box
 {
-    background-size:contain;
-
     display: flex;
     flex-direction: column;
     justify-content: end;
@@ -118,25 +133,33 @@ home-view
     
     div
     {
-        margin: 20px;
+        margin: 7%;
         display: flex;
         flex-direction: column;
-        gap: 5px;
-
+        gap: 5%;
+        height: 40%;
         h3
         {
             color: var(--highlight);
         }
         p {
-            font-size: 0.5rem;
+            font-size: max(0.7vw, 0.8vh);
         }
         button
         {
-            width: 80px;
-            height: 40px;
-            border-radius: 5px;
+            width: max(30%, 6vw);
+            height: max(21%, 4vh);
             text-transform: uppercase;
-            font-size: 0.7rem;
+            font-size: max(0.7vw, 0.8vh);
+            /* margin-top: auto; */
+        }
+    }
+
+    @media (max-width : 1024px)
+    {
+        div
+        {
+            height: 100%;
         }
     }
 

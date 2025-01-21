@@ -88,7 +88,8 @@ export const profileTemplate  =
             </thead>
             <tbody>
             ${dynamicPart}
-            </tbody`        
+            </tbody
+            </div>`        
     },
     friendsBox(userId)
     {

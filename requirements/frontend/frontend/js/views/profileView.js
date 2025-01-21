@@ -45,7 +45,13 @@ export class ProfileView extends HTMLElement
     setupEventListenersAndAnimations()
     {
         window.addEventListener('resize', animateProgressBar)
+        window.addEventListener('resize', () => {
+            let selectedChoice = document.querySelector('.selected-choice')
+            const slidingLine = document.getElementById('sliding-line')
 
+            slidingLine.style.width = `${selectedChoice.offsetWidth}px`
+            slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
+        })
         if (this._userId === 'me')
             addListenersForFriendsBox.apply(this) // gotta remove the events after finishing up with it .
         animateProgressBar()

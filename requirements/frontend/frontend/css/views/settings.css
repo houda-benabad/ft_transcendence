@@ -9,67 +9,81 @@ settings-view
     > div
     {
         border: solid 1px var(--border-type2);
-        border-radius: 35px;
+        border-radius: 3vw;
         padding: 2vh;
-        overflow: hidden;
+        box-sizing: border-box;
+        p
+        {
+            font-size: max(1.2vw, 1.5vh);
+        }
     }
     #settings-box1
     {
-        display: flex;
-        flex-direction: column;
-        gap: 3vw;
-        #user-picture 
+        #box-container
         {
+            /* border: solid 1px red; */
             display: flex;
-            align-items: center;
-            gap: 15px;
-            img 
-            {
-                height: max(7vw, 9vh);
-                width: max(7vw, 9vh);
-                border-radius: 50%;
-            }
-
-            div 
+            flex-direction: column;
+            gap: 3vw;
+            width: 80%;
+            #user-picture 
             {
                 display: flex;
-                gap : 1vw;
-            }
-          
-            input 
-            {
-                display: none;
-            }
-        }
-        #user-username
-        {
-            p 
-            {
-                padding-bottom: 1vh;
-            }
-            div 
-            {
-                position: relative;
-                width: 70%;
+                align-items: center;
+                justify-content: space-between;
+                /* border: solid 1px yellow; */
+                gap: 3vh;
+                img 
+                {
+                    height: 100%;
+                    width: max(9vw, 10vh);
+                    border-radius: 50%;
+                }
+
+                
                 input 
                 {
-                    height: min(7vh, 7vw);
-                    border-radius: 7px;
-                    border: none;
-                    background-color: var(--secondary2);
-                    color: white;
-                    padding-left: 1vw;
-                    /* position: relative; */
-                    width: 100%;
+                    display: none;
                 }
-                button 
+                div 
                 {
-                    position: absolute;
-                    bottom: 0;
-                    right: -3vw;
+                    /* border: solid 1px red; */
+                    flex-grow: 1;
+                    display: flex;
+                    gap : 1vh;
+                    justify-content: space-evenly;
+                }
+            }
+            #user-username
+            {
+                p 
+                {
+                    padding-bottom: 1vh;
+                }
+                div 
+                {
+                    position: relative;
+                    width: 100%;
+                    input 
+                    {
+                        height: min(7vh, 7vw);
+                        border-radius: 7px;
+                        border: none;
+                        background-color: var(--secondary2);
+                        color: white;
+                        /* padding-left: 1vw; */
+                        position: relative;
+                        width: 100%;
+                    }
+                    button 
+                    {
+                        position: absolute;
+                        bottom: 0;
+                        right: -3vw;
 
-                    border-bottom-left-radius: 0;
-                    border-top-left-radius: 0;
+                        border-bottom-left-radius: 0;
+                        border-top-left-radius: 0;
+                    }
                 }
             }
         }
@@ -77,12 +91,16 @@ settings-view
     #settings-box3
     {
         grid-column: 1 / 3;
-        justify-content: space-around;
-
-        .button-type3
+        justify-content: space-between;
+        div 
         {
-            width: max(14vw, 14vh);
-            height: min(8vw, 8vh);
+            margin-bottom: 1%;  
+            .button-type3
+            {
+                width: max(120px, 22vw);
+                height: max(5vw, 5vh);
+            }
+
         }
     }
     #settings-box2
@@ -149,17 +167,20 @@ settings-view
     }
 }
 
-@media (max-width : 1024px)
+@media (max-width : 1024px)  and (min-height : 650px)
 {
     settings-view
     {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1.3fr 1fr;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
 
-        #user-picture-buttons
+        #settings-box2
         {
-            flex-direction: column;
-            gap: 1vh;
+            grid-row: 2 / 3;
+        }
+        #settings-box3
+        {
+            grid-column:auto;
         }
     }
 }
