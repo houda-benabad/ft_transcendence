@@ -256,7 +256,7 @@ profile-view
             }
         }
     }
-    @media (max-width : 1024px)
+    @media (max-width : 750px)
     {
         grid-template-columns: 1.2fr 1fr;
         grid-template-rows: 1fr 1fr;

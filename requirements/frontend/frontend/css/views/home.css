@@ -61,7 +61,7 @@ home-view
             }
         }
     }
-    @media (max-width : 1024px)
+    @media (max-width : 750px)
     {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1.5fr 1fr 1fr 1fr;

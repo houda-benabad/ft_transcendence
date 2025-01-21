@@ -34,7 +34,6 @@ export class Router
     }
     handleRoute(newPath=null)
     {
-        // console.log('new path is : ', newPath)
         const path = newPath || window.location.pathname
 
         if (!_tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
@@ -50,6 +49,8 @@ export class Router
     {
         let options
 
+        history.pushState(null, null, path)
+
         if (path.includes('/profile'))
         {
             if (path === '/profile' || path.includes('/profile/'))
@@ -61,15 +62,12 @@ export class Router
             else 
                 path = '/404'
         }
-        history.pushState(null, null, path)
-
         this.updateContent(path, options)
     }
     updateContent(path, options) // to make this more clean and maintenable
     {
-        const route = this._routes[path] || this._routes['/404']
         let fragment = document.createDocumentFragment()
-
+        const route = this._routes[path] || this._routes['/404']
         if (route.customElement)
         {
             fragment = document.createElement(route.customElement)

@@ -31,7 +31,7 @@ export class Notification {
         if ( type == 'new_notification'){
             const notification = document.querySelector('.circle')
 
-            notification.classList.add('active')
+            notification.classList.add('active-notification')
             console.log('here : ', notification)
         }
         this.renderHtml(type, data)

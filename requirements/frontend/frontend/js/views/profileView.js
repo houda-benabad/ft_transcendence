@@ -26,7 +26,7 @@ export class ProfileView extends HTMLElement
         this._database = await apiService.user.getProfileInfos(this._userId)
 
         if (this._database === 'not found')
-            router.handleRoute('/404')
+            return router.handleRoute('/404')
         this._dataTransformer = new databaseExtractorService(this._database)
 
         this.innerHTML = profileTemplate.layout()
