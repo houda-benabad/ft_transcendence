@@ -7,6 +7,7 @@ class OnlineStatusConsumer(WebsocketConsumer):
 
     def connect(self):
         self.group_name = self.scope["user"].username + "_friends"
+        self.accept()
         async_to_sync(self.channel_layer.group_add(self.group_name, self.channel_name))
 
         friends_qs = Friend.objects.friends(self.scope["user"])
@@ -17,7 +18,6 @@ class OnlineStatusConsumer(WebsocketConsumer):
             self.group_name, {"type": "friend.status", "friend_username": self.scope["user"].username, "status": "online"}
         ))
         
-        self.accept()
     
     def disconnect(self, close_code):
 

@@ -2,12 +2,15 @@ from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
 from . import views
 from .views import CustomUserViewSet
+from djoser.views import UserViewSet
 from . import views
 
 urlpatterns = [
     path('auth/users/signup', CustomUserViewSet.as_view({'post': 'create'}), name='user-create'),
-    path('api/users/<int:id>', CustomUserViewSet.as_view({'get': 'retrieve'}), name='user'), #views.CustomUserViewSet.as_view({'get': 'retrieve'})
-    path('api/users/me', CustomUserViewSet.as_view({'get': 'me'}), name='current-user'), #views.CustomUserViewSet.as_view({'get': 'me'})
+    path('api/users/<int:id>', UserViewSet.as_view({'get': 'retrieve'}), name='user'), #views.CustomUserViewSet.as_view({'get': 'retrieve'})
+    path('api/users/me', UserViewSet.as_view({'get': 'me'}), name='current-user'), #views.CustomUserViewSet.as_view({'get': 'me'})
+    path('api/users/set_username', UserViewSet.as_view({'post': 'set_username'}), name='set_username'),
+    path('api/users/set_password', UserViewSet.as_view({'post': 'set_password'}), name='set_password'),
     path("auth/users/signin", jwt_views.TokenObtainPairView.as_view(), name="jwt-create"),
     path("auth/jwt/refresh/", jwt_views.TokenRefreshView.as_view(), name="jwt-refresh"),
     path("auth/jwt/verify/", jwt_views.TokenVerifyView.as_view(), name="jwt-verify"),

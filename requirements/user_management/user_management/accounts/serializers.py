@@ -6,13 +6,14 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 import requests
 from django.conf import settings
+from django.core.validators import validate_image_file_extension
 
 
 User = get_user_model()
 
 class UserCreateSerializer(BaseUserCreateSerializer):
 
-    avatar = serializers.ImageField(required=False, write_only=True)
+    avatar = serializers.ImageField(required=False, write_only=True, validators=[validate_image_file_extension])
 
     class Meta(BaseUserCreateSerializer.Meta):
         model = User

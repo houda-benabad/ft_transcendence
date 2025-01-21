@@ -1,12 +1,23 @@
-from rest_framework import generics
+from rest_framework import generics, mixins
 from .models import Profile
-from .serializers import UserProfileSerializer , DetailedUserProfileSerializer, OtherUserProfileSerializer, DetailedotherUserProfileSerializer
+from . import serializers
 from rest_framework import filters
 import re
 
+
+# class ProfilePicUpdateDeleteView(mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+#     queryset = Profile.objects.select_related('user').all()
+#     serializer_class = serializers.ProfilePicUpdateSerializer
+
+#     def get_object(self):
+#         return self.request.user.profile
+
+# profile_pic_update_delete_view = ProfilePicUpdateDeleteView.as_view()
+
+
 class ProfileDetailAPIView(generics.RetrieveAPIView):
     queryset = Profile.objects.select_related('user').all()
-    serializer_class = DetailedUserProfileSerializer
+    serializer_class = serializers.DetailedUserProfileSerializer
 
     def get_object(self):
         return self.request.user.profile
@@ -15,14 +26,14 @@ profile_detail_view = ProfileDetailAPIView.as_view()
 
 class ProfileListAPIView(generics.ListAPIView):
     queryset = Profile.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = serializers.UserProfileSerializer
 
 Profile_list_view = ProfileListAPIView.as_view()
 
 
 class OtherUserDetailAPIView(generics.RetrieveAPIView):
     queryset = Profile.objects.select_related('user').all()
-    serializer_class = DetailedotherUserProfileSerializer
+    serializer_class = serializers.DetailedotherUserProfileSerializer
     lookup_field = 'user__id'
 
 other_user_profile_detail_view = OtherUserDetailAPIView.as_view()
@@ -30,7 +41,7 @@ other_user_profile_detail_view = OtherUserDetailAPIView.as_view()
 
 class SearchUsersView(generics.ListAPIView):
     queryset = Profile.objects.select_related('user').all()
-    serializer_class = UserProfileSerializer
+    serializer_class = serializers.UserProfileSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['user__username']
     ordering = ['user__username']
