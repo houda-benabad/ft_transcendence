@@ -36,8 +36,10 @@ export class Router
     }
     async handleRoute(newPath=null)
     {
+        console.log('im heree')
         const path = newPath || window.location.pathname
         const query = window.location.search
+
         if (query) // this should nt stay in here - -
         {
             const params = new URLSearchParams(query)
@@ -84,7 +86,10 @@ export class Router
             fragment = document.createElement(route.customElement)
             if (route.api)
                 fragment.database = await this.fetchDataForCtmEl(options, route.api)
+            if (options)
+                fragment.userId = options
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
+            // console.log('->>>>>>>>> here in router : ', document.querySelector(`[data-action="router"][href="${path}"]`))
             document.querySelector(`[data-action="router"][href="${path}"]`).classList.add('selected')
         }
         else

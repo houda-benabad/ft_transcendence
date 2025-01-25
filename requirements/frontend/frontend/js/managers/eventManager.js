@@ -4,6 +4,7 @@ import { multiplayer } from '../mods/multiplayer.js'
 import { modalService } from '../services/modalService.js'
 import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
+import { searchService } from '../services/searchService.js'
 
 export class EventManager
 {
@@ -44,9 +45,6 @@ export class EventManager
         const eventType = event.type
         const target = event.target
 
-        // console.log('event type : ', eventType)
-        // console.log('event target : ', target)
-
         if (eventType === 'focusout' && target.id === '')
             this.handleSearchFocus()
         else if (eventType === 'click' && target.matches('a'))
@@ -57,8 +55,8 @@ export class EventManager
             this.handleButtonEvents(target)
         else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
             this.handleformEvents(event, target)
-        else if (eventType === 'input' && target.id === '') // when cleansing
-            this.handleSearchInput(event, target)
+        else if (eventType === 'input' && target.id === 'search-input') // when cleansing
+            this.handleSearchInput(event)
         else if (eventType === 'input' && target.id === 'user-input-img')
             this.handleInputFiles(target)
         else if (eventType === 'click' && target.classList.contains('search-item'))
@@ -160,6 +158,7 @@ export class EventManager
 	}
 	handleSearchInput(event, target)
 	{
+		console.log('im in heree !!!')
 	   const debounced = searchService.debounce(searchService.performSearch.bind(this), 500)
 
 		const value = event.target.value
@@ -170,10 +169,9 @@ export class EventManager
 	handleAnchorEvents(event, target)
 	{
 		event.preventDefault()
-
+	
         const link = target.getAttribute('data-link')
         const action = target.getAttribute("data-action")
-
 		if (link)
 			this._router.handleRoute(link)
 		else if (action)

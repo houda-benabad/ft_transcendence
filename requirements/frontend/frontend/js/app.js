@@ -2,7 +2,7 @@ import { GlobalManager } from "./managers/globalManager.js"
 
 window.addEventListener('DOMContentLoaded', async () => 
 {
-    const globalManager = new GlobalManager()
+    // ma mahalouk f li3rab
 })
 
 

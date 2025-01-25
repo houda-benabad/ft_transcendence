@@ -91,7 +91,7 @@ export const profileTemplate  =
             </tbody
             </div>`        
     },
-    friendsBox(userId)
+    friendsBox(userId, username)
     {
         let dynamicPart
 
@@ -107,7 +107,7 @@ export const profileTemplate  =
             </div>`
         }
         else 
-            dynamicPart = `<h2>eva's friends</h2>`// in here gotta update the username
+            dynamicPart = `<h2>${username}'s friends</h2>`// in here gotta update the username
 
         return `${dynamicPart}<div id="friends-box-container"></div>`
     },
@@ -121,6 +121,7 @@ export const profileTemplate  =
             const selectedChoice = document.querySelector('.selected-choice')
             const value = selectedChoice ? selectedChoice.id : 'friends'
 
+            console.log('what is the value in here : ', value)
             friendsBoxConatainer.innerHTML = `<p>there is no ${value} at the moment</p>`
             return ;
         }

@@ -1,7 +1,7 @@
 // import { apiService } from "../services/apiService.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
-import { addListenersForFriendsBox} from '../utils/eventListeners.js'
+// import { addListenersForFriendsBox} from '../utils/eventListeners.js'
 // import { router  } from "../utils/global.js"
 
 export class ProfileView extends HTMLElement
@@ -11,10 +11,17 @@ export class ProfileView extends HTMLElement
         super()
         
         this._database = null
+        this._username = null
+        this._userId = null
     }
     set database(value)
     {
         this._database = value
+    }
+    set userId(value)
+    {
+        console.log('im in heee')
+        this._userId = value
     }
     async connectedCallback() 
     {
@@ -42,14 +49,50 @@ export class ProfileView extends HTMLElement
             slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
         })
         if (this._userId === 'me')
-            addListenersForFriendsBox.apply(this) // gotta remove the events after finishing up with it .
+            this.addListenersForFriendsBox()
         animateProgressBar()
     }
+    addListenersForFriendsBox()
+    {
+        let selectedChoice = document.querySelector('.selected-choice')
+        const slidingLine = document.getElementById('sliding-line')
+
+        // initial value
+        slidingLine.style.width = `${selectedChoice.offsetWidth}px`
+        slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
+
+        document.querySelectorAll('.choice-item').forEach(e => {
+            e.addEventListener('mouseover', (event) => {
+                slidingLine.style.width = `${e.offsetWidth}px`
+                slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
+                e.classList.add('hoovered')
+                selectedChoice.classList.remove('selected-choice')
+            })
+            e.addEventListener('mouseout', (event) => {
+                slidingLine.style.width = `${selectedChoice.offsetWidth}px`
+                slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
+                e.classList.remove('hoovered')
+                selectedChoice.classList.add('selected-choice')
+            })
+            e.addEventListener('click', (event) => {
+                event.preventDefault()
+                
+                slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
+                selectedChoice.classList.remove('selected-choice')
+                e.classList.add('selected-choice')
+                selectedChoice = e
+
+                const friendsDb = this._database.extractData('friends')
+                profileTemplate.friendsBoxConatainer(friendsDb)
+            })
+    })
+}
     addProfile()
     {
         const profileBox = document.getElementById('profile-box1')
         const profileDb = this._database.extractData('profile')
 
+        this._username = profileDb.username
         profileBox.innerHTML = profileTemplate.profileBox(profileDb) 
 
         const icons = document.createElement('div', {is : 'custom-icons'})
@@ -69,7 +112,7 @@ export class ProfileView extends HTMLElement
     {
         const friendsBox = document.querySelector('.friends-box')
 
-        friendsBox.innerHTML = profileTemplate.friendsBox(this._userId)
+        friendsBox.innerHTML = profileTemplate.friendsBox(this._userId, this._username)
 
         const friendsDb = this._database.extractData('friends')
 

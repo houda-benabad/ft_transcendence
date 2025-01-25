@@ -45,8 +45,8 @@ export default class Local{
 		return { 
 			score : this.physics.score,
 			name: {
-				p1: "hajar",
-				p2: "hind"
+				p1: this.players[0],
+				p2: this.players[1]
 			}
 		}
 

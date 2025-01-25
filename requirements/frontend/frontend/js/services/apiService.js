@@ -92,6 +92,12 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
+            if (response.status === 401)
+            {
+                console.log('test token  : ', globalManager._tokenService.accessToken)
+                console.log('test status : ', response.status)
+                return ;
+            }
             if (needsAuth && response.status === 401) // this needs to be implemented in a maintenabale and cleam way
                 {
                     console.log('->>>>>>> access token was expired')
@@ -261,7 +267,7 @@ export const apiService =
             generatedHttpRequests.createGetRequest(ENDPOINTS.PROFILE + id, {needsAuth : true, modalMessage: null})(resolve)
         }),
         getUsers : (query) => new Promise (resolve => {
-            generatedHttpRequests.createGetRequest(ENDPOINTS.SEARCHED_USERS)(resolve, {key : 'search', value : query})
+            generatedHttpRequests.createGetRequest(ENDPOINTS.SEARCHED_USERS, {needsAuth : true, modalMessage: null})(resolve, {key : 'search', value : query})
         }),
     },
     friendship :
