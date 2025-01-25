@@ -75,14 +75,15 @@ export class Router
         }
         this.updateContent(path, options)
     }
-    updateContent(path, options) // to make this more clean and maintenable
+    async updateContent(path, options) // to make this more clean and maintenable
     {
         let fragment = document.createDocumentFragment()
         const route = this._routes[path] || this._routes['/404']
         if (route.customElement)
         {
             fragment = document.createElement(route.customElement)
-            fragment.database = this.fetchDataForCtmEl(options, route.api)
+            if (route.api)
+                fragment.database = await this.fetchDataForCtmEl(options, route.api)
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
             document.querySelector(`[data-action="router"][href="${path}"]`).classList.add('selected')
         }
@@ -107,6 +108,6 @@ export class Router
 
         if (response === 'not found')
             return this.handleRoute('/404')
-        return new databaseExtractorService(this._database)
+        return new databaseExtractorService(response)
     }
 }

@@ -21,4 +21,5 @@ export class GlobalManager
 }
 
 const eventListeners = new EventService() // just for the moment i wont be in need of it later on
-export { eventListeners }
+const globalManager = new GlobalManager()
+export { eventListeners, globalManager}

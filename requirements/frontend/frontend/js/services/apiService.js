@@ -1,5 +1,6 @@
 import { ENDPOINTS } from '../constants/endpoints.js'
-import { modalService } from './modalService.js'
+import { modalService } from './modalService.js' // this one too need to find a solution for it
+import { globalManager } from '../managers/globalManager.js'
 
 class RequestConfiguration
 {
@@ -87,7 +88,7 @@ class ApiService
                 method,
                 headers : {
                     "Content-Type": "application/json",
-                    "Authorization": needsAuth ? `Bearer ${_tokenService.accessToken}` : null, // for the moment no token variable does exist.
+                    "Authorization": needsAuth ? `Bearer ${globalManager._tokenService.accessToken}` : null, // for the moment no token variable does exist.
                 },
                 body : body ? JSON.stringify(body) : null
             })
@@ -99,18 +100,18 @@ class ApiService
                         headers : {
                             "Content-Type": "application/json"
                         },
-                        body : JSON.stringify({"refresh" : _tokenService.refreshToken})
+                        body : JSON.stringify({"refresh" : globalManager._tokenService.refreshToken})
                     })
                     if (response.status === 401)
                     {
                         console.log('->>>>>> refresh token was expired')
-                        _tokenService.clear()
+                        globalManager_tokenService.clear()
                         document.getElementById('app').classList.remove('active')
-                        GlobalManager._router.handleRoute('/signin')
+                        globalManager._router.handleRoute('/signin')
                         return ; 
                     }
                     const responseBody = await response.json()
-                    _tokenService.accessToken = responseBody.access
+                    globalManager._tokenService.accessToken = responseBody.access
                     this.request()
                     return ;    
             }
@@ -150,19 +151,19 @@ class ApiService
             headers : {
                 "Content-Type": "application/json"
             },
-            body : JSON.stringify({"refresh" : _tokenService.refreshToken})
+            body : JSON.stringify({"refresh" : globalManager._tokenService.refreshToken})
         })
         if (response.status === 401)
         {
             // console.log('->>>>>> refresh token was expired')
-            _tokenService.clear()
+            globalManager._tokenService.clear()
             document.getElementById('app').classList.remove('active')
-            GlobalManager._router.handleRoute('/signin')
+            globalManager._router.handleRoute('/signin')
             return ;
         }
         // console.log('im in here doing some work')
         const responseBody = await response.json()
-        _tokenService.accessToken = responseBody.access
+        globalManager._tokenService.accessToken = responseBody.access
         this.request()
     }    
     async handleMessaageErrors(responseBody)
@@ -274,7 +275,6 @@ export const apiService =
         deleteFriendship : (action, id) => new Promise (resolve => 
         {
             const messageIdentifier = action.replace('_',' the ')
-            console.log('here : ', messageIdentifier)
             generatedHttpRequests.createDeleteRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${id}`, `you did ${messageIdentifier} successfully`)(resolve)
         }),
     },
@@ -282,7 +282,6 @@ export const apiService =
     {
         getLeaderboardData :  () => new Promise (resolve => 
         {
-            console.log('im this function')
             generatedHttpRequests.createGetRequest(ENDPOINTS.LEADERBOARD, {needsAuth : false, modalMessage: null})(resolve)
         })
     }
