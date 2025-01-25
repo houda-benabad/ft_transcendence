@@ -282,6 +282,7 @@ export const apiService =
     {
         getLeaderboardData :  () => new Promise (resolve => 
         {
+            console.log('im this function')
             generatedHttpRequests.createGetRequest(ENDPOINTS.LEADERBOARD, {needsAuth : false, modalMessage: null})(resolve)
         })
     }

@@ -1,7 +1,8 @@
 import { signTemplate } from "../templates/signTemplate.js"
 import { errorTemplate } from "../templates/errorTemplate.js"
+import { apiService } from "../services/apiService.js"
 
-export const ROUTES = {
+export const ROUTES = (apiService) => ({
     '/signin' :
     {
         template : signTemplate('signin'),
@@ -18,13 +19,15 @@ export const ROUTES = {
     {
         customElement : 'home-view',
         protected: true,
-        allScreen : false
+        allScreen : false,
+        api : () => apiService.home.getLeaderboardData(),
     },
     '/profile' :
     {
         customElement : 'profile-view',
         protected: true,
-        allScreen : false
+        allScreen : false,
+        api : (userId) => apiService.user.getProfileInfos(userId)
     },
     '/game-settings' :
     {
@@ -44,4 +47,4 @@ export const ROUTES = {
         protected: false,
         allScreen : true
     },
-}
+})

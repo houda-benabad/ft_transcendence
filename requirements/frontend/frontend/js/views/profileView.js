@@ -1,8 +1,7 @@
-import { apiService } from "../services/apiService.js"
+// import { apiService } from "../services/apiService.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
 import { addListenersForFriendsBox} from '../utils/eventListeners.js'
-import { databaseExtractorService } from "../services/databaseExtractorService.js"
 // import { router  } from "../utils/global.js"
 
 export class ProfileView extends HTMLElement
@@ -10,31 +9,22 @@ export class ProfileView extends HTMLElement
     constructor()
     {
         super()
-
-        this._userId = null
+        
         this._database = null
-        this._dataTransformer = null
     }
-    set userId(value)
+    set database(value)
     {
-        this._userId = value
+        this._database = value
     }
-
     async connectedCallback() 
     {
-        this._database = await apiService.user.getProfileInfos(this._userId)
-
-        if (this._database === 'not found')
-            return router.handleRoute('/404')
-        this._dataTransformer = new databaseExtractorService(this._database)
-
         this.innerHTML = profileTemplate.layout()
         this.addProfile()
         this.gameHistory()
         this.addFriendsBox()
         this.setupEventListenersAndAnimations()
     }
-    disconnectedCallback()
+    disconnectedCallback() // later
     {
         window.removeEventListener('resize', animateProgressBar)
 
@@ -58,7 +48,7 @@ export class ProfileView extends HTMLElement
     addProfile()
     {
         const profileBox = document.getElementById('profile-box1')
-        const profileDb = this._dataTransformer.extractData('profile')
+        const profileDb = this._database.extractData('profile')
 
         profileBox.innerHTML = profileTemplate.profileBox(profileDb) 
 
@@ -71,7 +61,7 @@ export class ProfileView extends HTMLElement
     gameHistory()
     {
         const gameHistory = document.querySelector('.table-box')
-        const gameHistoryDb = this._dataTransformer.extractData('gameHistory')
+        const gameHistoryDb = this._database.extractData('gameHistory')
 
         gameHistory.innerHTML = profileTemplate.gameHistory(gameHistoryDb)
     }
@@ -81,7 +71,7 @@ export class ProfileView extends HTMLElement
 
         friendsBox.innerHTML = profileTemplate.friendsBox(this._userId)
 
-        const friendsDb = this._dataTransformer.extractData('friends')
+        const friendsDb = this._database.extractData('friends')
 
         profileTemplate.friendsBoxConatainer(friendsDb)
     }

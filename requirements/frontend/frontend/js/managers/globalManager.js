@@ -20,5 +20,5 @@ export class GlobalManager
     }
 }
 
-const eventListeners = new EventService() // just for the moment
+const eventListeners = new EventService() // just for the moment i wont be in need of it later on
 export { eventListeners }

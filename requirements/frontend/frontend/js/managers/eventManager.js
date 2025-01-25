@@ -24,6 +24,9 @@ export class EventManager
             'handle-notifications' : this.handleNotifications.bind(this)
         }
 		this._apiService = global._apiService
+		this._router = global._router
+		this._tokenService = global._tokenService
+		this._reset =  global._reset
     } 
     async handleIntraCall(target)
     {
@@ -78,7 +81,7 @@ export class EventManager
 			mainElement.relationshipStatus = 'stranger'
 		}
 		else 
-			router.handleRoute('/settings')
+			this._router.handleRoute('/settings')
 
 
 		// if (action === 'send_request')
@@ -118,12 +121,12 @@ export class EventManager
 			const response = await this._apiService.auth[action](formObject)
 
 			if (action  === 'signup')
-				setTimeout(() => router.handleRoute('/signin'), 1000)
+				setTimeout(() => this._router.handleRoute('/signin'), 1000)
 			 else
 			{
-				_tokenService.tokens= response
-				await reset()
-				router.handleRoute('/')
+				this._tokenService.tokens= response
+				await this._reset()
+				this._router.handleRoute('/')
 			}
 		}
 	}
@@ -137,7 +140,7 @@ export class EventManager
 			if (!searchResults.classList.contains('clicked'))
 				searchService.clear()
 		}, 5000)
-		console.log('IM OUT OF FOCUSSSSS OUYTTTTTT')
+		// console.log('IM OUT OF FOCUSSSSS OUYTTTTTT') // gotta not use focus out
 	}
 	handleSearchItem(target)
 	{
@@ -147,7 +150,7 @@ export class EventManager
 
 		searchResults.classList.add('clicked')
 		searchService.clear()
-		router.handleRoute(`/profile/${id}`)
+		this._router.handleRoute(`/profile/${id}`)
 	}
 	handleSearchInput(event, target)
 	{
@@ -166,7 +169,7 @@ export class EventManager
         const action = target.getAttribute("data-action")
 
 		if (link)
-			router.handleRoute(link)
+			this._router.handleRoute(link)
 		else if (action)
 		{
 			// console.log('action : ', action)
@@ -216,7 +219,7 @@ export class EventManager
 			router.navigateTo( '/game' )
 			await local( this.gameSettings , ["player1", "player2"])
 			await modalService.show(  'Game over', 'hihi' )
-			await reset(  )
+			await this._reset(  )
 			router.navigateTo( '/' )
 		}
 		else if ( gameMode == MODE.TOURNAMENT){
@@ -229,19 +232,19 @@ export class EventManager
 			winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
 			const winner = await local(  this.gameSettings , winners )
 			await modalService.show(  'Game over', 'hihi' )
-			await reset(  )
+			await this._reset(  )
 			router.navigateTo( '/' )
 		}
 		else if ( gameMode == MODE.REMOTE ){
 			await remote( )
 			// await modalService.show(  'Game over', 'hihi' )
-			await reset(  )
+			await this._reset(  )
 			router.navigateTo( '/' )
 		}
 		else if ( gameMode == MODE.MULTIPLAYER ){
 			await multiplayer( )
 			// await modalService.show(  'Game over', 'hihi' )
-			await reset(  )
+			await this._reset(  )
 			router.navigateTo( '/' )
 		}
 		console.log('in hereee hajar u should take the functions from event handlers and out it in here: ' , gameMode)
@@ -255,13 +258,13 @@ export class EventManager
 			this.handleLogout()
 		else
 	   
-		router.handleRoute(newPath)
+		this._router.handleRoute(newPath)
 	}
 	handleLogout()
 	{
 		document.getElementById('app').classList.remove('active')
-		_tokenService.clear()
-		router.handleRoute('/signin')
+		this._tokenService.clear()
+		this._router.handleRoute('/signin')
 	}
 	handleImgUpdate(target)
 	{

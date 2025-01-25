@@ -1,3 +1,4 @@
+import { databaseExtractorService } from "../services/databaseExtractorService.js"
 import { ROUTES } from '../constants/routes.js'
 
 import '../views/homeView.js'
@@ -13,7 +14,7 @@ export class Router
         this._apiService = global._apiService
         this._tokenService = global._tokenService
         this._reset = global._reset
-        this._routes = ROUTES
+        this._routes = ROUTES(this._apiService)
         
         this.init()
     }
@@ -37,12 +38,12 @@ export class Router
     {
         const path = newPath || window.location.pathname
         const query = window.location.search
-        if (query)
+        if (query) // this should nt stay in here - -
         {
             const params = new URLSearchParams(query)
             const code = params.get('code')
 
-            const response = await this._apiService.auth.intraCallback({code : code})
+            const response = await this._apiService.auth.intraCallback({code : code}) // im getting a 500 error what could be the reason
             this._tokenService.tokens = response
             await this._reset()
         }
@@ -57,7 +58,7 @@ export class Router
     }
     navigateTo(path)
     {
-        let options
+        let options = null
 
         history.pushState(null, null, path)
 
@@ -81,9 +82,7 @@ export class Router
         if (route.customElement)
         {
             fragment = document.createElement(route.customElement)
-            if (options)
-                fragment.userId = options
-
+            fragment.database = this.fetchDataForCtmEl(options, route.api)
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
             document.querySelector(`[data-action="router"][href="${path}"]`).classList.add('selected')
         }
@@ -101,5 +100,13 @@ export class Router
         const container = route.allScreen ? app : main
 
         container.replaceChildren(fragment)
+    }
+    async fetchDataForCtmEl(options, api)
+    {
+        const response = await api(options)
+
+        if (response === 'not found')
+            return this.handleRoute('/404')
+        return new databaseExtractorService(this._database)
     }
 }

@@ -10,11 +10,12 @@ export class homeView extends HTMLElement
         this.buttons = null /// haha i dont think i will wokr with you anymore  :p
         this._database = null
     }
+    set database(value)
+    {
+        this._database = value
+    }
     async connectedCallback()
     {
-        this._database = await apiService.home.getLeaderboardData()
-        this._dataTransformer = new databaseExtractorService(this._database)
-
         this.innerHTML = homeTemplate.layout()
         //for tournament
         const tournament = document.getElementById('tournament')
@@ -37,7 +38,7 @@ export class homeView extends HTMLElement
     }
     addLeaderBoard()
     {
-        const leaderboardDb = this._dataTransformer.extractData('leaderboard')
+        const leaderboardDb = this._database.extractData('leaderboard')
         const tournament = document.querySelector('.table-box')
 
         tournament.innerHTML = homeTemplate.leaderboard(leaderboardDb)
