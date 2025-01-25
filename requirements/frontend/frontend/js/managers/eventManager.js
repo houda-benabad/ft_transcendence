@@ -1,3 +1,9 @@
+import { MODE } from '../constants/engine.js'
+import { remote } from '../mods/remote.js'
+import { multiplayer } from '../mods/multiplayer.js'
+import { modalService } from '../services/modalService.js'
+import { formService } from '../services/formService.js'
+import { local } from '../mods/local.js'
 
 export class EventManager
 {
@@ -214,38 +220,38 @@ export class EventManager
 		const gameMode = target.getAttribute("data-game-mode")
 
 		if ( gameMode === MODE.LOCAL ){
-			await router.navigateTo( '/game-settings' )
+			await this._router.navigateTo( '/game-settings' )
 			this.gameSettings = await formService.game()
-			router.navigateTo( '/game' )
+			this._router.navigateTo( '/game' )
 			await local( this.gameSettings , ["player1", "player2"])
 			await modalService.show(  'Game over', 'hihi' )
 			await this._reset(  )
-			router.navigateTo( '/' )
+			this._router.navigateTo( '/' )
 		}
 		else if ( gameMode == MODE.TOURNAMENT){
 			const players = await modalService.show(  '', false, 'tournament' ) // the alias names for the players 
-			await router.navigateTo( '/game-settings' )
+			await this._router.navigateTo( '/game-settings' )
 			this.gameSettings = await formService.game(  )
-			router.navigateTo( '/game' )
+			this._router.navigateTo( '/game' )
 			const winners = []
 			winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
 			winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
 			const winner = await local(  this.gameSettings , winners )
 			await modalService.show(  'Game over', 'hihi' )
 			await this._reset(  )
-			router.navigateTo( '/' )
+			this._router.navigateTo( '/' )
 		}
 		else if ( gameMode == MODE.REMOTE ){
 			await remote( )
 			// await modalService.show(  'Game over', 'hihi' )
 			await this._reset(  )
-			router.navigateTo( '/' )
+			this._router.navigateTo( '/' )
 		}
 		else if ( gameMode == MODE.MULTIPLAYER ){
 			await multiplayer( )
 			// await modalService.show(  'Game over', 'hihi' )
 			await this._reset(  )
-			router.navigateTo( '/' )
+			this._router.navigateTo( '/' )
 		}
 		console.log('in hereee hajar u should take the functions from event handlers and out it in here: ' , gameMode)
 
