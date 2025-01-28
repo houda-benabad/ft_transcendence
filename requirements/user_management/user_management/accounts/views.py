@@ -13,6 +13,8 @@ from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
 import logging
 import json
+from djoser.serializers import UsernameSerializer
+from rest_framework import generics
 
 logging.basicConfig(level=logging.DEBUG)  
 
@@ -32,6 +34,15 @@ class Error(exceptions.APIException):
         self.detail = detail
         self.status_code = status_code
         super().__init__(self.detail)
+
+class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UsernameSerializer
+
+    def get_object(self):
+        return self.request.user
+
+set_username_api_view = UserUsrnameUpdateApiView.as_view()
 
 class   CustomUserViewSet(UserViewSet):
     def perform_create(self, serializer):

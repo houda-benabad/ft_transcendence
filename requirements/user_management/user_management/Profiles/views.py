@@ -1,8 +1,27 @@
 from rest_framework import generics
 from .models import Profile
-from .serializers import UserProfileSerializer , DetailedUserProfileSerializer, OtherUserProfileSerializer, DetailedotherUserProfileSerializer
-from rest_framework import filters
+from .serializers import \
+UserProfileSerializer,ProfilePicSerializer, UserBaseProfileSerializer ,DetailedUserProfileSerializer, OtherUserProfileSerializer, DetailedotherUserProfileSerializer
+from rest_framework import filters, mixins
 import re
+
+class ProfilePicUpdateAPIView(generics.UpdateAPIView):
+    queryset = Profile.objects.select_related('user').all()
+    serializer_class = ProfilePicSerializer
+
+    def get_object(self):
+        return self.request.user.profile
+            
+profile_picture_update_view = ProfilePicUpdateAPIView.as_view()
+
+class BaseProfileAPIView(generics.RetrieveAPIView):
+    queryset = Profile.objects.select_related('user').all()
+    serializer_class = UserBaseProfileSerializer
+
+    def get_object(self):
+        return self.request.user.profile
+            
+base_profile_view = BaseProfileAPIView.as_view()
 
 class ProfileDetailAPIView(generics.RetrieveAPIView):
     queryset = Profile.objects.select_related('user').all()
