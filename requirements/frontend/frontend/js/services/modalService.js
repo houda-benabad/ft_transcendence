@@ -7,7 +7,7 @@ export const modalService =
 {
     show(message, automatised =  false , type = null)
     {  
-        console.log('in here  : ', message)
+        // console.log('in here  : ', message)
         return new Promise(async (resolve) =>  {
             const app = document.getElementById('app')
             const modalHtml = this.createModalHtml(type, message)

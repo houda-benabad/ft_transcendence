@@ -9,7 +9,8 @@ export class databaseExtractorService
         const extractionType = {
             'profile' : this.extractDataForProfile.bind(this),
             'gameHistory' : this.extractDataForGameHistory.bind(this),
-            'friends' : this.extractDataForFriends.bind(this),
+            'friendsList' : this.extractDataForFriendsList.bind(this),
+            'friendsRequests' : this.extractDataForFriendsRequests.bind(this),
             'leaderboard' : this.extractDataForLeaderboard.bind(this),
             'notifications' : this.extractDataForNotifications.bind(this),
         }
@@ -58,19 +59,20 @@ export class databaseExtractorService
             })
         )
     }
-    extractDataForFriends()
-    {
-        const selectedChoice = document.querySelector('.selected-choice') 
+    // extractDataForFriends()
+    // {
+    //     console.log('here database is : ', this._database)
+    //     const selectedChoice = document.querySelector('.selected-choice') 
 
-        // console.log('selected choice : ', selectedChoice.id)
-        const type = selectedChoice ? (selectedChoice.id === 'friends' ? 'friendsList' : 'friendsRequests') : 'friendsList'
+    //     // console.log('selected choice : ', selectedChoice.id)
+    //     const type = selectedChoice ? (selectedChoice.id === 'friends' ? 'friendsList' : 'friendsRequests') : 'friendsList'
 
-        // console.log('type : ', type)
-        if (type === 'friendsList')
-            return this.extractDataForFriendsList()
-        else
-            return this.extractDataForFriendsRequests()
-    }
+    //     // console.log('type : ', type)
+    //     if (type === 'friendsList')
+    //         return this.extractDataForFriendsList()
+    //     else
+    //         return this.extractDataForFriendsRequests()
+    // }
     extractDataForFriendsList()
     {
         const { friends, relationship } = this._database

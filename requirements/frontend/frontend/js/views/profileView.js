@@ -1,8 +1,6 @@
-// import { apiService } from "../services/apiService.js"
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
-// import { addListenersForFriendsBox} from '../utils/eventListeners.js'
-// import { router  } from "../utils/global.js"
+import { Icons ,Friends} from "../componants/customElements.js"
 
 export class ProfileView extends HTMLElement
 {
@@ -20,7 +18,7 @@ export class ProfileView extends HTMLElement
     }
     set userId(value)
     {
-        console.log('im in heee')
+        // console.log('im in heee')
         this._userId = value
     }
     async connectedCallback() 
@@ -111,13 +109,20 @@ export class ProfileView extends HTMLElement
     addFriendsBox()
     {
         const friendsBox = document.querySelector('.friends-box')
-
         friendsBox.innerHTML = profileTemplate.friendsBox(this._userId, this._username)
 
-        const friendsDb = this._database.extractData('friends')
+        const friends = document.createElement('div', {is : 'custom-friends'})
 
-        profileTemplate.friendsBoxConatainer(friendsDb)
+        friends.friendsListDb = this._database.extractData('friendsList')
+        friends.friendsRequestsDb = this._database.extractData('friendsRequests')
+        
+        friendsBox.appendChild(friends)
+
+
+
+        // const friendsDb = this._database.extractData('friends')
+        // profileTemplate.friendsBoxConatainer(friendsDb)
     }
-   
+    
 }
 customElements.define('profile-view', ProfileView) 

@@ -1,5 +1,4 @@
 import { escapeHtml } from "../utils/security.js"
-import { Icons } from "../componants/customElements.js"
 
 export const profileTemplate  =
 {
@@ -109,41 +108,6 @@ export const profileTemplate  =
         else 
             dynamicPart = `<h2>${username}'s friends</h2>`// in here gotta update the username
 
-        return `${dynamicPart}<div id="friends-box-container"></div>`
-    },
-    friendsBoxConatainer(db) //rthis is not a template .
-    {
-        let friendsBoxConatainer = document.getElementById('friends-box-container')
-        let fragment = document.createDocumentFragment()
-        
-        if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
-        {
-            const selectedChoice = document.querySelector('.selected-choice')
-            const value = selectedChoice ? selectedChoice.id : 'friends'
-
-            console.log('what is the value in here : ', value)
-            friendsBoxConatainer.innerHTML = `<p>there is no ${value} at the moment</p>`
-            return ;
-        }
-        db.forEach(e => {
-            const friendBoxItem = document.createElement('div')
-
-            friendBoxItem.classList.add('friends-box-item')
-            friendBoxItem.innerHTML =
-            `
-                <img src='${escapeHtml(e.profilePic)}'>
-                <div class="user-infos">
-                    <p class="username">${escapeHtml(e.username)}</p>
-                    <p class="other">${escapeHtml(e.other)}</p>
-                </div>
-            `
-            const icons = document.createElement('div', {is : 'custom-icons'})
-            icons.className = 'icons'
-            icons.data = {id : e.id, relationship : e.relationship || null , iconId : e.type}
-            friendBoxItem.appendChild(icons)
-
-            fragment.appendChild(friendBoxItem)
-        })
-        friendsBoxConatainer.replaceChildren(fragment)
-    },
+        return `${dynamicPart}`
+    }
 }
