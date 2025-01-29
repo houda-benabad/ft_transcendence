@@ -91,7 +91,7 @@ export class databaseExtractorService
     }
     extractDataForFriendsRequests()
     {
-        const { requests } = this._database
+        const { requests = []} = this._database
     
         // console.log('requests : ', requests)
         // console.log('database : ', this._database.requests)

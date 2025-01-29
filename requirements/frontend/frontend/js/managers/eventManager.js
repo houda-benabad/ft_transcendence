@@ -102,16 +102,17 @@ export class EventManager
 	{
 		const action = target.getAttribute('action-type')
 		const id = target.getAttribute('id')
-		const friendsBoxItemId = target.closest('.friends-box-item').id
-		const friendsBoxContainer = document.getElementById('friends-box-container')
-        friendsBoxContainer.updateDb = friendsBoxItemId
-
+		
 		if (action === 'send_request' || action === 'accept_request')
 			await this._apiService.friendship.postFriendship(action, id)
 		else
 			await this._apiService.friendship.deleteFriendship(action, id)
+	
+		// updating the ui
+		const friendsBoxItemId = target.closest('.friends-box-item').id
+		const friendsBoxContainer = document.getElementById('friends-box-container')
 
-		
+		friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}	
 	}
 	async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
 	{

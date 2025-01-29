@@ -79,12 +79,15 @@ export class Icons extends HTMLDivElement
         if (iconId === 'profile')
             type = relationship ? relationship.status : 'me'
         else if (iconId === 'friend')
+        {
+            // console.log('->>>>> relationship  status : ', relationship.status)
             type =  relationship ? relationship.status  : 'me-friends'
+        }
         else 
             type = 'request'
 
-        console.log('->>>>>>>> type :' , type)
-        console.log('my id type : ', iconId)
+        // console.log('->>>>>>>> type :' , type)
+        // console.log('my id type : ', iconId)
         const iconActionType = {
         'friend'  : [{icon : 'eva:person-remove-outline', action :'remove_friend'}],
         'stranger' : [{icon : 'eva:person-add-outline', action : 'send_request'}],
@@ -124,34 +127,48 @@ export class Friends extends HTMLDivElement
         if (this._friendsRequesstDb === null)
             this._friendsRequestsDb = value
     }
-    set updateDb(index)
+    set updateDb({index, action})
     {
-        // console.log('im in updateDb  :', this._friendsRequestsDb[0])
-        // console.log('the db is to be updated : ', this._friendsList)
+        // console.log('index in here is  : ', index)
         if (this._friendsList === true)
-        {
             this._friendsListDb.splice(index, 1)
-        }
         else
         {
-            // console.log('im in heree !!!1   :', this._friendsRequestDb)
+           
             const{
                 id,
                 username,
                 profilePic,
-                relationship = 'friend',
+                relationship = {status  : 'friend' },
             } = this._friendsRequestsDb[index]
-            // console.log('value is  : ', value)
-            this._friendsListDb.push({id, username, profilePic, relationship, other : 'online', type : 'friend'})
-            // console.log('here the new value is :', this._friendsListDb)
+            if (action === 'accept_request')
+                this._friendsListDb.push({id, username, profilePic, relationship, other : 'online', type : 'friend'})
             this._friendsRequestsDb.splice(index, 1)
         }
-        this.updateContent() // for the moment i can update the ui later
+        this.removeChildUi(index)
     }
     async connectedCallback() 
     {
         this.id = 'friends-box-container'
         this.updateContent()
+    }
+    removeChildUi(index)
+    {
+        // console.log('index of child is : ', index)
+        const childToRemove = this.children[index]
+        this.removeChild(childToRemove)
+
+        const db = this._friendsList === true ? this._friendsListDb : this._friendsRequestsDb
+
+        if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
+        {
+            const value = this._friendsList ? 'friends' : 'requests'
+
+            this.innerHTML = `<p>there is no ${value} at the moment</p>`
+            return ;
+        }
+        Array.from(this.children).forEach((e, index) => e.id = index)
+
     }
     updateContent()
     {
@@ -169,7 +186,7 @@ export class Friends extends HTMLDivElement
             return ;
         }
         db.forEach((e, index) => {
-            console.log('testing e : ', e)
+            // console.log('testing e : ', e)
             const friendBoxItem = document.createElement('div')
 
             friendBoxItem.classList.add('friends-box-item')
