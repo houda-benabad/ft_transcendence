@@ -92,12 +92,6 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            if (response.status === 401)
-            {
-                console.log('test token  : ', globalManager._tokenService.accessToken)
-                console.log('test status : ', response.status)
-                return ;
-            }
             if (needsAuth && response.status === 401) // this needs to be implemented in a maintenabale and cleam way
                 {
                     console.log('->>>>>>> access token was expired')
@@ -122,7 +116,7 @@ class ApiService
                     return ;    
             }
             if (response.status === 500)
-                throw new Error(response.status)
+                throw new Error(await response.json())
             else if (response.status === 404)
                 this._resolve('not found')
             const contentType = response.headers.get('Content-Type');
@@ -137,7 +131,7 @@ class ApiService
         }
         catch(error)
         {
-            console.log('the error that was caught in api service is ', error)
+            console.log('the error ', error)
         }
     }
     async finishingUp(response =  null)

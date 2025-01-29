@@ -8,5 +8,3 @@ class Profile(models.Model):
     avatar = models.ImageField(default='default.jpg', upload_to='avatars')
     image_url = models.URLField(blank=True)
     is_oauth2 = models.BooleanField(default=False)
-
-

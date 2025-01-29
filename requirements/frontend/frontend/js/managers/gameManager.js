@@ -1,11 +1,11 @@
-// import router from "../router/router.js"
-// import { formService } from "../services/formService.js"
-// import { modalService } from "../services/modalService.js"
-// import Local from "./localManagers.js"
-// import { reset } from "../utils/utils.js"
-// import { local } from "../mods/local.js"
+import { globalManager } from "./globalManager.js"
+import { formService } from "../services/formService.js"
+import { modalService } from "../services/modalService.js"
+import { reset } from "../utils/utils.js"
+import { local } from "../mods/local.js"
+import { remote } from "../mods/remote.js"
+export class GameManager 
 
-export class gameManager 
 {
     constructor()
     {
@@ -13,38 +13,41 @@ export class gameManager
         this.app = document.getElementById( 'app' )
     }
 
-    #run(classInstance)
-    {
-        this.app.replaceChildren()
-
-        classInstance.setup( )
-        return new Promise ( ( resolve )=>{
-            classInstance.animate( resolve )
-        })
-    }
     async #init( ){
-        await router.navigateTo( '/game-settings' )
+        await globalManager._router.navigateTo( '/game-settings' )
         this.gameSettings = await formService.game(  )
-        router.navigateTo( './game' )
+        globalManager._router.navigateTo( '/game' )
     }
-    async #denit( ){
-        await modalService.show(  'Game over', 'hihi' )
+
+    async #denit( message='Game over' ){
+        await modalService.show(  message )
         await reset(  )
-        router.navigateTo( '/home' )
+        globalManager._router.navigateTo( '/' )
     }
     async local()
     {
-        this.#init( )
+        await this.#init()
         await local( this.gameSettings , ["player1", "player2"])
-        this.#denit()
+        await this.#denit()
     }
     async tournament( ){
         const players = await modalService.show(  '', false,'tournament' ) // the alias names for the players 
-        this.#init( )
+        await this.#init( )
         const winners = []
         winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
+        await modalService.show(  `This round winner is ${winners[0]}` , true)
         winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
+        await modalService.show(  `This round winner is ${winners[1]}` , true)
         const winner = await local(  this.gameSettings , winners )
-        this.#denit( )
+        await modalService.show(  `Winner is ${winner}` , true)
+        await this.#denit( )
+    }
+    async remote( ){
+        let result = await remote( )
+        await this.#denit( `You ${result.state}` )
+    }
+    async multiplayer( ){
+        await multiplayer( )
+        await this.#denit( )
     }
 }

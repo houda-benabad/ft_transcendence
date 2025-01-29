@@ -36,7 +36,7 @@ export default class Remote{
 		document.getElementById( "cancel-btn" ).addEventListener( 'click', async ( )=>{
 			this.socket.close( 4000 )
 			await reset(  )
-			router.navigateTo( '/' )
+			globalManager._router.navigateTo( '/' )
 		} )
 		this.socket  = this.setupSocket( resolve )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
@@ -57,7 +57,7 @@ export default class Remote{
 	}
 
 	update(  ){
-		this.input.movePlayers( this.engine.socket )
+		this.input.movePlayers( this.socket )
 		this.visual.updatePosition( )
 
 	}
@@ -72,7 +72,6 @@ export default class Remote{
 	}
 
 	updateApi( data ){
-		console.log( "api = ", data )
 		this.visual.updateCoordinates( data )
 	}
 
@@ -88,7 +87,7 @@ export default class Remote{
 	updateState( data, resolve ){
 		console.log( "result = ", data )
 
-		resolve( )
+		resolve( data )
 		cancelAnimationFrame( this.id )
 	}
 

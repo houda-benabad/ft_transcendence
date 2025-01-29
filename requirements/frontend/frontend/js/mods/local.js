@@ -5,9 +5,10 @@ import Local from "../managers/localManager.js"
 
 export async function local( options , players) {
     let local = new Local( options, players )
-    local.setup( )
+    local.setup(  )
 	return new Promise ( ( resolve )=>{
 		local.animate( resolve )
+		console.log("out of local")
 	})
 	
 }

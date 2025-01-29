@@ -1,3 +1,5 @@
+import { escapeHtml } from "../utils/security.js"
+
 export class Icons extends HTMLDivElement
 {
     constructor()
@@ -5,16 +7,6 @@ export class Icons extends HTMLDivElement
         super()
         this._data = {}
     }
-    // set action(newValue)
-    // {
-    //     this._action = newValue
-    //     this.setAttribute('action', newValue)
-    //     this.updateContent()
-    // }
-    // get action() // i dont know if i will be in need of this anymore
-    // {
-    //     return this._action
-    // }
     async connectedCallback() 
     {
         this.updateContent(this._data.iconId)
@@ -66,7 +58,7 @@ export class Icons extends HTMLDivElement
                 const a = document.createElement('a')
     
                 a.href = "#"
-                console.log('in custom element ', this._data.id)
+                // console.log('in custom element ', this._data.id)
                 const id = index === 0 ? 'first' : 'second'
                 a.setAttribute('data-action', 'friends')
                 a.setAttribute('action-type', e.action)
@@ -87,7 +79,10 @@ export class Icons extends HTMLDivElement
         if (iconId === 'profile')
             type = relationship ? relationship.status : 'me'
         else if (iconId === 'friend')
+        {
+            // console.log('->>>>> relationship  status : ', relationship.status)
             type =  relationship ? relationship.status  : 'me-friends'
+        }
         else 
             type = 'request'
 
@@ -106,3 +101,112 @@ export class Icons extends HTMLDivElement
     }
 }
 customElements.define('custom-icons', Icons, { extends: 'div' }) 
+
+export class Friends extends HTMLDivElement
+{
+    constructor()
+    {
+        super()
+
+        this._friendsList = true
+        this._friendsListDb = null
+        this._friendsRequesstDb = null
+    }
+    set friendsList(value)
+    {
+        this._friendsList = value
+        this.updateContent()
+    }
+    set friendsListDb(value)
+    {
+        if (this._friendsListDb === null)
+            this._friendsListDb = value
+    }
+    set friendsRequestsDb(value)
+    {
+        if (this._friendsRequesstDb === null)
+            this._friendsRequestsDb = value
+    }
+    set updateDb({index, action})
+    {
+        // console.log('index in here is  : ', index)
+        if (this._friendsList === true)
+            this._friendsListDb.splice(index, 1)
+        else
+        {
+           
+            const{
+                id,
+                username,
+                profilePic,
+                relationship = {status  : 'friend' },
+            } = this._friendsRequestsDb[index]
+            if (action === 'accept_request')
+                this._friendsListDb.push({id, username, profilePic, relationship, other : 'online', type : 'friend'})
+            this._friendsRequestsDb.splice(index, 1)
+        }
+        this.removeChildUi(index)
+    }
+    async connectedCallback() 
+    {
+        this.id = 'friends-box-container'
+        this.updateContent()
+    }
+    removeChildUi(index)
+    {
+        // console.log('index of child is : ', index)
+        const childToRemove = this.children[index]
+        this.removeChild(childToRemove)
+
+        const db = this._friendsList === true ? this._friendsListDb : this._friendsRequestsDb
+
+        if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
+        {
+            const value = this._friendsList ? 'friends' : 'requests'
+
+            this.innerHTML = `<p>there is no ${value} at the moment</p>`
+            return ;
+        }
+        Array.from(this.children).forEach((e, index) => e.id = index)
+
+    }
+    updateContent()
+    {
+        // console.log('im in hereee - - ')
+        // console.log(this._friendsListDb)
+        const db = this._friendsList === true ? this._friendsListDb : this._friendsRequestsDb
+        let fragment = document.createDocumentFragment()
+
+        console.log('db is  : ', db)
+        if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
+        {
+            const value = this._friendsList ? 'friends' : 'requests'
+
+            this.innerHTML = `<p>there is no ${value} at the moment</p>`
+            return ;
+        }
+        db.forEach((e, index) => {
+            // console.log('testing e : ', e)
+            const friendBoxItem = document.createElement('div')
+
+            friendBoxItem.classList.add('friends-box-item')
+            friendBoxItem.id = index
+            friendBoxItem.innerHTML =
+            `
+                <img src='${escapeHtml(e.profilePic)}'>
+                <div class="user-infos">
+                    <p class="username">${escapeHtml(e.username)}</p>
+                    <p class="other">${escapeHtml(e.other)}</p>
+                </div>
+            `
+            const icons = document.createElement('div', {is : 'custom-icons'})
+            icons.className = 'icons'
+            icons.data = {id : e.id, relationship : e.relationship || null , iconId : e.type}
+            friendBoxItem.appendChild(icons)
+
+            fragment.appendChild(friendBoxItem)
+        })
+        this.replaceChildren(fragment)
+    }
+}
+customElements.define('custom-friends', Friends, { extends: 'div' }) 

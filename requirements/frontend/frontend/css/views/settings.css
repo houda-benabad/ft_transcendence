@@ -1,4 +1,4 @@
-settings-view
+/* settings-view
 {
     display: grid;
     gap: 3vw;
@@ -21,7 +21,7 @@ settings-view
     {
         #box-container
         {
-            /* border: solid 1px red; */
+            border: solid 1px red;
             display: flex;
             flex-direction: column;
             gap: 3vw;
@@ -31,7 +31,7 @@ settings-view
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                /* border: solid 1px yellow; */
+                border: solid 1px yellow;
                 gap: 3vh;
                 img 
                 {
@@ -47,7 +47,7 @@ settings-view
                 }
                 div 
                 {
-                    /* border: solid 1px red; */
+                    border: solid 1px red;
                     flex-grow: 1;
                     display: flex;
                     gap : 1vh;
@@ -71,7 +71,7 @@ settings-view
                         border: none;
                         background-color: var(--secondary2);
                         color: white;
-                        /* padding-left: 1vw; */
+                        padding-left: 1vw;
                         position: relative;
                         width: 100%;
                     }
@@ -181,6 +181,93 @@ settings-view
         #settings-box3
         {
             grid-column:auto;
+        }
+    }
+} */
+
+settings-view
+{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap : min(5vw, 3vh);
+    background-color: var(--secondary2);
+    border-radius: 3vw;
+    color: white;
+    padding: 3vw;
+    box-sizing: border-box;
+    
+    #settings
+    {
+        display: flex;
+        flex-direction: column;
+        gap: max(5vw, 3vh);
+        width: 80%;
+        > div 
+        {
+            display: flex;
+            align-items: center;
+        }
+        .settings-label
+        {
+            width: 30%;
+            font-size: max(1.2vw, 1.2vh);;
+        }
+        #user-picture 
+        {
+            img 
+            {
+                height: max(8vw, 9vh);
+                width: max(8vw, 9vh);
+                border-radius: 50%;
+                margin-right: max(2vw, 1vh);
+            }
+            input 
+            {
+                display: none;
+            }
+            #user-picture-buttons
+            {
+                display: flex;
+                flex-grow: 1;
+                gap: 1vw;
+
+                button 
+                {
+                    width: max(12vw, 12vh);
+                    flex-grow: 1;
+                }
+            }
+        }
+        #user-username
+        {
+            position: relative;
+            div 
+            {
+                flex-grow: 1;
+            }
+            input
+            {
+                background-color: #2A1260;
+                border: solid 1px var(--secondary2);
+                color: white;
+                box-sizing: border-box;
+                padding: 0 1vw;
+                height : min(7vh, 9vw);
+                border-radius: min(1.5vw, 3vh);
+                width: 100%;
+            }
+            button 
+            {
+                position: absolute;
+                height : min(7vh, 9vw);
+                width: 20%;
+                border-radius: min(1.5vw, 3vh);
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+                top : 0;
+                right: 0;
+            }
         }
     }
 }

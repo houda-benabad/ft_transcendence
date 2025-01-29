@@ -3,13 +3,16 @@ export class databaseExtractorService
     constructor(database)
     {
         this._database = database
+
+        console.log('here database : ', database)
     }
     extractData(type)
     {
         const extractionType = {
             'profile' : this.extractDataForProfile.bind(this),
             'gameHistory' : this.extractDataForGameHistory.bind(this),
-            'friends' : this.extractDataForFriends.bind(this),
+            'friendsList' : this.extractDataForFriendsList.bind(this),
+            'friendsRequests' : this.extractDataForFriendsRequests.bind(this),
             'leaderboard' : this.extractDataForLeaderboard.bind(this),
         }
 
@@ -57,19 +60,20 @@ export class databaseExtractorService
             })
         )
     }
-    extractDataForFriends()
-    {
-        const selectedChoice = document.querySelector('.selected-choice') 
+    // extractDataForFriends()
+    // {
+    //     console.log('here database is : ', this._database)
+    //     const selectedChoice = document.querySelector('.selected-choice') 
 
-        // console.log('selected choice : ', selectedChoice.id)
-        const type = selectedChoice ? (selectedChoice.id === 'friends' ? 'friendsList' : 'friendsRequests') : 'friendsList'
+    //     // console.log('selected choice : ', selectedChoice.id)
+    //     const type = selectedChoice ? (selectedChoice.id === 'friends' ? 'friendsList' : 'friendsRequests') : 'friendsList'
 
-        // console.log('type : ', type)
-        if (type === 'friendsList')
-            return this.extractDataForFriendsList()
-        else
-            return this.extractDataForFriendsRequests()
-    }
+    //     // console.log('type : ', type)
+    //     if (type === 'friendsList')
+    //         return this.extractDataForFriendsList()
+    //     else
+    //         return this.extractDataForFriendsRequests()
+    // }
     extractDataForFriendsList()
     {
         const { friends, relationship } = this._database
@@ -88,7 +92,7 @@ export class databaseExtractorService
     }
     extractDataForFriendsRequests()
     {
-        const { requests } = this._database
+        const { requests = []} = this._database
     
         // console.log('requests : ', requests)
         // console.log('database : ', this._database.requests)

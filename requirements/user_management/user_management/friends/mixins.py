@@ -20,7 +20,7 @@ class	SendFriendshipRequestMixin:
         except (ValidationError, AlreadyFriendsError, AlreadyExistsError) as e:
             return Response({"detail": str(e)},status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({"message": "Friendship request was sent."}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Friendship request was sent successfully."}, status=status.HTTP_201_CREATED)
 
 
 class	CancelFriendshipRequestMixin:
@@ -35,7 +35,7 @@ class	CancelFriendshipRequestMixin:
         except (User.DoesNotExist, FriendshipRequest.DoesNotExist) as e:
             return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Friendship request was canceled successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
 class	AcceptRequestMixin:
@@ -47,10 +47,10 @@ class	AcceptRequestMixin:
             friendship_request = FriendshipRequest.objects.get(from_user=from_user, to_user=request.user)
             friendship_request.accept()
 
-        except (User.DoesNotExis, FriendshipRequest.DoesNotExist) as e:
+        except (User.DoesNotExist, FriendshipRequest.DoesNotExist) as e:
             return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"message": "Friendship request was accepted."}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Friendship request was accepted successfully."}, status=status.HTTP_201_CREATED)
 
 
 class	RejectRequestMixin:
@@ -63,10 +63,10 @@ class	RejectRequestMixin:
             friendship_request.reject()
             friendship_request.delete()
             
-        except (User.DoesNotExis, FriendshipRequest.DoesNotExist) as e:
+        except (User.DoesNotExist, FriendshipRequest.DoesNotExist) as e:
             return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"message": "Friendship request was rejected."}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class	RemoveFriendMixin:

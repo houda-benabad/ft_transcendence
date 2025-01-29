@@ -11,7 +11,7 @@ export function gameTemplate()
                         <input type="radio" name="mode" data-action="mode" value="score" id="score">
                         <label for="score">score</label>
                     </div>
-                    </div>
+                </div>
                     <div class="settings-slider">
                         <div id="slider-infos">
                             <p id="slider-mode">seconds</p>

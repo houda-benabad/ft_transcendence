@@ -66,7 +66,7 @@ p,label
     width: max(10vw, 10vh);
     height: min(7vw, 7vh);
     border : none;
-    border-radius: 7px;
+    border-radius: min(1.5vw, 3vh);
     font-size: max(1.3vw, 1.5vh);
     font-weight: 700;
     cursor: pointer;
@@ -87,8 +87,8 @@ p,label
     width: max(10vw, 10vh);
     height: min(7vw, 7vh);
     border : none;
-    border-radius: 7px;
-    font-size: max(2vw, 1.5vh);
+    border-radius: min(1.5vw, 3vh);
+    font-size: max(1.3vw, 1.5vh);
     font-weight: 700;
     cursor: pointer;
     background-color : var(--secondary);
