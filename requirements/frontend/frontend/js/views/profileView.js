@@ -80,8 +80,8 @@ export class ProfileView extends HTMLElement
                 e.classList.add('selected-choice')
                 selectedChoice = e
 
-                const friendsDb = this._database.extractData('friends')
-                profileTemplate.friendsBoxConatainer(friendsDb)
+                const friendsBoxContainer = document.getElementById('friends-box-container')
+                friendsBoxContainer.friendsList = selectedChoice.id === 'friends' ? true : false
             })
     })
 }

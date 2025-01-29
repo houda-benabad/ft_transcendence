@@ -102,10 +102,10 @@ export class EventManager
 	{
 		const action = target.getAttribute('action-type')
 		const id = target.getAttribute('id')
-		// const profileView = document.querySelector('profile-view')
+		const friendsBoxItemId = target.closest('.friends-box-item').id
+		const friendsBoxContainer = document.getElementById('friends-box-container')
+        friendsBoxContainer.updateDb = friendsBoxItemId
 
-		// console.log('here  id  : ', id)
-		// console.log('target : ', target)
 		if (action === 'send_request' || action === 'accept_request')
 			await this._apiService.friendship.postFriendship(action, id)
 		else

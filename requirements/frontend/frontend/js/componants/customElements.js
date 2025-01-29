@@ -1,3 +1,5 @@
+import { escapeHtml } from "../utils/security.js"
+
 export class Icons extends HTMLDivElement
 {
     constructor()
@@ -81,8 +83,8 @@ export class Icons extends HTMLDivElement
         else 
             type = 'request'
 
-        // console.log('->>>>>>>> type :' , type)
-        // console.log('my id type : ', iconId)
+        console.log('->>>>>>>> type :' , type)
+        console.log('my id type : ', iconId)
         const iconActionType = {
         'friend'  : [{icon : 'eva:person-remove-outline', action :'remove_friend'}],
         'stranger' : [{icon : 'eva:person-add-outline', action : 'send_request'}],
@@ -107,15 +109,44 @@ export class Friends extends HTMLDivElement
         this._friendsListDb = null
         this._friendsRequesstDb = null
     }
+    set friendsList(value)
+    {
+        this._friendsList = value
+        this.updateContent()
+    }
     set friendsListDb(value)
     {
-        this._friendsListDb = value
-        console.log('im in here friendsList :', value)
+        if (this._friendsListDb === null)
+            this._friendsListDb = value
     }
     set friendsRequestsDb(value)
     {
-        console.log('im in here friendsRequests :', value)
-        this._friendsRequestsDb = value
+        if (this._friendsRequesstDb === null)
+            this._friendsRequestsDb = value
+    }
+    set updateDb(index)
+    {
+        // console.log('im in updateDb  :', this._friendsRequestsDb[0])
+        // console.log('the db is to be updated : ', this._friendsList)
+        if (this._friendsList === true)
+        {
+            this._friendsListDb.splice(index, 1)
+        }
+        else
+        {
+            // console.log('im in heree !!!1   :', this._friendsRequestDb)
+            const{
+                id,
+                username,
+                profilePic,
+                relationship = 'friend',
+            } = this._friendsRequestsDb[index]
+            // console.log('value is  : ', value)
+            this._friendsListDb.push({id, username, profilePic, relationship, other : 'online', type : 'friend'})
+            // console.log('here the new value is :', this._friendsListDb)
+            this._friendsRequestsDb.splice(index, 1)
+        }
+        this.updateContent() // for the moment i can update the ui later
     }
     async connectedCallback() 
     {
@@ -124,10 +155,12 @@ export class Friends extends HTMLDivElement
     }
     updateContent()
     {
-        console.log('im in hereee - - ')
-        const db = this._friendsList ? this._friendsListDb : this._friendsRequesstDb 
+        // console.log('im in hereee - - ')
+        // console.log(this._friendsListDb)
+        const db = this._friendsList === true ? this._friendsListDb : this._friendsRequestsDb
         let fragment = document.createDocumentFragment()
 
+        // console.log('db is  : ', db)
         if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
         {
             const value = this._friendsList ? 'friends' : 'requests'
@@ -135,10 +168,12 @@ export class Friends extends HTMLDivElement
             this.innerHTML = `<p>there is no ${value} at the moment</p>`
             return ;
         }
-        db.forEach(e => {
+        db.forEach((e, index) => {
+            console.log('testing e : ', e)
             const friendBoxItem = document.createElement('div')
 
             friendBoxItem.classList.add('friends-box-item')
+            friendBoxItem.id = index
             friendBoxItem.innerHTML =
             `
                 <img src='${escapeHtml(e.profilePic)}'>
