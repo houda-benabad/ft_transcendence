@@ -196,6 +196,22 @@ const generateHttpRequests = (api) =>
             await api.request()
         }
     },
+    createPutRequest(endpoint, {needsAuth, modalMessage})
+    {
+        return async (body, resolve) => {
+            const request = new RequestConfiguration()
+                .withEndpoint(endpoint)
+                .withMethod('PUT')
+                .withBody(body)
+                .withAuth(needsAuth)
+
+            if (modalMessage)
+                request.withModal(modalMessage)        
+            api.requestConfig = request.requestConfig
+            api.resolve = resolve
+            await api.request()
+        }
+    },
     createGetRequest(endpoint, {needsAuth, modalMessage})
     {
         return (resolve, params = null) => 
@@ -284,5 +300,23 @@ export const apiService =
         {
             generatedHttpRequests.createGetRequest(ENDPOINTS.LEADERBOARD, {needsAuth : false, modalMessage: null})(resolve)
         })
+    },
+    settings :
+    {
+        getBasicData : () => new Promise (async resolve => {
+            generatedHttpRequests.createGetRequest(ENDPOINTS.SETTINGS_INFO, {needsAuth : true, modalMessage: null})(resolve)
+        }),
+        updateUsername : (body) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPutRequest(ENDPOINTS.SETTINGS_USERNAME_UPDATE, {needsAuth : true, modalMessage: 'updated the username successfully !!!'})(body, resolve)
+        }),
+        updatePassword : (body) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPostRequest(ENDPOINTS.SETTINGS_CHANGE_PASSWORD, {needsAuth : true, modalMessage: 'updated the password successfully !!!'})(body, resolve)
+        }),
+        updateImage : (body) => new Promise (resolve => 
+        {
+            generatedHttpRequests.createPutRequest(ENDPOINTS.SETTINGS_PIC_UPDATE, {needsAuth : true, modalMessage: 'updated the picture successfully !!!'})(body, resolve)
+        }),
     }
 }

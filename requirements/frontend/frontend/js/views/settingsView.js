@@ -7,10 +7,23 @@ export class settingsView extends HTMLElement
     constructor()
     {
         super()
+        
+        this._database = null
+    }
+    set database(value)
+    {
+        this._database = value
     }
     connectedCallback()
     {
-       this.innerHTML = settingsTemplate.settings()
+        const db = this._database.extractData('settings')
+        this.innerHTML = settingsTemplate.settings(db)
+
+        if (db.is_oauth2 === false)
+        {   
+            const settings = document.getElementById('settings')
+            settings.innerHTML += settingsTemplate.settingsNoIntraFeatures(db)
+        }
     }
 }
 
