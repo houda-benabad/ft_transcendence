@@ -68,7 +68,6 @@ services:
       - frontend
       - game
       - user_game_aggregator
-      # - notification
 
   game:
     container_name: game
@@ -110,26 +109,6 @@ services:
       - user_management
       - game
 
-  notification:
-    container_name: notification
-    depends_on:
-      user_management:
-          condition: service_started
-      postgres:
-        condition: service_healthy
-    build:
-      context: ./requirements/notification/
-      dockerfile: Dockerfile
-    ports:
-      - 8005:8000
-    restart: on-failure
-    networks:
-      - transcendence
-    env_file:
-      - .env
-    volumes:
-      - ./requirements/notification/:/usr/src/notification
-      # - .notifvolume:/usr/src/notification
 
 networks:
   transcendence:
@@ -170,10 +149,3 @@ volumes:
       type: none
       o: bind
       device: ./requirements/user_game_aggregator/aggregator
-
-  notifvolume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./requirements/notification/

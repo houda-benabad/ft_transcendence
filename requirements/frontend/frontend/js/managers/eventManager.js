@@ -68,9 +68,6 @@ export class EventManager
         const id = target.getAttribute('id')
         const mainElement = target.closest(['[class="icons"]'])
 
-		// console.log('main Element : ', mainElement)
-		// console.log('in here : ', userId)
-		// console.log('target : ', target)
 		if (action === 'send_request' || action === 'accept_request')
 		{
 			await this._apiService.friendship.postFriendship(action, id)
@@ -88,23 +85,12 @@ export class EventManager
 			this._router.handleRoute('/settings')
 
 
-		// if (action === 'send_request')
-		// {
-		// 	notificationSocket.send_msg( "notification",
-		// 		{
-		// 		"receiver" : id,
-		// 		"content" : "lets play a game"
-		// 		} 
-		// )
-		// }
 	}   
 	async handleFriendsIcons(target)
 	{
 		const action = target.getAttribute('action-type')
 		const id = target.getAttribute('id')
 
-		// console.log('here  id  : ', id)
-		// console.log('target : ', target)
 		if (action === 'send_request' || action === 'accept_request')
 			await this._apiService.friendship.postFriendship(action, id)
 		else
@@ -337,12 +323,6 @@ export class EventManager
 		notificationResults.style.display = 'block'
 
         const down = document.getElementById('down')
-        // const clear = document.getElementById('clear') //later
-        // if (!db.length)
-        // {
-        //     clear.style.display = 'none'
-        //     down.innerHTML = "no Notifications at the moment"
-        // } // later
        down.appendChild(notificationSocket.notificationsHtml)
    }
 }

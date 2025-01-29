@@ -4,13 +4,7 @@ from asgiref.sync import async_to_sync, sync_to_async
 from . import models
 from channels.layers import get_channel_layer
 from channels.db import database_sync_to_async
-
-
-
-GAME_TICK_RATE = 0.02
-GAME_START_DELAY = 5
-TWO_PLAYERS = 2
-MULTI_PLAYERS = 4
+from .constants import *
 
 
 class GameServer(  ):

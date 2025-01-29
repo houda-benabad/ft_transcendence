@@ -9,6 +9,7 @@ import { modalService } from "../services/modalService.js"
 import { MODE, WORLD } from "../constants/engine.js"
 // import { router } from '../utils/global.js'
 import { reset } from '../utils/utils.js'
+import { globalManager } from "./globalManager.js"
 
 
 
@@ -28,29 +29,46 @@ export default class Remote{
 			this.canva = new appCanva( ["team1", "team2"] )
 	}
 
-	setup(){
+	setup( resolve ){
 		this.engine.setup( )
 		this.components.setup( )
 		this.canva.add( 'waiting' )
 		document.getElementById( "cancel-btn" ).addEventListener( 'click', async ( )=>{
-			this.engine.socket.close( 4000 )
+			this.socket.close( 4000 )
 			await reset(  )
 			router.navigateTo( '/' )
 		} )
+		this.socket  = this.setupSocket( resolve )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
 
-	update( id, resolve ){
-		this.engine.socket.onmessage = ( e ) => this.updateData( e, id, resolve )
+	setupSocket( resolve ) {
+		let url = `wss://${window.location.host}/wss/${this.mode}`
+		const token = globalManager._tokenService.accessToken 
+		let socket = new WebSocket( url )
+		socket.onopen = ( ) =>{
+			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
+		}
+		socket.onclose =   ( e ) =>{ console.log( "closing = ", e.reason ) }
+		socket.onmessage = ( e ) => this.updateData( e, resolve )
+		console.log( "resolve = ", typeof( resolve ))
+		return socket
+	}
+
+	update(  ){
 		this.input.movePlayers( this.engine.socket )
 		this.visual.updatePosition( )
 
 	}
 
-	updateData( e, id, resolve ){
+	updateData( e,  resolve ){
 		const { type, data } = JSON.parse( e.data )
-		this[ACTIONS[type]]( data, id, resolve)
+		this[ACTIONS[type]]( data,  resolve)
+	}
+
+	handleError( data ){
+		console.log("handlin error, = ", data)
 	}
 
 	updateApi( data ){
@@ -67,11 +85,11 @@ export default class Remote{
 		this.canva.remove( "waiting" )
 	}
 
-	updateState( data, id, resolve ){
+	updateState( data, resolve ){
 		console.log( "result = ", data )
 
 		resolve( )
-		cancelAnimationFrame( id )
+		cancelAnimationFrame( this.id )
 	}
 
 	initialAnimation(){
@@ -80,14 +98,13 @@ export default class Remote{
 		this.engine.camera.lookAt( this.engine.scene.position )
 	}
 
-	animate( resolve ) {
-		let id = requestAnimationFrame( (  ) => this.animate( resolve ) )
+	animate(  ) {
+		this.id = requestAnimationFrame( (  ) => this.animate(  ) )
 		this.engine.world.step( WORLD.TIMESTAMP) 
-
 		if ( this.animationProgress < 1 )
 			this.initialAnimation(  )
 		else
-			this.update( id, resolve )
+			this.update( this.id )
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
 	
 	}

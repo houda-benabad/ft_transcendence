@@ -4,23 +4,9 @@ from .serializer import PlayerSerializer, RankSerializer
 from game.models import Player
 import requests
 from django.conf import settings
-from .permissions import AuthenticationUsingJWT
 from rest_framework.views import APIView
 
 from game.models import Player
-
-class MeDetailView( generics.RetrieveAPIView ):
-	queryset = Player.objects.all(  )
-	serializer_class = PlayerSerializer
-	permission_classes = [ AuthenticationUsingJWT ]
-
-	def get_object( self ):
-		
-		user_info = self.request.user_info
-		print( " user = ", user_info)
-		player = Player. objects.get( userId=user_info.get('id') )
-		return player
-
 class PlayerDetailView( generics.RetrieveAPIView ):
 	lookup_field = 'userId'
 	queryset = Player.objects.all(  )
@@ -28,18 +14,23 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 
 	def get_object( self ):
 		try: 
-			userId = self.kwargs.get( 'userId' )
-			# print( "hhi = ", self.kwargs.get( "userId" ))
-			response = requests.get( settings.USER_INFO_URL + str( userId ), headers={"Host": "localhost"})
-			
+			url_name = self.request.resolver_match.url_name
+			if url_name == "PlayerInfo":
+				userId = self.kwargs.get( 'userId' )
+				response = requests.get( settings.USER_INFO_URL + str( userId ), headers={"Host": "localhost"})
+			elif url_name == "MeInfo":
+				token = self.request.headers.get( 'Authorization' )
+				response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'Authorization': token })
+				user_info = response.json(  )
+				userId = user_info.get('id')
+	
 			if response.status_code != 200:
-				return Response({"detail":response.json()['detail']}, status=response.status_code)
-			
-			user_info = response.json(  )
-			return Player.objects.get( userId=userId )
-
+				raise ValueError( "Player not found")
+					
+			player = Player.objects.get( userId=userId )
+			return player
 		except Exception as e:
-			Response({'detail' : 'Error ocurred during operation'})
+			return None
 
 class NewPlayerView( APIView ):
 	def  post(self, request, *args, **kwargs):

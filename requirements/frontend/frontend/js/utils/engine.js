@@ -3,7 +3,8 @@ import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cann
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js'
 import { CAMERA, WORLD, LIGHT } from "../constants/engine.js";
 import { MODE } from '../constants/engine.js';
-// import { _tokenService } from '../utils/global.js'
+// import { _tokenService } from '../utils/
+import { globalManager } from '../managers/globalManager.js';
 
 export default class Engine {
 
@@ -18,8 +19,8 @@ export default class Engine {
 		this.renderer = new THREE.WebGLRenderer( { antialias: true } );
 		this.scene = new THREE.Scene(  );
 		this.world = new CANNON.World(  );
-		if ( this.mode == MODE.REMOTE || this.mode == MODE.MULTIPLAYER )
-			this.socket = this.setupSocket(  )
+		// if ( this.mode == MODE.REMOTE || this.mode == MODE.MULTIPLAYER )
+		// 	this.socket = this.setupSocket(  )
 		const axesHelper = new THREE.AxesHelper( 10 );
 		this.scene.add( axesHelper );
 	}
@@ -39,15 +40,18 @@ export default class Engine {
 		this.setupResizeEvent(  )
 	}
 
-	setupSocket(  ) {
-		let url = `wss://${window.location.host}/wss/${this.mode}`
-		const token = _tokenService.accessToken 
-		let socket = new WebSocket( url )
-		socket.onopen = ( ) =>{
-			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
-		}
-		return socket
-	}
+	// setupSocket(  ) {
+	// 	let url = `wss://${window.location.host}/wss/${this.mode}`
+	// 	const token = globalManager._tokenService.accessToken 
+	// 	let socket = new WebSocket( url )
+	// 	socket.onopen = ( ) =>{
+	// 		socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
+	// 	}
+	// 	socket.onclose = ( e ) =>{
+	// 		console.log( "closing = ", e`.reason` )
+	// 	}
+	// 	return socket
+	// }
 
 	setupCamera(  ){
         this.camera.position.set( ...Object.values( CAMERA.INITIALPOSITION ) )

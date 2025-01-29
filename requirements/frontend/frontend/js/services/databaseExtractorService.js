@@ -11,7 +11,6 @@ export class databaseExtractorService
             'gameHistory' : this.extractDataForGameHistory.bind(this),
             'friends' : this.extractDataForFriends.bind(this),
             'leaderboard' : this.extractDataForLeaderboard.bind(this),
-            'notifications' : this.extractDataForNotifications.bind(this),
         }
 
         const extracted = extractionType[type]

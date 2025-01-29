@@ -13,7 +13,8 @@ export const ACTIONS  = {
     'api' : 'updateApi',
     'score' : 'updateScore',
     'start' : 'updateStart',
-    'endGame' : 'updateState'
+    'endGame' : 'updateState',
+    'error' : 'handleError'
 }
 
 export const PLAYERS =  ['PLAYER1', 'PLAYER2', 'PLAYER3', 'PLAYER4']
