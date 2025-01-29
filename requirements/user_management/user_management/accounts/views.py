@@ -13,6 +13,8 @@ from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
 import logging
 import json
+from djoser.serializers import UsernameSerializer
+from rest_framework import generics
 
 logging.basicConfig(level=logging.DEBUG)  
 
@@ -32,6 +34,15 @@ class Error(exceptions.APIException):
         self.detail = detail
         self.status_code = status_code
         super().__init__(self.detail)
+
+class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UsernameSerializer
+
+    def get_object(self):
+        return self.request.user
+
+set_username_api_view = UserUsrnameUpdateApiView.as_view()
 
 class   CustomUserViewSet(UserViewSet):
     def perform_create(self, serializer):
@@ -88,13 +99,18 @@ class   IntraCallback(APIView):
                 user_profile.save()
             else:
                 Profile.objects.create(user=intra_user, image_url = user_data["image_url"], is_oauth2=True)
+                response = requests.post("http://game:8000/api/game/new_player", data = {"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
+                if response.status_code != status.HTTP_200_OK:
+                    raise OAuthError("error in the new_player response", response.status_code)
             refresh = RefreshToken.for_user(intra_user)
             access = refresh.access_token
         except json.JSONDecodeError:
             return Response({'detail': 'Invalid JSON data'}, status=HTTP_400_BAD_REQUEST)
         except OAuthError as e:
             return Response({"detail": str(e.detail)}, status=e.status_code)
-        except Exception as e:  
+        except requests.RequestException as e:
+            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+        except Exception as e:
             return Response({"detail": f"Internal server error {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({"refresh": str(refresh), "access": str(access)}, status=status.HTTP_200_OK)
@@ -121,8 +137,8 @@ class   IntraCallback(APIView):
             if not access_token:
                 raise OAuthError('No access token in response', status.HTTP_401_UNAUTHORIZED)
         
-        except requests.exceptions.HTTPOAuthError as http_err:
-            raise OAuthError(f"code exchange with access token failed {str(HTTPOAuthError)}", http_err.response.status_code)
+        except requests.exceptions.HTTPError as http_err:
+            raise OAuthError(f"code exchange with access token failed {str(http_err)}", http_err.response.status_code)
         except requests.exceptions.RequestException as e:
             raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
         
@@ -144,7 +160,7 @@ class   IntraCallback(APIView):
                 "image_url" : ((user_info["image"])["versions"])["medium"]
             }
         
-        except requests.exceptions.HTTPOAuthError as http_err:
+        except requests.exceptions.HTTPOError as http_err:
             raise OAuthError(f"getting user info failed {str(http_err)}", http_err.response.status_code)
         except requests.exceptions.RequestException as e:
             raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)

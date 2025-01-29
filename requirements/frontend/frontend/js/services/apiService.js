@@ -116,7 +116,7 @@ class ApiService
                     return ;    
             }
             if (response.status === 500)
-                throw new Error(response.status)
+                throw new Error(await response.json())
             else if (response.status === 404)
                 this._resolve('not found')
             const contentType = response.headers.get('Content-Type');
@@ -131,7 +131,7 @@ class ApiService
         }
         catch(error)
         {
-            console.log('the error that was caught in api service is ', error)
+            console.log('the error ', error)
         }
     }
     async finishingUp(response =  null)

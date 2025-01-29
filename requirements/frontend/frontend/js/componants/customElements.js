@@ -177,7 +177,7 @@ export class Friends extends HTMLDivElement
         const db = this._friendsList === true ? this._friendsListDb : this._friendsRequestsDb
         let fragment = document.createDocumentFragment()
 
-        // console.log('db is  : ', db)
+        console.log('db is  : ', db)
         if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
         {
             const value = this._friendsList ? 'friends' : 'requests'

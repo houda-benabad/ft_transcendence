@@ -9,5 +9,6 @@ export const ENDPOINTS =
     FRIENDSHIP: '/api/friendship/',
     REFRESH_TOKEN : '/auth/jwt/refresh/',
     INTRA_AUTHORIZE : '/auth/oauth2/authorize',
-    INTRA_CALLBACK : '/auth/oauth2/callback'
+    INTRA_CALLBACK : '/auth/oauth2/callback',
+    EDIT_PASSWORD : '/api/users/set_password'
 }

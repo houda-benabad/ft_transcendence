@@ -3,6 +3,8 @@ export class databaseExtractorService
     constructor(database)
     {
         this._database = database
+
+        console.log('here database : ', database)
     }
     extractData(type)
     {

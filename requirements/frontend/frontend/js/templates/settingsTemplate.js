@@ -21,6 +21,10 @@ export const settingsTemplate =
                         <button class="anchor-tmp button-type4" data-action="save_username">Save</button>
                     </div>
                 </div>
+                <div>
+                    <p class="settings-label">Password</p>
+                    <button class="anchor-tmp button-type4" data-action="add_password">Add</button>
+                </div>
             </div>
             `)
     },
