@@ -103,6 +103,7 @@ export class EventManager
 		const action = target.getAttribute('action-type')
 		const id = target.getAttribute('id')
 		
+		// console.log('action is  : ', action)
 		if (action === 'send_request' || action === 'accept_request')
 			await this._apiService.friendship.postFriendship(action, id)
 		else
@@ -180,7 +181,7 @@ export class EventManager
 			this._router.handleRoute(link)
 		else if (action)
 		{
-			console.log('action : ', action)
+			// console.log('action : ', action)
 			const runAction = this._actionType[action]
 
 			runAction(target)
