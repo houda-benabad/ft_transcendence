@@ -10,7 +10,8 @@ class OnlineStatusConsumer(WebsocketConsumer):
         
         if self.scope.get("user") != AnonymousUser():
             self.accept()
-            self.group_name = self.scope.get("user").username + "_friends"
+            self.user = self.scope.get("user")
+            self.group_name = user.username + "_friends"
             async_to_sync(self.channel_layer.group_add(self.group_name, self.channel_name))
 
             friends_qs = Friend.objects.friends(self.scope.get("user"))
@@ -20,6 +21,11 @@ class OnlineStatusConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send(
                 self.group_name, {"type": "friend.status", "friend_username": self.scope.get("user").username, "status": "online"}
             ))
+        
+        # when the group is created add it to redis and then before adding self.channel to other groups
+        # check if the user is already part of those groups  by checking group sets that were added in redis
+        # also using redis keep track of the users that are online
+        # so that when the user first logs in he sees the online status of the friends that connected before
         
     
     def disconnect(self, close_code):

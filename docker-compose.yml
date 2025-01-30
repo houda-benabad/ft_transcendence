@@ -3,7 +3,9 @@ services:
   user_management:
     container_name: user_management
     depends_on:
-      postgres:
+      UserManagementPostgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     build:
       context: ./requirements/user_management/
@@ -13,29 +15,72 @@ services:
     restart: on-failure
     env_file:
       - .env
+    environment:
+      - POSTGRES_DB=${USER_MANAGEMENT_DB_NAME}
+      - DB_HOST=${USER_MANAGEMENT_DB_HOST}
     networks:
       - transcendence
     volumes:
         - ./requirements/user_management/user_management:/usr/src/user_management
         # - authvolume:/usr/src/user_management
 
-  postgres:
+  UserManagementPostgres:
     image: postgres:15.8
-    container_name: postgres
+    container_name: UserManagementPostgres
     restart: on-failure
     env_file:
       - .env
+    environment:
+      - POSTGRES_DB=${USER_MANAGEMENT_DB_NAME}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-U", "$$POSTGRES_USER", "-d", "$$POSTGRES_DB"]
-      interval: 30s #test to see if we can minimize it
-      timeout: 60s
+      interval: 10s #test to see if we can minimize it
+      timeout: 30s
       retries: 5
-      start_period: 80s
+      start_period: 60s
     networks:
       - transcendence
+
+  game:
+    container_name: game
+    depends_on:
+      user_management:
+          condition: service_started
+      GamePostgres:
+        condition: service_healthy
+    build:
+      context: ./requirements/game/
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${GAME_DB_NAME}
+      - DB_HOST=${GAME_DB_HOST}
+    networks:
+      - transcendence
+    ports:
+      - 8001:8000
     volumes:
-      - ./data/:/var/lib/postgresql/data/
-      # - dbvolume:/var/lib/postgresql/data/
+      -  ./requirements/game/backend:/usr/src/game
+      # -  gamevolume:/usr/src/game
+    
+  GamePostgres:
+    image: postgres:15.8
+    container_name: GamePostgres
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${GAME_DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-U", "$$POSTGRES_USER", "-d", "$$POSTGRES_DB"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 60s
+    networks:
+      - transcendence
   
   frontend:
     build:
@@ -68,28 +113,6 @@ services:
       - frontend
       - game
       - user_game_aggregator
-      # - notification
-
-  game:
-    container_name: game
-    depends_on:
-      user_management:
-          condition: service_started
-      postgres:
-        condition: service_healthy
-    build:
-      context: ./requirements/game/
-      dockerfile: Dockerfile
-    restart: on-failure
-    env_file:
-      - .env
-    networks:
-      - transcendence
-    ports:
-      - 8001:8000
-    volumes:
-      -  ./requirements/game/backend:/usr/src/game
-      # -  gamevolume:/usr/src/game
   
   user_game_aggregator:
     container_name: user_game_aggregator
@@ -109,19 +132,20 @@ services:
     depends_on:
       - user_management
       - game
-
-  notification:
-    container_name: notification
-    build:
-      context: ./requirements/notification/
-      dockerfile: Dockerfile
-    ports:
-      - 8005:8000
+    
+  
+  redis:
+    container_name: redis
+    image: redis:7.2-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
     restart: on-failure
     networks:
       - transcendence
-    # volumes:
-    #   - notifvolume:/usr/src/notification
 
 networks:
   transcendence:
@@ -142,12 +166,12 @@ volumes:
       o: bind
       device: ./requirements/game/backend
 
-  dbvolume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./data/
+  # dbvolume:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     o: bind
+  #     device: ./data/
 
   frontVolume:
     driver: local
@@ -163,9 +187,3 @@ volumes:
       o: bind
       device: ./requirements/user_game_aggregator/aggregator
 
-  notifvolume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./requirements/notification/
