@@ -30,6 +30,7 @@ export default class Remote{
 	}
 
 	setup( resolve ){
+		this.resolve = resolve
 		this.engine.setup( )
 		this.components.setup( )
 		this.canva.add( 'waiting' )
@@ -38,12 +39,12 @@ export default class Remote{
 			await reset(  )
 			globalManager._router.navigateTo( '/' )
 		} )
-		this.socket  = this.setupSocket( resolve )
+		this.socket  = this.setupSocket( this.resolve )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
 
-	setupSocket( resolve ) {
+	setupSocket(  ) {
 		let url = `wss://${window.location.host}/wss/${this.mode}`
 		const token = globalManager._tokenService.accessToken 
 		let socket = new WebSocket( url )
@@ -51,8 +52,8 @@ export default class Remote{
 			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
 		}
 		socket.onclose =   ( e ) =>{ console.log( "closing = ", e.reason ) }
-		socket.onmessage = ( e ) => this.updateData( e, resolve )
-		console.log( "resolve = ", typeof( resolve ))
+		socket.onmessage = ( e ) => this.updateData( e, this.resolve )
+		console.log( "resolve = ", typeof( this.resolve ))
 		return socket
 	}
 

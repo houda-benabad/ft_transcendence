@@ -4,6 +4,7 @@ import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 import { local } from "../mods/local.js"
 import { remote } from "../mods/remote.js"
+import{ multiplayer} from "../mods/multiplayer.js"
 export class GameManager 
 
 {
@@ -47,7 +48,7 @@ export class GameManager
         await this.#denit( `You ${result.state}` )
     }
     async multiplayer( ){
-        await multiplayer( )
-        await this.#denit( )
+        let result = await multiplayer( )
+        await this.#denit( `You ${result.state}` )
     }
 }

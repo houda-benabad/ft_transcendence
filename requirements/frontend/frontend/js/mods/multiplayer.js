@@ -3,7 +3,9 @@ import Remote from "../managers/remoteManager.js"
 
 export function multiplayer(  ) {
     let multiplayer = new Remote( MODE.MULTIPLAYER )
-    multiplayer.setup(  )
     console.log( "Multilayer staring soon" )
-    return new Promise( resolve => multiplayer.animate( resolve ) )
+    return new Promise( (resolve) =>{ 
+        multiplayer.setup( resolve )
+        multiplayer.animate(  )
+    } )
 }
