@@ -37,6 +37,7 @@ export class EventManager
 		this._router = global._router
 		this._tokenService = global._tokenService
 		this._reset =  global._reset
+
     } 
     async handleIntraCall(target)
     {

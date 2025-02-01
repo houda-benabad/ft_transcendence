@@ -9,22 +9,38 @@ from django.conf import settings
 REDIS_ONLINE_USERS = "online_users"
 
 class OnlineStatusConsumer(WebsocketConsumer):
-    redis_client = redis.redis(host=settings.REDIS_SERVER, port=settings.REDIS_PORT)
+    redis_client = redis.Redis(host=settings.REDIS_SERVER, port=settings.REDIS_PORT)
 
     def connect(self):
-        
-        if self.scope.get("user") != AnonymousUser():
-            self.accept()
-            self.user = self.scope.get("user")
-            username = self.user.username
+        self.accept()
+    
+    def receive(self, text_data):
+        try :
+            json_data = json.loads(text_data)
+            token = json_data.get('token', '')
+            if not token:
+                raise ValueError("missing token, rejected connection")
+            jwt_auth = JWTAuthentication()
+            validated_token = jwt_auth.get_validated_token(token)
+            self.user = jwt_auth.get_user(validated_token)
 
             self.redis_client.sadd(REDIS_ONLINE_USERS, self.user.username)
-            self.redis_client.sadd(f"{username}_channels", self.channel_name)
+            self.redis_client.sadd(f"{self.user.username}_channels", self.channel_name)
             friends_qs = Friend.objects.friends(self.user)
             friends_usernames = friends_qs.values_list("username", flat=True)
-            self._inform_friends_user_online_status(username, friends_usernames, "online")
+            self._inform_friends_user_online_status(self.user.username, friends_usernames, "online")
             online_friends = self._get_online_friends(friends_usernames)
             self.send(text_data=json.dumps({"online_friends": online_friends}))
+
+        except ValueError as e:
+            self.send(text_data=json.dumps({"error": str(e)}))
+            self.close()
+        except Exception as e:
+            self.send(text_data=json.dumps({"error": str(e)}))
+            self.close()
+        except json.JSONDecodeError:
+            self.send(text_data=json.dumps({"error": 'Invalid JSON format'}))
+            self.close()
     
     def _inform_friends_user_online_status(self, username, friends_usernames, online_status):
 
@@ -56,10 +72,12 @@ class OnlineStatusConsumer(WebsocketConsumer):
         if self.user != AnonymousUser():
 
             self.redis_client.srem(REDIS_ONLINE_USERS, self.user.username)
-            self.redis_client.srem(f"{username}_channels", self.channel_name)
-            friends_qs = Friend.objects.friends(self.user)
-            friends_usernames = friends_qs.values_list("username", flat=True)
-            self._inform_friends_user_online_status(username, friends_usernames, "offline")
+            self.redis_client.srem(f"{self.user.username}_channels", self.channel_name)
+            user_channels_set_size = self.redis_client.scard(f"{self.user.username}_channels")
+            if user_channels_set_size == 0:
+                friends_qs = Friend.objects.friends(self.user)
+                friends_usernames = friends_qs.values_list("username", flat=True)
+                self._inform_friends_user_online_status(self.user.username, friends_usernames, "offline")
 
 
     def friend_status(self, event):
