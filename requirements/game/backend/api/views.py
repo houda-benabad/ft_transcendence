@@ -28,6 +28,8 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 				raise ValueError( "Player not found")
 					
 			player = Player.objects.get( userId=userId )
+			player.username = user_info.get('username')
+			player.save( )
 			return player
 		except Exception as e:
 			return None

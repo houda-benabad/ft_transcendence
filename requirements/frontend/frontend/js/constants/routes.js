@@ -39,7 +39,8 @@ export const ROUTES = (apiService) => ({
     {
         customElement : 'settings-view',
         protected: true,
-        allScreen : false
+        allScreen : false,
+        api : () => apiService.settings.getBasicData()
     },
     '/404' :
     {

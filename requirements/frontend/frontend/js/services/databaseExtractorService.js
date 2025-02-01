@@ -3,8 +3,8 @@ export class databaseExtractorService
     constructor(database)
     {
         this._database = database
-
-        console.log('here database : ', database)
+        
+        console.log('database : ', this._database)
     }
     extractData(type)
     {
@@ -14,10 +14,16 @@ export class databaseExtractorService
             'friendsList' : this.extractDataForFriendsList.bind(this),
             'friendsRequests' : this.extractDataForFriendsRequests.bind(this),
             'leaderboard' : this.extractDataForLeaderboard.bind(this),
+            'notifications' : this.extractDataForNotifications.bind(this),
+            'settings' : this.extractDataforSettings.bind(this)
         }
 
         const extracted = extractionType[type]
         return extracted()
+    }
+    extractDataforSettings()
+    {
+        return this._database
     }
     extractDataForProfile()
     {

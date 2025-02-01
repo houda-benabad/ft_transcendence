@@ -47,7 +47,7 @@ export class EventManager
         const eventType = event.type
         const target = event.target
 
-        if (eventType === 'focusout' && target.id === '')
+        if (eventType === 'focusout' && target.id === 'search-input')
             this.handleSearchFocus()
         else if (eventType === 'click' && target.matches('a'))
             this.handleAnchorEvents(event, target)
@@ -136,7 +136,7 @@ export class EventManager
 			// console.log('->>>>>>>>>>>my searched results after lost focus : ', searchResults)
 			if (!searchResults.classList.contains('clicked'))
 				searchService.clear()
-		}, 5000)
+		}, 300)
 		// console.log('IM OUT OF FOCUSSSSS OUYTTTTTT') // gotta not use focus out
 	}
 	handleSearchItem(target)
@@ -236,24 +236,25 @@ export class EventManager
 		input.click()
 		// input.addEventListener('change', this.handleInputFiles(input)) // not clean at all
 	}
-	handleInputFiles(target)
+	async handleInputFiles(target)
 	{
 		const file = target.files[0]
 		const formData = new FormData()
-
 		formData.append('image', file) // this would be sent to backend with its original form (binary)
 		const temporaryFilePath = URL.createObjectURL(file)
-		const img = document.getElementById('tobe-updated-img')
+	
+		// console.log('tempo : ', formData)
+		const response = await this._apiService.settings.updateImage({avatar :  formData, reset_image : false})
 
-		img.src = temporaryFilePath
-
-		modalService.show('updated the image successfully', true)
+	// 	const img = document.getElementById('tobe-updated-img')
+	// 	img.src = temporaryFilePath
 	}
-	handleDeleteOfImage(target)
+	async handleDeleteOfImage(target)
 	{
 		//fetch to backend to delete image, and the final response i will take that and apply it as image
 		//for now
-
+		const response = await this._apiService.settings.updateImage({avatar :  null, reset_image : true})
+		console.log('in here : ', response)
 		const img = document.getElementById('tobe-updated-img')
 
         img.src = ''
@@ -263,18 +264,27 @@ export class EventManager
     {
         const response = await modalService.show('', false, 'add-password')
 
-		// console.log('response : ', response) // to be fetched to backend
+		// validate password
+		const {current_password, new_password, confirm_password} = response
+		
+		console.log('confirm : ', confirm_password)
+		if (new_password !== confirm_password)
+			return modalService.show('confirm the password again !!!')
+		
+		await this._apiService.settings.updatePassword({new_password : new_password, current_password :  current_password})
 	}
 	async handleNewUsername(target)
 	{
 		const input = document.getElementById('username-to-save')
-		const inputValue = input.value
-
+		const inputValue = input.value	
         if (!inputValue || inputValue.includes(' '))
-            return modalService.show('enter a valid username')
-        // console.log('value  : ', inputValue) // fetch to backend with this one
-        await modalService.show('updated the username successfully', true)
-        input.value = ""
+            modalService.show('enter a valid username')
+		else if (inputValue === input.placeholder)
+			modalService.show('you already have the same username  - -')
+		else
+			await this._apiService.settings.updateUsername({new_username : inputValue})
+		input.placeholder = inputValue
+		input.value = ''
     }
    handleNotifications(target)
    {
@@ -289,8 +299,6 @@ export class EventManager
 				notificationResults.style.display = 'none'
 			}
 		})
-		
-		
 		const notificationResults = document.getElementById('notification-results')
 		notificationResults.style.display = 'block'
 
