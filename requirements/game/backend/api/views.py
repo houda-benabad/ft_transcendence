@@ -23,13 +23,13 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 				response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'Authorization': token })
 				user_info = response.json(  )
 				userId = user_info.get('id')
+				# player.username = user_info.get('username')
+				# player.save( )
 	
 			if response.status_code != 200:
 				raise ValueError( "Player not found")
 					
 			player = Player.objects.get( userId=userId )
-			player.username = user_info.get('username')
-			player.save( )
 			return player
 		except Exception as e:
 			return None
