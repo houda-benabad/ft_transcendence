@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #'user_management:8000'
 # Application definition
 
 DJANGO_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -86,7 +87,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'user_management.wsgi.application'
+# WSGI_APPLICATION = 'user_management.wsgi.application'
+ASGI_APPLICATION = 'user_management.asgi.application'
 
 
 # Database
@@ -199,5 +201,16 @@ SECRET = os.environ.get('SECRET')
 INTRA_AUTH_URL = os.environ.get('INTRA_AUTH_URL')
 INTRA_TOKEN_URI = os.environ.get('INTRA_TOKEN_URI')
 USER_INFO_URI = os.environ.get('USER_INFO_URI')
+
+REDIS_SERVER = os.environ.get('REDIS_SERVER')
+REDIS_PORT = os.environ.get('REDIS_PORT')
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_SERVER, REDIS_PORT)],
+        },
+    },
+}
 
 NEW_PLAYER_URL = "http://game:8001/api/game/new_player" #os.environ.get('NEW_PLAYER_URL')

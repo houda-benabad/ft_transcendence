@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Profile#, Friendship
-from django.core.validators import validate_image_file_extension
 from friendship.models import Friend
+from django.core.validators import validate_image_file_extension
 import logging
 logging.basicConfig(level=logging.DEBUG)
 import os  
@@ -9,6 +9,7 @@ from django.conf import settings
         
 logger = logging.getLogger("accounts.views")
 
+<<<<<<< HEAD
 class ProfilePicSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(required=False, validators=[validate_image_file_extension])
     reset_image = serializers.BooleanField(write_only=True, required=False, default=False)
@@ -64,6 +65,19 @@ class UserBaseProfileSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             return request.build_absolute_uri(obj.avatar.url)
         return (obj.image_url)
+=======
+# class ProfilePicUpdateSerializer(serializers.ModelSerializer):
+
+#     avatar = serializers.ImageField(required=True, write_only=True)#, validators=[validate_image_file_extension])
+
+#     class Meta:
+#         model = Profile
+#         fields = [
+# 			'avatar',
+# 		]
+    
+    # define an update fct where you delete the previous picture of the user so that the memory is not full with unused images
+>>>>>>> online_status
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

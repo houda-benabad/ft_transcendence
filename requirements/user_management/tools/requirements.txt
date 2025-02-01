@@ -10,6 +10,10 @@ urllib3==1.26.15
 Pillow
 django-friendship
 drf-yasg
+channels
+daphne
+channels-redis
+
 # pyyaml
 # drf_social_oauth2==3.1.0
 # django-oauth-toolkit

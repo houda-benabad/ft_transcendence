@@ -5,12 +5,18 @@ from Profiles.models import Profile
 from rest_framework import serializers
 import requests
 from django.conf import settings
+from django.core.validators import validate_image_file_extension
 
 
 User = get_user_model()
 
 class UserCreateSerializer(BaseUserCreateSerializer):
 
+<<<<<<< HEAD
+=======
+    avatar = serializers.ImageField(required=False, write_only=True, validators=[validate_image_file_extension])
+
+>>>>>>> online_status
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = [
