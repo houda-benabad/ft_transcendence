@@ -70,37 +70,33 @@ class Game():
 			self.players[2].move( consumers[2], self.plane, MULTI_PLAYERS, self.players[3] )
 			self.players[3].move( consumers[3], self.plane, MULTI_PLAYERS, self.players[2] )
 
-	# STILL SOME ISSUES
+	# GOOD
 	def end_game_results(self, consumers, gameModel):
-
 		if self.mode == TWO_PLAYERS:
+			base = ['won', 'lost']
 			if (consumers[1].keycode == -1 or self.players[0].score > self.players[1].score):
-				consumers[0].game_result = "won"
-				consumers[1].game_result = "lost"
+				for consumer, state in zip( consumers, base ):
+					consumer.game_result = state
 				gameModel.winner = consumers[0].playerModel
-				consumers[0].playerModel.level = round( math.sqrt( consumers[0].playerModel.total_points ) * .7, 2)
 			elif (self.players[0].score < self.players[1].score):
-				consumers[1].game_result = "won"
-				consumers[0].game_result = "lost"
-				consumers[1].playerModel.level =  round(math.sqrt( consumers[1].playerModel.total_points ) * .7, )
+				for consumer, state in zip( consumers, reversed(base) ):
+					consumer.game_result = state
 				gameModel.winner = consumers[1].playerModel
 
+			gameModel.winner.level =  round(math.sqrt( consumers[1].playerModel.total_points ) * .7, 2)
+
 		elif self.mode == MULTI_PLAYERS:
+			base = ['won', 'won', 'lost', 'lost']
 			if ( consumers[0].keycode == -1 or consumers[1].keycode == -1 or self.players[0].score > self.players[2].score):
-				consumers[0].game_result = "won"
-				consumers[1].game_result = "won"
-				consumers[2].game_result = "lost"
-				consumers[3].game_result = "lost"
+				for consumer, state in zip( consumers, base ):
+					consumer.game_result = state
 				gameModel.winner1 = consumers[0].playerModel
 				gameModel.winner2 = consumers[1].playerModel
-				consumers[0].playerModel.level = round( math.sqrt( consumers[0].playerModel.total_points ) * .5, 2)
-				consumers[1].playerModel.level = round( math.sqrt( consumers[1].playerModel.total_points ) * .5, 2)
-			elif (self.players[0].score < self.players[1].score):
-				consumers[0].game_result = "lost"
-				consumers[1].game_result = "lost"
-				consumers[2].game_result = "won"
-				consumers[3].game_result = "won"
+			elif (self.players[0].score < self.players[2].score):
+				for consumer, state in zip( consumers, reversed(base) ):
+					consumer.game_result = state
 				gameModel.winner1 = consumers[2].playerModel
 				gameModel.winner2 = consumers[3].playerModel
-				consumers[2].playerModel.level = round( math.sqrt( consumers[2].playerModel.total_points ) * .5, 2)
-				consumers[3].playerModel.level = round( math.sqrt( consumers[3].playerModel.total_points ) * .5, 2)
+
+			gameModel.winner1.level = round( math.sqrt( consumers[2].playerModel.total_points ) * .5, 2)
+			gameModel.winner2.level = round( math.sqrt( consumers[3].playerModel.total_points ) * .5, 2)
