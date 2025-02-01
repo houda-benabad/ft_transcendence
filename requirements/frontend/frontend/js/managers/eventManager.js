@@ -47,7 +47,7 @@ export class EventManager
         const eventType = event.type
         const target = event.target
 
-        if (eventType === 'focusout' && target.id === '')
+        if (eventType === 'focusout' && target.id === 'search-input')
             this.handleSearchFocus()
         else if (eventType === 'click' && target.matches('a'))
             this.handleAnchorEvents(event, target)
@@ -136,7 +136,7 @@ export class EventManager
 			// console.log('->>>>>>>>>>>my searched results after lost focus : ', searchResults)
 			if (!searchResults.classList.contains('clicked'))
 				searchService.clear()
-		}, 5000)
+		}, 300)
 		// console.log('IM OUT OF FOCUSSSSS OUYTTTTTT') // gotta not use focus out
 	}
 	handleSearchItem(target)
