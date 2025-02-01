@@ -7,6 +7,7 @@ import { local } from '../mods/local.js'
 import { searchService } from '../services/searchService.js'
 import { GameManager } from './gameManager.js'
 import Local from './localManager.js'
+import { ENDPOINTS } from '../constants/endpoints.js'
 
 export class EventManager
 {
@@ -230,34 +231,37 @@ export class EventManager
 	}
 	handleImgUpdate(target)
 	{
-		// console.log('hallo im here')
 		const input = document.getElementById('user-input-img')
 
 		input.click()
-		// input.addEventListener('change', this.handleInputFiles(input)) // not clean at all
 	}
 	async handleInputFiles(target)
 	{
 		const file = target.files[0]
 		const formData = new FormData()
-		formData.append('image', file) // this would be sent to backend with its original form (binary)
+		
+		formData.append('avatar', file) 
 		const temporaryFilePath = URL.createObjectURL(file)
-	
-		// console.log('tempo : ', formData)
-		const response = await this._apiService.settings.updateImage({avatar :  formData, reset_image : false})
+		const response = await fetch(ENDPOINTS.SETTINGS_PIC_UPDATE , {
+			method : 'PUT',
+			headers : {
+				"Authorization": `Bearer ${this._tokenService.accessToken}`,
+			},
+			body : formData
+		})
 
-	// 	const img = document.getElementById('tobe-updated-img')
-	// 	img.src = temporaryFilePath
+		const img = document.getElementById('tobe-updated-img')
+
+		img.src = temporaryFilePath
+        modalService.show('the image was uploaded successfully', true)
 	}
 	async handleDeleteOfImage(target)
 	{
-		//fetch to backend to delete image, and the final response i will take that and apply it as image
-		//for now
-		const response = await this._apiService.settings.updateImage({avatar :  null, reset_image : true})
-		console.log('in here : ', response)
+		const response = await this._apiService.settings.updateImage({reset_image : true})
+
 		const img = document.getElementById('tobe-updated-img')
 
-        img.src = ''
+        img.src = response.avatar
         modalService.show('deleted the image successfully', true)
     }
     async handleAddOfPassword(target)

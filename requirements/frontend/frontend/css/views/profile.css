@@ -168,8 +168,8 @@ profile-view
 
                     img
                     {
-                        width: max(10vh, 8vw);
-                        height: max(10vh, 8vw);
+                        width: max(11vh, 9vw);
+                        height: max(11vh, 9vw);
                         border-radius: 50%;
                     }
                     #profile-box1-top-id
