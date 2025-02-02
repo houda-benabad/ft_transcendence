@@ -6,7 +6,7 @@ D_COMPOSE = docker compose
 all : $(NAME)
 
 $(NAME) :
-	mkdir -p ./data/
+	# mkdir -p ./data/
 	$(D_COMPOSE) -f ./docker-compose.yml up --build -d
 
 up:
