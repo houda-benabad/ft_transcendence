@@ -4,12 +4,7 @@ from .player import Player
 from .ball import Ball
 import math
 from .objects import Plane
-
-TWO_PLAYERS = 2
-MULTI_PLAYERS = 4
-
-
-WINNING_SCORE = 2
+from ..constants import *
 
 
 @dataclass
