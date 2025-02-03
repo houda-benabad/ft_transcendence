@@ -169,28 +169,29 @@ export default class Components {
     }
 
 
-    createBackgroundSphere( background ){
-        const geometry = new THREE.SphereGeometry( ...Object.values( BACKGROUND.DIMENSION ) );
-        geometry.scale( ...Object.values( BACKGROUND.SCALE ) );
-        
-        const textureLoader = new THREE.TextureLoader(  );
-        textureLoader.load( 
+    createBackgroundSphere(background) {
+        const geometry = new THREE.SphereGeometry(...Object.values(BACKGROUND.DIMENSION));
+        geometry.scale(...Object.values(BACKGROUND.SCALE));
+    
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load(
             `../../assets/background/${background}.png`,
-            ( texture ) => {
-                texture.encoding = THREE.sRGBEncoding;
-                texture.minFilter = THREE.LinearMipmapLinearFilter;
+            (texture) => {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                texture.minFilter = THREE.LinearFilter;
                 texture.magFilter = THREE.LinearFilter;
-                texture.anisotropy = this.engine.renderer.capabilities.getMaxAnisotropy(  );
-                
-                const material = new THREE.MeshBasicMaterial( { map: texture } );
-                const sphere = new THREE.Mesh( geometry, material );
-                this.engine.scene.add( sphere );
+                texture.anisotropy = Math.min(16, this.engine.renderer.capabilities.getMaxAnisotropy()); // Higher anisotropy for better sharpness
+    
+                const material = new THREE.MeshBasicMaterial({ map: texture });
+                const sphere = new THREE.Mesh(geometry, material);
+                this.engine.scene.add(sphere);
             },
             undefined,
-            ( error ) => {
-                console.error( 'An error occurred while loading the texture:', error );
+            (error) => {
+                console.error("An error occurred while loading the texture:", error);
             }
-         );
+        );
     }
+    
 
 }

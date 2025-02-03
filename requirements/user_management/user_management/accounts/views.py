@@ -83,6 +83,7 @@ class   IntraCallback(APIView):
     def post(self, request):
 
         try:
+            logger.debug("entered in the callback")
             body = request.body.decode('utf-8')
             data = json.loads(body)
             code = data.get('code', '')
@@ -95,11 +96,13 @@ class   IntraCallback(APIView):
             if user_profile :
                 if not user_profile.is_oauth2:
                     raise OAuthError(f"A user with the username '{intra_user.username}' already exists and does not use OAuth.", status.HTTP_400_BAD_REQUEST)
-                user_profile.image_url = user_data["image_url"]
-                user_profile.save()
+                # user_profile.image_url = user_data["image_url"]
+                # user_profile.save()
             else:
                 Profile.objects.create(user=intra_user, image_url = user_data["image_url"], is_oauth2=True)
-                response = requests.post("http://game:8000/api/game/new_player", data = {"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
+                logger.debug("before posting to game")
+                response = requests.post("http://game:8000/api/game/new_player", data = {"userId": intra_user.id, "username": intra_user.username}, headers={"Host":"localhost"})
+                logger.debug("after posting to game")
                 if response.status_code != status.HTTP_200_OK:
                     raise OAuthError("error in the new_player response", response.status_code)
             refresh = RefreshToken.for_user(intra_user)
@@ -155,6 +158,7 @@ class   IntraCallback(APIView):
             response = requests.get(settings.USER_INFO_URI, headers=headers)
             response.raise_for_status()
             user_info = response.json()
+            logger.debug(f"==================================user_info: {user_info}")
             data = {
                 "username" : user_info["login"],
                 "image_url" : ((user_info["image"])["versions"])["medium"]

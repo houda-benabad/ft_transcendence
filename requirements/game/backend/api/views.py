@@ -36,11 +36,24 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 
 class NewPlayerView( APIView ):
 	def  post(self, request, *args, **kwargs):
-		userId = request.POST.get('userId')
-		username = request.POST.get('username')
-		new_player = Player.objects.create( userId=userId, username=username )
-		new_player.save( )
-		return Response({"detail" : "player created successfully"})
+		try:
+			userId = request.POST.get('userId')
+			username = request.POST.get('username')
+			new_player = Player.objects.create( userId=userId, username=username )
+			new_player.save( )
+		except:
+			return Response( {'detail' : 'Error while creating user'}, status=505)
+
+class UpdatePlayerView( APIView ):
+	def  post(self, request, *args, **kwargs):
+		try:
+			userId = request.POST.get('userId')
+			username = request.POST.get('username')
+			player = Player.objects.get( userId=userId )
+			player.username = username
+			player.save( )
+		except:
+			return Response( {'detail' : 'No player with credential was found'}, status=404 )
 
 # working fine
 class leaderBoardView( generics.ListAPIView ):

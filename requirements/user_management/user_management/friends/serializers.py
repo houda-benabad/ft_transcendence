@@ -38,13 +38,14 @@ class FriendSerializer(serializers.Serializer):
         return self._friend_response(request, obj.user)
     
     def _friend_response(self, request, other_user):
-        remove_friend_url = request.build_absolute_uri(reverse('remove-friend', kwargs={'friend_id': other_user.id}))
-        return {"status": "friend", "urls": [remove_friend_url]}
+        return {"status": "friend"}
 
 
-class RelationshipSerializer(serializers.Serializer):
-    relationship = serializers.SerializerMethodField(read_only=True)
+class   OtherUserProfileSerializer(serializers.Serializer):
     
+    user_details = UserProfileSerializer(source='*', read_only=True)
+    relationship = serializers.SerializerMethodField(read_only=True)
+
     def get_relationship(self, obj):
         
         request = self.context.get("request")
@@ -54,45 +55,16 @@ class RelationshipSerializer(serializers.Serializer):
         if friendship_request:
             return self._friendship_request_response(friendship_request, request)
         if Friend.objects.are_friends(request.user, obj.user):
-            return self._friend_response(request, obj.user)
-        return self._stranger_response(request, obj.user)
+            return {"status": "friend"}
+        return {"status": "stranger"}
     
     def _get_friendship_request(self, user, other_user):
-        
         try:
             return FriendshipRequest.objects.get(from_user__in=[user, other_user], to_user__in=[user, other_user])
         except FriendshipRequest.DoesNotExist:
             return None
     
-    def _build_uri(self, request, view_name, kwargs):
-        return request.build_absolute_uri(reverse(view_name, kwargs=kwargs))
-    
     def _friendship_request_response(self, friendship_request, request):
-        urls = []
         if friendship_request.from_user == request.user:
-                urls.append(self._build_uri(request, "cancel-request", {'to_user_id': friendship_request.to_user.id}))
-                return {"status": "requested", "urls": urls}
-        urls.append(self._build_uri(request, "accept-request", {'from_user_id': friendship_request.from_user.id}))
-        urls.append(self._build_uri(request, "reject-request", {'from_user_id': friendship_request.from_user.id}))
-        return {"status": "pending", "urls": urls}
-    
-    def _friend_response(self, request, other_user):
-        urls = [self._build_uri(request, "remove-friend", {'friend_id': other_user.id})]
-        return {"status": "friend", "urls": urls}
-    
-    def _stranger_response(self, request, other_user):
-        urls=[self._build_uri(request, "send-request", {'to_user_id': other_user.id})]
-        return {"status": "stranger", "urls": urls}
-
-class   OtherUserProfileSerializer(RelationshipSerializer):
-    
-    user_details = UserProfileSerializer(source='*', read_only=True)
-
-    def __init__(self, *args, **kwargs):
-        
-        super().__init__(*args, **kwargs)
-        self.fields = {
-            'user_details': self.fields['user_details'],
-            'relationship': self.fields['relationship'],
-            **self.fields
-        }
+            return {"status": "requested"}
+        return {"status": "pending"}

@@ -7,7 +7,6 @@ logging.basicConfig(level=logging.DEBUG)
 import os  
 from django.conf import settings
         
-logger = logging.getLogger("accounts.views")
 
 class ProfilePicSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(required=False, validators=[validate_image_file_extension])
@@ -24,7 +23,6 @@ class ProfilePicSerializer(serializers.ModelSerializer):
 
         reset_image = data.get('reset_image')
         avatar = data.get('avatar')
-        logger.debug(f"=============>avatar {avatar}, reset image {reset_image}")
         if not reset_image ^ (avatar != None):
             raise serializers.ValidationError("You have to choose one: reset_image or upload an image.")
         return data
@@ -33,7 +31,6 @@ class ProfilePicSerializer(serializers.ModelSerializer):
 
         reset_image = validated_data.get('reset_image')
         avatar = validated_data.get('avatar')
-        logger.debug(f"=============>avatar {avatar}, reset image {reset_image}")
         default_avatar = instance._meta.get_field('avatar').default
         if reset_image:
             if instance.avatar.name != default_avatar:
@@ -83,7 +80,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def get_profile_pic_url(self, obj):
         if obj.image_url == "":
             request = self.context.get('request')
-            return request.build_absolute_uri(obj.avatar.url)
+            protocol = request.headers.get("X-Protocol", request.scheme)
+            return request.build_absolute_uri(obj.avatar.url).replace(f"{request.scheme}://", f"{protocol}://")
         return (obj.image_url)
 
 

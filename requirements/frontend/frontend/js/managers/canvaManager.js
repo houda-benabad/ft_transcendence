@@ -6,11 +6,13 @@ class appCanva{
         this.elements.id = 'game-elements'
         canva.append(this.elements)
         this.waiting = document.createElement('div')
-        this.waiting.className = 'waiting-pop glass'
+        this.waiting.className = 'waiting-holder'
         this.waiting.innerHTML = `
+            <div class="waiting-pop glass">
 				<h1>Waiting for other player...</h1>
 				<div id="loader"></div>
 				<button data-action='cancel' id="cancel-btn">Cancel</button>
+			</div>
 	    `
         this.score = document.createElement('div')
         this.score.className = 'score'
