@@ -6,12 +6,16 @@ profile-view
     grid-template-rows: 1.3fr 1fr;
     grid-template-columns: 2.2fr 1fr;
     height: 100%;
-    #table
+    
+    .custom-table
     {
-        height : 180px !important;
-        table 
+        #table
         {
-            width: 95%;
+            .custom-table-head,.custom-table-row
+            {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                justify-items: center;
+            }
         }
     }
     > div

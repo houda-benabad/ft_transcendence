@@ -102,8 +102,8 @@ p,label
 }
 .anchor-box
 {
-  height: max(5vw, 5vh);
-  width: max(5vw, 5vh);
+  height: max(4vw, 5vh);
+  width: max(4vw, 5vh);
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -163,9 +163,9 @@ p,label
     {
       display: grid;
       grid-template-rows: 1fr;
-      grid-template-columns: 1fr 1fr 1fr;
       align-items: center;
-      padding: 0 3vw;
+      padding: 0 1.5vw;
+      box-sizing: border-box;
       background-color: var(--secondary3);
       border: solid 0.1vh var(--secondary);
       height: max(7%, 4vh);
@@ -196,13 +196,10 @@ p,label
       {
         display: grid;
         grid-template-rows: 1fr;
-        grid-template-columns: 33% 33% 33%;
-        padding: min(1vh, 1vw) 3vw;
+        padding: min(1vh, 1vw) 1.5vw;
         border-bottom: solid 0.1vh rgba(128, 86, 222, 0.2) ;
         p {
-          font-size: max(0.9vw, 0.7vh);
-          width: 25%;
-          text-align: center;
+          font-size: max(0.8vw, 0.7vh);
         }
       }
       #table-no-results

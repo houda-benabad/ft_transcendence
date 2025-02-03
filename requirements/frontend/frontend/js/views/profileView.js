@@ -111,8 +111,8 @@ export class ProfileView extends HTMLElement
     gameHistory()
     {
         const gameHistory = document.querySelector('.custom-table')
-        const gameHistoryDb = this._database.extractData('gameHistory')
-
+        let gameHistoryDb = this._database.extractData('gameHistory')
+        
         gameHistory.innerHTML = profileTemplate.gameHistory(gameHistoryDb)
     }
     addFriendsBox()
