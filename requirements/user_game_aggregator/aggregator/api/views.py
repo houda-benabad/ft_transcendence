@@ -39,7 +39,7 @@ class	ProfileWithGameHistoryView(APIView):
         except Error as e:
             return Response({"detail": str(e.message)}, status=e.status_code)
         except Exception as e:
-            return Response({"detail": f" an unecpected error occured {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": f" an unexpected error occured {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def _edit_combine_responses(self, user_profile_data, game_history_data):
 

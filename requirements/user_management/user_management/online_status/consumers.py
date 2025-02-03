@@ -19,7 +19,7 @@ class OnlineStatusConsumer(WebsocketConsumer):
             json_data = json.loads(text_data)
             token = json_data.get('token', '')
             if not token:
-                raise ValueError("missing token, rejected connection")
+                raise ValueError("missing token, rejected connection.")
             jwt_auth = JWTAuthentication()
             validated_token = jwt_auth.get_validated_token(token)
             self.user = jwt_auth.get_user(validated_token)
