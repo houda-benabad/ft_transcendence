@@ -38,4 +38,8 @@ export class OnlineStatusService
             console.log('the data i got is ', this._onlineFriendsList)
         }
     }
+    closeSocket()
+    {
+        this._socket.close()
+    }
 }

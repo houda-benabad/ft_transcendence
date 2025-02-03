@@ -238,6 +238,7 @@ export class EventManager
 		document.getElementById('app').classList.remove('active')
 		tokenService.clear()
 		this._router.handleRoute('/signin')
+		onlineStatusService.closeSocket()
 	}
 	handleImgUpdate(target)
 	{

@@ -1,6 +1,7 @@
 import { ENDPOINTS } from '../constants/endpoints.js'
 import { modalService } from './modalService.js' // this one too need to find a solution for it
 import { globalManager, tokenService } from '../managers/globalManager.js'
+import { tokenExpired } from '../utils/utils.js'
 
 class RequestConfiguration
 {
@@ -92,30 +93,9 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            // console.log('here is response  : ', response)
+            console.log('here is response  : ', response)
             if (needsAuth && response.status === 401) // this needs to be implemented in a maintenabale and cleam way
-                {
-                    console.log('->>>>>>> access token was expired')
-                    const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
-                        method : 'POST',
-                        headers : {
-                            "Content-Type": "application/json"
-                        },
-                        body : JSON.stringify({"refresh" : tokenService.refreshToken})
-                    })
-                    if (response.status === 401)
-                    {
-                        console.log('->>>>>> refresh token was expired')
-                        globalManager_tokenService.clear()
-                        document.getElementById('app').classList.remove('active')
-                        globalManager._router.handleRoute('/signin')
-                        return ; 
-                    }
-                    const responseBody = await response.json()
-                    tokenService.accessToken = responseBody.access
-                    this.request()
-                    return ;    
-            }
+                tokenExpired(this.request)
             if (response.status === 500)
                 throw new Error(await response.json())
             else if (response.status === 404)

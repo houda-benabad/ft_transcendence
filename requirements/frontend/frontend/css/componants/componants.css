@@ -18,7 +18,34 @@ p,label
     color: white;
     pointer-events: none;
 }
+.status
+{
+  position: relative;
 
+  &::after
+  {
+    content: "";
+    height: max(0.7vw, 1vh);
+    width: max(0.7vw, 1vh);
+    border-radius: 50%;
+    
+    position: absolute;
+    left: 110%;
+    top: 27%;
+  }
+}
+.online::after
+{
+    background-color: var(--online);
+}
+.offline::after
+{
+    background-color: var(--offline);
+}
+.unknown::after
+{
+    background-color: var(--unknown);
+}
 #button-type1
 {
     border-radius: 35px; 
