@@ -12,11 +12,6 @@ User = get_user_model()
 
 class UserCreateSerializer(BaseUserCreateSerializer):
 
-<<<<<<< HEAD
-=======
-    avatar = serializers.ImageField(required=False, write_only=True, validators=[validate_image_file_extension])
-
->>>>>>> online_status
     class Meta(BaseUserCreateSerializer.Meta):
         model = User
         fields = [
