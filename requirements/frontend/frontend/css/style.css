@@ -37,8 +37,8 @@
     --intra-hover: #145662;
 
     --online : #15EE23;
-    --playing : #FB773C;
     --offline : #D32727; 
+    --unknown : #FB773C;
 }
 
 * {

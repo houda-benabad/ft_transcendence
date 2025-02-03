@@ -1,3 +1,5 @@
+import { onlineStatusService } from "../managers/globalManager.js"
+
 export class databaseExtractorService
 {
     constructor(database)
@@ -43,7 +45,7 @@ export class databaseExtractorService
             userId : user_id,
             username,
             profilePic : profile_pic_url,
-            status  : 'online',
+            status  : this.determineUserStatus(user_id, relationship),
             friendsCount : friends_count,
             totalGames : total_games,
             totalPoints : total_points,
@@ -82,7 +84,7 @@ export class databaseExtractorService
     // }
     extractDataForFriendsList()
     {
-        const { friends, relationship } = this._database
+        const { friends} = this._database
 
         // console.log('friends here  : ', friends)
         // console.log('database: ', this._database)
@@ -91,7 +93,7 @@ export class databaseExtractorService
             username : friend.relationship ? friend.user_details.username : 'Me',
             profilePic : friend.user_details.profile_pic_url,
             relationship : friend.relationship,
-            other : 'online',
+            other : this.determineUserStatus(friend.user_details.user_id, friend.relationship),
             type : 'friend'
             //here gotta link the icons with the convenient urls.
         }))
@@ -145,6 +147,19 @@ export class databaseExtractorService
         }
         // console.log('here in the extractor : ', IconType[type])
         return (ActionType[type])
+    }
+
+    determineUserStatus(userId, relationship)
+    {
+        const onlineFriendsList = onlineStatusService._onlineFriendsList
+        const relationshipStatus = relationship ?  relationship.status : 'me'
+
+        if ((relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === true ) || relationshipStatus === 'me')
+            return ('online')
+        else if (relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === false)
+            return ('offline')
+        else
+            return ('unknown')
     }
     extractDataForNotifications()
     {

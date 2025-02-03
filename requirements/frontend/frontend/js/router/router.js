@@ -6,23 +6,23 @@ import '../views/profileView.js'
 import '../views/gameSettingsView.js'
 import '../views/settingsView.js'
 import '../views/gameView.js'
+import { onlineStatusService, tokenService } from "../managers/globalManager.js"
 
 export class Router 
 {
     constructor(global)
     {
         this._apiService = global._apiService
-        this._tokenService = global._tokenService
         this._reset = global._reset
         this._routes = ROUTES(this._apiService)
-        
         this.init()
     }
    
     async init() // this needs cleansing and to make it more maintenable
     {
-        if (this._tokenService.isAuthenticated())
+        if (tokenService.isAuthenticated())
         {
+            onlineStatusService.init()
             await this._reset()
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
             
@@ -46,12 +46,12 @@ export class Router
             const code = params.get('code')
 
             const response = await this._apiService.auth.intraCallback({code : code}) // im getting a 500 error what could be the reason
-            this._tokenService.tokens = response
+            tokenService.tokens = response
             await this._reset()
         }
-        if (!this._tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
+        if (!tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
-        else if (this._tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
+        else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
             this.navigateTo('/')
         else if (path === '/game')
             this.navigateTo('/')
@@ -113,6 +113,6 @@ export class Router
 
         if (response === 'not found')
             return this.handleRoute('/404')
-        return new databaseExtractorService(response)
+        return new databaseExtractorService(response, this)
     }
 }

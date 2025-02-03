@@ -8,6 +8,8 @@ import { searchService } from '../services/searchService.js'
 import { GameManager } from './gameManager.js'
 import Local from './localManager.js'
 import { ENDPOINTS } from '../constants/endpoints.js'
+import { onlineStatusService } from './globalManager.js'
+import { tokenService } from './globalManager.js'
 
 export class EventManager
 {
@@ -35,9 +37,7 @@ export class EventManager
         }
 		this._apiService = global._apiService
 		this._router = global._router
-		this._tokenService = global._tokenService
 		this._reset =  global._reset
-		this._onlineStatusService = global._onlineStatusService
 
     } 
     async handleIntraCall(target)
@@ -80,7 +80,7 @@ export class EventManager
 				mainElement.relationshipStatus = 'requested'
 			else
 			{
-				this._onlineStatusService.newFriend = id
+				onlineStatusService.newFriend = id
 				mainElement.relationshipStatus = 'friend'
 			}
 		}
@@ -106,13 +106,11 @@ export class EventManager
 		// updating the ui
 		const friendsBoxItemId = target.closest('.friends-box-item').id
 		const friendsBoxContainer = document.getElementById('friends-box-container')
-
-		console.log('test : ', friendsBoxItemId)
 		friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
 		
 		if (action === 'accept_request')
 		{
-			this._onlineStatusService.newFriend = id
+			onlineStatusService.newFriend = id
 		}
 	}
 	async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
@@ -133,9 +131,10 @@ export class EventManager
 				setTimeout(() => this._router.handleRoute('/signin'), 1000)
 			 else
 			{
-				this._tokenService.tokens= response
+				tokenService.tokens= response
 				await this._reset()
 				this._router.handleRoute('/')
+				onlineStatusService.init()
 			}
 		}
 	}
@@ -237,7 +236,7 @@ export class EventManager
 	handleLogout()
 	{
 		document.getElementById('app').classList.remove('active')
-		this._tokenService.clear()
+		tokenService.clear()
 		this._router.handleRoute('/signin')
 	}
 	handleImgUpdate(target)
@@ -256,7 +255,7 @@ export class EventManager
 		const response = await fetch(ENDPOINTS.SETTINGS_PIC_UPDATE , {
 			method : 'PUT',
 			headers : {
-				"Authorization": `Bearer ${this._tokenService.accessToken}`,
+				"Authorization": `Bearer ${tokenService.accessToken}`,
 			},
 			body : formData
 		})

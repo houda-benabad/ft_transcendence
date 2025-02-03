@@ -177,11 +177,41 @@ profile-view
                         margin-top: 20px;
                         display: flex;
                         flex-direction: column;
+                        align-items: flex-start;
                         gap:7px;
                         
                         #profile-box1-top-username
                         {
                             font-weight: 900;
+                        }
+                        .profile-box1-box-text
+                        {
+                            position: relative;
+                            display: inline-block;
+                            font-size: max(1vw, 1vh);
+                        }
+                        .status::after
+                        {
+                            content: "";
+                            height: max(0.7vw, 1vh);
+                            width: max(0.7vw, 1vh);
+                            border-radius: 50%;
+                            
+                            position: absolute;
+                            left: 110%;
+                            top: 27%;
+                        }
+                        .online::after
+                        {
+                            background-color: var(--online);
+                        }
+                        .offline::after
+                        {
+                            background-color: var(--offline);
+                        }
+                        .unknown::after
+                        {
+                            background-color: var(--unknown);
                         }
                     }
                 }
