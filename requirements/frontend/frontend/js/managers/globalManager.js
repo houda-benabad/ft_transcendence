@@ -5,6 +5,7 @@ import { TokenService } from '../services/tokenService.js'
 import { EventService } from '../services/eventService.js'
 import { eventHandlers } from '../utils/eventHandlers.js'
 import { reset } from '../utils/utils.js'
+import { OnlineStatusService } from '../services/onlineStatusService.js'
 
 export class GlobalManager
 {
@@ -17,6 +18,7 @@ export class GlobalManager
 
         this._router = new Router(this)
         this._eventManager = new EventManager(this)
+        this._onlineStatusService = new OnlineStatusService(this)
     }
 }
 

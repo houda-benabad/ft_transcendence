@@ -29,14 +29,6 @@ export class ProfileView extends HTMLElement
         this.gameHistory()
         this.addFriendsBox()
         this.setupEventListenersAndAnimations()
-        this.setUpWebsocket()
-    }
-    setUpWebsocket()
-    {
-        const url = `wss://${window.location.host}/wss/online_status`
-        const socket = new WebSocket(url)
-
-        socket.onopen = () => { console.log('websocket was opened successfully')}
     }
     disconnectedCallback() // later
     {
