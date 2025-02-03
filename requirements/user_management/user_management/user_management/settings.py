@@ -53,7 +53,8 @@ PACKAGES = [
 APPS_ADDED = [
     'accounts',
     'Profiles',
-    'friends'
+    'friends',
+    'online_status'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PACKAGES + APPS_ADDED
@@ -204,6 +205,7 @@ USER_INFO_URI = os.environ.get('USER_INFO_URI')
 
 REDIS_SERVER = os.environ.get('REDIS_SERVER')
 REDIS_PORT = os.environ.get('REDIS_PORT')
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",

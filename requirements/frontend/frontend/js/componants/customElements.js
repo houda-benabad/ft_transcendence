@@ -186,7 +186,6 @@ export class Friends extends HTMLDivElement
             return ;
         }
         db.forEach((e, index) => {
-            // console.log('testing e : ', e)
             const friendBoxItem = document.createElement('div')
 
             friendBoxItem.classList.add('friends-box-item')

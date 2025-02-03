@@ -37,6 +37,7 @@ export class EventManager
 		this._router = global._router
 		this._tokenService = global._tokenService
 		this._reset =  global._reset
+		this._onlineStatusService = global._onlineStatusService
 
     } 
     async handleIntraCall(target)
@@ -78,7 +79,10 @@ export class EventManager
 			if (action === 'send_request')
 				mainElement.relationshipStatus = 'requested'
 			else
+			{
+				this._onlineStatusService.newFriend = id
 				mainElement.relationshipStatus = 'friend'
+			}
 		}
 		else if (action === 'remove_friend' || action === 'cancel_request' || action === 'reject_request')
 		{
@@ -103,7 +107,13 @@ export class EventManager
 		const friendsBoxItemId = target.closest('.friends-box-item').id
 		const friendsBoxContainer = document.getElementById('friends-box-container')
 
-		friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}	
+		console.log('test : ', friendsBoxItemId)
+		friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
+		
+		if (action === 'accept_request')
+		{
+			this._onlineStatusService.newFriend = id
+		}
 	}
 	async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
 	{

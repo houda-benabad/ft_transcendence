@@ -17,8 +17,8 @@ export class GlobalManager
         this._reset = reset
 
         this._router = new Router(this)
-        this._eventManager = new EventManager(this)
         this._onlineStatusService = new OnlineStatusService(this)
+        this._eventManager = new EventManager(this)
     }
 }
 
