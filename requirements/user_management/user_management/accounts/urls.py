@@ -5,8 +5,8 @@ from . import views
 
 urlpatterns = [
     path('auth/users/signup', CustomUserViewSet.as_view({'post': 'create'}), name='user-create'),
-    path('api/users/<int:id>', UserViewSet.as_view({'get': 'retrieve'}), name='user'), #views.CustomUserViewSet.as_view({'get': 'retrieve'})
-    path('api/users/me', UserViewSet.as_view({'get': 'me'}), name='current-user'), #views.CustomUserViewSet.as_view({'get': 'me'})
+    path('api/users/<int:id>', UserViewSet.as_view({'get': 'retrieve'}), name='user'),
+    path('api/users/me', UserViewSet.as_view({'get': 'me'}), name='current-user'),
     path("api/users/set_password", UserViewSet.as_view({'post': 'set_password'}), name="set-password"),
     path("api/users/set_username", views.set_username_api_view, name="set-username"),
     path("auth/users/signin", jwt_views.TokenObtainPairView.as_view(), name="jwt-create"),

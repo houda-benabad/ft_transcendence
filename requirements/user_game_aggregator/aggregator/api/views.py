@@ -1,17 +1,13 @@
-# from rest_framework.views import APIView
+
 from adrf.views import APIView
 import httpx
 from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
-# import requests
 import logging
 from django.urls import resolve
 from urllib.parse import urlparse, urlunparse
 logging.basicConfig(level=logging.DEBUG)  
-
-logger = logging.getLogger("accounts.views")  
-
 
 class   Error(Exception):
     
@@ -43,11 +39,6 @@ class	ProfileWithGameHistoryView(APIView):
 
     def _edit_combine_responses(self, user_profile_data, game_history_data):
 
-        profile_pic_url = user_profile_data['user_details']['profile_pic_url']
-        parsed_url = urlparse(profile_pic_url)
-        parsed_url = parsed_url._replace(scheme='https')
-        profile_pic_url = urlunparse(parsed_url)
-        user_profile_data['user_details']['profile_pic_url'] = profile_pic_url
         game_history_data['general_details']['friends_count'] = user_profile_data['friends_count']
         user_profile_data.pop('friends_count', None)
         combined_response = {
@@ -61,13 +52,9 @@ class	ProfileWithGameHistoryView(APIView):
         is_other_user = request.resolver_match.url_name == "other_user_detailed_profile"
         user_profile_url = f"{settings.USER_PROFILE_URL}/{user_id if is_other_user else 'me'}"
         game_history_url = f"{settings.GAME_HISTORY_URL}/{user_id if is_other_user else 'me'}"
-        logger.debug(f"------> urls {user_profile_url} {game_history_url}")
-        headers = {"Authorization": auth_token, "Host": request.get_host()} 
-        logger.debug("here fetching")
+        headers = {"Authorization": auth_token, "Host": request.get_host(), "X-Protocol": request.scheme} 
         async with httpx.AsyncClient() as client:
-            logger.debug("before fetching")
             user_profile_response = await client.get(user_profile_url, headers=headers)
-            logger.debug("fetched user_profile")
             game_history_response = await client.get(game_history_url, headers=headers)
         if user_profile_response.status_code != status.HTTP_200_OK:
             raise Error("Failed to retrieve user profile", status_code=user_profile_response.status_code)

@@ -134,10 +134,3 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ['Bearer'],
     "SIGNING_KEY": os.environ.get("JWT_SIGNING_KEY")
 }
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_RENDERER_CLASSES': (
-#         'rest_framework.renderers.JSONRenderer',
-#         'rest_framework.renderers.BrowsableAPIRenderer'
-#     ),
-# }

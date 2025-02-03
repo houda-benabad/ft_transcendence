@@ -13,11 +13,8 @@ class JwtAuthMiddleware(BaseMiddleware):
 
     async def __call__(self, scope, receive, send):
         try :
-            logger.debug("----------------------------------CALLED")
             token = self._get_token(scope)
-            logger.debug("----------------------------------ttttttttt")
             user = await self._get_user(token)
-            logger.debug(f"----------------{user}")
             scope["user"] = user
 
         except Exception as e:
@@ -45,8 +42,6 @@ class JwtAuthMiddleware(BaseMiddleware):
             jwt_auth = JWTAuthentication()
             validated_token = jwt_auth.get_validated_token(token)
             user = jwt_auth.get_user(validated_token)
-            logger.debug(f"---------> user {user}")
             return user
         except Exception as e:
-            logger.debug("---------> anonymous")
             return AnonymousUser()
