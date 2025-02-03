@@ -6,7 +6,7 @@ export const homeTemplate =
     layout()
     {
         return (`
-            <div class="table-box""></div>
+            <div class="custom-table""></div>
             <div id="tournament"></div>
             <div id="remote" class="home-mini-box"></div>
             <div id="multiplayer" class="home-mini-box"></div>
@@ -46,31 +46,28 @@ export const homeTemplate =
         let dynamicPart = ''
 
         if (!db.length)
-            dynamicPart = `<tr><td colspan="3" id="no-data">no players have played yet !!!</td></tr>`
+            dynamicPart = `<p id="table-no-results">no players have played yet !!!</p>`
         db.forEach(e => {
             dynamicPart += 
-            `<tr>
-                <td>${escapeHtml(e.rank)}</td>
-                <td>${escapeHtml(e.username)}</td>
-                <td>${escapeHtml(e.totalPoints)}</td>
-            </tr>
+            `<div class="custom-table-row">
+                <p>${escapeHtml(e.rank)}</p>
+                <p>${escapeHtml(e.username)}</p>
+                <p>${escapeHtml(e.totalPoints)}</p>
+            </div>
             `
         });
 
         return `
         <h3>Leaderboard</h3>
         <div id="table">
-        <table>
-            <thead>
-                <tr>
-                    <th>rank</th>
-                    <th>player</th>
-                    <th>total points</th>
-                </tr>
-            </thead>
-            <tbody>
-            ${dynamicPart}
-            </tbody>
-            </div>`        
+            <div class="custom-table-head">
+                <p>rank</p>
+                <p>player</p>
+                <p>total points</p>
+            </div>
+            <div class="custom-table-content">
+                ${dynamicPart}    
+            </div>
+        </div>`          
     }
 }

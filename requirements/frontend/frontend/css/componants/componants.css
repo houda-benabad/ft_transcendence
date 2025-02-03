@@ -140,72 +140,76 @@ p,label
     background-color: var(--secondary-hover);
   }
 }  
-.table-box
+.custom-table
 {
-  overflow: hidden;
-  height: 100%;
-  box-sizing: border-box; /* Ensure padding doesn't affect the layout */
-  height: auto; /* Allow the height to be flexible based on content */
+  padding: max(3%, 2vh);
   box-sizing: border-box;
+  max-height: 100%;
+  height: 100%;
+  overflow: hidden;
   h3 {
-    padding: 20px 0px 20px 20px;
+    font-size: max(1.5vw, 2.4vh);
+    padding-bottom: max(1vh, 1vw);
   }
+
   #table
   {
-      margin: 0 auto;
-      width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap : max(3%, 1vw);
+    max-height: 100%;
+    height: 83%;
+    .custom-table-head
+    {
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      padding: 0 3vw;
+      background-color: var(--secondary3);
+      border: solid 0.1vh var(--secondary);
+      height: max(7%, 4vh);
+      border-radius: 3vw;
+      
+      p 
+      {
+        font-size: max(1vw, 0.8vh);
+      }
+    }
+    .custom-table-content
+    {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
       overflow-y: auto;
-      height: 550px;
-      /* something for thsi height  */
+
       &::-webkit-scrollbar
       {
-          width: 10px;
+          width: 7px;
       }
       &::-webkit-scrollbar-thumb
       {
           background-color: var(--secondary2);
-          border-radius: 10px;
+          border-radius : 10px;
       }
-      table
+      .custom-table-row
       {
-          border-collapse: collapse;
-          margin: 0 auto;
-          thead
-          {
-              border: 1px solid rgba(255,255,255, 0.2);
-              font-size: 0.8rem;
-          }
-          th
-          {
-              background-color: var(--secondary2);
-          }
-          th, td
-          {
-              padding: 10px;
-              text-align: left;
-            }
-            
-            td
-            {
-              font-size: 0.7rem;
-              border-bottom: 1px solid rgba(255,255,255, 0.1);
-
-            }
-            #no-data
-            {
-              text-align: center;
-              padding: 30px;
-              border-bottom: none;
-              font-size: 1rem;
-            }
-          
-          td[class="message-info"]
-          {
-              /* padding-top: 50px; */
-              border: none;
-              text-align: center;
-          }
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: 33% 33% 33%;
+        padding: min(1vh, 1vw) 3vw;
+        border-bottom: solid 0.1vh rgba(128, 86, 222, 0.2) ;
+        p {
+          font-size: max(0.9vw, 0.7vh);
+          width: 25%;
+          text-align: center;
+        }
       }
+      #table-no-results
+      {
+        text-align: center;
+      }
+    }
   }
 }
 

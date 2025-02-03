@@ -39,7 +39,7 @@ export class homeView extends HTMLElement
     addLeaderBoard()
     {
         const leaderboardDb = this._database.extractData('leaderboard')
-        const tournament = document.querySelector('.table-box')
+        const tournament = document.querySelector('.custom-table')
 
         tournament.innerHTML = homeTemplate.leaderboard(leaderboardDb)
         // console.log('normally in here i should add the value of the leaderBoard')

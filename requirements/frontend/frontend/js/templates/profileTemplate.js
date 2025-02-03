@@ -6,7 +6,7 @@ export const profileTemplate  =
     {
         return (
             `<div id="profile-box1"></div>
-            <div class="table-box"></div>
+            <div class="custom-table"></div>
             <div class="friends-box"></div>`
         )
     },
@@ -61,34 +61,31 @@ export const profileTemplate  =
         let dynamicPart = ''
 
         if (!db.length)
-            dynamicPart = `<tr><td colspan="4" id="no-data">no games played yet !!!</td></tr>`
+            dynamicPart = `<p id="table-no-results">no games played yet !!!</p>`
         db.forEach(e => {
             dynamicPart += 
-            `<tr>
-                <td>${escapeHtml(e.gameType)}</td>
-                <td>${escapeHtml(e.dateTime)}</td>
-                <td>${escapeHtml(e.gamePoints)}</td>
-                <td>${escapeHtml(e.gameStatus)}</td>
-            </tr>
+            `<div class="custom-table-row">
+                <p>${escapeHtml(e.gameType)}</p>
+                <p>${escapeHtml(e.dateTime)}</p>
+                <p>${escapeHtml(e.gamePoints)}</p>
+                <p>${escapeHtml(e.gameStatus)}</p>
+            </div>
             `
         });
 
         return `
         <h3>Game History</h3>
         <div id="table">
-        <table>
-            <thead>
-                <tr>
-                    <th>game type</th>
-                    <th>date/time</th>
-                    <th>points</th>
-                    <th>status</th>
-                </tr>
-            </thead>
-            <tbody>
-            ${dynamicPart}
-            </tbody
-            </div>`        
+            <div class="custom-table-head">
+                <p>game type</p>
+                <p>date/time</p>
+                <p>points</p>
+                <p>status</p>
+            </div>
+            <div class="custom-table-content">
+                ${dynamicPart}    
+            </div>
+        </div>`       
     },
     friendsBox(userId, username)
     {

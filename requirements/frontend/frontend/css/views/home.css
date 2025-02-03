@@ -15,7 +15,7 @@ home-view
         border-radius: 3vw;
     }
 
-    .table-box
+    .custom-table
     {
         grid-row: 1 / 3;
     }
