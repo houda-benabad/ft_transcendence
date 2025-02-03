@@ -5,12 +5,12 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 # import requests
-# import logging
+import logging
 from django.urls import resolve
 from urllib.parse import urlparse, urlunparse
-# logging.basicConfig(level=logging.DEBUG)  
+logging.basicConfig(level=logging.DEBUG)  
 
-# logger = logging.getLogger("accounts.views")  
+logger = logging.getLogger("accounts.views")  
 
 
 class   Error(Exception):
@@ -39,7 +39,7 @@ class	ProfileWithGameHistoryView(APIView):
         except Error as e:
             return Response({"detail": str(e.message)}, status=e.status_code)
         except Exception as e:
-            return Response({"detail": f" an unecpected error occured {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"detail": f" an unexpected error occured {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def _edit_combine_responses(self, user_profile_data, game_history_data):
 
@@ -61,9 +61,13 @@ class	ProfileWithGameHistoryView(APIView):
         is_other_user = request.resolver_match.url_name == "other_user_detailed_profile"
         user_profile_url = f"{settings.USER_PROFILE_URL}/{user_id if is_other_user else 'me'}"
         game_history_url = f"{settings.GAME_HISTORY_URL}/{user_id if is_other_user else 'me'}"
+        logger.debug(f"------> urls {user_profile_url} {game_history_url}")
         headers = {"Authorization": auth_token, "Host": request.get_host()} 
+        logger.debug("here fetching")
         async with httpx.AsyncClient() as client:
+            logger.debug("before fetching")
             user_profile_response = await client.get(user_profile_url, headers=headers)
+            logger.debug("fetched user_profile")
             game_history_response = await client.get(game_history_url, headers=headers)
         if user_profile_response.status_code != status.HTTP_200_OK:
             raise Error("Failed to retrieve user profile", status_code=user_profile_response.status_code)

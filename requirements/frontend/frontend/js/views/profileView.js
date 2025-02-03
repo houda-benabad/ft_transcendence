@@ -1,7 +1,8 @@
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { animateProgressBar } from "../utils/animations.js"
 import { Icons ,Friends} from "../componants/customElements.js"
-
+import { globalManager } from "../managers/globalManager.js"
+``
 export class ProfileView extends HTMLElement
 {
     constructor()
@@ -28,6 +29,14 @@ export class ProfileView extends HTMLElement
         this.gameHistory()
         this.addFriendsBox()
         this.setupEventListenersAndAnimations()
+        this.setUpWebsocket()
+    }
+    setUpWebsocket()
+    {
+        const url = `wss://${window.location.host}/wss/online_status`
+        const socket = new WebSocket(url)
+
+        socket.onopen = () => { console.log('websocket was opened successfully')}
     }
     disconnectedCallback() // later
     {
