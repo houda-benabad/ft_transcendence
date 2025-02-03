@@ -3,21 +3,26 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 50px 25px;
+    padding-left: 3%;
+    padding-right: 3%;
+    box-sizing: border-box;
     #search-bar
     {
         position: relative;
+        display: flex;
+        align-items: center;
+        height: 100%;
         input
         {
             background-color: var(--secondary2);
             color: white;
-            width: 300px;
-            height: 60px;
-            border-radius: 50px;
+            width: max(32vw, 25vh);
+            height: 57%;
+            border-radius: max(3vw, 3vh);
             padding-left: 5%;
             padding-right: 12%;
             box-sizing: border-box;
-            font-size: 1.1rem;
+            font-size: max(1.5vw, 1.5vh);
             border: none;
         }
         input:focus
@@ -30,7 +35,7 @@
             top: 50%;
             right: -40%;
             transform: translateY(-50%);
-            font-size: 26px;
+            font-size: max(2.5vw, 2.5vh);
         }
         #search-results
         {
@@ -184,7 +189,7 @@
         }
         
     }
-    @media (max-width : 750px)
+    /* @media (max-width : 750px)
     {
         padding: 0px 10px;
         #search-bar
@@ -201,7 +206,7 @@
                 font-size: 12px;
             }
         }
-    }
+    } */
 }
 
 #navbar
@@ -258,7 +263,7 @@
             }
         }
     }
-    @media (max-width : 750px)
+    @media (max-width : 820px)
     {
         nav
         {

@@ -70,8 +70,8 @@ html
     {
       color: white;
       display: grid;
-      grid-template-columns: 140px auto;
-      grid-template-rows: 70px auto;
+      grid-template-columns: 12% auto;
+      grid-template-rows: 14% auto;
       height: 100vh;
       #header
       {
@@ -79,12 +79,13 @@ html
       }
       #main
       {
-        margin: 55px 30px 45px 30px;
+        margin-bottom: max(3vw, 2vh);
+        margin-right: max(3vw, 2vh);
       }
-      @media (max-width : 750px)
+      @media (max-width : 820px)
       {
         grid-template-columns: none;
-        grid-template-rows: 70px  auto 70px;
+        grid-template-rows: 10%  auto 10%;
         #header
         {
           grid-row : 1 / 2;

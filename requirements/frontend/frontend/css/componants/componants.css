@@ -14,7 +14,7 @@ p,label
 .iconify
 {
     width: 100%;
-    font-size: 30px;
+    font-size: max(2.5vw, 2.5vh);
     color: white;
     pointer-events: none;
 }
@@ -102,8 +102,8 @@ p,label
 }
 .anchor-box
 {
-  height: 50px;
-  width: 50px;
+  height: max(5vw, 5vh);
+  width: max(5vw, 5vh);
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -224,23 +224,23 @@ p,label
 
 @media (max-width : 750px)
 {
-    .iconify
+    /* .iconify
     {
       font-size: 20px;
-    }
+    } */
     /* h2
     {
         font-size: 16px;
     } */
-    h3 
+    /* h3 
     {
       font-size: 12px;
-    }
-    .anchor-box
+    } */
+    /* .anchor-box
     {
       height: 40px;
       width: 40px;
-    }
+    } */
     /* p,label
     {
         font-size: 0.5rem;
