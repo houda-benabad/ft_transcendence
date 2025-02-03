@@ -89,7 +89,6 @@ class OnlineStatusConsumer(WebsocketConsumer):
 
     
     def disconnect(self, close_code):
-
         if self.user != AnonymousUser():
             self.redis_client.srem(REDIS_ONLINE_USERS, self.user.username)
             self.redis_client.srem(f"{self.user.username}_channels", self.channel_name)

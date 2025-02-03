@@ -1,6 +1,7 @@
 import { layoutTemplate } from '../templates/layoutTemplate.js'
 import { tokenService } from '../managers/globalManager.js'
 import { globalManager } from '../managers/globalManager.js'
+import { ENDPOINTS } from '../constants/endpoints.js'
 
 export async function reset()
 {
