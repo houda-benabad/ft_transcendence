@@ -79,7 +79,7 @@ class OnlineStatusConsumer(WebsocketConsumer):
                     async_to_sync(self.channel_layer.send(
                         friend_channel, 
                         {
-                            "type": "friend.status",
+                            "type": "friend_status",
                             "friend_id": user_id,
                             "status": online_status,
                         }))
