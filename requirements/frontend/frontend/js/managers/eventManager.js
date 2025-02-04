@@ -1,10 +1,6 @@
-import { MODE } from '../constants/engine.js'
 import { modalService } from '../services/modalService.js'
-import { formService } from '../services/formService.js'
-import { local } from '../mods/local.js'
 import { searchService } from '../services/searchService.js'
 import { GameManager } from './gameManager.js'
-import Local from './localManager.js'
 import { ENDPOINTS } from '../constants/endpoints.js'
 import { onlineStatusService } from './globalManager.js'
 import { tokenService } from './globalManager.js'
@@ -172,7 +168,7 @@ const eventHandlers = (eventManager) =>
 				'update_image' : this.handleImgUpdate.bind(this),
 				'delete_image' : this.handleDeleteOfImage.bind(this),
 				'save_username' : this.handleNewUsername.bind(this),
-				'add_password' : this.handleAddOfPassword.bins(this),
+				'add_password' : this.handleAddOfPassword.bind(this),
 			}
 			console.log('in buttons action is  : ', action)
 			if (action)

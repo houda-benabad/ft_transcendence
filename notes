@@ -1,11 +1,24 @@
-   
+export const formService =
+{
+    tournamentForm()
+    {
+       
+    },
+    handleTournament()
+    {
+        return new Promise (resolve => {
+            const form = document.querySelector('form')
+    
+            eventListeners.on(form, 'submit', (event) => eventHandlers.form.tournamentFormHandler(event, resolve))
+        })
+    },
+    game()
+    {
+        return new Promise (resolve => {
+
+            const form = document.querySelector('form')
+
+            eventListeners.on(form, 'submit', (event) => FUNCTIONNAME.GAME_FORM(event, resolve))
+        })
+    },
 }
-
-
-this._actionType = 
-        {
-            
-            'friends' : this._eventHandlers.handleFriendsIcons,
-            'add_password' : this._eventHandlers.handleAddOfPassword,
-            'cancel' : this._eventHandlers.handleCancelButton,
-        }

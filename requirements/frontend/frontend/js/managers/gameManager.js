@@ -1,5 +1,5 @@
 import { globalManager } from "./globalManager.js"
-import { formService } from "../services/formService.js"
+// import { formService } from "../services/formService.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 import { local } from "../mods/local.js"
@@ -33,6 +33,7 @@ export class GameManager
     }
     async tournament( ){
         const players = await modalService.show(  '', false,'tournament' ) // the alias names for the players 
+        console.log('im out of modal service in game')
         await this.#init( )
         const winners = []
         winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )

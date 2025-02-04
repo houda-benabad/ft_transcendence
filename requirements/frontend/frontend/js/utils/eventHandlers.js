@@ -1,35 +1,8 @@
-// import { updateData , sendData, reset} from './utils.js'
-// import { apiService } from '../services/apiService.js'
-// import router from '../router/router.js'
-// import { modalService } from '../services/modalService.js'
-// import { MODE } from '../constants/engine.js'
-// import { local } from '../mods/local.js'
-// import { formService } from '../services/formService.js'
-import { eventListeners } from "../managers/globalManager.js"
-// import { gameManager } from '../managers/gameManager.js'
-// import { remote } from '../mods/remote.js'
 
-//break it into small chunks and cleanse this out .
+import { eventListeners } from "../managers/globalManager.js"
+
 export const eventHandlers = 
 {
-    auth :
-    {
-        signHandler( event )
-        {
-            const signAnchor = document.getElementById( 'sign-anchor' )
-
-            event.preventDefault(  )
-            document.getElementById( 'signDiv' ).dataset.value = signAnchor.innerHTML
-            updateData(  )
-        },
-        async intraHandler( event )
-        {
-            event.preventDefault(  )
-            await apiService.auth.intra(  )
-            await reset(  )
-            router.init(  )
-        }
-    },
     form :
     {
         tournamentFormHandler( event, resolve )
@@ -66,36 +39,6 @@ export const eventHandlers =
             resolve(formObject)
         }
     },
-    router : 
-    {
-        anchorsNavHandler( event, e )
-        {
-            document.querySelectorAll( '.static' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
-            e.classList.add( 'selected' )
-
-            event.preventDefault(  )
-            const path = e.getAttribute( 'href' )
-            router.navigateTo( path )
-        },
-        popstateHandler( event )
-        {
-            const path = event.state ? event.state.path : '/home'
-            router.navigateTo(path, false)
-
-            document.querySelectorAll( '.static' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
-            document.querySelector( `a[href="${path}"]` ).classList.add( 'selected' )
-        }
-    },
-    // i do think this as a constructor it would be a good idea - 
-    home :
-    {
-        async playGame( event )
-        {
-            const mode = event.target.dataset.mode
-            // const manager = new gameManager(  )
-
-        }
-    },
     game :
     {
         slider( event, mode )
@@ -127,21 +70,16 @@ export const eventHandlers =
             num.innerHTML = `${input.value}`
         }
     },
-    removeModalHandler( event, resolve ) // what type of function is this
+    removeModalHandler( event, resolve , type) // what type of function is this
     {
         const modalBackground = document.getElementById( 'modal-background' )
         
-        if (event && event.target === modalBackground )
+        if (!event || (event && event.target === modalBackground ))
         {
             eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
             modalBackground.remove(  )
-            resolve(  ) // do i really need to resolve
-        }
-        else if (!event)
-        {
-            eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
-            modalBackground.remove(  )
-            resolve(  )
+            if (type !== null)
+                resolve(  ) 
         }
     }
 }
