@@ -8,6 +8,7 @@ from django.conf import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import logging
 
+
 logging.basicConfig(level=logging.DEBUG)  
 
 logger = logging.getLogger("consumers") 
@@ -17,31 +18,27 @@ class OnlineStatusConsumer(WebsocketConsumer):
     redis_client = redis.Redis(host=settings.REDIS_SERVER, port=settings.REDIS_PORT)
 
     def connect(self):
+        self.user = self.scope.get("user")
+        if not self.user or self.user.is_anonymous:
+            self.close()
+            return
         self.accept()
+        self.redis_client.sadd(REDIS_ONLINE_USERS, self.user.id)
+        self.redis_client.sadd(f"{self.user.username}_channels", self.channel_name)
+        self.group_name = f"{self.user.username}_group"
+        async_to_sync(self.channel_layer.group_add(self.group_name, self.channel_name))
+        channels = self.redis_client.smembers(f"{self.user.username}_channels")
+        friends_qs = Friend.objects.friends(self.user)
+        # friends_usernames = friends_qs.values_list("username", flat=True)
+        self._inform_friends_user_online_status(self.user.id, friends_qs, "online")
+        online_friends = self._get_online_friends(friends_qs)
+        self.send(text_data=json.dumps({"type": "online_friends_list", "online_friends": online_friends}))
     
     def receive(self, text_data):
         try :
             json_data = json.loads(text_data)
             message_type = json_data.get('type', '')
-            if message_type == 'auth':
-                token = json_data.get('token', '')
-                if not token:
-                    raise ValueError("missing token, rejected connection.")
-                jwt_auth = JWTAuthentication()
-                validated_token = jwt_auth.get_validated_token(token)
-                self.user = jwt_auth.get_user(validated_token)
-
-                self.redis_client.sadd(REDIS_ONLINE_USERS, self.user.id)
-                self.redis_client.sadd(f"{self.user.username}_channels", self.channel_name)
-                self.group_name = f"{self.user.username}_group"
-                async_to_sync(self.channel_layer.group_add(self.group_name, self.channel_name))
-                channels = self.redis_client.smembers(f"{self.user.username}_channels")
-                friends_qs = Friend.objects.friends(self.user)
-                # friends_usernames = friends_qs.values_list("username", flat=True)
-                self._inform_friends_user_online_status(self.user.id, friends_qs, "online")
-                online_friends = self._get_online_friends(friends_qs)
-                self.send(text_data=json.dumps({"type": "online_friends_list", "online_friends": online_friends}))
-            elif message_type == 'new_friend':
+            if message_type == 'new_friend':
                 friend_id = json_data.get('friend_id', '')
                 if not friend_id:
                     raise ValueError("missing friend id")
@@ -52,12 +49,15 @@ class OnlineStatusConsumer(WebsocketConsumer):
         except ValueError as e:
             self.send(text_data=json.dumps({"error": str(e)}))
             self.close()
+            return
         except Exception as e:
             self.send(text_data=json.dumps({"error": str(e)}))
             self.close()
+            return
         except json.JSONDecodeError:
             self.send(text_data=json.dumps({"error": 'Invalid JSON format'}))
             self.close()
+            return
     
     def _inform_friends_user_online_status(self, user_id, friends_qs, online_status):
 

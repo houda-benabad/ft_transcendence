@@ -19,11 +19,11 @@ export class OnlineStatusService
     }
     init()
     {
-        this._socket = new WebSocket(`wss://${window.location.host}/wss/online_status`)
+        this._socket = new WebSocket(`wss://${window.location.host}/wss/online_status?token=${tokenService.accessToken}`)
         
         this._socket.onopen = () => { 
             console.log('websocket was opened successfully')
-            this._socket.send (JSON.stringify({type: 'auth', token : tokenService.accessToken}))
+            // this._socket.send (JSON.stringify({type: 'auth', token : tokenService.accessToken}))
 
             setTimeout(() => 
                 {
