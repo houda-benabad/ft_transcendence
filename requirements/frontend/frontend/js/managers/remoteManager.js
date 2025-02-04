@@ -52,17 +52,20 @@ export default class Remote{
 		}
 	}
 
+	async _handle_cancel_btn( ){
+		this.socket.close( 4000 )
+		await reset(  )
+		globalManager._router.navigateTo( '/' )
+		document.getElementById( "cancel-btn" ).addEventListener( 'click', this._handle_cancel_btn.bind(this))
+	}
+
 	_setupSocket(  ) {
 		let url = `wss://${window.location.host}/wss/${this.mode}`
 		const token = globalManager._tokenService.accessToken 
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{
 			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
-			document.getElementById( "cancel-btn" ).addEventListener( 'click', async ( )=>{
-				this.socket.close( 4000 )
-				await reset(  )
-				globalManager._router.navigateTo( '/' )
-			} )
+			document.getElementById( "cancel-btn" ).addEventListener( 'click', this._handle_cancel_btn)
 		}
 		socket.onclose =   async ( e ) => await this._handle_socket_error( e)
 		socket.onmessage = ( e ) => this.updateData( e, this.resolve )
