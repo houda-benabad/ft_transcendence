@@ -8,7 +8,6 @@ export async function local( options , players) {
     local.setup(  )
 	return new Promise ( ( resolve )=>{
 		local.animate( resolve )
-		console.log("out of local")
 	})
 	
 }

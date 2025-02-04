@@ -19,7 +19,7 @@ export default class Local{
 		this.engine = new Engine( MODE.LOCAL )
 		this.components = new Components(this.engine, MODE.LOCAL, options)
 		this.visual = new visualsManager(this.components, MODE.LOCAL)
-		this.input = new inputManager( this.components )
+		this.input = new inputManager( this.components, MODE.LOCAL )
 		this.canva = new appCanva( this.players )
 
 		this.physics = new physicsManager( this.components )

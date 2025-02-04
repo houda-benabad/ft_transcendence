@@ -5,7 +5,7 @@ from django.conf import settings
 from . import game
 import requests
 from .models import Player
-from .constants import TWO_PLAYERS, MULTI_PLAYERS
+from .constants import *
 
 remote_players = []
 multi_players = []
@@ -22,22 +22,34 @@ class GameConsumer( AsyncWebsocketConsumer ):
 	async def connect(self):
 		await self.accept()
 
+
 	async def _handle_auth( self, token ):
-		try:
-			response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'authorization': f"Bearer {token}" })
-			if response.status_code != 200:
-				raise ValueError( "Connetion rejected" )
-			user_info = response.json(  )
-			self.playerModel= await self._get_player_( user_info.get('id') , user_info.get('username') )
-		except Exception as e:
-			await self.send_error( e, 401 )
+		response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'authorization': f"Bearer {token}" })
+		if response.status_code != SUCCES_STATUS_CODE:
+			await self.send_error( 'Connection Error', AUTHORIZATION_STATUS_CODE )
+			return False
+		user_info = response.json(  )
+		self.id = user_info.get('id')
+		self.playerModel= await self._get_player_( self.id , user_info.get('username') )
+		if self._is_already_playing(  ):
+			await self.send_error( 'Connection Error', GAME_ERROR_STATUS_CODE )
+			return False
+		return True
 
-
+	def _is_already_playing( self ):
+		for player in remote_players:
+			if player.id == self.id:
+				return True
+		for player in multi_players:
+			if player.id == self.id:
+				return True
+		return False
 	# Message handlers
-	async def _send_message_( self, type, data, code=200 ): await self.send(text_data=json.dumps({ 'type': type, 'data': data, 'code': code }))
+	async def _send_message_( self, type, data, code=SUCCES_STATUS_CODE ): 
+		await self.send(text_data=json.dumps({ 'type': type, 'data': data, 'code': code }))
 	async def send_error( self, error_message, code ): 
 		await self._send_message_( 'error', error_message, code=code )
-		await self.close( code=4000 )
+		await self.close( code=code )
 	async def start(self, event): await self._send_message_( 'start', event['data'] )
 	async def api(self, event): await self._send_message_( 'api', event['data'] )
 	async def score(self, event):await self._send_message_( 'score', event['data'] )
@@ -50,12 +62,12 @@ class GameConsumer( AsyncWebsocketConsumer ):
 		if (dataType == 'keycode'):
 			self.keycode = dataJson['data']
 		elif dataType == 'auth' :
-			await self._handle_auth( dataJson['data'])
-			await self._update_players(  )
+			if await self._handle_auth( dataJson['data']):
+				await self._update_players(  )
 	
 	# Player handle
 	@database_sync_to_async
-	def _get_player_( self, userId, username): 
+	def _get_player_( self, userId, username):
 		player = Player.objects.get( userId=userId )
 		if not player:
 			raise ValueError( "No player was found")
@@ -73,7 +85,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			players_set = [remote_players.pop(0) for num in range(TWO_PLAYERS)]
 			asyncio.create_task(game.startRemoteGame( players_set, TWO_PLAYERS ))
 		except Exception as e:
-			self.send_error( e, 500 )
+			self.send_error( e, GAME_ERROR_STATUS_CODE )
 			
 
 	async def disconnect(self, close_code):
@@ -96,7 +108,7 @@ class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			players_set = [multi_players.pop(0) for num in range(MULTI_PLAYERS)]
 			asyncio.create_task(game.startRemoteGame( players_set , MULTI_PLAYERS))
 		except Exception as e:
-					self.send_error( e, 500 )
+					self.send_error( e, GAME_ERROR_STATUS_CODE )
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1

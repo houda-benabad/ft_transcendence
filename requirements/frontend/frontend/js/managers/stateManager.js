@@ -8,7 +8,6 @@ export default class stateManager{
 
 	setup(  ){
 		this.startTime = new Date(  )
-		console.log(  "this one = ", this.startTime  )
 	}
 
 	reachedMaxTime( score ){

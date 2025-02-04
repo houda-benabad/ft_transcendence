@@ -45,7 +45,6 @@ export const eventHandlers =
         },
         gameFormHandler( event, resolve )
         {
-            console.log('im in hereeee')
             const form = document.querySelector( 'form' )
 
             event.preventDefault(  )

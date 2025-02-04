@@ -5,11 +5,10 @@ import Engine from "../utils/engine.js"
 import Components from "../utils/components.js"
 import appCanva from "./canvaManager.js"
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
-import { modalService } from "../services/modalService.js"
 import { MODE, WORLD } from "../constants/engine.js"
-// import { router } from '../utils/global.js'
-import { reset } from '../utils/utils.js'
+import { reset, tokenExpired } from '../utils/utils.js'
 import { globalManager } from "./globalManager.js"
+import { modalService } from "../services/modalService.js"
 
 
 
@@ -44,20 +43,26 @@ export default class Remote{
 		const token = globalManager._tokenService.accessToken 
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{
+			console.log( "socket opened" )
 			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
 			document.getElementById( "cancel-btn" ).addEventListener( 'click', async ( )=>{
+				console.log("CANCEL CLICKED")
 				this.socket.close( 4000 )
 				await reset(  )
 				globalManager._router.navigateTo( '/' )
 			} )
 		}
-		socket.onclose =   ( e ) =>{ 
-			switch( e ){
-				case 401:
-					// refreash token or not authenticated
+		socket.onclose =   async ( e ) =>{ 
+			console.log( "socket closed"  )
+			switch( e.code ){
+				case 4000: // need to be tested
+					tokenExpired( this.setupSocket.bind(this) )
 					break;
-				case 500:
-					// Erro poccured while playing
+				case 3000:
+					await reset(  )
+					await modalService.show( `Error Ocurred During Game, Please try again later` )
+					await reset(  )
+					globalManager._router.navigateTo( '/' )
 					break;
 			}
 		 }
@@ -95,7 +100,6 @@ export default class Remote{
 	}
 
 	updateState( data, resolve ){
-		console.log( "result = ", data )
 
 		resolve( data )
 		cancelAnimationFrame( this.id )

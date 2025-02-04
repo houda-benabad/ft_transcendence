@@ -79,7 +79,6 @@ export default class Components {
                 color = COLORS.PLAYER1
             else
                 color = COLORS.PLAYER2
-            console.log( `player num ${i} position = (${MULTIPLAYERPOSITION[PLAYERS[i]].x}, ${MULTIPLAYERPOSITION[PLAYERS[i]].z})` )
             players[`player${i + 1}`] = this.createPlayer( Object.values(MULTIPLAYERPOSITION[PLAYERS[i]]), color)
         }
 

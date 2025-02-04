@@ -54,7 +54,6 @@ class PlayerSerializer( serializers.ModelSerializer ):
 		]
 		
 	def get_general_details( self, obj ):
-		print("obj = ", obj)
 		return {
 			"total_points": obj.total_points,
 			"total_games": obj.total_games,

@@ -41,6 +41,7 @@ class NewPlayerView( APIView ):
 			username = request.POST.get('username')
 			new_player = Player.objects.create( userId=userId, username=username )
 			new_player.save( )
+			return Response( {'detail' : 'Player was created successfully'}, status=200)
 		except:
 			return Response( {'detail' : 'Error while creating user'}, status=505)
 

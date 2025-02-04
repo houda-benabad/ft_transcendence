@@ -40,19 +40,6 @@ export default class Engine {
 		this.setupResizeEvent(  )
 	}
 
-	// setupSocket(  ) {
-	// 	let url = `wss://${window.location.host}/wss/${this.mode}`
-	// 	const token = globalManager._tokenService.accessToken 
-	// 	let socket = new WebSocket( url )
-	// 	socket.onopen = ( ) =>{
-	// 		socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
-	// 	}
-	// 	socket.onclose = ( e ) =>{
-	// 		console.log( "closing = ", e`.reason` )
-	// 	}
-	// 	return socket
-	// }
-
 	setupCamera(  ){
         this.camera.position.set( ...Object.values( CAMERA.INITIALPOSITION ) )
 		new OrbitControls( this.camera, this.renderer.domElement )
