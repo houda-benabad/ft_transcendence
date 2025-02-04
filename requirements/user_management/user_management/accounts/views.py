@@ -41,6 +41,19 @@ class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+    
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        # logger.debug(f"---------this is the host {self.request.get_host()}--------------")
+        try :
+            response = requests.post(f"http://game:8000/api/game/update_player/{instance.id}", data = {"username": instance.username}, headers={"Host":"localhost"})
+            if response.status_code != status.HTTP_200_OK:
+                raise Error(detail="error in the new_player response", status_code = response.status_code)
+        except requests.RequestException as e:
+            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+        except Exception as e:
+            raise Error(detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
 
 set_username_api_view = UserUsrnameUpdateApiView.as_view()
 
