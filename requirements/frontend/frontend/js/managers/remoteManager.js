@@ -33,39 +33,38 @@ export default class Remote{
 		this.engine.setup( )
 		this.components.setup( )
 		this.canva.add( 'waiting' )
-		this.socket  = this.setupSocket( this.resolve )
+		this.socket  = this._setupSocket( this.resolve )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
 	}
 
-	setupSocket(  ) {
+	async _handle_socket_error( e ){
+		switch( e.code ){
+			case 4000:
+				tokenExpired( this._setupSocket.bind(this) )
+				break;
+			case 3000:
+				await reset(  )
+				await modalService.show( `Error Ocurred During Game, Please try again later` )
+				await reset(  )
+				globalManager._router.navigateTo( '/' )
+				break;
+		}
+	}
+
+	_setupSocket(  ) {
 		let url = `wss://${window.location.host}/wss/${this.mode}`
 		const token = globalManager._tokenService.accessToken 
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{
-			console.log( "socket opened" )
 			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
 			document.getElementById( "cancel-btn" ).addEventListener( 'click', async ( )=>{
-				console.log("CANCEL CLICKED")
 				this.socket.close( 4000 )
 				await reset(  )
 				globalManager._router.navigateTo( '/' )
 			} )
 		}
-		socket.onclose =   async ( e ) =>{ 
-			console.log( "socket closed"  )
-			switch( e.code ){
-				case 4000: // need to be tested
-					tokenExpired( this.setupSocket.bind(this) )
-					break;
-				case 3000:
-					await reset(  )
-					await modalService.show( `Error Ocurred During Game, Please try again later` )
-					await reset(  )
-					globalManager._router.navigateTo( '/' )
-					break;
-			}
-		 }
+		socket.onclose =   async ( e ) => await this._handle_socket_error( e)
 		socket.onmessage = ( e ) => this.updateData( e, this.resolve )
 
 		return socket

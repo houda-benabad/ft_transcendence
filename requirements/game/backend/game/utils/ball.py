@@ -14,13 +14,13 @@ class Vector3:
     z: float
 
 class Ball(GameObject):
-	MIN_VELOCITY = 0.1  
+	MIN_VELOCITY = 0.05  
     
     # GENERIC
 	def __reset(self):
 		self.position = Vector3( 0, 0, 0)
 		self.velocity.z *= random.choice([-1, 1])
-		self.velocity.x *= random.choice([-1.1, 1.1]) 
+		self.velocity.x *= random.choice([-1.03, 1.03]) 
 
 	#GENERIC
 	def __adjust_z_velocity(self):

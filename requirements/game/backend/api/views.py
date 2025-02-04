@@ -48,11 +48,12 @@ class NewPlayerView( APIView ):
 class UpdatePlayerView( APIView ):
 	def  post(self, request, *args, **kwargs):
 		try:
-			userId = request.POST.get('userId')
+			userId = self.kwargs.get( 'userId' )
 			username = request.POST.get('username')
 			player = Player.objects.get( userId=userId )
 			player.username = username
 			player.save( )
+			return Response( {'detail' : 'Player was updated successfully'}, status=200)
 		except:
 			return Response( {'detail' : 'No player with credential was found'}, status=404 )
 
