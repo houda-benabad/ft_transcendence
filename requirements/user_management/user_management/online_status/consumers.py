@@ -36,6 +36,8 @@ class OnlineStatusConsumer(WebsocketConsumer):
 
                 self.redis_client.sadd(REDIS_ONLINE_USERS, self.user.id)
                 self.redis_client.sadd(f"{self.user.username}_channels", self.channel_name)
+                channels = self.redis_client.smembers(f"{self.user.username}_channels")
+                logger.debug(f"my channels size : {len(channels)}==================my channels:::::{channels}")
                 friends_qs = Friend.objects.friends(self.user)
                 # friends_usernames = friends_qs.values_list("username", flat=True)
                 self._inform_friends_user_online_status(self.user.id, friends_qs, "online")
@@ -65,18 +67,24 @@ class OnlineStatusConsumer(WebsocketConsumer):
     
     def _inform_friends_user_online_status(self, user_id, friends_qs, online_status):
 
-        for friend in friends_qs:
+        try:
 
-            friend_channels = self.redis_client.smembers(f"{friend.username}_channels")
+            for friend in friends_qs:
 
-            for friend_channel in friend_channels:
-                async_to_sync(self.channel_layer.send(
-                    friend_channel, 
-                    {
-                        "type": "friend.status",
-                        "friend_id": user_id,
-                        "status": online_status,
-                    }))
+                friend_channels = self.redis_client.smembers(f"{friend.username}_channels")
+                logger.debug("=--===============================sending to friend channels the user online_status")
+                logger.debug(f"size friend channels : {len(friend_channels)}==================friend channels:::::{friend_channels}")
+                for friend_channel in friend_channels:
+                    logger.debug("=--===============================sending to each of the friend channels the user online_status")
+                    async_to_sync(self.channel_layer.send(
+                        friend_channel, 
+                        {
+                            "type": "friend.status",
+                            "friend_id": user_id,
+                            "status": online_status,
+                        }))
+        except Exception as e:
+            logger.debug(f"error occured while ssending to friends the user's online status {str(e)}")
     
     def _get_online_friends(self, friends_qs):
 
@@ -89,20 +97,26 @@ class OnlineStatusConsumer(WebsocketConsumer):
 
     
     def disconnect(self, close_code):
+        logger.debug("=================================disconnected=====================================")
         if self.user != AnonymousUser():
-            self.redis_client.srem(REDIS_ONLINE_USERS, self.user.username)
-            self.redis_client.srem(f"{self.user.username}_channels", self.channel_name)
+            logger.debug("========================================entered here in disconnect")
             user_channels_set_size = self.redis_client.scard(f"{self.user.username}_channels")
-            if user_channels_set_size == 0:
+            if user_channels_set_size == 1:
                 friends_qs = Friend.objects.friends(self.user)
                 # friends_usernames = friends_qs.values_list("username", flat=True)
                 self._inform_friends_user_online_status(self.user.id, friends_qs, "offline")
+            self.redis_client.srem(REDIS_ONLINE_USERS, self.user.username)
+            self.redis_client.srem(f"{self.user.username}_channels", self.channel_name)
 
 
     def friend_status(self, event):
+        try :
+            logger.debug("------------------------------------------------------receiving from friend his online_status and sending to frontend")
+            logger.debug(f"Received event: {event}")
+            status = event.get("status")
+            friend_id = event.get("friend_id")
 
-        status = event["status"]
-        friend_id = event["friend_id"]
-
-        self.send(text_data=json.dumps({"type": "friend_online_status", "friend_id": friend_id, "status": status}))
+            self.send(text_data=json.dumps({"type": "friend_online_status", "friend_id": friend_id, "status": status}))
+        except Exception as e:
+            logger.debug("================================================error occured in friend status method message:", str(e))
         
