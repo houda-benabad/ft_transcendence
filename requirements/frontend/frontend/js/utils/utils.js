@@ -35,6 +35,6 @@ export async function tokenExpired(func = null)
     }
     const responseBody = await response.json()
     tokenService.accessToken = responseBody.access
-    func()
-    return ;    
+    if (func !== null)
+        func() 
 }
