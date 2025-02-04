@@ -20,11 +20,8 @@ class GameConsumer( AsyncWebsocketConsumer ):
 		self.playerModel = None
   
 	async def connect(self):
-		try:
-			await self.accept()
-		except Exception:
-			await self.send_error( "Connection rejected" )
-  
+		await self.accept()
+
 	async def _handle_auth( self, token ):
 		try:
 			response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'authorization': f"Bearer {token}" })
@@ -33,13 +30,13 @@ class GameConsumer( AsyncWebsocketConsumer ):
 			user_info = response.json(  )
 			self.playerModel= await self._get_player_( user_info.get('id') , user_info.get('username') )
 		except Exception as e:
-			await self.send_error( e )
+			await self.send_error( e, 401 )
 
 
 	# Message handlers
-	async def _send_message_( self, type, data ): await self.send(text_data=json.dumps({ 'type': type, 'data': data }))
-	async def send_error( self, error_message ): 
-		await self._send_message_( 'error', error_message )
+	async def _send_message_( self, type, data, code=200 ): await self.send(text_data=json.dumps({ 'type': type, 'data': data, 'code': code }))
+	async def send_error( self, error_message, code ): 
+		await self._send_message_( 'error', error_message, code=code )
 		await self.close( code=4000 )
 	async def start(self, event): await self._send_message_( 'start', event['data'] )
 	async def api(self, event): await self._send_message_( 'api', event['data'] )
@@ -72,8 +69,12 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			await self.start_game()
 
 	async def start_game(self):
-		players_set = [remote_players.pop(0) for num in range(TWO_PLAYERS)]
-		asyncio.create_task(game.startRemoteGame( players_set, TWO_PLAYERS ))
+		try:
+			players_set = [remote_players.pop(0) for num in range(TWO_PLAYERS)]
+			asyncio.create_task(game.startRemoteGame( players_set, TWO_PLAYERS ))
+		except Exception as e:
+			self.send_error( e, 500 )
+			
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1
@@ -85,13 +86,17 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
 	async def _update_players( self ):
+     
 		multi_players.append(self)
 		if len(multi_players) >= MULTI_PLAYERS:
 			await self.start_game()
 
 	async def start_game(self):
-		players_set = [multi_players.pop(0) for num in range(MULTI_PLAYERS)]
-		asyncio.create_task(game.startRemoteGame( players_set , MULTI_PLAYERS))
+		try:
+			players_set = [multi_players.pop(0) for num in range(MULTI_PLAYERS)]
+			asyncio.create_task(game.startRemoteGame( players_set , MULTI_PLAYERS))
+		except Exception as e:
+					self.send_error( e, 500 )
 
 	async def disconnect(self, close_code):
 		self.keycode =  -1

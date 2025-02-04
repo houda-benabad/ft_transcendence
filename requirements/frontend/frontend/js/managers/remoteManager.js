@@ -34,11 +34,6 @@ export default class Remote{
 		this.engine.setup( )
 		this.components.setup( )
 		this.canva.add( 'waiting' )
-		document.getElementById( "cancel-btn" ).addEventListener( 'click', async ( )=>{
-			this.socket.close( 4000 )
-			await reset(  )
-			globalManager._router.navigateTo( '/' )
-		} )
 		this.socket  = this.setupSocket( this.resolve )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
@@ -50,10 +45,24 @@ export default class Remote{
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{
 			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
+			document.getElementById( "cancel-btn" ).addEventListener( 'click', async ( )=>{
+				this.socket.close( 4000 )
+				await reset(  )
+				globalManager._router.navigateTo( '/' )
+			} )
 		}
-		socket.onclose =   ( e ) =>{ console.log( "closing = ", e.reason ) }
+		socket.onclose =   ( e ) =>{ 
+			switch( e ){
+				case 401:
+					// refreash token or not authenticated
+					break;
+				case 500:
+					// Erro poccured while playing
+					break;
+			}
+		 }
 		socket.onmessage = ( e ) => this.updateData( e, this.resolve )
-		console.log( "resolve = ", typeof( this.resolve ))
+
 		return socket
 	}
 
