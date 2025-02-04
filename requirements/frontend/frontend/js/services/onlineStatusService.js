@@ -38,11 +38,14 @@ export class OnlineStatusService
         };
         this._socket.onmessage = (e) => {
             const response = JSON.parse(e.data)
-
             const {type, online_friends} = response
+            
+            if (type != 'online_friends_list')
+                console.log('-----------------------------------------the data i got is ', response)
+            
             if (type === 'online_friends_list')
                 this._onlineFriendsList = online_friends
-            console.log('the data i got is ', this._onlineFriendsList)
+            console.log('-----------------------------------------the data i got is ', this._onlineFriendsList)
         }
     }
     closeSocket()
