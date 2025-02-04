@@ -46,7 +46,7 @@ class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
         instance = serializer.save()
         # logger.debug(f"---------this is the host {self.request.get_host()}--------------")
         try :
-            response = requests.post("http://game:8000/api/game/update_player", data = {"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
+            response = requests.post(f"http://game:8000/api/game/update_player/{instance.id}", data = {"username": instance.username}, headers={"Host":"localhost"})
             if response.status_code != status.HTTP_200_OK:
                 raise Error(detail="error in the new_player response", status_code = response.status_code)
         except requests.RequestException as e:
