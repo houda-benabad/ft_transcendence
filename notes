@@ -1,29 +1,7 @@
- async handleIntraCall(target)
+async handleIntraCall(target)
     {
         const response = await this._apiService.auth.intraAuthorize()
 		window.location.href = response.intra_auth_url
-    }
-    handleEventDelegation(event)
-    {
-        const eventType = event.type
-        const target = event.target
-
-        if (eventType === 'focusout' && target.id === 'search-input')
-            this.handleSearchFocus()
-        else if (eventType === 'click' && target.matches('a'))
-            this.handleAnchorEvents(event, target)
-        else if (eventType === 'click' && target.getAttribute('data-action') === 'clear-notifications')
-            this.handleClearNotifications(event, target)
-        else if (eventType === 'click' && target.matches('button'))
-            this.handleButtonEvents(target)
-        else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
-            this.handleformEvents(event, target)
-        else if (eventType === 'input' && target.id === 'search-input') // when cleansing
-            this.handleSearchInput(event)
-        else if (eventType === 'input' && target.id === 'user-input-img')
-            this.handleInputFiles(target)
-        else if (eventType === 'click' && target.classList.contains('search-item'))
-            this.handleSearchItem(target)
     }
     async handleProfileIcons(target)
     {
@@ -96,6 +74,22 @@
 			}
 		}
 	}
+	handleAnchorEvents(event, target)
+	{
+		event.preventDefault()
+	
+        const link = target.getAttribute('data-link')
+        const action = target.getAttribute("data-action")
+		if (link)
+			this._router.handleRoute(link)
+		else if (action)
+		{
+			// console.log('action : ', action)
+			const runAction = this._actionType[action]
+
+			runAction(target)
+		}
+	}
 	handleSearchFocus()
 	{
 		setTimeout(() => 
@@ -127,22 +121,6 @@
 
 		if (value.length >= 1)
 			debounced(value)
-	}
-	handleAnchorEvents(event, target)
-	{
-		event.preventDefault()
-	
-        const link = target.getAttribute('data-link')
-        const action = target.getAttribute("data-action")
-		if (link)
-			this._router.handleRoute(link)
-		else if (action)
-		{
-			// console.log('action : ', action)
-			const runAction = this._actionType[action]
-
-			runAction(target)
-		}
 	}
 	handleCancelButton( target ){
 		// console.log( " waaaa3")
@@ -278,3 +256,4 @@
         const down = document.getElementById('down')
        down.appendChild(notificationSocket.notificationsHtml)
    }
+}

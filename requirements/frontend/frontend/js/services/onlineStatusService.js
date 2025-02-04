@@ -40,6 +40,6 @@ export class OnlineStatusService
     }
     closeSocket()
     {
-        this._socket.close()
+        this._socket.close(1000)
     }
 }

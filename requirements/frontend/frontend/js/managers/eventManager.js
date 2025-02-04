@@ -1,6 +1,10 @@
+import { MODE } from '../constants/engine.js'
 import { modalService } from '../services/modalService.js'
+import { formService } from '../services/formService.js'
+import { local } from '../mods/local.js'
 import { searchService } from '../services/searchService.js'
 import { GameManager } from './gameManager.js'
+import Local from './localManager.js'
 import { ENDPOINTS } from '../constants/endpoints.js'
 import { onlineStatusService } from './globalManager.js'
 import { tokenService } from './globalManager.js'
@@ -13,7 +17,7 @@ export class EventManager
 		this._router = global._router
 		this._reset =  global._reset
 
-        this._actionType =  // not maintenable
+        this._actionType = 
         {
             'router' : this.handleNavigation.bind(this),
             'profile' : this.handleProfileIcons.bind(this),
@@ -27,31 +31,46 @@ export class EventManager
             'cancel' : this.handleCancelButton.bind(this),
             'handle-notifications' : this.handleNotifications.bind(this)
         }
-
 		this.init()
-
-    }
-	
-	handleEventDelegation(event)
-    {
-        const eventType = event.type
+    } 
+	init()
+	{
+		document.addEventListener('click', this.handleEventDelegationForClick.bind(this))
+		// document.addEventListener('submit', this.handleEventDelegationForSubmit.bind(this))
+		// document.addEventListener('input', this.handleEventDelegationForInput.bind(this))
+		// document.addEventListener('focusout', this.handleEventDelegationFocusout.bind(this))
+	}
+	handleEventDelegationForClick(event)
+	{
         const target = event.target
 
-        if (eventType === 'focusout' && target.id === 'search-input')
-            this.handleSearchFocus()
-        else if (eventType === 'click' && target.matches('a'))
+		if (target.matches('a'))
             this.handleAnchorEvents(event, target)
-        else if (eventType === 'click' && target.getAttribute('data-action') === 'clear-notifications')
-            this.handleClearNotifications(event, target)
-        else if (eventType === 'click' && target.matches('button'))
+        else if (target.matches('button'))
             this.handleButtonEvents(target)
-        else if (target.matches('form') && eventType === 'submit' && target.id === 'sign') // do not need that eventType submit
-            this.handleformEvents(event, target)
-        else if (eventType === 'input' && target.id === 'search-input') // when cleansing
-            this.handleSearchInput(event)
-        else if (eventType === 'input' && target.id === 'user-input-img')
-            this.handleInputFiles(target)
-        else if (eventType === 'click' && target.classList.contains('search-item'))
+		else if (target.classList.contains('search-item'))
             this.handleSearchItem(target)
-    }
+	}
+	handleEventDelegationForSubmit(event)
+	{
+		const target = event.target
+
+		if (target.matches('form') && target.id === 'sign')
+			this.handleformEvents(event, target)
+	}
+	handleEventDelegationForInput(event)
+	{
+		const target = event.target
+
+		if (target.id === 'search-input')
+			this.handleSearchInput(event)
+		else if (target.id === 'user-input-img')
+			this.handleInputFiles(target)
+	}
+	handleEventDelegationFocusout(event)
+	{
+		if (target.id === 'search-input')
+            this.handleSearchFocus()
+	}
+
 }
