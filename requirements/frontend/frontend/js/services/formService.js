@@ -7,29 +7,72 @@ export class FormService
     constructor()
     {
     }
-    #eventHandlerTouranmentForm(event, resolve)
+    #removeModal()
+    {
+        const modalBackground = document.getElementById('modal-background')
+
+        modalBackground.remove()
+        eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler) // leak
+    }
+    #eventHandlerTournamentForm(event, resolve)
     {
         const form = document.querySelector( 'form' )
-
-        event.preventDefault(  )
+        
+        event.preventDefault()
+        this.#removeModal()
             
         let data = new FormData( form );
         let playersObject = Object.fromEntries( data )
         let players = Object.values( playersObject )
         resolve( players )
     }
-   async handleTournament()
+    #eventHandlerGameForm( event, resolve )
     {
-        await new Promise (resolve => {
-            const form = document.querySelector('form')
+        console.log('im i hereee')
+        const form = document.querySelector( 'form' )
+        
+        event.preventDefault()
+        
     
-            eventListeners.on(form, 'submit', this.#eventHandlerTouranmentForm(event, resolve))
+        let data = new FormData( form );
+        let gameSettings = Object.fromEntries( data )
+        resolve( gameSettings )
+    }
+    #eventHandlerPasswordForm (event, resolve)
+    {
+        const form = document.querySelector( 'form' )
+
+        event.preventDefault(  )
+        this.#removeModal()
+
+        let data = new FormData( form );
+        let gameSettings = Object.fromEntries( data )
+        resolve( gameSettings )
+    }
+    handleTournament()
+    {
+        return new Promise (resolve => {
+            const form = document.querySelector('form')
+            
+            eventListeners.on(form, 'submit', (event) => this.#eventHandlerTournamentForm(event, resolve)) // remove this one
         })
-        console.log('im out of form touranemt')
-        const modalBackground = document.getElementById('modal-background')
-        const players = await formService.handleTournament()
-        eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler)
-        modalBackground.remove()
-        resolve(players)
+    }
+    handleGame()
+    {
+        return new Promise (resolve => {
+
+            const form = document.querySelector('form')
+
+            eventListeners.on(form, 'submit', (event) => this.#eventHandlerGameForm(event, resolve)) // remove leak
+        })
+    }
+    handlePassword()
+    {
+        return new Promise (resolve => {
+
+            const form = document.querySelector('form')
+
+            eventListeners.on(form, 'submit', (event) => this.#eventHandlerPasswordForm(event, resolve)) // remove leak
+        })
     }
 }

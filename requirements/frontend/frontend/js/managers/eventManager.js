@@ -12,6 +12,7 @@ export class EventManager
 		this._apiService = global._apiService
 		this._router = global._router
 		this._reset =  global._reset
+		this._formService = global._formService
 
 		this._eventHandlers = eventHandlers(this)
 		this.init()
@@ -71,9 +72,8 @@ const eventHandlers = (eventManager) =>
 			const link = target.getAttribute('data-link')
 			const action = target.getAttribute("data-action")
 
-			console.log('in anchor events')
-			console.log('link ', link)
-			console.log('action : ', action)
+			if (target.getAttribute('href') === '/game-settings' && action === 'router')
+				return ;
 			if (link)
 				return eventManager._router.handleRoute(link)
 			
@@ -113,7 +113,7 @@ const eventHandlers = (eventManager) =>
 		},
 		async handleProfileIcons(target)
 		{
-			console.log('target : ', target)
+			// console.log('target : ', target)
 			const action = target.getAttribute('action-type')
 			const id = target.getAttribute('id')
 			const mainElement = target.closest(['[class="icons"]'])
@@ -170,7 +170,7 @@ const eventHandlers = (eventManager) =>
 				'save_username' : this.handleNewUsername.bind(this),
 				'add_password' : this.handleAddOfPassword.bind(this),
 			}
-			console.log('in buttons action is  : ', action)
+			// console.log('in buttons action is  : ', action)
 			if (action)
 			{
 				const runAction = actionType[action]
@@ -179,12 +179,13 @@ const eventHandlers = (eventManager) =>
 		},
 		async handleAddOfPassword(target)
 		{
-			const response = await modalService.show('', false, 'add-password')
-	
+			await modalService.show('', false, 'add-password')
+			
+			const response = await eventManager._formService.handlePassword()
+			console.log('im out ')
 			// validate password
 			const {current_password, new_password, confirm_password} = response
 			
-			console.log('confirm : ', confirm_password)
 			if (new_password !== confirm_password)
 				return modalService.show('confirm the password again !!!')
 			

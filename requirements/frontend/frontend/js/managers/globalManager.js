@@ -21,10 +21,11 @@ export class GlobalManager
         this._eventHandler = eventHandlers
         this._apiService = apiService
         this._reset = reset
+        this._formService = new FormService(this)
         
         this._router = new Router(this)
-        this._eventManager = new EventManager(this)
         this._formService = new FormService(this)
+        this._eventManager = new EventManager(this)
     }
 }
 

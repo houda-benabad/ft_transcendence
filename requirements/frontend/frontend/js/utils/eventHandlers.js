@@ -4,29 +4,7 @@ import { eventListeners } from "../managers/globalManager.js"
 export const eventHandlers = 
 {
     form :
-    {
-        tournamentFormHandler( event, resolve )
-        {
-            const form = document.querySelector( 'form' )
-
-            event.preventDefault(  )
-                
-            let data = new FormData( form );
-            let playersObject = Object.fromEntries( data )
-            let players = Object.values( playersObject )
-            resolve( players )
-        },
-        gameFormHandler( event, resolve )
-        {
-            console.log('im in hereeee')
-            const form = document.querySelector( 'form' )
-
-            event.preventDefault(  )
-
-            let data = new FormData( form );
-            let gameSettings = Object.fromEntries( data )
-            resolve( gameSettings )
-        },
+    {   
         addPasswordForm(event, resolve)
         {
             event.preventDefault()
@@ -74,11 +52,12 @@ export const eventHandlers =
     {
         const modalBackground = document.getElementById( 'modal-background' )
         
+        console.log('type : ', type)
         if (!event || (event && event.target === modalBackground ))
         {
             eventListeners.off( modalBackground, 'click', eventHandlers.removeModalHandler )
             modalBackground.remove(  )
-            if (type !== null)
+            if (type === null)
                 resolve(  ) 
         }
     }

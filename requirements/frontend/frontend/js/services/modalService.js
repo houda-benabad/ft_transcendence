@@ -22,23 +22,15 @@ export const modalService =
             else
             {
                 await new Promise ((resolve) => setTimeout(resolve, 1000))
-                eventHandlers.removeModalHandler(null, resolve, )
+                eventHandlers.removeModalHandler(null, resolve, null)
             }
-            
-            // if (type === 'tournament')
-            // {
-
-            //     const players = await formService.handleTournament()
-            //     eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler)
-            //     modalBackground.remove()
-            //     resolve(players)
-            // }
+            if (type)
+                resolve()
         })
     },
 
     createModalHtml(type, message)
     {
-        // console.log('type : ', type)
         if (type === 'tournament')
             return modalTemplate.tournamentForm()
         else if (type === 'add-password')

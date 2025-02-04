@@ -16,7 +16,7 @@ export class GameManager
 
     async #init( ){
         await globalManager._router.navigateTo( '/game-settings' )
-        this.gameSettings = await formService.game(  )
+        this.gameSettings = await globalManager._formService.handleGame(  )
         globalManager._router.navigateTo( '/game' )
     }
 
@@ -32,8 +32,8 @@ export class GameManager
         await this.#denit()
     }
     async tournament( ){
-        const players = await modalService.show(  '', false,'tournament' ) // the alias names for the players 
-        console.log('im out of modal service in game')
+        await modalService.show(  '', false,'tournament' ) // the alias names for the players 
+        const players = await globalManager._formService.handleTournament()
         await this.#init( )
         const winners = []
         winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )

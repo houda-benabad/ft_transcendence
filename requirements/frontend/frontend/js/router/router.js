@@ -37,7 +37,7 @@ export class Router
     async handleRoute(newPath=null)
     {
         // console.log('im heree')
-        const path = newPath || window.location.pathname
+        const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = window.location.search
 
         if (query) // this should nt stay in here - -
