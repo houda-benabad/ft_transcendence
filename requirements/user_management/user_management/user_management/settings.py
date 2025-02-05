@@ -214,5 +214,26 @@ CHANNEL_LAYERS = {
         },
     },
 }
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'channels': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer"
+#     }
+# }
 
 NEW_PLAYER_URL = "http://game:8001/api/game/new_player" #os.environ.get('NEW_PLAYER_URL')
