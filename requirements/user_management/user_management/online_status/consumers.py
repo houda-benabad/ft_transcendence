@@ -68,7 +68,6 @@ class OnlineStatusConsumer(WebsocketConsumer):
                     "friend_id": user_id,
                     "status": online_status,
                 })
-        self.send(text_data=json.dumps({"type": "user_online_status", "user_id_id": user_id, "status": online_status, "informing": "done"}))
     
     def _get_online_friends(self, friends_qs):
 
