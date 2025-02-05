@@ -23,13 +23,16 @@ class OnlineStatusConsumer(WebsocketConsumer):
             self.close()
             return
         self.accept()
-        self.redis_client.sadd(REDIS_ONLINE_USERS, self.user.id)
         self.group_name = f"{self.user.username}_group"
         async_to_sync(self.channel_layer.group_add)(self.group_name, self.channel_name)
+        user_channels_set_size = self.redis_client.zcard(f"asgi:group:{self.group_name}")
         friends_qs = Friend.objects.friends(self.user)
-        self._inform_friends_user_online_status(self.user.id, friends_qs, "online")
+        if user_channels_set_size == 1:
+            self._inform_friends_user_online_status(self.user.id, friends_qs, "online")
+            self.redis_client.sadd(REDIS_ONLINE_USERS, self.user.id)
         online_friends = self._get_online_friends(friends_qs)
         self.send(text_data=json.dumps({"type": "online_friends_list", "online_friends": online_friends}))
+        
     
     def receive(self, text_data):
         try :
@@ -83,8 +86,8 @@ class OnlineStatusConsumer(WebsocketConsumer):
             if user_channels_set_size == 1:
                 friends_qs = Friend.objects.friends(self.user)
                 self._inform_friends_user_online_status(self.user.id, friends_qs, "offline")
-                self.redis_client.srem(REDIS_ONLINE_USERS, self.user.username)
-            async_to_sync(self.channel_layer.group_discard(self.group_name, self.channel_name))
+                self.redis_client.srem(REDIS_ONLINE_USERS, self.user.id)
+            async_to_sync(self.channel_layer.group_discard)(self.group_name, self.channel_name)
 
 
 
