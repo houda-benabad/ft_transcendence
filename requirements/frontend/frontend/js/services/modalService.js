@@ -1,7 +1,6 @@
-// import { formService } from './formService.js'
-import { eventHandlers } from '../utils/eventHandlers.js'
 import { modalTemplate } from '../templates/modalTemplate.js'
 import { eventListeners } from '../managers/globalManager.js'
+import { removeModalHandler } from '../utils/utils.js'
 
 export const modalService = 
 {
@@ -18,11 +17,11 @@ export const modalService =
             modalBackground.style.display = 'flex'
 
             if (!automatised)
-                eventListeners.on(modalBackground, 'click', (event ) => eventHandlers.removeModalHandler(event, resolve, type)) // dont know if we will be needsing this eventlistener
+                eventListeners.on(modalBackground, 'click', (event ) => removeModalHandler(event, resolve, type))
             else
             {
                 await new Promise ((resolve) => setTimeout(resolve, 1000))
-                eventHandlers.removeModalHandler(null, resolve, null)
+                removeModalHandler(null, resolve, null)
             }
             if (type)
                 resolve()

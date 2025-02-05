@@ -250,7 +250,7 @@ profile-view
             
                     .progress 
                     {
-                        height: min(4vh, 4vw);
+                        height: min(3vh, 3vw);
                         width: 100%;
                         border-radius: 20px;
                         background: var(--level-bar);

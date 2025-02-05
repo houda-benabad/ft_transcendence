@@ -45,11 +45,17 @@ export class EventManager
 	handleEventDelegationForInput(event)
 	{
 		const target = event.target
+		const id = target.id
 
-		if (target.id === 'search-input')
+		console.log('im in the input event : ', target)
+		if (id === 'search-input')
 			this._eventHandlers.search.handleSearchInput(event)
-		else if (target.id === 'user-input-img')
+		else if (id === 'user-input-img')
 			this._eventHandlers.input.handleInputFiles(target)
+		else if (id === 'slider-input')
+			this._eventHandlers.input.handleSliderInput(target)
+		else if (target.name && target.name === 'mode')
+			this._eventHandlers.input.handleModeGameInput(target)
 	}
 	handleEventDelegationFocusout(event)
 	{
@@ -309,6 +315,35 @@ const eventHandlers = (eventManager) =>
 
 			img.src = temporaryFilePath
 			modalService.show('the image was uploaded successfully', true)
+		},
+		handleSliderInput(target)
+		{
+			const num = document.getElementById( 'slider-number' )
+            const input = document.getElementById( 'slider-input' )
+
+            num.innerHTML = `${input.value}`
+		},
+		handleModeGameInput(target)
+		{
+
+            const num = document.getElementById( 'slider-number' )
+            const modeInput = document.getElementById( 'slider-mode' )
+            const input = document.getElementById( 'slider-input' )
+
+            if ( target.value === 'score' )
+                {
+                    input.min = 1
+                    input.max = 5
+                    input.value = 1
+                }
+                else
+                {
+                    input.min = 10
+                    input.max = 180
+                    input.value = 10
+                }
+                num.innerHTML = `${input.value}`
+                modeInput.innerHTML = `${target.value}`
 		}
 	}
 })

@@ -1,5 +1,3 @@
-import { FUNCTIONNAME } from "../constants/functionName.js"
-
 export class EventService
 {
     constructor(global)
@@ -24,25 +22,25 @@ export class EventService
             this._listeners.delete(key)
         }
     }
-    setAllByType(elements, eventType)
-    {
-        elements.forEach(e => {
-            const functionKey = e.dataset.action.toUpperCase()
-            if (functionKey === 'MODE' || functionKey === "ROUTER")
-                this.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event, e))
-            else
-               this.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event))
-        })
-    }
-    removeAllByType(elements, eventType)
-    {   
-        elements.forEach(e => {
-            const functionKey = e.dataset.action
+    // setAllByType(elements, eventType)
+    // {
+    //     elements.forEach(e => {
+    //         const functionKey = e.dataset.action.toUpperCase()
+    //         if (functionKey === 'MODE' || functionKey === "ROUTER")
+    //             this.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event, e))
+    //         else
+    //            this.on(e, eventType, (event) => FUNCTIONNAME[functionKey](event))
+    //     })
+    // }
+    // removeAllByType(elements, eventType)
+    // {   
+    //     elements.forEach(e => {
+    //         const functionKey = e.dataset.action
             
-            this.off(e, eventType)
-        })
+    //         this.off(e, eventType)
+    //     })
         
-    }
+    // }
     removeAll()
     {
         this._listeners.forEach((value, key) => {

@@ -1,8 +1,6 @@
 import { profileTemplate } from "../templates/profileTemplate.js"
-import { animateProgressBar } from "../utils/animations.js"
-import { Icons ,Friends} from "../componants/customElements.js"
-import { globalManager } from "../managers/globalManager.js"
-``
+import { eventListeners } from "../managers/globalManager.js"
+
 export class ProfileView extends HTMLElement
 {
     constructor()
@@ -19,7 +17,6 @@ export class ProfileView extends HTMLElement
     }
     set userId(value)
     {
-        // console.log('im in heee')
         this._userId = value
     }
     async connectedCallback() 
@@ -30,62 +27,10 @@ export class ProfileView extends HTMLElement
         this.addFriendsBox()
         this.setupEventListenersAndAnimations()
     }
-    disconnectedCallback() // later
+    disconnectedCallback()
     {
-        window.removeEventListener('resize', animateProgressBar)
-
-        // if (this._userId === 'me') // to check later on how to do it
-        //     removeListenersForFriendsBox.apply(this) // to remove the event listeners of friends
+        // to remove all eventlisteners for this one
     }
-    setupEventListenersAndAnimations()
-    {
-        window.addEventListener('resize', animateProgressBar)
-        window.addEventListener('resize', () => {
-            let selectedChoice = document.querySelector('.selected-choice')
-            const slidingLine = document.getElementById('sliding-line')
-
-            slidingLine.style.width = `${selectedChoice.offsetWidth}px`
-            slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
-        })
-        if (this._userId === 'me')
-            this.addListenersForFriendsBox()
-        animateProgressBar()
-    }
-    addListenersForFriendsBox()
-    {
-        let selectedChoice = document.querySelector('.selected-choice')
-        const slidingLine = document.getElementById('sliding-line')
-
-        // initial value
-        slidingLine.style.width = `${selectedChoice.offsetWidth}px`
-        slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
-
-        document.querySelectorAll('.choice-item').forEach(e => {
-            e.addEventListener('mouseover', (event) => {
-                slidingLine.style.width = `${e.offsetWidth}px`
-                slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
-                e.classList.add('hoovered')
-                selectedChoice.classList.remove('selected-choice')
-            })
-            e.addEventListener('mouseout', (event) => {
-                slidingLine.style.width = `${selectedChoice.offsetWidth}px`
-                slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
-                e.classList.remove('hoovered')
-                selectedChoice.classList.add('selected-choice')
-            })
-            e.addEventListener('click', (event) => {
-                event.preventDefault()
-                
-                slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
-                selectedChoice.classList.remove('selected-choice')
-                e.classList.add('selected-choice')
-                selectedChoice = e
-
-                const friendsBoxContainer = document.getElementById('friends-box-container')
-                friendsBoxContainer.friendsList = selectedChoice.id === 'friends' ? true : false
-            })
-    })
-}
     addProfile()
     {
         const profileBox = document.getElementById('profile-box1')
@@ -118,12 +63,47 @@ export class ProfileView extends HTMLElement
         friends.friendsRequestsDb = this._database.extractData('friendsRequests')
         
         friendsBox.appendChild(friends)
-
-
-
-        // const friendsDb = this._database.extractData('friends')
-        // profileTemplate.friendsBoxConatainer(friendsDb)
     }
-    
+    setupEventListenersAndAnimations()
+    {
+        // eventListeners.on(window, 'resize', eventHandlersForProfile.resize.resizingWindow)
+        window.addEventListener('resize', () => eventHandlersForProfile.resize.resizingWindow)
+    }
 }
+
 customElements.define('profile-view', ProfileView) 
+
+const eventHandlersForProfile = 
+{
+    animation : 
+    {
+        animateProgressBar()
+        {
+            const startTime = performance.now()
+            const levelBar = document.getElementById('level-progress')
+            const levelPercentage = levelBar.getAttribute('data-value')
+
+            function update(currentTime)
+            {
+                const elapsedTime = currentTime - startTime
+                const duration = (1500 * (levelPercentage / 100))
+                const progress = Math.min(elapsedTime / duration, 1) // 2000 represent the duration i want for my animation in ms
+                const targetPorcentage = progress * levelPercentage
+
+                levelBar.style.width = `${targetPorcentage}%`
+                if (progress < 1)
+                    requestAnimationFrame(update)
+
+            }
+            requestAnimationFrame(update)
+        }
+    },
+    resize : 
+    {
+        resizingWindow() 
+        {
+            console.log('im in heree -  -')
+            eventHandlersForProfile.animation.animateProgressBar()
+        }
+    }
+}

@@ -3,7 +3,6 @@ import { EventManager } from './eventManager.js'
 import { Router } from '../router/router.js'
 import { TokenService } from '../services/tokenService.js'
 import { EventService } from '../services/eventService.js'
-import { eventHandlers } from '../utils/eventHandlers.js'
 import { reset } from '../utils/utils.js'
 import { OnlineStatusService } from '../services/onlineStatusService.js'
 import { FormService } from '../services/formService.js'
@@ -18,7 +17,6 @@ export class GlobalManager
 {
     constructor()
     {
-        this._eventHandler = eventHandlers
         this._apiService = apiService
         this._reset = reset
         this._formService = new FormService(this)

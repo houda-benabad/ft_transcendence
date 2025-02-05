@@ -1,7 +1,5 @@
-import { eventHandlers } from '../utils/eventHandlers.js'
-import { FUNCTIONNAME } from '../constants/functionName.js'
 import { eventListeners } from '../managers/globalManager.js'
-
+import { removeModalHandler } from '../utils/utils.js'
 export class FormService
 {
     constructor()
@@ -12,7 +10,7 @@ export class FormService
         const modalBackground = document.getElementById('modal-background')
 
         modalBackground.remove()
-        eventListeners.off(modalBackground, 'click', eventHandlers.removeModalHandler) // leak
+        eventListeners.off(modalBackground, 'click', removeModalHandler) // leak
     }
     #eventHandlerTournamentForm(event, resolve)
     {
