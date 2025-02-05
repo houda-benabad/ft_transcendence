@@ -40,6 +40,8 @@ class ProfilePicSerializer(serializers.ModelSerializer):
             if instance.avatar.name != avatar.name and instance.avatar.name != default_avatar:
                 instance.avatar.delete(save=False)
                 instance.avatar = avatar
+        if instance.is_oauth2 and instance.pic_updated == False:
+            instance.pic_updated = True
         return super().update(instance, validated_data)
 
 
@@ -57,7 +59,7 @@ class UserBaseProfileSerializer(serializers.ModelSerializer):
 		]
     
     def get_profile_pic_url(self, obj):
-        if obj.image_url == "":
+        if obj.image_url == "" or (obj.is_oauth2 and obj.pic_updated):
             request = self.context.get('request')
             return request.build_absolute_uri(obj.avatar.url)
         return (obj.image_url)
@@ -78,7 +80,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 		]
     
     def get_profile_pic_url(self, obj):
-        if obj.image_url == "":
+        if obj.image_url == "" or (obj.is_oauth2 and obj.pic_updated):
             request = self.context.get('request')
             protocol = request.headers.get("X-Protocol", request.scheme)
             return request.build_absolute_uri(obj.avatar.url).replace(f"{request.scheme}://", f"{protocol}://")

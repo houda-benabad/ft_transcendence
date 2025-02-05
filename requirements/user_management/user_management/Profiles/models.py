@@ -9,3 +9,4 @@ class Profile(models.Model):
     image_url = models.URLField(blank=True)
     is_oauth2 = models.BooleanField(default=False)
     oauth2_id = models.IntegerField(default=0, unique=True)
+    pic_updated = models.BooleanField(default=False)
