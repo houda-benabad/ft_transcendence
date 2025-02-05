@@ -73,7 +73,7 @@ class Game():
 				for consumer, state in zip( consumers, base ):
 					consumer.game_result = state
 				gameModel.winner = consumers[0].playerModel
-			elif (self.players[0].score < self.players[1].score):
+			else:
 				for consumer, state in zip( consumers, reversed(base) ):
 					consumer.game_result = state
 				gameModel.winner = consumers[1].playerModel

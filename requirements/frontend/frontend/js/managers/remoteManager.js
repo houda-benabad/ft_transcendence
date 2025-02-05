@@ -60,8 +60,8 @@ export default class Remote{
 	}
 
 	_setupSocket(  ) {
-		let url = `wss://${window.location.host}/wss/${this.mode}`
 		const token = globalManager._tokenService.accessToken 
+		let url = `wss://${window.location.host}/wss/${this.mode}?token=${token}`
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{
 			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )

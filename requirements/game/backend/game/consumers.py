@@ -21,20 +21,11 @@ class GameConsumer( AsyncWebsocketConsumer ):
   
 	async def connect(self):
 		await self.accept()
-
-
-	async def _handle_auth( self, token ):
-		response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'authorization': f"Bearer {token}" })
-		if response.status_code != SUCCES_STATUS_CODE:
-			await self.send_error( 'Connection Error', AUTHORIZATION_STATUS_CODE )
-			return False
-		user_info = response.json(  )
-		self.id = user_info.get('id')
-		self.playerModel= await self._get_player_( self.id , user_info.get('username') )
+		self.playerModel= await self._get_player_( )
 		if self._is_already_playing(  ):
 			await self.send_error( 'Connection Error', GAME_ERROR_STATUS_CODE )
 			return False
-		return True
+		await self._update_players(  )
 
 	def _is_already_playing( self ):
 		for player in remote_players:
@@ -44,6 +35,7 @@ class GameConsumer( AsyncWebsocketConsumer ):
 			if player.id == self.id:
 				return True
 		return False
+
 	# Message handlers
 	async def _send_message_( self, type, data, code=SUCCES_STATUS_CODE ): 
 		await self.send(text_data=json.dumps({ 'type': type, 'data': data, 'code': code }))
@@ -61,14 +53,12 @@ class GameConsumer( AsyncWebsocketConsumer ):
 
 		if (dataType == 'keycode'):
 			self.keycode = dataJson['data']
-		elif dataType == 'auth' :
-			if await self._handle_auth( dataJson['data']):
-				await self._update_players(  )
-	
+
 	# Player handle
 	@database_sync_to_async
-	def _get_player_( self, userId, username):
-		player = Player.objects.get( userId=userId )
+	def _get_player_( self ):
+		self.id = self.scope.get('user_id') 
+		player = Player.objects.get( userId=self.id )
 		if not player:
 			raise ValueError( "No player was found")
 		return player
@@ -110,7 +100,7 @@ class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
 		except Exception as e:
 					self.send_error( e, GAME_ERROR_STATUS_CODE )
 
-	async def disconnect(self, close_code):
+	async def disconnect(self):
 		self.keycode =  -1
 		if self in multi_players :
 			multi_players.remove( self )
