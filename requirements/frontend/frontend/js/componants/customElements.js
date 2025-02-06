@@ -1,4 +1,5 @@
 import { escapeHtml } from "../utils/security.js"
+import { createParagraph } from "./componants.js"
 
 export class Icons extends HTMLDivElement
 {
@@ -16,7 +17,6 @@ export class Icons extends HTMLDivElement
     set data(newValue)
     {
         this._data = newValue
-        // console.log('the setter of custom element was fired : ', this._data)
     }
     set relationshipStatus(newValue)
     {
@@ -25,7 +25,6 @@ export class Icons extends HTMLDivElement
     }
     updateContent(iconId)
     {
-        // console.log('hallo : ', iconId)
         if (iconId === 'profile')
         {
             const iconAction = this.determineActionAndIcon()
@@ -52,13 +51,11 @@ export class Icons extends HTMLDivElement
             const iconAction = this.determineActionAndIcon()
             const fragement = document.createDocumentFragment()
 
-            // console.log('hereeeeee: ', iconAction)
             iconAction.forEach((e, index) => {
                 const div = document.createElement('div')
                 const a = document.createElement('a')
     
                 a.href = "#"
-                // console.log('in custom element ', this._data.id)
                 const id = index === 0 ? 'first' : 'second'
                 a.setAttribute('data-action', 'friends')
                 a.setAttribute('action-type', e.action)
@@ -79,15 +76,10 @@ export class Icons extends HTMLDivElement
         if (iconId === 'profile')
             type = relationship ? relationship.status : 'me'
         else if (iconId === 'friend')
-        {
-            // console.log('->>>>> relationship  status : ', relationship.status)
             type =  relationship ? relationship.status  : 'me-friends'
-        }
         else 
             type = 'request'
 
-        // console.log('->>>>>>>> type :' , type)
-        // console.log('my id type : ', iconId)
         const iconActionType = {
         'friend'  : [{icon : 'eva:person-remove-outline', action :'remove_friend'}],
         'stranger' : [{icon : 'eva:person-add-outline', action : 'send_request'}],
@@ -129,7 +121,6 @@ export class Friends extends HTMLDivElement
     }
     set updateDb({index, action})
     {
-        // console.log('index in here is  : ', index)
         if (this._friendsList === true)
             this._friendsListDb.splice(index, 1)
         else
@@ -154,17 +145,16 @@ export class Friends extends HTMLDivElement
     }
     removeChildUi(index)
     {
-        // console.log('index of child is : ', index)
         const childToRemove = this.children[index]
         this.removeChild(childToRemove)
 
         const db = this._friendsList === true ? this._friendsListDb : this._friendsRequestsDb
 
-        if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
+        if (db.length === 0)
         {
             const value = this._friendsList ? 'friends' : 'requests'
 
-            this.innerHTML = `<p>there is no ${value} at the moment</p>`
+            this.replaceChildren(createParagraph(value, `there is no ${value} at the moment`))
             return ;
         }
         Array.from(this.children).forEach((e, index) => e.id = index)
@@ -172,18 +162,14 @@ export class Friends extends HTMLDivElement
     }
     updateContent()
     {
-        // console.log('im in hereee - - ')
-        // console.log(this._friendsListDb)
         const db = this._friendsList === true ? this._friendsListDb : this._friendsRequestsDb
         let fragment = document.createDocumentFragment()
 
-        // console.log('db is  : ', db)
-        if (db.length === 0) // to cleanse and i could add an element to my fragment a paragraoph componant.
+        if (db.length === 0)
         {
             const value = this._friendsList ? 'friends' : 'requests'
 
-            this.innerHTML = `<p>there is no ${value} at the moment</p>`
-            return ;
+            fragment.appendChild(createParagraph(value, `there is no ${value} at the moment`))
         }
         db.forEach((e, index) => {
             const friendBoxItem = document.createElement('div')

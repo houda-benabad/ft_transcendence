@@ -8,7 +8,6 @@ export function removeModalHandler( event, resolve , type) // what type of funct
 {
     const modalBackground = document.getElementById( 'modal-background' )
     
-    console.log('type : ', type)
     if (!event || (event && event.target === modalBackground ))
     {
         eventListeners.off( modalBackground, 'click', removeModalHandler )

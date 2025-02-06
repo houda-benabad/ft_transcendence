@@ -161,7 +161,7 @@ class ApiService
 
 const generateHttpRequests = (api) =>
 ({
-    createPostRequest(endpoint, {needsAuth, modalMessage}) // see if gotta make this object empty
+    createPostRequest(endpoint, {needsAuth, modalMessage})
     {
         return async (body, resolve) => {
             const request = new RequestConfiguration()
@@ -201,7 +201,6 @@ const generateHttpRequests = (api) =>
                 .withEndpoint(endpoint)
                 .withAuth(needsAuth)
             
-            // console.log('->>> ', needsAuth)
             if (params)
                 request.withParams(params)
             if (modalMessage)
@@ -223,7 +222,6 @@ const generateHttpRequests = (api) =>
                 request.withModal(modalMessage)
 
             api.requestConfig = request.requestConfig
-            // console.log('here config : ', request.requestConfig)
             api.resolve = resolve
             api.request()
         }

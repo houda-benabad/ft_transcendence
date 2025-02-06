@@ -1,5 +1,7 @@
 import { profileTemplate } from "../templates/profileTemplate.js"
 import { eventListeners } from "../managers/globalManager.js"
+import { Friends } from "../componants/customElements.js"
+import { eventHandlersForProfile } from "../utils/eventHandlers.js"
 
 export class ProfileView extends HTMLElement
 {
@@ -29,7 +31,16 @@ export class ProfileView extends HTMLElement
     }
     disconnectedCallback()
     {
-        // to remove all eventlisteners for this one
+        eventListeners.off(window, 'resize')
+
+        if (this._userId === 'me')
+        {
+            document.querySelectorAll('.choice-item').forEach(e => {
+                eventListeners.off(e, 'mouseover')
+                eventListeners.off(e, 'mouseout')
+                eventListeners.off(e, 'click')
+            })
+        }
     }
     addProfile()
     {
@@ -66,44 +77,22 @@ export class ProfileView extends HTMLElement
     }
     setupEventListenersAndAnimations()
     {
-        // eventListeners.on(window, 'resize', eventHandlersForProfile.resize.resizingWindow)
-        window.addEventListener('resize', () => eventHandlersForProfile.resize.resizingWindow)
+        let selectedChoice = document.querySelector('.selected-choice')
+        const slidingLine = document.getElementById('sliding-line')
+
+        eventListeners.on(window, 'resize', eventHandlersForProfile.resize.resizingWindow())
+
+        if (this._userId === 'me')
+        {
+            document.querySelectorAll('.choice-item').forEach(e => {
+                eventListeners.on(e, 'mouseover', (event) => eventHandlersForProfile.animation.mouseOverSelectedChoice(event.target))
+                eventListeners.on(e, 'mouseout', (event) => eventHandlersForProfile.animation.mouseOutSelectedChoice(event.target))
+                eventListeners.on(e, 'click', (event) => eventHandlersForProfile.click.clickSelectedChoice(event.target))
+            })
+        }
+
     }
 }
 
 customElements.define('profile-view', ProfileView) 
 
-const eventHandlersForProfile = 
-{
-    animation : 
-    {
-        animateProgressBar()
-        {
-            const startTime = performance.now()
-            const levelBar = document.getElementById('level-progress')
-            const levelPercentage = levelBar.getAttribute('data-value')
-
-            function update(currentTime)
-            {
-                const elapsedTime = currentTime - startTime
-                const duration = (1500 * (levelPercentage / 100))
-                const progress = Math.min(elapsedTime / duration, 1) // 2000 represent the duration i want for my animation in ms
-                const targetPorcentage = progress * levelPercentage
-
-                levelBar.style.width = `${targetPorcentage}%`
-                if (progress < 1)
-                    requestAnimationFrame(update)
-
-            }
-            requestAnimationFrame(update)
-        }
-    },
-    resize : 
-    {
-        resizingWindow() 
-        {
-            console.log('im in heree -  -')
-            eventHandlersForProfile.animation.animateProgressBar()
-        }
-    }
-}
