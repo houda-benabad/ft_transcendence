@@ -50,9 +50,8 @@ export class databaseExtractorService
             totalGames : total_games,
             totalPoints : total_points,
             rank,
-            level,
+            level : 70, // testing
             relationship,
-            // actions : this.determineActions('profile', relationship)
         })
     }
     extractDataForGameHistory()

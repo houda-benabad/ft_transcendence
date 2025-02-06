@@ -2,7 +2,20 @@ import { layoutTemplate } from '../templates/layoutTemplate.js'
 import { tokenService } from '../managers/globalManager.js'
 import { globalManager } from '../managers/globalManager.js'
 import { ENDPOINTS } from '../constants/endpoints.js'
+import { eventListeners } from "../managers/globalManager.js"
 
+export function removeModalHandler( event, resolve , type) // what type of function is this
+{
+    const modalBackground = document.getElementById( 'modal-background' )
+    
+    if (!event || (event && event.target === modalBackground ))
+    {
+        eventListeners.off( modalBackground, 'click', removeModalHandler )
+        modalBackground.remove(  )
+        if (type === null)
+            resolve(  ) 
+    }
+}
 export async function reset()
 {
     const app = document.getElementById('app')

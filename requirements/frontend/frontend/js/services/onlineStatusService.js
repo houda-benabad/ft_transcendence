@@ -10,7 +10,7 @@ export class OnlineStatusService
 
     set newFriend(newValue)
     {
-        console.log('newvalue : ', newValue)
+        // console.log('newvalue : ', newValue)
         this._socket.send(JSON.stringify({type: 'new_friend', friend_id: newValue}))
     }
     get onlineFriendsList()
@@ -23,8 +23,7 @@ export class OnlineStatusService
         
         this._socket.onopen = () => { 
             console.log('websocket was opened successfully')
-            // this._socket.send (JSON.stringify({type: 'auth', token : tokenService.accessToken}))
-
+            
             setTimeout(() => 
                 {
                     const logout = document.querySelector('a[href="/logout"]')
@@ -34,7 +33,7 @@ export class OnlineStatusService
         }
         this._socket.onclose = (e) => {console.log('connection is closing because  : ', e.reason, 'code : ', e.code)}
         this._socket.onerror = (e) => {
-            console.log('WebSocket error:', e);
+            // console.log('WebSocket error:', e);
         };
         this._socket.onmessage = (e) => {
             const response = JSON.parse(e.data)
@@ -50,6 +49,6 @@ export class OnlineStatusService
     }
     closeSocket()
     {
-        this._socket.close()
+        this._socket.close(1000)
     }
 }
