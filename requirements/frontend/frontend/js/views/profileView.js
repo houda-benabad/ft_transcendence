@@ -77,9 +77,6 @@ export class ProfileView extends HTMLElement
     }
     setupEventListenersAndAnimations()
     {
-        let selectedChoice = document.querySelector('.selected-choice')
-        const slidingLine = document.getElementById('sliding-line')
-
         eventListeners.on(window, 'resize', eventHandlersForProfile.resize.resizingWindow())
 
         if (this._userId === 'me')
