@@ -213,4 +213,5 @@ CHANNEL_LAYERS = {
     },
 }
 
-NEW_PLAYER_URL = "http://game:8001/api/game/new_player" #os.environ.get('NEW_PLAYER_URL')
+NEW_PLAYER_URL = os.environ.get('NEW_PLAYER_URL')
+UPDATE_PLAYER_URL = os.environ.get('UPDATE_PLAYER_URL')

@@ -19,19 +19,13 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger("accounts.views") 
 User = get_user_model()
 
-class   OAuthError(Exception):
+class   Error(exceptions.APIException):
     
     def __init__(self, detail, status_code):
         self.detail = detail
         self.status_code = status_code
         super().__init__(self.detail)
 
-class Error(exceptions.APIException):
-
-    def __init__(self, detail, status_code):
-        self.detail = detail
-        self.status_code = status_code
-        super().__init__(self.detail)
 
 class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
     queryset = User.objects.all()
@@ -44,13 +38,15 @@ class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
         instance = serializer.save()
         # logger.debug(f"---------this is the host {self.request.get_host()}--------------")
         try :
-            response = requests.post(f"http://game:8000/api/game/update_player/{instance.id}", data = {"username": instance.username}, headers={"Host":"localhost"})
-            if response.status_code != status.HTTP_200_OK:
-                raise Error(detail="error in the new_player response", status_code = response.status_code)
+            response = requests.post(f"{settings.UPDATE_PLAYER_URL}/{instance.id}", data={"username": instance.username}, headers={"Host":"localhost"})
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as http_err:
+            logger.debug("---------------entered here--------------")
+            raise Error(detail="error in the new_player response", status_code=http_err.response.status_code)
         except requests.RequestException as e:
-            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+            raise Error(detail=str(e), code=status.HTTP_503_SERVICE_UNAVAILABLE)
         except Exception as e:
-            raise Error(detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            raise exceptions.APIException(detail=str(e))
     
 
 set_username_api_view = UserUsrnameUpdateApiView.as_view()
@@ -59,13 +55,14 @@ class   CustomUserViewSet(UserViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
         try :
-            response = requests.post("http://game:8000/api/game/new_player", data = {"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
-            if response.status_code != status.HTTP_200_OK:
-                raise Error(detail="error in the new_player response", status_code = response.status_code)
+            response = requests.post(settings.NEW_PLAYER_URL, data={"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as http_err:
+            raise Error(detail="error in the new_player response", status_code=http_err.response.status_code)
         except requests.RequestException as e:
-            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+            raise Error(detail=str(e), code=status.HTTP_503_SERVICE_UNAVAILABLE)
         except Exception as e:
-            raise Error(detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            raise exceptions.APIException(detail=str(e))
 
 
 class   IntraAuth(APIView):
@@ -107,19 +104,19 @@ class   IntraCallback(APIView):
             if not user_profile:
                 intra_user, created = User.objects.get_or_create(username=user_data.get("username"))
                 if not created:
-                    raise OAuthError(f"A user with the username '{intra_user.username}' already exists and does not use OAuth.", status.HTTP_400_BAD_REQUEST)
+                    return Response({'detail': f"A user with the username '{intra_user.username}' already exists and does not use OAuth."}, status=status.HTTP_400_BAD_REQUEST)
                 user_profile = Profile.objects.create(user=intra_user, image_url = user_data.get("image_url"), is_oauth2=True, oauth2_id=user_data.get("id"))
-                response = requests.post("http://game:8000/api/game/new_player", data = {"userId": intra_user.id, "username": intra_user.username}, headers={"Host":"localhost"})
+                response = requests.post(settings.NEW_PLAYER_URL, data = {"userId": intra_user.id, "username": intra_user.username}, headers={"Host":"localhost"})
                 if response.status_code != status.HTTP_200_OK:
-                    raise OAuthError("error in the new_player response", response.status_code)
+                    return Response({'detail':"error in the new_player response"}, status=response.status_code)
             refresh = RefreshToken.for_user(intra_user)
             access = refresh.access_token
         except json.JSONDecodeError:
             return Response({'detail': 'Invalid JSON data'}, status=status.HTTP_400_BAD_REQUEST)
-        except OAuthError as e:
+        except Error as e:
             return Response({"detail": str(e.detail)}, status=e.status_code)
-        except requests.RequestException as e:
-            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+        except requests.exceptions.RequestException as e:
+            return Response({"detail": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
         except Exception as e:
             return Response({"detail": f"Internal server error {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -145,12 +142,12 @@ class   IntraCallback(APIView):
             credentials = response.json()
             access_token = credentials.get('access_token')
             if not access_token:
-                raise OAuthError('No access token in response', status.HTTP_401_UNAUTHORIZED)
+                raise Error('No access token in response', status.HTTP_401_UNAUTHORIZED)
         
         except requests.exceptions.HTTPError as http_err:
-            raise OAuthError(f"code exchange with access token failed {str(http_err)}", http_err.response.status_code)
+            raise Error(f"code exchange with access token failed {str(http_err)}", http_err.response.status_code)
         except requests.exceptions.RequestException as e:
-            raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
+            raise Error(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
         
         return access_token
         
@@ -171,12 +168,12 @@ class   IntraCallback(APIView):
                 "image_url" : user_info.get("image").get("versions").get("medium")
             }
         
-        except requests.exceptions.HTTPOError as http_err:
-            raise OAuthError(f"getting user info failed {str(http_err)}", http_err.response.status_code)
+        except requests.exceptions.HTTPError as http_err:
+            raise Error(f"getting user info failed {str(http_err)}", http_err.response.status_code)
         except requests.exceptions.RequestException as e:
-            raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
+            raise Error(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
         except KeyError as key_err:
-            raise OAuthError(f"Invalid user info structure received {str(key_err)}", status.HTTP_500_INTERNAL_SERVER_ERROR)
+            raise Error(f"Invalid user info structure received {str(key_err)}", status.HTTP_500_INTERNAL_SERVER_ERROR)
         return data
 
 intra_callback_view = IntraCallback.as_view()
