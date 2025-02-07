@@ -80,6 +80,8 @@ export class Icons extends HTMLDivElement
         else 
             type = 'request'
 
+        if (type === 'me-friends')
+            return []
         const iconActionType = {
         'friend'  : [{icon : 'eva:person-remove-outline', action :'remove_friend'}],
         'stranger' : [{icon : 'eva:person-add-outline', action : 'send_request'}],
@@ -138,6 +140,17 @@ export class Friends extends HTMLDivElement
         }
         this.removeChildUi(index)
     }
+    set updateStatus({friend_id, status})
+    {
+        const friendBoxItem = this.querySelector(`[userId="${friend_id}"]`)
+
+        if (friendBoxItem)
+        {
+            const statusDom = friendBoxItem.querySelector('.status')
+            statusDom.id = escapeHtml(status)
+            statusDom.innerHTML = escapeHtml(status)
+        }
+    }
     async connectedCallback() 
     {
         this.id = 'friends-box-container'
@@ -175,13 +188,14 @@ export class Friends extends HTMLDivElement
             const friendBoxItem = document.createElement('div')
             const value = this._friendsList === true ? 'status' : 'time'
             friendBoxItem.classList.add('friends-box-item')
-            friendBoxItem.id = index
+            friendBoxItem.setAttribute('index', index)
+            friendBoxItem.setAttribute('userId', e.id)
             friendBoxItem.innerHTML =
             `
                 <img src='${escapeHtml(e.profilePic)}'>
                 <div class="user-infos">
                     <p class="username">${escapeHtml(e.username)}</p>
-                    <p class="${value} ${e.other}" $>${escapeHtml(e.other)}</p>
+                    <p class="${value}" id=${e.other}>${escapeHtml(e.other)}</p>
                 </div>
             `
             const icons = document.createElement('div', {is : 'custom-icons'})

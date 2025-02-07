@@ -56,14 +56,6 @@ export const eventHandlersForProfile =
             target.classList.remove('hoovered')
         }
     },
-    resize : 
-    {
-        resizingWindow() 
-        {
-            eventHandlersForProfile.animation.animateProgressBar()
-            eventHandlersForProfile.animation.changeLineForSelectedChoice()
-        }
-    },
     click : 
     {
         clickSelectedChoice(target)
@@ -164,13 +156,16 @@ export const eventHandlersForEventManager = (eventManager) =>
         {
             const action = target.getAttribute('action-type')
             const id = target.getAttribute('id')
-            if (action === 'send_request' || action === 'accept_request')
-                await this._apiService.friendship.postFriendship(action, id)
+            
+            if (action === 'to_profile')
+                eventManager._router.handleRoute('/profile')
+            else if (action === 'send_request' || action === 'accept_request')
+                await eventManager._apiService.friendship.postFriendship(action, id)
             else
-                await this._apiService.friendship.deleteFriendship(action, id)
+                await eventManager._apiService.friendship.deleteFriendship(action, id)
         
             // updating the ui
-            const friendsBoxItemId = target.closest('.friends-box-item').id
+            const friendsBoxItemId = target.closest('.friends-box-item').getAttribute('index')
             const friendsBoxContainer = document.getElementById('friends-box-container')
             friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
             
@@ -260,15 +255,14 @@ export const eventHandlersForEventManager = (eventManager) =>
 
             searchResults.classList.add('clicked')
             searchService.clear()
-            this._router.handleRoute(`/profile/${id}`)
+           eventManager._router.handleRoute(`/profile/${id}`)
         },
         handleSearchInput(event, target)
         {
-            const debounced = searchService.debounce(searchService.performSearch.bind(this), 500)
             const value = event.target.value			
 
             if (value.length >= 1)
-                debounced(value)
+                eventManager._debounced(value)
         },
         handleSearchFocus()
         {

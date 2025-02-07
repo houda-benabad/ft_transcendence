@@ -2,6 +2,7 @@ import { profileTemplate } from "../templates/profileTemplate.js"
 import { eventListeners } from "../managers/globalManager.js"
 import { Friends } from "../componants/customElements.js"
 import { eventHandlersForProfile } from "../utils/eventHandlers.js"
+import { escapeHtml } from "../utils/security.js"
 
 export class ProfileView extends HTMLElement
 {
@@ -20,6 +21,12 @@ export class ProfileView extends HTMLElement
     set userId(value)
     {
         this._userId = value
+    }
+    set updateStatus({friend_id, status})
+    { 
+        const statusDom = this.querySelector('.profile-box1-box-text')
+        statusDom.id = status
+        statusDom.innerHTML = escapeHtml(status)
     }
     async connectedCallback() 
     {
@@ -77,10 +84,11 @@ export class ProfileView extends HTMLElement
     }
     setupEventListenersAndAnimations()
     {
-        eventListeners.on(window, 'resize', eventHandlersForProfile.resize.resizingWindow())
+        eventListeners.on(window, 'resize', eventHandlersForProfile.animation.animateProgressBar())
 
         if (this._userId === 'me')
         {
+            eventHandlersForProfile.animation.changeLineForSelectedChoice()
             document.querySelectorAll('.choice-item').forEach(e => {
                 eventListeners.on(e, 'mouseover', (event) => eventHandlersForProfile.animation.mouseOverSelectedChoice(event.target))
                 eventListeners.on(e, 'mouseout', (event) => eventHandlersForProfile.animation.mouseOutSelectedChoice(event.target))

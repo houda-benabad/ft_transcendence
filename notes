@@ -1,0 +1,7 @@
+
+// setTimeout(() => 
+//     {
+//         const logout = document.querySelector('a[href="/logout"]')
+//         logout.addEventListener('click', () => this._socket.close(1000))
+//     }
+//     , 3000)

@@ -34,15 +34,15 @@ p,label
     top: 27%;
   }
 }
-.online::after
+#online::after
 {
     background-color: var(--online);
 }
-.offline::after
+#offline::after
 {
     background-color: var(--offline);
 }
-.unknown::after
+#unknown::after
 {
     background-color: var(--unknown);
 }

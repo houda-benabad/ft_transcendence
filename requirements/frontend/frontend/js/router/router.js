@@ -76,6 +76,7 @@ export class Router
             else 
                 path = '/404'
         }
+        console.log('options  : ', options)
         this.updateContent(path, options)
     }
     async updateContent(path, options)

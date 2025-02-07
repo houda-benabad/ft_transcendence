@@ -1,4 +1,6 @@
 import { eventHandlersForEventManager } from "../utils/eventHandlers.js"
+import { debounce } from "../utils/utils.js"
+import { searchService } from "../services/searchService.js"
 
 export class EventManager
 {
@@ -8,7 +10,7 @@ export class EventManager
 		this._router = global._router
 		this._reset =  global._reset
 		this._formService = global._formService
-
+		this._debounced = debounce(searchService.performSearch.bind(this), 500)
 		this._eventHandlers = eventHandlersForEventManager(this)
 		this.init()
     } 
@@ -42,7 +44,6 @@ export class EventManager
 		const target = event.target
 		const id = target.id
 
-		console.log('im in the input event : ', target)
 		if (id === 'search-input')
 			this._eventHandlers.search.handleSearchInput(event)
 		else if (id === 'user-input-img')
