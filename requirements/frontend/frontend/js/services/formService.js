@@ -1,53 +1,76 @@
-import { apiService } from './apiService.js'
-import { eventHandlers } from '../utils/eventHandlers.js'
-// import { sendData, reset} from '../utils/utils.js'
-import { FUNCTIONNAME } from '../constants/functionName.js'
 import { eventListeners } from '../managers/globalManager.js'
-
-// do i need this service anymore or ?
-export const formService =
+import { removeModalHandler } from '../utils/utils.js'
+export class FormService
 {
-//     async handleSign() 
-//     {
-//         return new Promise(resolve => {
-//             const form = document.querySelector('form')
+    constructor()
+    {
+    }
+    #removeModal()
+    {
+        const modalBackground = document.getElementById('modal-background')
 
-//             // need to put this function in the eventHandler
-//             eventListeners.on(form, 'submit', async () => 
-//             {
-//                 const ENDPOINTS = document.getElementById('signDiv').getAttribute('data-value').toLowerCase().replace(' ', '') 
+        modalBackground.remove()
+        eventListeners.off(modalBackground, 'click', removeModalHandler) // leak
+    }
+    #eventHandlerTournamentForm(event, resolve)
+    {
+        const form = document.querySelector( 'form' )
+        
+        event.preventDefault()
+        this.#removeModal()
+            
+        let data = new FormData( form );
+        let playersObject = Object.fromEntries( data )
+        let players = Object.values( playersObject )
+        resolve( players )
+    }
+    #eventHandlerGameForm( event, resolve )
+    {
+        console.log('im i hereee')
+        const form = document.querySelector( 'form' )
+        
+        event.preventDefault()
+        
+    
+        let data = new FormData( form );
+        let gameSettings = Object.fromEntries( data )
+        resolve( gameSettings )
+    }
+    #eventHandlerPasswordForm (event, resolve)
+    {
+        const form = document.querySelector( 'form' )
 
-//                 event.preventDefault()
-//                 await sendData(ENDPOINTS)
-//                 await reset()
-//                 resolve()
-//             })
-//         })
-//     },
+        event.preventDefault(  )
+        this.#removeModal()
 
+        let data = new FormData( form );
+        let gameSettings = Object.fromEntries( data )
+        resolve( gameSettings )
+    }
     handleTournament()
     {
         return new Promise (resolve => {
             const form = document.querySelector('form')
-    
-            eventListeners.on(form, 'submit', (event) => eventHandlers.form.tournamentFormHandler(event, resolve))
+            
+            eventListeners.on(form, 'submit', (event) => this.#eventHandlerTournamentForm(event, resolve)) // remove this one
         })
-    },
-    game()
+    }
+    handleGame()
     {
         return new Promise (resolve => {
 
             const form = document.querySelector('form')
 
-            eventListeners.on(form, 'submit', (event) => FUNCTIONNAME.GAME_FORM(event, resolve))
+            eventListeners.on(form, 'submit', (event) => this.#eventHandlerGameForm(event, resolve)) // remove leak
         })
-    },
-    handleAddPassword()
+    }
+    handlePassword()
     {
         return new Promise (resolve => {
+
             const form = document.querySelector('form')
-    
-            eventListeners.on(form, 'submit', (event) => eventHandlers.form.addPasswordForm(event, resolve))
+
+            eventListeners.on(form, 'submit', (event) => this.#eventHandlerPasswordForm(event, resolve)) // remove leak
         })
     }
 }

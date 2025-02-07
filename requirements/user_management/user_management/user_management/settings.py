@@ -53,7 +53,8 @@ PACKAGES = [
 APPS_ADDED = [
     'accounts',
     'Profiles',
-    'friends'
+    'friends',
+    'online_status'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PACKAGES + APPS_ADDED
@@ -175,7 +176,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ['Bearer'],
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=5),
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=3),
     "SIGNING_KEY": os.getenv('JWT_SIGNING_KEY')
 }
@@ -204,6 +205,7 @@ USER_INFO_URI = os.environ.get('USER_INFO_URI')
 
 REDIS_SERVER = os.environ.get('REDIS_SERVER')
 REDIS_PORT = os.environ.get('REDIS_PORT')
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -212,5 +214,26 @@ CHANNEL_LAYERS = {
         },
     },
 }
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'channels': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer"
+#     }
+# }
 
 NEW_PLAYER_URL = "http://game:8001/api/game/new_player" #os.environ.get('NEW_PLAYER_URL')

@@ -1,2 +1,7 @@
-I changed in userCreateSerializer
-I added a serializer for profile pic
+
+// setTimeout(() => 
+//     {
+//         const logout = document.querySelector('a[href="/logout"]')
+//         logout.addEventListener('click', () => this._socket.close(1000))
+//     }
+//     , 3000)

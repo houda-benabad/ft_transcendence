@@ -1,3 +1,5 @@
+import { onlineStatusService } from "../managers/globalManager.js"
+
 export class databaseExtractorService
 {
     constructor(database)
@@ -38,19 +40,17 @@ export class databaseExtractorService
             } = {},
             relationship,
         } = this._database
-        // console.log('in here : ', this.determineIconsAndActions(relationship))
         return ({
             userId : user_id,
             username,
             profilePic : profile_pic_url,
-            status  : 'online',
+            status  : this.determineUserStatus(user_id, relationship),
             friendsCount : friends_count,
             totalGames : total_games,
             totalPoints : total_points,
             rank,
             level,
             relationship,
-            // actions : this.determineActions('profile', relationship)
         })
     }
     extractDataForGameHistory()
@@ -66,42 +66,23 @@ export class databaseExtractorService
             })
         )
     }
-    // extractDataForFriends()
-    // {
-    //     console.log('here database is : ', this._database)
-    //     const selectedChoice = document.querySelector('.selected-choice') 
-
-    //     // console.log('selected choice : ', selectedChoice.id)
-    //     const type = selectedChoice ? (selectedChoice.id === 'friends' ? 'friendsList' : 'friendsRequests') : 'friendsList'
-
-    //     // console.log('type : ', type)
-    //     if (type === 'friendsList')
-    //         return this.extractDataForFriendsList()
-    //     else
-    //         return this.extractDataForFriendsRequests()
-    // }
     extractDataForFriendsList()
     {
-        const { friends, relationship } = this._database
+        const { friends} = this._database
 
-        // console.log('friends here  : ', friends)
-        // console.log('database: ', this._database)
         return friends.map(friend => ({
             id : friend.user_details.user_id,
             username : friend.relationship ? friend.user_details.username : 'Me',
             profilePic : friend.user_details.profile_pic_url,
             relationship : friend.relationship,
-            other : 'online',
+            other : this.determineUserStatus(friend.user_details.user_id, friend.relationship),
             type : 'friend'
-            //here gotta link the icons with the convenient urls.
         }))
     }
     extractDataForFriendsRequests()
     {
         const { requests = []} = this._database
     
-        // console.log('requests : ', requests)
-        // console.log('database : ', this._database.requests)
         return requests.map(request => ({
             id : request.from_user.user_id,
             username : request.from_user.username,
@@ -123,7 +104,6 @@ export class databaseExtractorService
     }
     determineActions(id, relationship = null)
     {
-        // console.log(' =>>> relationshipp', relationship)
         let type
         if (id === 'profile')
             type = relationship ? relationship.status : 'me'
@@ -132,9 +112,6 @@ export class databaseExtractorService
         else 
             type = 'requests'
 
-        // console.log('id  : ', id)
-        // console.log('the type is : ? ', type)
-        // console.log('im here again : ', type)
         const ActionType = {
             'friend'  : ['remove_friend'],
             'stranger' : ['send_request'],
@@ -143,8 +120,21 @@ export class databaseExtractorService
             'me' : ['edit_profile'],
             'requests' : ['cancel_request','accept_request']
         }
-        // console.log('here in the extractor : ', IconType[type])
         return (ActionType[type])
+    }
+
+    determineUserStatus(userId, relationship)
+    {
+        const onlineFriendsList = onlineStatusService._onlineFriendsList
+        const relationshipStatus = relationship ?  relationship.status : 'me'
+
+        console.log('im checking the online status in database extractor', onlineFriendsList)
+        if ((relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === true ) || relationshipStatus === 'me')
+            return ('online')
+        else if (relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === false)
+            return ('offline')
+        else
+            return ('unknown')
     }
     extractDataForNotifications()
     {
@@ -159,6 +149,3 @@ export class databaseExtractorService
         )
     }
 }
-
-
-// 'la:user-friends' : 'eva:person-add-outline'] : ['la:user-friends']) : ['eva:person-remove-outline','solar:gamepad-minimalistic-linear']

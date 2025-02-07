@@ -110,10 +110,11 @@ profile-view
                     padding-left: 3%;
                     display: flex;
                     flex-direction: column;
+                    align-items: flex-start;
                     justify-self: left;
                     gap: 0.7vh;
 
-                    .other
+                    .status,.time
                     {
                         color: var(--text2)
                     }
@@ -135,6 +136,11 @@ profile-view
                     {
                         color: var(--highlight);
                     }
+                }
+                .status::after
+                {
+                    height: max(0.6vw, 0.7vh);
+                    width: max(0.6vw, 0.7vh);
                 }
             }
         }
@@ -181,11 +187,16 @@ profile-view
                         margin-top: 20px;
                         display: flex;
                         flex-direction: column;
+                        align-items: flex-start;
                         gap:7px;
                         
                         #profile-box1-top-username
                         {
                             font-weight: 900;
+                        }
+                        .profile-box1-box-text
+                        {
+                            font-size: max(1vw, 1vh);
                         }
                     }
                 }
@@ -243,7 +254,7 @@ profile-view
             
                     .progress 
                     {
-                        height: min(4vh, 4vw);
+                        height: min(3vh, 3vw);
                         width: 100%;
                         border-radius: 20px;
                         background: var(--level-bar);
