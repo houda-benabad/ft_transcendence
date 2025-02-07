@@ -54,7 +54,7 @@ export default class physicsManager{
 	}
 	
 	checkWallCollision(  ){
-		if ( Math.abs( this.components.bodies.ball.position.x ) >= DIMENSION.PLANE.x/2 )
+		if ( Math.abs( this.components.bodies.ball.position.x ) > DIMENSION.PLANE.x/2 )
 			this.ball_velocity.x*= -1
 	}
 }
