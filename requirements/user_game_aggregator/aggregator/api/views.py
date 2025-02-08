@@ -8,6 +8,7 @@ import logging
 from django.urls import resolve
 from urllib.parse import urlparse, urlunparse
 logging.basicConfig(level=logging.DEBUG)  
+logger = logging.getLogger("accounts.views")
 
 class   Error(Exception):
     
@@ -77,7 +78,7 @@ class	ProfileWithGameHistoryView(APIView):
 
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                "http://user_management:8000/auth/jwt/verify/",
+                settings.VALIDATE_TOKEN_URL,
                 json={"token": token},
                 headers={"Host": "localhost"}
             )
