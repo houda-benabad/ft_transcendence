@@ -89,12 +89,11 @@ class ApiService
                 method,
                 headers : {
                     "Content-Type": "application/json",
-                    "Authorization": needsAuth ? `Bearer ${tokenService.accessToken}` : null, // for the moment no token variable does exist.
+                    "Authorization": needsAuth ? `Bearer ${tokenService.accessToken}` : null,
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            // console.log('here is response  : ', response)
-            if (needsAuth && response.status === 401) // this needs to be implemented in a maintenabale and cleam way
+            if (needsAuth && response.status === 401)
                 tokenExpired(this.request)
             if (response.status === 500)
                 throw new Error(await response.json())
@@ -124,29 +123,6 @@ class ApiService
 
         this._resolve(response)
     }
-   async manageExpiredTokens()
-    {
-        // console.log('->>>>>> access token was expired')
-        const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
-            method : 'POST',
-            headers : {
-                "Content-Type": "application/json"
-            },
-            body : JSON.stringify({"refresh" : tokenService.refreshToken})
-        })
-        if (response.status === 401)
-        {
-            // console.log('->>>>>> refresh token was expired')
-            tokenService.clear()
-            document.getElementById('app').classList.remove('active')
-            globalManager._router.handleRoute('/signin')
-            return ;
-        }
-        // console.log('im in here doing some work')
-        const responseBody = await response.json()
-        tokenService.accessToken = responseBody.access
-        this.request()
-    }    
     async handleMessaageErrors(responseBody)
     {
         const {showModal} = this._requestConfig
@@ -240,14 +216,14 @@ export const apiService =
         }),
         signup : (body) => new Promise (resolve => 
         {
-            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : false, modalMessage: 'you signed up successffully'})(body, resolve)
+            generatedHttpRequests.createPostRequest(ENDPOINTS.SIGN_UP, {needsAuth : false, modalMessage: 'you signed up successffully !!!'})(body, resolve)
         }),
         intraAuthorize :() => new Promise (async resolve => {
             generatedHttpRequests.createGetRequest(ENDPOINTS.INTRA_AUTHORIZE, {needsAuth : false, modalMessage: null})(resolve)
         }),
         intraCallback :  (body) => new Promise (resolve => 
         {
-            generatedHttpRequests.createPostRequest(ENDPOINTS.INTRA_CALLBACK, {needsAuth : false, modalMessage: 'welcome to pingy !!!'})(body, resolve)
+            generatedHttpRequests.createPostRequest(ENDPOINTS.INTRA_CALLBACK, {needsAuth : false, modalMessage: 'you logged in successfully with intra !!!'})(body, resolve)
         }),
     },
     user :

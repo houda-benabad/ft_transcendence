@@ -7,6 +7,7 @@ import '../views/profileView.js'
 import '../views/gameSettingsView.js'
 import '../views/settingsView.js'
 import '../views/gameView.js'
+import { modalService } from "../services/modalService.js"
 
 export class Router 
 {
@@ -34,14 +35,18 @@ export class Router
         window.addEventListener('popstate', () => this.handleRoute())
         this.handleRoute()
     }
-    async handleIntraRoute(query)
+    handleIntraRoute(query)
     {
-        const params = new URLSearchParams(query)
-        const code = params.get('code')
-
-        const response = await this._apiService.auth.intraCallback({code : code})
-        tokenService.tokens = response
-        await this._reset()
+        return new Promise (async resolve  => {
+            const params = new URLSearchParams(query)
+            const code = params.get('code')
+    
+            const response = await this._apiService.auth.intraCallback({code : code})
+            tokenService.tokens = response
+            await this._reset()
+            onlineStatusService.init()
+            resolve()
+        })
     }
     async handleRoute(newPath=null)
     {
@@ -49,7 +54,7 @@ export class Router
         const query = window.location.search
 
         if (query)
-            this.handleIntraRoute(query)
+            await this.handleIntraRoute(query)
         if (!tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
         else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
@@ -76,7 +81,6 @@ export class Router
             else 
                 path = '/404'
         }
-        console.log('options  : ', options)
         this.updateContent(path, options)
     }
     async updateContent(path, options)

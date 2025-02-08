@@ -4,6 +4,7 @@ import { GameManager } from "../managers/gameManager.js"
 import { ENDPOINTS } from "../constants/endpoints.js"
 import { onlineStatusService } from "../managers/globalManager.js"
 import { tokenService } from "../managers/globalManager.js"
+import { loader } from './utils.js'
 
 export const eventHandlersForProfile = 
 {
@@ -19,7 +20,7 @@ export const eventHandlersForProfile =
             {
                 const elapsedTime = currentTime - startTime
                 const duration = (1500 * (levelPercentage / 100))
-                const progress = Math.min(elapsedTime / duration, 1) // 2000 represent the duration i want for my animation in ms
+                const progress = Math.min(elapsedTime / duration, 1)
                 const targetPorcentage = progress * levelPercentage
 
                 levelBar.style.width = `${targetPorcentage}%`
@@ -119,16 +120,16 @@ export const eventHandlersForEventManager = (eventManager) =>
             else
                 eventManager._router.handleRoute(newPath)
         },
-        handleLogout()
+        async handleLogout()
         {
             document.getElementById('app').classList.remove('active')
             tokenService.clear()
+            await loader(500)
             eventManager._router.handleRoute('/signin')
             onlineStatusService.closeSocket()
         },
         async handleProfileIcons(target)
         {
-            // console.log('target : ', target)
             const action = target.getAttribute('action-type')
             const id = target.getAttribute('id')
             const mainElement = target.closest(['[class="icons"]'])
@@ -163,8 +164,7 @@ export const eventHandlersForEventManager = (eventManager) =>
                 await eventManager._apiService.friendship.postFriendship(action, id)
             else
                 await eventManager._apiService.friendship.deleteFriendship(action, id)
-        
-            // updating the ui
+
             const friendsBoxItemId = target.closest('.friends-box-item').getAttribute('index')
             const friendsBoxContainer = document.getElementById('friends-box-container')
             friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
@@ -188,7 +188,6 @@ export const eventHandlersForEventManager = (eventManager) =>
                 'save_username' : this.handleNewUsername.bind(this),
                 'add_password' : this.handleAddOfPassword.bind(this),
             }
-            // console.log('in buttons action is  : ', action)
             if (action)
             {
                 const runAction = actionType[action]
@@ -200,8 +199,6 @@ export const eventHandlersForEventManager = (eventManager) =>
             await modalService.show('', false, 'add-password')
             
             const response = await eventManager._formService.handlePassword()
-            console.log('im out ')
-            // validate password
             const {current_password, new_password, confirm_password} = response
             
             if (new_password !== confirm_password)
@@ -270,16 +267,14 @@ export const eventHandlersForEventManager = (eventManager) =>
             {
                 const searchResults = document.getElementById('search-results') // dry
 
-                // console.log('->>>>>>>>>>>my searched results after lost focus : ', searchResults)
                 if (!searchResults.classList.contains('clicked'))
                     searchService.clear()
             }, 300)
-            // console.log('IM OUT OF FOCUSSSSS OUYTTTTTT') // gotta not use focus out
         }
     },
     form :
     {
-        async handleformEvents(event, target) // this need to be made more generic and cleaner and maintenable .
+        async handleformEvents(event, target)
         {
             event.preventDefault()
             

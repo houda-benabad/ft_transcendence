@@ -6,7 +6,7 @@ export class databaseExtractorService
     {
         this._database = database
         
-        console.log('database : ', this._database)
+        // console.log('database : ', this._database)
     }
     extractData(type)
     {

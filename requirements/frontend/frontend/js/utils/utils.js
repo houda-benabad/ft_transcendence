@@ -4,7 +4,7 @@ import { globalManager } from '../managers/globalManager.js'
 import { ENDPOINTS } from '../constants/endpoints.js'
 import { eventListeners } from "../managers/globalManager.js"
 
-export function removeModalHandler( event, resolve , type) // what type of function is this
+export function removeModalHandler( event, resolve , type)
 {
     const modalBackground = document.getElementById( 'modal-background' )
     
@@ -16,14 +16,20 @@ export function removeModalHandler( event, resolve , type) // what type of funct
             resolve(  ) 
     }
 }
+export function loader(delay)
+{
+    const app = document.getElementById('app')
+
+    return new Promise(resolve => {
+        app.innerHTML = '<div id="loader"></div>'
+        setTimeout(resolve, delay)
+    })
+}
 export async function reset()
 {
     const app = document.getElementById('app')
     
-    await new Promise(resolve => {
-        app.innerHTML = '<div id="loader"></div>'
-        setTimeout(resolve, 1500)
-    })
+    await loader(1500)
     app.innerHTML = layoutTemplate()
     app.classList.add('active')
 }

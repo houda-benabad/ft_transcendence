@@ -49,7 +49,6 @@ export class OnlineStatusService
         const profileView = document.querySelector('profile-view')
         if (profileView)
         {
-            
             const friendsBoxContainer = document.getElementById('friends-box-container')
 
             profileView.updateStatus = {friend_id, status}
