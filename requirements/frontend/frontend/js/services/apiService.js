@@ -74,6 +74,7 @@ class ApiService
     }
     async request()
     {
+        //  console.log('before : ', this._requestConfig)
         let {
             endpoint,
             method,
@@ -82,7 +83,7 @@ class ApiService
             params
         } = this._requestConfig
 
-        // console.log('here  : ', this._requestConfig)
+        // console.log('here in apiService  : ', this._requestConfig)
         const url = params ? `${endpoint}?${params.key}=${encodeURIComponent(params.value)}` : endpoint
         try{
             const response = await fetch(url , {
@@ -94,7 +95,7 @@ class ApiService
                 body : body ? JSON.stringify(body) : null
             })
             if (needsAuth && response.status === 401)
-                tokenExpired(this.request)
+                tokenExpired(this.request.bind(this))
             if (response.status === 500)
                 throw new Error(await response.json())
             else if (response.status === 404)

@@ -128,7 +128,6 @@ export class databaseExtractorService
         const onlineFriendsList = onlineStatusService._onlineFriendsList
         const relationshipStatus = relationship ?  relationship.status : 'me'
 
-        console.log('im checking the online status in database extractor', onlineFriendsList)
         if ((relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === true ) || relationshipStatus === 'me')
             return ('online')
         else if (relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === false)
