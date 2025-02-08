@@ -12,15 +12,10 @@ logger = logging.getLogger("online_status.authentication")
 class JwtAuthMiddleware(BaseMiddleware):
 
     async def __call__(self, scope, receive, send):
-<<<<<<< HEAD
-        try :
-            token = self._get_token(scope)
-=======
         token = self._get_token(scope)
         if not token:
             scope["user"] = AnonymousUser()
         else:
->>>>>>> online_status_frontend
             user = await self._get_user(token)
             scope["user"] = user
         return await super().__call__(scope, receive, send)

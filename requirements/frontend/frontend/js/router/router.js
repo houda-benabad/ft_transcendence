@@ -1,3 +1,4 @@
+import { onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 import { ROUTES } from '../constants/routes.js'
 
@@ -6,7 +7,6 @@ import '../views/profileView.js'
 import '../views/gameSettingsView.js'
 import '../views/settingsView.js'
 import '../views/gameView.js'
-import { onlineStatusService, tokenService } from "../managers/globalManager.js"
 
 export class Router 
 {
@@ -18,7 +18,7 @@ export class Router
         this.init()
     }
    
-    async init() // this needs cleansing and to make it more maintenable
+    async init()
     {
         if (tokenService.isAuthenticated())
         {
@@ -34,7 +34,7 @@ export class Router
         window.addEventListener('popstate', () => this.handleRoute())
         this.handleRoute()
     }
-    async handleIntraRoute()
+    async handleIntraRoute(query)
     {
         const params = new URLSearchParams(query)
         const code = params.get('code')
@@ -49,7 +49,7 @@ export class Router
         const query = window.location.search
 
         if (query)
-            this.handleIntraRoute()
+            this.handleIntraRoute(query)
         if (!tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
         else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
