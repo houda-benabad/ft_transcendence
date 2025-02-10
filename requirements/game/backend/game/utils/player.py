@@ -8,9 +8,8 @@ class Player(GameObject):
 	score = 0
 
 	def update(self):
-		
 		self.updateBounds()
-	
+	# NON GENRIC
 	def move(self, consumer, plane,  mode, player=None):
 		if mode == TWO_PLAYERS:
 			target = 0

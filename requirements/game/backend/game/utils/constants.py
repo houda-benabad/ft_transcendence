@@ -6,3 +6,9 @@ WINNING_SCORE = 10
 AUTHORIZATION_STATUS_CODE=4000
 GAME_ERROR_STATUS_CODE=3000
 SUCCES_STATUS_CODE  = 200
+
+@dataclass
+class Vector3:
+    x: float
+    y: float
+    z: float
