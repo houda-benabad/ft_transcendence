@@ -24,7 +24,8 @@ game-settings-view
             #slider-input
             {
                 width: 100%;
-                color : var(--secondary2);
+                accent-color: var(--secondary);
+
             }
         }
        #button 

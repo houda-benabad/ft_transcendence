@@ -3,23 +3,30 @@ import { EventManager } from './eventManager.js'
 import { Router } from '../router/router.js'
 import { TokenService } from '../services/tokenService.js'
 import { EventService } from '../services/eventService.js'
-import { eventHandlers } from '../utils/eventHandlers.js'
 import { reset } from '../utils/utils.js'
+import { OnlineStatusService } from '../services/onlineStatusService.js'
+import { FormService } from '../services/formService.js'
+
+
+const eventListeners = new EventService() // just for the moment i wont be in need of it later on
+const onlineStatusService = new OnlineStatusService()
+const tokenService = new TokenService()
+
 
 export class GlobalManager
 {
     constructor()
     {
-        this._eventHandler = eventHandlers
-        this._tokenService = new TokenService(this)
         this._apiService = apiService
         this._reset = reset
-
+        this._formService = new FormService(this)
+        
         this._router = new Router(this)
+        this._formService = new FormService(this)
         this._eventManager = new EventManager(this)
     }
 }
 
-const eventListeners = new EventService() // just for the moment i wont be in need of it later on
 const globalManager = new GlobalManager()
-export { eventListeners, globalManager}
+
+export { eventListeners, globalManager, tokenService, onlineStatusService}

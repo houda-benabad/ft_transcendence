@@ -16,18 +16,19 @@ export const settingsTemplate =
                         <button class="anchor-tmp button-type3" data-action="delete_image">Delete</button>
                     </div>
                 </div>
-            </div>
-            `)
-    },
-    settingsNoIntraFeatures(db)
-    {
-        return (`<div id='user-username'>
+                <div id='user-username'>
                     <p class="settings-label">Username</p>
                     <div>
                         <input type='text' placeholder='${escapeHtml(db.username)}' id="username-to-save">
                         <button class="anchor-tmp button-type4" data-action="save_username">Save</button>
                     </div>
                 </div>
+            </div>
+            `)
+    },
+    settingsNoIntraFeatures(db)
+    {
+        return (`
                 <div>
                     <p class="settings-label">Password</p>
                     <button class="anchor-tmp button-type4" data-action="add_password">Add</button>

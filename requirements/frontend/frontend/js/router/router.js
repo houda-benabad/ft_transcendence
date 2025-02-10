@@ -1,3 +1,4 @@
+import { onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 import { ROUTES } from '../constants/routes.js'
 
@@ -6,23 +7,23 @@ import '../views/profileView.js'
 import '../views/gameSettingsView.js'
 import '../views/settingsView.js'
 import '../views/gameView.js'
+import { modalService } from "../services/modalService.js"
 
 export class Router 
 {
     constructor(global)
     {
         this._apiService = global._apiService
-        this._tokenService = global._tokenService
         this._reset = global._reset
         this._routes = ROUTES(this._apiService)
-        
         this.init()
     }
    
-    async init() // this needs cleansing and to make it more maintenable
+    async init()
     {
-        if (this._tokenService.isAuthenticated())
+        if (tokenService.isAuthenticated())
         {
+            onlineStatusService.init()
             await this._reset()
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
             
@@ -34,24 +35,29 @@ export class Router
         window.addEventListener('popstate', () => this.handleRoute())
         this.handleRoute()
     }
-    async handleRoute(newPath=null)
+    handleIntraRoute(query)
     {
-        // console.log('im heree')
-        const path = newPath || window.location.pathname
-        const query = window.location.search
-
-        if (query) // this should nt stay in here - -
-        {
+        return new Promise (async resolve  => {
             const params = new URLSearchParams(query)
             const code = params.get('code')
-
-            const response = await this._apiService.auth.intraCallback({code : code}) // im getting a 500 error what could be the reason
-            this._tokenService.tokens = response
+    
+            const response = await this._apiService.auth.intraCallback({code : code})
+            tokenService.tokens = response
             await this._reset()
-        }
-        if (!this._tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
+            onlineStatusService.init()
+            resolve()
+        })
+    }
+    async handleRoute(newPath=null)
+    {
+        const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
+        const query = window.location.search
+
+        if (query)
+            await this.handleIntraRoute(query)
+        if (!tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
             this.navigateTo('/signin')
-        else if (this._tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
+        else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
             this.navigateTo('/')
         else if (path === '/game')
             this.navigateTo('/')
@@ -77,7 +83,7 @@ export class Router
         }
         this.updateContent(path, options)
     }
-    async updateContent(path, options) // to make this more clean and maintenable
+    async updateContent(path, options)
     {
         let fragment = document.createDocumentFragment()
         const route = this._routes[path] || this._routes['/404']
@@ -89,7 +95,6 @@ export class Router
             if (options)
                 fragment.userId = options
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
-            // console.log('->>>>>>>>> here in router : ', document.querySelector(`[data-action="router"][href="${path}"]`))
             document.querySelector(`[data-action="router"][href="${path}"]`).classList.add('selected')
         }
         else
@@ -113,6 +118,6 @@ export class Router
 
         if (response === 'not found')
             return this.handleRoute('/404')
-        return new databaseExtractorService(response)
+        return new databaseExtractorService(response, this)
     }
 }

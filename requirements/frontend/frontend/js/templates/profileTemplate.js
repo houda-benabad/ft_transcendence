@@ -20,7 +20,7 @@ export const profileTemplate  =
                     <img src="${escapeHtml(db.profilePic)}">
                     <div id="profile-box1-top-id">
                         <h2 id="profile-box1-top-username">${escapeHtml(db.username)}</h2>
-                        <p class="status profile-box1-box-text">${escapeHtml(db.status)}</p>
+                        <p class="status profile-box1-box-text" id="${db.status}">${escapeHtml(db.status)}</p>
                     </div>
                 </div>
             </div>
