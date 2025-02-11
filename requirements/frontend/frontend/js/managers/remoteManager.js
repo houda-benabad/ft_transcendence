@@ -53,10 +53,10 @@ export default class Remote{
 	}
 
 	async _handle_cancel_btn( ){
+		document.getElementById( "cancel-btn" ).removeEventListener( 'click', this._handle_cancel_btn)
 		this.socket.close( 4000 )
 		await reset(  )
 		globalManager._router.navigateTo( '/' )
-		document.getElementById( "cancel-btn" ).addEventListener( 'click', this._handle_cancel_btn.bind(this))
 	}
 
 	_setupSocket(  ) {
@@ -65,7 +65,7 @@ export default class Remote{
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{
 			socket.send( JSON.stringify( { 'type' : 'auth', 'data': token} ) )
-			document.getElementById( "cancel-btn" ).addEventListener( 'click', this._handle_cancel_btn)
+			document.getElementById( "cancel-btn" ).addEventListener( 'click', this._handle_cancel_btn.bind(this))
 		}
 		socket.onclose =   async ( e ) => await this._handle_socket_error( e)
 		socket.onmessage = ( e ) => this.updateData( e, this.resolve )

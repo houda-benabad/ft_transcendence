@@ -39,6 +39,14 @@ export default class Components {
 
     // OBJECTS
 
+    createBanner( position ){
+        let banner = new THREE.Mesh( 
+            new THREE.BoxGeometry( ...Object.values( DIMENSION.BANNER ) ), 
+            new THREE.MeshLambertMaterial( { color:  color } ) )
+        player.position.set( ...position )
+        return player
+    }
+
     createPlane(  ){
         let plane = new THREE.Mesh(
             new THREE.BoxGeometry( 
@@ -56,7 +64,7 @@ export default class Components {
     createBall(  ){
         let ball = new THREE.Mesh( 
             new THREE.SphereGeometry( ...Object.values( DIMENSION.BALL ) ), 
-            new THREE.MeshLambertMaterial( { color: COLORS.BALL } ) )
+            new THREE.MeshLambertMaterial( { color: COLORS[this.options.texture] } ) )
         ball.position.set( ...Object.values( POSITION.BALL ) )
         return ball
     }

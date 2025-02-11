@@ -1,8 +1,10 @@
 export const COLORS = {
     PLANE : 0x5F1584,
-    BALL : 0xD43ADF,
     PLAYER1 : 0x8C96ED,
-    PLAYER2: 0XFFFFFF
+    PLAYER2: 0XFFFFFF,
+    popular : 0x0FFADF,
+    default : 0xD43ADF,
+    special : 0xD43A00
 }
 
 export const DIMENSION = {
@@ -20,6 +22,11 @@ export const DIMENSION = {
         x:1,
         y:.3,
         z:.1
+    },
+    BANNER :{
+        x: 1,
+        y: 4,
+        z: 6
     }
 }
 

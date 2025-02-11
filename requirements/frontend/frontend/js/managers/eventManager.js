@@ -5,7 +5,7 @@ import { modalService } from '../services/modalService.js'
 import { formService } from '../services/formService.js'
 import { local } from '../mods/local.js'
 import { searchService } from '../services/searchService.js'
-import { GameManager } from './gameManager.js'
+import { GameManager } from './modesManager.js'
 import Local from './localManager.js'
 import { ENDPOINTS } from '../constants/endpoints.js'
 
