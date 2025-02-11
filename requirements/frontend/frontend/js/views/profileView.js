@@ -1,8 +1,9 @@
 import { profileTemplate } from "../templates/profileTemplate.js"
-import { animateProgressBar } from "../utils/animations.js"
-import { Icons ,Friends} from "../componants/customElements.js"
-import { globalManager } from "../managers/globalManager.js"
-``
+import { eventListeners } from "../managers/globalManager.js"
+import { Friends } from "../componants/customElements.js"
+import { eventHandlersForProfile } from "../utils/eventHandlers.js"
+import { escapeHtml } from "../utils/security.js"
+
 export class ProfileView extends HTMLElement
 {
     constructor()
@@ -19,8 +20,13 @@ export class ProfileView extends HTMLElement
     }
     set userId(value)
     {
-        // console.log('im in heee')
         this._userId = value
+    }
+    set updateStatus({friend_id, status})
+    { 
+        const statusDom = this.querySelector('.profile-box1-box-text')
+        statusDom.id = status
+        statusDom.innerHTML = escapeHtml(status)
     }
     async connectedCallback() 
     {
@@ -29,71 +35,20 @@ export class ProfileView extends HTMLElement
         this.gameHistory()
         this.addFriendsBox()
         this.setupEventListenersAndAnimations()
-        this.setUpWebsocket()
     }
-    setUpWebsocket()
+    disconnectedCallback()
     {
-        const url = `wss://${window.location.host}/wss/online_status`
-        const socket = new WebSocket(url)
+        eventListeners.off(window, 'resize')
 
-        socket.onopen = () => { console.log('websocket was opened successfully')}
-    }
-    disconnectedCallback() // later
-    {
-        window.removeEventListener('resize', animateProgressBar)
-
-        // if (this._userId === 'me') // to check later on how to do it
-        //     removeListenersForFriendsBox.apply(this) // to remove the event listeners of friends
-    }
-    setupEventListenersAndAnimations()
-    {
-        window.addEventListener('resize', animateProgressBar)
-        window.addEventListener('resize', () => {
-            let selectedChoice = document.querySelector('.selected-choice')
-            const slidingLine = document.getElementById('sliding-line')
-
-            slidingLine.style.width = `${selectedChoice.offsetWidth}px`
-            slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
-        })
         if (this._userId === 'me')
-            this.addListenersForFriendsBox()
-        animateProgressBar()
+        {
+            document.querySelectorAll('.choice-item').forEach(e => {
+                eventListeners.off(e, 'mouseover')
+                eventListeners.off(e, 'mouseout')
+                eventListeners.off(e, 'click')
+            })
+        }
     }
-    addListenersForFriendsBox()
-    {
-        let selectedChoice = document.querySelector('.selected-choice')
-        const slidingLine = document.getElementById('sliding-line')
-
-        // initial value
-        slidingLine.style.width = `${selectedChoice.offsetWidth}px`
-        slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
-
-        document.querySelectorAll('.choice-item').forEach(e => {
-            e.addEventListener('mouseover', (event) => {
-                slidingLine.style.width = `${e.offsetWidth}px`
-                slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
-                e.classList.add('hoovered')
-                selectedChoice.classList.remove('selected-choice')
-            })
-            e.addEventListener('mouseout', (event) => {
-                slidingLine.style.width = `${selectedChoice.offsetWidth}px`
-                slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
-                e.classList.remove('hoovered')
-                selectedChoice.classList.add('selected-choice')
-            })
-            e.addEventListener('click', (event) => {
-                event.preventDefault()
-                
-                slidingLine.style.transform = `translateX(${e.offsetLeft}px)`
-                selectedChoice.classList.remove('selected-choice')
-                e.classList.add('selected-choice')
-                selectedChoice = e
-
-                const friendsBoxContainer = document.getElementById('friends-box-container')
-                friendsBoxContainer.friendsList = selectedChoice.id === 'friends' ? true : false
-            })
-    })
-}
     addProfile()
     {
         const profileBox = document.getElementById('profile-box1')
@@ -126,12 +81,23 @@ export class ProfileView extends HTMLElement
         friends.friendsRequestsDb = this._database.extractData('friendsRequests')
         
         friendsBox.appendChild(friends)
-
-
-
-        // const friendsDb = this._database.extractData('friends')
-        // profileTemplate.friendsBoxConatainer(friendsDb)
     }
-    
+    setupEventListenersAndAnimations()
+    {
+        eventListeners.on(window, 'resize', eventHandlersForProfile.animation.animateProgressBar())
+
+        if (this._userId === 'me')
+        {
+            eventHandlersForProfile.animation.changeLineForSelectedChoice()
+            document.querySelectorAll('.choice-item').forEach(e => {
+                eventListeners.on(e, 'mouseover', (event) => eventHandlersForProfile.animation.mouseOverSelectedChoice(event.target))
+                eventListeners.on(e, 'mouseout', (event) => eventHandlersForProfile.animation.mouseOutSelectedChoice(event.target))
+                eventListeners.on(e, 'click', (event) => eventHandlersForProfile.click.clickSelectedChoice(event.target))
+            })
+        }
+
+    }
 }
+
 customElements.define('profile-view', ProfileView) 
+

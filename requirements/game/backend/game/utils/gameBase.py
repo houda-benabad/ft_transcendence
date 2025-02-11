@@ -4,7 +4,7 @@ from .player import Player
 from .ball import Ball
 import math
 from .objects import Plane
-from ..constants import *
+from .constants import *
 
 
 @dataclass

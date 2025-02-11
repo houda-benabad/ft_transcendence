@@ -34,6 +34,7 @@ export default class Engine {
 		this.setupLight(  )
 		this.setupWorld(  )
 		this.setupResizeEvent(  )
+		this.onWindowResize( )
 	}
 
 	setupCamera(  ){

@@ -53,7 +53,8 @@ PACKAGES = [
 APPS_ADDED = [
     'accounts',
     'Profiles',
-    'friends'
+    'friends',
+    'online_status'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PACKAGES + APPS_ADDED
@@ -204,6 +205,7 @@ USER_INFO_URI = os.environ.get('USER_INFO_URI')
 
 REDIS_SERVER = os.environ.get('REDIS_SERVER')
 REDIS_PORT = os.environ.get('REDIS_PORT')
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -212,5 +214,27 @@ CHANNEL_LAYERS = {
         },
     },
 }
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'channels': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
 
-NEW_PLAYER_URL = "http://game:8001/api/game/new_player" #os.environ.get('NEW_PLAYER_URL')
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer"
+#     }
+# }
+
+NEW_PLAYER_URL = os.environ.get('NEW_PLAYER_URL')
+UPDATE_PLAYER_URL = os.environ.get('UPDATE_PLAYER_URL')

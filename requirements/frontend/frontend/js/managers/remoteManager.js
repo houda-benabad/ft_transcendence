@@ -7,7 +7,7 @@ import appCanva from "./canvaManager.js"
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { MODE, WORLD } from "../constants/engine.js"
 import { reset, tokenExpired } from '../utils/utils.js'
-import { globalManager } from "./globalManager.js"
+import { tokenService } from "./globalManager.js"
 import { modalService } from "../services/modalService.js"
 
 
@@ -36,6 +36,7 @@ export default class Remote{
 		this.socket  = this._setupSocket( this.resolve )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
+		document.getElementById( "cancel-btn" ).addEventListener( 'click', this._handle_cancel_btn.bind(this))
 	}
 
 	async _handle_socket_error( e ){
@@ -60,7 +61,7 @@ export default class Remote{
 	}
 
 	_setupSocket(  ) {
-		const token = globalManager._tokenService.accessToken 
+		const token = tokenService.accessToken 
 		let url = `wss://${window.location.host}/wss/${this.mode}?token=${token}`
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{

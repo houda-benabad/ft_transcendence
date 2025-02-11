@@ -11,6 +11,7 @@ export default class Components {
         this.engine = engine
         this.mode = mode
         this.options = options ? options : { texture : TEXTURE, background : TEXTURE }
+        console.log( 'oprion are => ', this.options )
         this.objects = this.createObjects( this.mode )
         this.bodies = this.createBodies( this.mode )
     }
@@ -63,6 +64,8 @@ export default class Components {
     }
 
     createBall(  ){
+        console.log("TEXTURE = ", this.options.texture)
+        console.log("COLOR = ", COLORS[this.options.texture])
         let ball = new THREE.Mesh( 
             new THREE.SphereGeometry( ...Object.values( DIMENSION.BALL ) ), 
             new THREE.MeshLambertMaterial( { color: COLORS[this.options.texture] } ) )

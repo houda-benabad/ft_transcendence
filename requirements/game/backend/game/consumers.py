@@ -2,10 +2,10 @@ import json, asyncio
 from channels.generic.websocket import  AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.conf import settings
-from . import game
+from .utils import game
 import requests
 from .models import Player
-from .constants import *
+from .utils.constants import *
 
 remote_players = []
 multi_players = []

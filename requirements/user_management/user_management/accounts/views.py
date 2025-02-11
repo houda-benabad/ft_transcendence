@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 import requests
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
@@ -6,9 +5,8 @@ from Profiles.models import Profile
 from rest_framework.response import Response
 import urllib
 from rest_framework.views import APIView
-from rest_framework import status, permissions, exceptions
+from rest_framework import status, exceptions
 from django.conf import settings
-from django.urls import reverse
 from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
 import logging
@@ -21,19 +19,13 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger("accounts.views") 
 User = get_user_model()
 
-class   OAuthError(Exception):
+class   Error(exceptions.APIException):
     
     def __init__(self, detail, status_code):
         self.detail = detail
         self.status_code = status_code
         super().__init__(self.detail)
 
-class Error(exceptions.APIException):
-
-    def __init__(self, detail, status_code):
-        self.detail = detail
-        self.status_code = status_code
-        super().__init__(self.detail)
 
 class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
     queryset = User.objects.all()
@@ -46,13 +38,15 @@ class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
         instance = serializer.save()
         # logger.debug(f"---------this is the host {self.request.get_host()}--------------")
         try :
-            response = requests.post(f"http://game:8000/api/game/update_player/{instance.id}", data = {"username": instance.username}, headers={"Host":"localhost"})
-            if response.status_code != status.HTTP_200_OK:
-                raise Error(detail="error in the new_player response", status_code = response.status_code)
+            response = requests.post(f"{settings.UPDATE_PLAYER_URL}/{instance.id}", data={"username": instance.username}, headers={"Host":"localhost"})
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as http_err:
+            logger.debug("---------------entered here--------------")
+            raise Error(detail="error in the new_player response", status_code=http_err.response.status_code)
         except requests.RequestException as e:
-            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+            raise Error(detail=str(e), code=status.HTTP_503_SERVICE_UNAVAILABLE)
         except Exception as e:
-            raise Error(detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            raise exceptions.APIException(detail=str(e))
     
 
 set_username_api_view = UserUsrnameUpdateApiView.as_view()
@@ -61,13 +55,14 @@ class   CustomUserViewSet(UserViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
         try :
-            response = requests.post("http://game:8000/api/game/new_player", data = {"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
-            if response.status_code != status.HTTP_200_OK:
-                raise Error(detail="error in the new_player response", status_code = response.status_code)
+            response = requests.post(settings.NEW_PLAYER_URL, data={"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as http_err:
+            raise Error(detail="error in the new_player response", status_code=http_err.response.status_code)
         except requests.RequestException as e:
-            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+            raise Error(detail=str(e), code=status.HTTP_503_SERVICE_UNAVAILABLE)
         except Exception as e:
-            raise Error(detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            raise exceptions.APIException(detail=str(e))
 
 
 class   IntraAuth(APIView):
@@ -96,7 +91,6 @@ class   IntraCallback(APIView):
     def post(self, request):
 
         try:
-            logger.debug("entered in the callback")
             body = request.body.decode('utf-8')
             data = json.loads(body)
             code = data.get('code', '')
@@ -104,28 +98,25 @@ class   IntraCallback(APIView):
                 return Response({"detail": "missing code"}, status= status.HTTP_400_BAD_REQUEST)
             access_token = self.exchange_code(request, code)
             user_data = self.get_user_data(access_token)
-            intra_user, created = User.objects.get_or_create(username=user_data["username"])
-            user_profile = Profile.objects.filter(user=intra_user).first()
-            if user_profile :
-                if not user_profile.is_oauth2:
-                    raise OAuthError(f"A user with the username '{intra_user.username}' already exists and does not use OAuth.", status.HTTP_400_BAD_REQUEST)
-                # user_profile.image_url = user_data["image_url"]
-                # user_profile.save()
-            else:
-                Profile.objects.create(user=intra_user, image_url = user_data["image_url"], is_oauth2=True)
-                logger.debug("before posting to game")
-                response = requests.post("http://game:8000/api/game/new_player", data = {"userId": intra_user.id, "username": intra_user.username}, headers={"Host":"localhost"})
-                logger.debug("after posting to game")
+            user_profile =  Profile.objects.filter(oauth2_id=user_data.get("id")).first()
+            if user_profile:
+                intra_user = User.objects.filter(profile=user_profile).first()
+            if not user_profile:
+                intra_user, created = User.objects.get_or_create(username=user_data.get("username"))
+                if not created:
+                    return Response({'detail': f"A user with the username '{intra_user.username}' already exists and does not use OAuth."}, status=status.HTTP_400_BAD_REQUEST)
+                user_profile = Profile.objects.create(user=intra_user, image_url = user_data.get("image_url"), is_oauth2=True, oauth2_id=user_data.get("id"))
+                response = requests.post(settings.NEW_PLAYER_URL, data = {"userId": intra_user.id, "username": intra_user.username}, headers={"Host":"localhost"})
                 if response.status_code != status.HTTP_200_OK:
-                    raise OAuthError("error in the new_player response", response.status_code)
+                    return Response({'detail':"error in the new_player response"}, status=response.status_code)
             refresh = RefreshToken.for_user(intra_user)
             access = refresh.access_token
         except json.JSONDecodeError:
-            return Response({'detail': 'Invalid JSON data'}, status=HTTP_400_BAD_REQUEST)
-        except OAuthError as e:
+            return Response({'detail': 'Invalid JSON data'}, status=status.HTTP_400_BAD_REQUEST)
+        except Error as e:
             return Response({"detail": str(e.detail)}, status=e.status_code)
-        except requests.RequestException as e:
-            raise Error(detail=str(e), status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+        except requests.exceptions.RequestException as e:
+            return Response({"detail": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
         except Exception as e:
             return Response({"detail": f"Internal server error {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -149,14 +140,14 @@ class   IntraCallback(APIView):
             response = requests.post(settings.INTRA_TOKEN_URI, data=data, headers=headers)
             response.raise_for_status()
             credentials = response.json()
-            access_token = credentials['access_token']
+            access_token = credentials.get('access_token')
             if not access_token:
-                raise OAuthError('No access token in response', status.HTTP_401_UNAUTHORIZED)
+                raise Error('No access token in response', status.HTTP_401_UNAUTHORIZED)
         
         except requests.exceptions.HTTPError as http_err:
-            raise OAuthError(f"code exchange with access token failed {str(http_err)}", http_err.response.status_code)
+            raise Error(f"code exchange with access token failed {str(http_err)}", http_err.response.status_code)
         except requests.exceptions.RequestException as e:
-            raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
+            raise Error(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
         
         return access_token
         
@@ -171,18 +162,18 @@ class   IntraCallback(APIView):
             response = requests.get(settings.USER_INFO_URI, headers=headers)
             response.raise_for_status()
             user_info = response.json()
-            logger.debug(f"==================================user_info: {user_info}")
             data = {
-                "username" : user_info["login"],
-                "image_url" : ((user_info["image"])["versions"])["medium"]
+                "id" : user_info.get("id"),
+                "username" : user_info.get("login"),
+                "image_url" : user_info.get("image").get("versions").get("medium")
             }
         
-        except requests.exceptions.HTTPOError as http_err:
-            raise OAuthError(f"getting user info failed {str(http_err)}", http_err.response.status_code)
+        except requests.exceptions.HTTPError as http_err:
+            raise Error(f"getting user info failed {str(http_err)}", http_err.response.status_code)
         except requests.exceptions.RequestException as e:
-            raise OAuthError(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
-        except KeyOAuthError as key_err:
-            raise OAuthError(f"Invalid user info structure received {str(key_err)}", status.HTTP_500_INTERNAL_SERVER_ERROR)
+            raise Error(str(e), status.HTTP_503_SERVICE_UNAVAILABLE)
+        except KeyError as key_err:
+            raise Error(f"Invalid user info structure received {str(key_err)}", status.HTTP_500_INTERNAL_SERVER_ERROR)
         return data
 
 intra_callback_view = IntraCallback.as_view()

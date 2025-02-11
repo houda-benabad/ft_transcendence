@@ -1,7 +1,7 @@
 import json, asyncio, uuid
-from .utils.gameBase import Game
+from .gameBase import Game
 from asgiref.sync import async_to_sync, sync_to_async
-from . import models
+from .. import models
 from channels.layers import get_channel_layer
 from channels.db import database_sync_to_async
 from .constants import *

@@ -41,6 +41,7 @@
         {
             background-color: var(--secondary2);
             position: absolute;
+            top: 77%;
             width: 100%;
             margin-top: 7px;
             z-index: 1;
