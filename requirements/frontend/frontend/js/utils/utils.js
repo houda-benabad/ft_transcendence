@@ -28,7 +28,6 @@ export function loader(delay)
 }
 export async function reset()
 {
-    console.log('im in reset - -')
     const app = document.getElementById('app')
     
     await loader(1500)

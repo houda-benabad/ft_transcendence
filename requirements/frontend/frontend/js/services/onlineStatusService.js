@@ -28,10 +28,12 @@ export class OnlineStatusService
         }
         
         this._socket.onclose = (e) => {
+            console.log('websocket was closed because ', e.reason , ' with code ', e.code)
             if (e.code === 1006)
                 tokenExpired(this.init.bind(this))
         }
         this._socket.onmessage = (e) => {
+            console.log('websocket got a message')
             const response = JSON.parse(e.data)
             const {type, online_friends, friend_id, status} = response
 
