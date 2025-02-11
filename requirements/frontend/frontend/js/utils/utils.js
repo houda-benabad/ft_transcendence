@@ -3,6 +3,7 @@ import { tokenService } from '../managers/globalManager.js'
 import { globalManager } from '../managers/globalManager.js'
 import { ENDPOINTS } from '../constants/endpoints.js'
 import { eventListeners } from "../managers/globalManager.js"
+import { modalService } from '../services/modalService.js'
 
 export function removeModalHandler( event, resolve , type)
 {
@@ -60,7 +61,9 @@ export async function tokenExpired(func = null)
     {
         console.log('->>>>>> refresh token was expired')
         tokenService.clear()
+        await modalService.show('the user is no more authenticated !!!', true)
         document.getElementById('app').classList.remove('active')
+        await loader(700)
         globalManager._router.handleRoute('/signin')
         return ; 
     }
