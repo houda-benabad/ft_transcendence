@@ -6,7 +6,6 @@ export const searchService =
 {
     async performSearch(query)
     {
-        console.log('im performing search  - -')
         const response = await apiService.user.getUsers(query)
 
         const searchResults = document.getElementById('search-results') // dry

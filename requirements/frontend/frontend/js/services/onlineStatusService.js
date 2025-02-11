@@ -33,8 +33,8 @@ export class OnlineStatusService
                 tokenExpired(this.init.bind(this))
         }
         this._socket.onmessage = (e) => {
-            console.log('websocket got a message')
             const response = JSON.parse(e.data)
+            console.log('websocket got a message the response is  : ', response)
             const {type, online_friends, friend_id, status} = response
 
             if (type === 'online_friends_list')
