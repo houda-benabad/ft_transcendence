@@ -1,8 +1,10 @@
 export const COLORS = {
     PLANE : 0x5F1584,
-    BALL : 0xD43ADF,
     PLAYER1 : 0x8C96ED,
-    PLAYER2: 0XFFFFFF
+    PLAYER2: 0XFFFFFF,
+    popular : 0xDFFADF,
+    default : 0xD43ADF,
+    special : 0xD43A00
 }
 
 export const DIMENSION = {
@@ -84,3 +86,4 @@ export const BACKGROUND = {
 }
 
 export const TEXTURE  = 'default'
+

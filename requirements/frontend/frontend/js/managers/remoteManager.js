@@ -36,6 +36,7 @@ export default class Remote{
 		this.socket  = this._setupSocket( this.resolve )
 		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
 		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
+		document.getElementById( "cancel-btn" ).addEventListener( 'click', this._handle_cancel_btn.bind(this))
 	}
 
 	async _handle_socket_error( e ){
@@ -55,8 +56,9 @@ export default class Remote{
 	async _handle_cancel_btn( ){
 		this.socket.close( 4000 )
 		await reset(  )
+		document.getElementById( "cancel-btn" ).removeEventListener( 'click', this._handle_cancel_btn.bind(this))
 		globalManager._router.navigateTo( '/' )
-		document.getElementById( "cancel-btn" ).addEventListener( 'click', this._handle_cancel_btn.bind(this))
+
 	}
 
 	_setupSocket(  ) {
