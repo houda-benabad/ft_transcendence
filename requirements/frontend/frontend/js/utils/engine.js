@@ -19,10 +19,6 @@ export default class Engine {
 		this.renderer = new THREE.WebGLRenderer( { antialias: true } );
 		this.scene = new THREE.Scene(  );
 		this.world = new CANNON.World(  );
-		// if ( this.mode == MODE.REMOTE || this.mode == MODE.MULTIPLAYER )
-		// 	this.socket = this.setupSocket(  )
-		const axesHelper = new THREE.AxesHelper( 10 );
-		this.scene.add( axesHelper );
 	}
 
 	onWindowResize(  ) {

@@ -40,10 +40,8 @@ export default class Components {
     // OBJECTS
 
     createBanner( position ){
-        console.log( Object.values( DIMENSION.BANNER ) )
         let banner = new THREE.Mesh( 
             new THREE.BoxGeometry( .2,2,6), 
-            // new THREE.BoxGeometry( ...Object.values( DIMENSION.BANNER ) ), 
             new THREE.MeshLambertMaterial() )
         banner.visible = false
         banner.position.set( ...position )

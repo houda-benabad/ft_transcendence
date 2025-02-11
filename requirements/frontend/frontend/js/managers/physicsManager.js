@@ -20,7 +20,6 @@ export default class physicsManager{
 
 	setupBallCollisionEvent(  ){
 		this.components.bodies.ball.addEventListener( 'collide', ( event )=>{
-			console.log("Collision with:", event.body);
 			if ( event.body !=  this.components.bodies.plane ){
 				if ( event.body == this.components.bodies.player1 || event.body == this.components.bodies.player2 ){
 
