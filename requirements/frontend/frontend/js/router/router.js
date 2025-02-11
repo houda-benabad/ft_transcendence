@@ -1,13 +1,14 @@
 import { onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 import { ROUTES } from '../constants/routes.js'
+import { modalService } from "../services/modalService.js"
+import { loader } from "../utils/utils.js"
 
 import '../views/homeView.js'
 import '../views/profileView.js'
 import '../views/gameSettingsView.js'
 import '../views/settingsView.js'
 import '../views/gameView.js'
-import { modalService } from "../services/modalService.js"
 
 export class Router 
 {

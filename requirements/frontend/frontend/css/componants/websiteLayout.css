@@ -51,7 +51,7 @@
             .search-item
             {
                 padding: 5px 0px 5px 10px;
-                border-radius: 12px;
+                border-radius: max(1vw, 1vh);
                 display: flex;
                 align-items: center;
                 gap: 7px;
@@ -59,6 +59,7 @@
                 {
                     cursor: pointer;
                     background-color: var(--secondary2-hover);
+                    border-bottom: solid 1px var(--border-type2);
                 }
                 img
                 {

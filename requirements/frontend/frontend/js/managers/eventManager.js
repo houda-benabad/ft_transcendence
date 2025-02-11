@@ -24,6 +24,7 @@ export class EventManager
 	handleEventDelegationForClick(event)
 	{
         const target = event.target
+		let targetParent
 
 		if (target.matches('a'))
             this._eventHandlers.anchor.handleAnchorEvents(event, target)
@@ -31,6 +32,8 @@ export class EventManager
             this._eventHandlers.button.handleButtonEvents(target)
 		else if (target.classList.contains('search-item'))
             this._eventHandlers.search.handleSearchItem(target)
+		else if (targetParent = target.closest('.friends-box-item'))
+			this._eventHandlers.div.handleFriendsBoxItem(targetParent)
 	}
 	handleEventDelegationForSubmit(event)
 	{

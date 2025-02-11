@@ -243,6 +243,16 @@ export const eventHandlersForEventManager = (eventManager) =>
             modalService.show('deleted the image successfully', true)
         }
     },
+    div :
+    {
+        handleFriendsBoxItem(target)
+        {
+            const userId = target.getAttribute('userid')
+
+            console.log('userid is : ', userId)
+            eventManager._router.handleRoute(`/profile/${userId}`)
+        }
+    },
     search : 
     {
         handleSearchItem(target)
@@ -252,7 +262,7 @@ export const eventHandlersForEventManager = (eventManager) =>
 
             searchResults.classList.add('clicked')
             searchService.clear()
-           eventManager._router.handleRoute(`/profile/${id}`)
+            eventManager._router.handleRoute(`/profile/${id}`)
         },
         handleSearchInput(event, target)
         {
@@ -267,8 +277,8 @@ export const eventHandlersForEventManager = (eventManager) =>
             {
                 const searchResults = document.getElementById('search-results') // dry
 
-                if (!searchResults.classList.contains('clicked'))
-                    searchService.clear()
+                // if (!searchResults.classList.contains('clicked'))
+                //     searchService.clear()
             }, 300)
         }
     },
@@ -289,7 +299,7 @@ export const eventHandlersForEventManager = (eventManager) =>
                 const response = await eventManager._apiService.auth[action](formObject)
 
                 if (action  === 'signup')
-                    setTimeout(() => eventManager._router.handleRoute('/signin'), 1000)
+                    setTimeout(() => eventManager._router.handleRoute('/signin'), 150)
                 else
                 {
                     tokenService.tokens = response

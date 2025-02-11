@@ -77,7 +77,7 @@ profile-view
             gap: 10px;
 
             height : 100%;
-            width: 85%;
+            width: 90%;
             overflow-y: auto;
 
             > p {
@@ -98,7 +98,14 @@ profile-view
             {
                 display: flex;
                 align-items: center;
-                /* justify-content: space-between; */
+                padding: min(0.7vh, 0.7vw) min(1vh, 1vw);
+                cursor: pointer;
+                &:hover
+                {
+                    background: var(--secondary2-hover);
+                    border-bottom: solid 1px var(--border-type2);
+                    border-radius: max(1vw, 1vh);
+                }
                 img 
                 {
                     width: 60px;

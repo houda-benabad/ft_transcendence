@@ -24,9 +24,12 @@ export class ProfileView extends HTMLElement
     }
     set updateStatus({friend_id, status})
     { 
-        const statusDom = this.querySelector('.profile-box1-box-text')
-        statusDom.id = status
-        statusDom.innerHTML = escapeHtml(status)
+        if (friend_id === Number(this._userId))
+        {
+            const statusDom = this.querySelector('.profile-box1-box-text')
+            statusDom.id = status
+            statusDom.innerHTML = escapeHtml(status)
+        }
     }
     async connectedCallback() 
     {

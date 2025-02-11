@@ -45,6 +45,10 @@ export class OnlineStatusService
     }
     updateContent({friend_id, status})
     {
+        console.log('im in updateContent')
+        console.log('status : ', status)
+        console.log('friend_id : ', friend_id)
+        
         if (status === 'offline')
             this._onlineFriendsList = this._onlineFriendsList.filter((num) => num !== friend_id);
         else
