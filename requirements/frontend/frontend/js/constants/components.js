@@ -24,8 +24,8 @@ export const DIMENSION = {
         z:.1
     },
     BANNER :{
-        x: 1,
-        y: 4,
+        x: .2,
+        y: 2,
         z: 6
     }
 }
@@ -51,6 +51,16 @@ export const POSITION = {
         y:.4,
         z:-DIMENSION.PLANE.z/2
     },
+    BANNER1:{
+        x:-DIMENSION.PLANE.x/2 - DIMENSION.BANNER.x/2 - .1,
+        y:0,
+        z:0
+    },
+    BANNER2:{
+        x:DIMENSION.PLANE.x/2 + DIMENSION.BANNER.x/2 + .1,
+        y:0,
+        z:0
+    }
 
 }
 

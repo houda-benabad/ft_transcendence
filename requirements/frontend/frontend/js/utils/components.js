@@ -40,11 +40,14 @@ export default class Components {
     // OBJECTS
 
     createBanner( position ){
+        console.log( Object.values( DIMENSION.BANNER ) )
         let banner = new THREE.Mesh( 
-            new THREE.BoxGeometry( ...Object.values( DIMENSION.BANNER ) ), 
-            new THREE.MeshLambertMaterial( { color:  color } ) )
-        player.position.set( ...position )
-        return player
+            new THREE.BoxGeometry( .2,2,6), 
+            // new THREE.BoxGeometry( ...Object.values( DIMENSION.BANNER ) ), 
+            new THREE.MeshLambertMaterial() )
+        banner.visible = false
+        banner.position.set( ...position )
+        return banner
     }
 
     createPlane(  ){
@@ -94,6 +97,8 @@ export default class Components {
     }
 
     createObjects(  ){
+        let banner1 = this.createBanner( Object.values(POSITION.BANNER1) )
+        let banner2 = this.createBanner( Object.values(POSITION.BANNER2) )
         let ball = this.createBall(  )
         let plane = this.createPlane(  )
         let player1 = this.createPlayer( 
@@ -105,10 +110,28 @@ export default class Components {
             COLORS.PLAYER2
          )
 
-        return {ball, plane, player1, player2}
+        return {ball, plane, player1, player2, banner1, banner2}
     }
 
     // BODIES
+
+    createBannerBody( position ){
+        const Shape = new CANNON.Box( 
+            new CANNON.Vec3( 
+                DIMENSION.BANNER.x / 2,
+                DIMENSION.BANNER.y / 2,
+                DIMENSION.BANNER.z / 2,
+             )
+         )
+        const banner = new CANNON.Body( {
+            type: CANNON.Body.STATIC,
+            position: new CANNON.Vec3( ...position ),
+        } );
+        banner.addShape( Shape )
+        banner.fixedRotation = true;
+
+        return banner
+    }
 
     createPlaneBody(  ){
         const ground = new CANNON.Body( {
@@ -166,13 +189,20 @@ export default class Components {
     createBodies(  ){
         let ball = this.createBallBody(  )
         let plane = this.createPlaneBody(  )
+        let banner1 = this.createBannerBody( 
+            Object.values( POSITION.BANNER1 ), 
+         )
+         let banner2 = this.createBannerBody( 
+            Object.values( POSITION.BANNER2 ), 
+         )
         let player1 = this.createPlayerBody( 
             Object.values( POSITION.PLAYER1 ), 
          )
         let player2 = this.createPlayerBody( 
             Object.values( POSITION.PLAYER2 ), 
          )
-        return {ball, plane, player1, player2}
+        // return {ball, plane, player1, player2}
+        return {ball, plane, player1, player2, banner1, banner2}
     }
 
 

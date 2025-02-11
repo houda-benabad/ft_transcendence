@@ -22,11 +22,15 @@ export default class visualsManager {
 		// FOR LOCAL
 		updatePosition(  ){
 			const { bodies, objects } = this.components;
-			const playerNumber = Object.keys( objects ).length - 2
-
+			const playerNumber = 2
 			for ( let i =0; i< playerNumber; i++ ){
 				objects[ `player${i+1}` ].position.copy( bodies[ `player${i+1}` ].position );
 				objects[ `player${i+1}` ].quaternion.copy( bodies[ `player${i+1}` ].quaternion );
+			}
+
+			for ( let i =0; i< playerNumber; i++ ){
+				objects[ `banner${i+1}` ].position.copy( bodies[ `banner${i+1}` ].position );
+				objects[ `banner${i+1}` ].quaternion.copy( bodies[ `banner${i+1}` ].quaternion );
 			}
 
 			this.components.objects.ball.position.copy( this.components.bodies.ball.position );

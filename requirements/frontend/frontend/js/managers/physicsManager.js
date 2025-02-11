@@ -20,10 +20,17 @@ export default class physicsManager{
 
 	setupBallCollisionEvent(  ){
 		this.components.bodies.ball.addEventListener( 'collide', ( event )=>{
+			console.log("Collision with:", event.body);
 			if ( event.body !=  this.components.bodies.plane ){
-				this.ball_velocity.z *= -1
-				if ( Math.abs( this.ball_velocity.z ) < .8 )
-					this.ball_velocity.z += .005 * ( this.ball_velocity.z > 0 ? 1 : -1 )
+				if ( event.body == this.components.bodies.player1 || event.body == this.components.bodies.player2 ){
+
+					this.ball_velocity.z *= -1
+					if ( Math.abs( this.ball_velocity.z ) < .8 )
+						this.ball_velocity.z += .005 * ( this.ball_velocity.z > 0 ? 1 : -1 )
+				}
+				else if ( event.body == this.components.bodies.banner1 || event.body == this.components.bodies.banner2 ){
+						this.ball_velocity.x*= -1
+				}
 			}
         } )
 	}
@@ -54,8 +61,8 @@ export default class physicsManager{
 	}
 	
 	checkWallCollision(  ){
-		if ( Math.abs( this.components.bodies.ball.position.x ) >= DIMENSION.PLANE.x/2 )
-			this.ball_velocity.x*= -1
+		// if ( Math.abs( this.components.bodies.ball.position.x ) >= DIMENSION.PLANE.x/2 )
+		// 	this.ball_velocity.x*= -1
 	}
 }
 
