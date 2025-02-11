@@ -1,5 +1,5 @@
 import { tokenService } from "../managers/globalManager.js"
-import { debounce } from "../utils/utils.js"
+import { debounce, tokenExpired } from "../utils/utils.js"
 
 export class OnlineStatusService
 {
@@ -27,8 +27,10 @@ export class OnlineStatusService
             console.log('websocket was opened successfully !!!')
         }
         
-        this._socket.onclose = (e) => {console.log('connection is closing because  : ', e.reason, 'code : ', e.code)}
-
+        this._socket.onclose = (e) => {
+            if (e.code === 1006)
+                tokenExpired(this.init.bind(this))
+        }
         this._socket.onmessage = (e) => {
             const response = JSON.parse(e.data)
             const {type, online_friends, friend_id, status} = response

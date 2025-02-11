@@ -23,8 +23,8 @@ export class Router
     {
         if (tokenService.isAuthenticated())
         {
-            onlineStatusService.init()
             await this._reset()
+            onlineStatusService.init()
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
             
             const element = document.querySelector(`[href="${window.location.pathname}"]`)

@@ -28,6 +28,7 @@ export function loader(delay)
 }
 export async function reset()
 {
+    console.log('im in reset - -')
     const app = document.getElementById('app')
     
     await loader(1500)
@@ -63,7 +64,7 @@ export async function tokenExpired(func = null)
         tokenService.clear()
         await modalService.show('the user is no more authenticated !!!', true)
         document.getElementById('app').classList.remove('active')
-        await loader(500)
+        await loader(700)
         globalManager._router.handleRoute('/signin')
         return ; 
     }
