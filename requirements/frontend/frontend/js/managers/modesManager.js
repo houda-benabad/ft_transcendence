@@ -17,13 +17,16 @@ export class GameManager
     async #init( ){
         await globalManager._router.navigateTo( '/game-settings' )
         this.gameSettings = await globalManager._formService.handleGame(  )
-        globalManager._router.navigateTo( '/game' )
+        await globalManager._router.navigateTo( '/game' )
+        await modalService.show("🎮 Controls:<br>🟦 Player 1: W / S<br>🟥 Player 2: ⬆ / ⬇", false);
+
     }
 
     async #denit( message='Game over' ){
         await modalService.show(  message )
         await reset(  )
         globalManager._router.navigateTo( '/' )
+        
     }
     async local()
     {
