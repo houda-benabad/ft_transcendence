@@ -1,5 +1,6 @@
 import { onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
+import { write , delay} from "../utils/utils.js"
 import { ROUTES } from '../constants/routes.js'
 import { modalService } from "../services/modalService.js"
 import { loader } from "../utils/utils.js"
@@ -36,6 +37,13 @@ export class Router
         window.addEventListener('popstate', () => this.handleRoute())
         this.handleRoute()
     }
+    async removeWelcomeText()
+    {
+        const welcomeText = document.getElementById('welcome-text')
+
+        await delay(3000)
+        welcomeText.replaceChildren()
+    }
     handleIntraRoute(query)
     {
         return new Promise (async resolve  => {
@@ -46,6 +54,13 @@ export class Router
             tokenService.tokens = response
             await this._reset()
             onlineStatusService.init()
+
+            const userInfos = await this._apiService.user.getBasicDataOfUser()
+
+            const text = `hello , ${userInfos.username}`
+            const welcomeText = document.getElementById('welcome-text')
+
+            write(text, 100, welcomeText)
             resolve()
         })
     }
@@ -54,6 +69,8 @@ export class Router
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = window.location.search
 
+        if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
+            this.removeWelcomeText()
         if (query)
             await this.handleIntraRoute(query)
         if (!tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))

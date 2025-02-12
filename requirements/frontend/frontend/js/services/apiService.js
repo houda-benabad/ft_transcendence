@@ -235,6 +235,9 @@ export const apiService =
         getUsers : (query) => new Promise (resolve => {
             generatedHttpRequests.createGetRequest(ENDPOINTS.SEARCHED_USERS, {needsAuth : true, modalMessage: null})(resolve, {key : 'search', value : query})
         }),
+        getBasicDataOfUser : () => new Promise (async resolve => {
+            generatedHttpRequests.createGetRequest(ENDPOINTS.USER_INFO, {needsAuth : true, modalMessage: null})(resolve)
+        }),
     },
     friendship :
     {

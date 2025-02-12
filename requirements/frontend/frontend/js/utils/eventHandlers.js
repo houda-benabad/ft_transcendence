@@ -4,7 +4,7 @@ import { GameManager } from "../managers/gameManager.js"
 import { ENDPOINTS } from "../constants/endpoints.js"
 import { onlineStatusService } from "../managers/globalManager.js"
 import { tokenService } from "../managers/globalManager.js"
-import { loader } from './utils.js'
+import { loader, write } from './utils.js'
 
 export const eventHandlersForProfile = 
 {
@@ -277,8 +277,8 @@ export const eventHandlersForEventManager = (eventManager) =>
             {
                 const searchResults = document.getElementById('search-results') // dry
 
-                // if (!searchResults.classList.contains('clicked'))
-                //     searchService.clear()
+                if (!searchResults.classList.contains('clicked'))
+                    searchService.clear()
             }, 300)
         }
     },
@@ -302,10 +302,18 @@ export const eventHandlersForEventManager = (eventManager) =>
                     setTimeout(() => eventManager._router.handleRoute('/signin'), 150)
                 else
                 {
+                    
                     tokenService.tokens = response
+                    const userInfos = await eventManager._apiService.user.getBasicDataOfUser()
+                    
                     await eventManager._reset()
                     eventManager._router.handleRoute('/')
                     onlineStatusService.init()
+                    
+                    const text = `hello , ${userInfos.username}`
+                    const welcomeText = document.getElementById('welcome-text')
+
+                    write(text, 100, welcomeText)
                 }
             }
         }
