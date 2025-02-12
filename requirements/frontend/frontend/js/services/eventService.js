@@ -8,6 +8,7 @@ export class EventService
     on(element, eventType, handler)
     {
         const key = this.#getUniqueKey(element, eventType)
+        // console.log('test listeners : ', this._listeners)
         
         this._listeners.set(key, {element, eventType, handler})
         element.addEventListener(eventType, handler)
@@ -33,7 +34,9 @@ export class EventService
     }
     #getUniqueKey(element, eventType)
     {
-        const key = element.id || `${element.innerHTML}:${eventType}` // to change not very smart
+        const key = element.id ? element.id : `${element.name}:${eventType}`
+
+        // console.log('key is  : ', key)
         return key
     }
 }

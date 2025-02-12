@@ -8,7 +8,7 @@ import { OnlineStatusService } from '../services/onlineStatusService.js'
 import { FormService } from '../services/formService.js'
 
 
-const eventListeners = new EventService() // just for the moment i wont be in need of it later on
+const eventListeners = new EventService()
 const onlineStatusService = new OnlineStatusService()
 const tokenService = new TokenService()
 

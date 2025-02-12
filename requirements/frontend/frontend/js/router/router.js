@@ -28,7 +28,7 @@ export class Router
         if (tokenService.isAuthenticated())
         {
             onlineStatusService.init()
-            this.initBasicRoutes()
+            await this.initBasicRoutes()
         }
         window.addEventListener('popstate', () => this.handleRoute(null))
         this.handleRoute()
@@ -60,14 +60,17 @@ export class Router
             resolve()
         })
     }
-    async initBasicRoutes()
+    initBasicRoutes()
     {
-        await this._reset()
-        document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
-        
-        const element = document.querySelector(`[href="${window.location.pathname}"]`) 
-        if (element)
-            element.classList.add('selected')
+        return new Promise (async resolve  => {
+            await this._reset()
+            document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
+            
+            const element = document.querySelector(`[href="${window.location.pathname}"]`) 
+            if (element)
+                element.classList.add('selected')
+            resolve()
+        })
     }
     async handleRoute(newPath=null)
     {
@@ -75,7 +78,7 @@ export class Router
         const query = window.location.search
 
         if (this._route === '/game' && path === '/')
-            this.initBasicRoutes()
+            await this.initBasicRoutes()
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
             this.removeWelcomeText()
         if (query)

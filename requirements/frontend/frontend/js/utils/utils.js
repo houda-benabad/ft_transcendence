@@ -11,7 +11,7 @@ export function removeModalHandler( event, resolve , type)
     
     if (!event || (event && event.target === modalBackground ))
     {
-        eventListeners.off( modalBackground, 'click', removeModalHandler )
+        eventListeners.off( modalBackground, 'click')
         modalBackground.remove(  )
         if (type === null)
             resolve(  ) 
