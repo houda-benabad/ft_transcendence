@@ -11,7 +11,7 @@ class appCanva{
             <div class="waiting-pop glass">
 				<h1>Waiting for other player...</h1>
 				<div id="loader"></div>
-				<button data-action='cancel' id="cancel-btn">Cancel</button>
+				<button id="cancel-btn">Cancel</button>
 			</div>
 	    `
         this.score = document.createElement('div')

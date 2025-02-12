@@ -26,7 +26,6 @@ export class FormService
     }
     #eventHandlerGameForm( event, resolve )
     {
-        console.log('im i hereee')
         const form = document.querySelector( 'form' )
         
         event.preventDefault()
