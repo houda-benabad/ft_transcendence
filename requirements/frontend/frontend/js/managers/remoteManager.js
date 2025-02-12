@@ -86,7 +86,6 @@ export default class Remote{
 	}
 
 	handleError( data ){
-		console.log("handlin error, = ", data)
 	}
 
 	updateApi( data ){
