@@ -23,6 +23,7 @@ class GameConsumer( AsyncWebsocketConsumer ):
 		await self.accept()
 		self.playerModel= await self._get_player_( )
 		if self._is_already_playing(  ):
+			print('alrerady playing')
 			await self.send_error( 'Connection Error', GAME_ERROR_STATUS_CODE )
 			return False
 		await self._update_players(  )
@@ -75,6 +76,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			players_set = [remote_players.pop(0) for num in range(TWO_PLAYERS)]
 			asyncio.create_task(game.startRemoteGame( players_set, TWO_PLAYERS ))
 		except Exception as e:
+			print( "e ---->", e)
 			self.send_error( e, GAME_ERROR_STATUS_CODE )
 			
 
@@ -98,9 +100,10 @@ class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			players_set = [multi_players.pop(0) for num in range(MULTI_PLAYERS)]
 			asyncio.create_task(game.startRemoteGame( players_set , MULTI_PLAYERS))
 		except Exception as e:
-					self.send_error( e, GAME_ERROR_STATUS_CODE )
+			print( "e ---->", e)
+			self.send_error( e, GAME_ERROR_STATUS_CODE )
 
-	async def disconnect(self):
+	async def disconnect(self, close_code):
 		self.keycode =  -1
 		if self in multi_players :
 			multi_players.remove( self )

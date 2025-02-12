@@ -9,7 +9,7 @@ import { MODE, WORLD } from "../constants/engine.js"
 import { reset, tokenExpired } from '../utils/utils.js'
 import { tokenService } from "./globalManager.js"
 import { modalService } from "../services/modalService.js"
-
+import { globalManager } from "./globalManager.js"
 
 
 
@@ -54,10 +54,13 @@ export default class Remote{
 	}
 
 	async _handle_cancel_btn( ){
-		document.getElementById( "cancel-btn" ).removeEventListener( 'click', this._handle_cancel_btn)
+		document.getElementById( "cancel-btn" ).removeEventListener( 'click',  this._handle_cancel_btn)
 		this.socket.close( 4000 )
-		await reset(  )
-		globalManager._router.navigateTo( '/' )
+		setTimeout( async () =>{
+			await reset(  )
+			globalManager._router.navigateTo( '/' )
+			
+		}, 100)  
 	}
 
 	_setupSocket(  ) {
@@ -76,7 +79,7 @@ export default class Remote{
 
 	update(  ){
 		this.input.movePlayers( this.socket )
-		this.visual.updatePosition( )
+		// this.visual.updatePosition( )
 
 	}
 

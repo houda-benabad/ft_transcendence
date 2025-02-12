@@ -22,12 +22,21 @@ class Ball(GameObject):
 		self.velocity.z *= random.choice([-1, 1])
 		self.velocity.x *= random.choice([-1.03, 1.03]) 
 
+	def calculate_hit_position(self,  paddle):
+		paddle_center_x = paddle.position.x + paddle.dimension.x / 2
+		hit_position = (self.position.x - paddle_center_x) / (paddle.dimension.x / 2)
+		return max(-1, min(1, hit_position))
+
 	#GENERIC
-	def __adjust_z_velocity(self):
+	def __adjust_z_velocity(self, paddle):
+    
 		self.velocity.z *= -1
-		if self.velocity.z < 0 and self.velocity.z > -self.MIN_VELOCITY:
+  
+		self.velocity.z += self.calculate_hit_position( paddle ) * 0.01 
+  
+		if 0 > self.velocity.z > -self.MIN_VELOCITY:
 			self.velocity.z -= .01
-		elif self.velocity.z > 0 and self.velocity.z < self.MIN_VELOCITY:
+		elif 0 < self.velocity.z < self.MIN_VELOCITY:
 			self.velocity.z += .01
 
 	#GENERIC
@@ -48,10 +57,10 @@ class Ball(GameObject):
 	def __handle_player_collision_remote( self, players ):
 
 		if (self.back >= players[0].front and self.right >= players[0].left and self.left <= players[0].right):
-				self.__adjust_z_velocity()
+				self.__adjust_z_velocity( players[0])
 
 		elif (self.front <= players[1].back and self.right >= players[1].left and self.left <= players[1].right):
-				self.__adjust_z_velocity()
+				self.__adjust_z_velocity( players[1])
 
 	# NON GENERIC BUT GOOD
 	def __handle_out_of_bounds_multi( self, plane, players ):
