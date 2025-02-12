@@ -1,4 +1,4 @@
-django
+Django==5.1.1
 channels
 daphne
 sqlparse==0.5.1
