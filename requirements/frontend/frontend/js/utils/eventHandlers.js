@@ -4,7 +4,7 @@ import { GameManager } from "../managers/modesManager.js"
 import { ENDPOINTS } from "../constants/endpoints.js"
 import { onlineStatusService } from "../managers/globalManager.js"
 import { tokenService } from "../managers/globalManager.js"
-import { loader } from './utils.js'
+import { loader, write } from './utils.js'
 
 export const eventHandlersForProfile = 
 {
@@ -243,6 +243,16 @@ export const eventHandlersForEventManager = (eventManager) =>
             modalService.show('deleted the image successfully', true)
         }
     },
+    div :
+    {
+        handleFriendsBoxItem(target)
+        {
+            const userId = target.getAttribute('userid')
+
+            console.log('userid is : ', userId)
+            eventManager._router.handleRoute(`/profile/${userId}`)
+        }
+    },
     search : 
     {
         handleSearchItem(target)
@@ -252,7 +262,7 @@ export const eventHandlersForEventManager = (eventManager) =>
 
             searchResults.classList.add('clicked')
             searchService.clear()
-           eventManager._router.handleRoute(`/profile/${id}`)
+            eventManager._router.handleRoute(`/profile/${id}`)
         },
         handleSearchInput(event, target)
         {
@@ -289,13 +299,21 @@ export const eventHandlersForEventManager = (eventManager) =>
                 const response = await eventManager._apiService.auth[action](formObject)
 
                 if (action  === 'signup')
-                    setTimeout(() => eventManager._router.handleRoute('/signin'), 1000)
+                    setTimeout(() => eventManager._router.handleRoute('/signin'), 150)
                 else
                 {
+                    
                     tokenService.tokens = response
+                    const userInfos = await eventManager._apiService.user.getBasicDataOfUser()
+                    
                     await eventManager._reset()
                     eventManager._router.handleRoute('/')
                     onlineStatusService.init()
+                    
+                    const text = `hello , ${userInfos.username}`
+                    const welcomeText = document.getElementById('welcome-text')
+
+                    write(text, 100, welcomeText)
                 }
             }
         }

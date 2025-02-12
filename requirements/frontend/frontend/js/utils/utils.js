@@ -17,6 +17,30 @@ export function removeModalHandler( event, resolve , type)
             resolve(  ) 
     }
 }
+export function  delay(ms)
+{
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+export function write(text, speed, target)
+{
+    let i = 0
+
+    
+    async function typing()
+    {
+        if (i < text.length)
+        {
+            target.innerHTML += text[i]
+            i++
+
+            await delay(speed)
+            typing()
+        }
+    }
+
+    typing()
+
+}
 export function loader(delay)
 {
     const app = document.getElementById('app')

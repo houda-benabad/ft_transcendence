@@ -31,7 +31,7 @@ export const settingsTemplate =
         return (`
                 <div>
                     <p class="settings-label">Password</p>
-                    <button class="anchor-tmp button-type4" data-action="add_password">Add</button>
+                    <button class="anchor-tmp button-type4" data-action="add_password">Edit</button>
                 </div>`)
     }
 }

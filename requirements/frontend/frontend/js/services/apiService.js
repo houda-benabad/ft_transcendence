@@ -83,7 +83,7 @@ class ApiService
             params
         } = this._requestConfig
 
-        // console.log('here in apiService  : ', this._requestConfig)
+        console.log('here in apiService  : ', this._requestConfig)
         const url = params ? `${endpoint}?${params.key}=${encodeURIComponent(params.value)}` : endpoint
         try{
             const response = await fetch(url , {
@@ -94,6 +94,7 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
+            console.log('test response  , ', response)
             if (needsAuth && response.status === 401)
                 tokenExpired(this.request.bind(this))
             if (response.status === 500)
@@ -234,6 +235,9 @@ export const apiService =
         }),
         getUsers : (query) => new Promise (resolve => {
             generatedHttpRequests.createGetRequest(ENDPOINTS.SEARCHED_USERS, {needsAuth : true, modalMessage: null})(resolve, {key : 'search', value : query})
+        }),
+        getBasicDataOfUser : () => new Promise (async resolve => {
+            generatedHttpRequests.createGetRequest(ENDPOINTS.USER_INFO, {needsAuth : true, modalMessage: null})(resolve)
         }),
     },
     friendship :

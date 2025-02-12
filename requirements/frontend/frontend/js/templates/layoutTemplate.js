@@ -2,23 +2,13 @@ export function layoutTemplate()
 {
     return(`
         <div id="header">
-            <h2></h2>
+            <h2 id="welcome-text"></h2>
             <div id="search-bar">
-                <input id="search-input" type="text" placeholder="search friends ...">
+                <input id="search-input" type="text" placeholder="search friends ..."autocomplete="off">
                 <i class="iconify" data-icon="teenyicons:search-outline" data-inline="false"></i>
                 <div id="search-results"></div>
             </div>
-            <div class="anchor-box circle">
-                <a href="/notify" data-action="handle-notifications" id="notification"><i class="iconify" data-icon="clarity:notification-line" data-inline="false"></i></a>
-                <div id="notification-results">
-                    <div id="top">
-                        <h2>Notifications</h2>
-                        <p id="clear" data-action="clear-notifications">Clear</p>
-                    </div>
-                    <div id="down">
-                    </div>
-                </div>
-            </div>
+           
         </div>
         <div id="navbar">
             <nav>
