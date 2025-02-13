@@ -12,7 +12,6 @@ export default class visualsManager {
 
 			bodies.ball.position.x = data.ball.position[0];
 			bodies.ball.position.z = data.ball.position[2];
-			console.log( bodies.ball.position )
 			objects.ball.position.copy( bodies.ball.position );
 	
 

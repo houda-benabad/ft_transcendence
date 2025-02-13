@@ -84,8 +84,8 @@ export default class Remote{
 	}
 
 	updateData( e,  resolve ){
-		const { type, data } = JSON.parse( e.data )
-		this[ACTIONS[type]]( data,  resolve)
+		const { type, data, author } = JSON.parse( e.data )
+		this[ACTIONS[type]]( data,  resolve, author)
 	}
 
 	handleError( data ){
@@ -95,11 +95,13 @@ export default class Remote{
 		this.visual.updateCoordinates( data )
 	}
 
-	updateScore( data ){
-		this.canva.update( 'score', data )
+	updateScore( data, author ){
+		this.canva.update( 'score', data, author )
 	}
 
-	updateStart(  ){
+	updateStart( data ){
+		console.log( "data = ", data  )
+		this.canva.setup( "score", data )
 		this.canva.add( "score" )
 		this.canva.remove( "waiting" )
 	}

@@ -5,35 +5,59 @@ class appCanva{
         this.elements = document.createElement('div')
         this.elements.id = 'game-elements'
         canva.append(this.elements)
-        this.waiting = document.createElement('div')
-        this.waiting.className = 'waiting-holder'
-        this.waiting.innerHTML = `
+        
+        this.initElemnts( players )
+    }
+    initElemnts( players ){
+        this.waiting = this._createElement('div', 'waiting-holder', `
             <div class="waiting-pop glass">
 				<h1>Waiting for other player...</h1>
 				<div id="loader"></div>
 				<button id="cancel-btn">Cancel</button>
 			</div>
-	    `
-        this.score = document.createElement('div')
-        this.score.className = 'score'
-        this.score.innerHTML = `
+	    `)
+        this.score = this._createElement( 'div', 'score',  `
             <div class="user glass">
-                <h3 id="user1">${players[0]}</h3>
+                <h3 id="user2">${players[0]}</h3>
             </div>
             <div class="score-num glass">
                 <h1 id="score">0 : 0</h1>
             </div>
             <div class="user glass">
-                <h3 id="user2">${players[1]}</h3>
+                <h3 id="user1">${players[1]}</h3>
             </div>
-	`
-
-        this.time = document.createElement('div')
-        this.time.className = 'time glass'
-        this.time.innerHTML = `<h1 id="time">0</h1>`
-
-        this.endGame = document.createElement('div')
-        this.endGame.className = 'endGame-pop glass'
+	    `)
+        this.time = this._createElement( 'div','time glass',  `<h1 id="time">0</h1>`)
+        this.endGame = this._createElement( 'div', 'endGame-pop glass' )
+        this.elementsId = null
+    }
+    setup( element, data ){
+        switch (element) {
+            case 'score':
+                if ( data.author == data.ids.p1)
+                    data.name.p1 = 'me'
+                else
+                    data.name.p2 = 'me'
+                this.score.innerHTML = `<div class="user glass">
+                        <h3 id="user${data.ids.p2}">${data.name.p2}</h3>
+                    </div>
+                    <div class="score-num glass">
+                        <h1 id="score">0 : 0</h1>
+                    </div>
+                    <div class="user glass">
+                        <h3 id="user${data.ids.p1}">${data.name.p1}</h3>
+                    </div>
+                `
+                break;
+            default:
+                break;
+        }
+    }
+    _createElement( tag,  className, html=" " ){
+        let element = document.createElement(tag)
+        element.className = className
+        element.innerHTML = html
+        return element
     }
     add(element){
         switch (element) {
@@ -62,21 +86,25 @@ class appCanva{
         }
     }
     update(element, data){
+        if ( !this.elementsId )
+            this.elementsId = {
+                p1: document.getElementById('user1'),
+                p2: document.getElementById('user2'),
+                score: document.getElementById( 'score' ),
+                time: document.getElementById( 'time' )
+            }
         switch (element) {
             case 'score':
-                if (data.name) {
-                    document.getElementById('user1').innerHTML = data.name.p2
-                    document.getElementById('user2').innerHTML = data.name.p1
-                }
-                document.getElementById('score').innerHTML = `${data.score.p2} : ${data.score.p1}`
+                this.elementsId.score.innerHTML = `${data.score.p2} : ${data.score.p1}`
                 break;
             case 'time':
-                document.getElementById('time').innerHTML = data
+                this.elementsId.time.innerHTML = data
                 break;
             default:
                 break;
         }
     }
+    
 }
 
 export default appCanva

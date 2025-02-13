@@ -70,7 +70,7 @@ class GameServer(  ):
 			}
  		
 	async def run( self ):
-		await self.__send_group_msg_( 'start', 'game is starting' )
+		await self.__send_group_msg_( 'start', self.get_score( ) )
 
 		while True:
 			self.game.update( )
