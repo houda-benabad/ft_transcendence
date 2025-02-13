@@ -101,7 +101,7 @@ export class Router
     {
         let options = null
 
-        history.pushState(null, null, path) // we ll see about that
+        history.pushState(null, null, path)
 
         if (path.includes('/profile'))
         {

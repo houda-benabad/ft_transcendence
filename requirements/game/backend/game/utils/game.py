@@ -80,13 +80,11 @@ class GameServer(  ):
 			if ( any( consumer.keycode == -1 for consumer in self.consumers )):
 				break
 			
-			# MOVEMENT 
 			self.game.move_players( self.consumers )
 			
 
 			await self.__send_group_msg_( 'api', self.game.get_coordinates() )
 			await self.__send_group_msg_( 'score', self.get_score(  ) )
-			# self.GAME OVER CHECK
 			if await self.game.is_over():
 				break
 

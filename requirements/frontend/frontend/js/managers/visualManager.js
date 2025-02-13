@@ -4,7 +4,6 @@ export default class visualsManager {
 		this.mode = mode
 	}
 
-		// for remote
 		updateCoordinates( data ) {
 			const { bodies } = this.components;
 			const { objects } = this.components;
@@ -23,7 +22,6 @@ export default class visualsManager {
 
 		}
 		
-		// FOR LOCAL
 		updatePosition(  ){
 			const { bodies, objects } = this.components;
 			const playerNumber = 2

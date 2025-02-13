@@ -36,7 +36,7 @@ export class GameManager
         await this.#denit( `${result} won`)
     }
     async tournament( ){
-        await modalService.show(  '', false,'tournament' ) // the alias names for the players 
+        await modalService.show(  '', false,'tournament' )
         const players = await globalManager._formService.handleTournament()
         await this.#init( )
         await tournament(this.gameSettings, players  )

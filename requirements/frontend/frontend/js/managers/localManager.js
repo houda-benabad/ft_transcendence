@@ -59,7 +59,6 @@ export default class Local{
 
 	update(  ){
 		this.input.movePlayers(   )
-		this.physics.checkWallCollision(  )
 		this.physics.checkBallPositionForScore(  )
 		this.physics.updateBallPosition(  )
 		this.visual.updatePosition()

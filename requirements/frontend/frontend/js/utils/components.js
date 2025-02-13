@@ -37,7 +37,6 @@ export default class Components {
         } )
     }
 
-    // OBJECTS
 
     createBanner( position ){
         let banner = new THREE.Mesh( 
@@ -111,7 +110,6 @@ export default class Components {
         return {ball, plane, player1, player2, banner1, banner2}
     }
 
-    // BODIES
 
     createBannerBody( position ){
         const Shape = new CANNON.Box( 
@@ -169,7 +167,6 @@ export default class Components {
 
     }
 
-    // MULTIPLAYER BODIES
     createMultiModeBodies(  ){
         let ball = this.createBallBody(  )
         let plane = this.createPlaneBody( )
@@ -183,7 +180,6 @@ export default class Components {
         return {ball, plane, ...players}
     }
 
-    // REMOTE BODIES
     createBodies(  ){
         let ball = this.createBallBody(  )
         let plane = this.createPlaneBody(  )
@@ -199,7 +195,6 @@ export default class Components {
         let player2 = this.createPlayerBody( 
             Object.values( POSITION.PLAYER2 ), 
          )
-        // return {ball, plane, player1, player2}
         return {ball, plane, player1, player2, banner1, banner2}
     }
 

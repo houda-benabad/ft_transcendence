@@ -2,9 +2,6 @@ import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/
 import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js'
 import { CAMERA, WORLD, LIGHT } from "../constants/engine.js";
-import { MODE } from '../constants/engine.js';
-// import { _tokenService } from '../utils/
-import { globalManager } from '../managers/globalManager.js';
 import { eventListeners } from '../managers/globalManager.js';
 export default class Engine {
 

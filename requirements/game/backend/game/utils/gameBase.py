@@ -14,9 +14,7 @@ class Vector3:
     z: float
 
 class Game():
-    # GENERIC
 	def __init__( self, mode ):
-		#  P V D
 		self.mode = mode
 		self.ball = Ball( Vector3( 0 , 0, 0), Vector3( .05,-.07,.1 ), Vector3( .2,.2,.2 ) )
 		self.ball.velocity.x *= random.choice([-1, 1]) 
@@ -37,24 +35,20 @@ class Game():
 							 Player( Vector3( 1.5, 0, -(self.plane.dimension.z )/2 ), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ) ]
 
 
-	# GENERIC
 	def update(self):
 		for player in self.players:
 			player.update()
 		self.ball.update(self.plane, self.players, self.mode )
 
-	# GENERIC
 	async def is_over(self):
 		return any( player.score == WINNING_SCORE for player in self.players )
 
-	# GENERIC
 	def get_coordinates(self):
 		coords = { "ball" :{ "position": astuple( self.ball.position ) } }
 		for i, player in enumerate( self.players ):
 			coords[f"p{i+1}"] = { "position" : astuple( player.position ) }
 		return coords
 
-	# GENERIC
 	def move_players(self, consumers):
 		if self.mode == TWO_PLAYERS:
 			for player, consumer in zip( self.players, consumers):
@@ -65,7 +59,6 @@ class Game():
 			self.players[2].move( consumers[2], self.plane, MULTI_PLAYERS, self.players[3] )
 			self.players[3].move( consumers[3], self.plane, MULTI_PLAYERS, self.players[2] )
 
-	# GOOD
 	def end_game_results(self, consumers, gameModel):
 		if self.mode == TWO_PLAYERS:
 			base = ['won', 'lost']
