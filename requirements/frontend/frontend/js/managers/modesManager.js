@@ -22,9 +22,9 @@ export class GameManager
 
     }
 
-    async #denit( message='Game over' ){
+    async #denit( message='Game over', automatisation=true ){
         console.log("BYE BYE")
-        await modalService.show(  message )
+        await modalService.show(  message , automatisation)
         await reset(  )
         globalManager._router.navigateTo( '/' )
         
@@ -53,7 +53,7 @@ export class GameManager
         let result = await remote( )
         console.log("SALINAAA")
         if(result )
-            await this.#denit( `You ${result.state}` )
+            await this.#denit( `You ${result.state}`, false )
         else{
             await this.#denit(  )
         }
@@ -62,7 +62,7 @@ export class GameManager
         await globalManager._router.navigateTo( '/game' )
         let result = await multiplayer( )
         if(result )
-            await this.#denit( `You ${result.state}` )
+            await this.#denit( `You ${result.state}`, false )
         else
             await this.#denit(  )
     }
