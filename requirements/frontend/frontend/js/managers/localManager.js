@@ -84,8 +84,11 @@ export default class Local{
 		if (  this.isGameover(   ) || getIsItOutOfGame() == true  ){
 			this.physics.score.p1 > this.physics.score.p2 ? this.winner = this.players[0] : this.winner = this.players[1]
 			cancelAnimationFrame( id )
-			setIsItOutOfGame(false)
-			resolve( this.winner )
+			if (getIsItOutOfGame() == true){
+				setIsItOutOfGame(false)
+				return resolve(  )
+			}
+			return resolve( this.winner )
 		}
 		else if (this.animationProgress < 1 && getIsItOutOfGame() == false  )
 			this.initialAnimation(  )

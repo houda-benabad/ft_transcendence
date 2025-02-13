@@ -4,7 +4,7 @@ import { reset } from "../utils/utils.js"
 import { local } from "../mods/local.js"
 import { remote } from "../mods/remote.js"
 import{ multiplayer} from "../mods/multiplayer.js"
-
+import { tournament } from "../mods/tournament.js"
 export class GameManager 
 
 {
@@ -39,19 +39,12 @@ export class GameManager
         await modalService.show(  '', false,'tournament' ) // the alias names for the players 
         const players = await globalManager._formService.handleTournament()
         await this.#init( )
-        const winners = []
-        winners[0] = await local(  this.gameSettings, [players[0], players[1]]  )
-        await modalService.show(  `This round winner is ${winners[0]}` , true)
-        winners[1] = await local(  this.gameSettings , [players[2], players[3]] )
-        await modalService.show(  `This round winner is ${winners[1]}` , true)
-        const winner = await local(  this.gameSettings , winners )
-        await modalService.show(  `Winner is ${winner}` , true)
+        await tournament(this.gameSettings, players  )
         await this.#denit( )
     }
     async remote( ){
         await globalManager._router.navigateTo( '/game' )
         let result = await remote( )
-        console.log("SALINAAA")
         if(result )
             await this.#denit( `You ${result.state}`, false )
         else{
