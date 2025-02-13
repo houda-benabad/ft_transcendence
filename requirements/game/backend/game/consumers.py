@@ -39,6 +39,7 @@ class GameConsumer( AsyncWebsocketConsumer ):
 
 	# Message handlers
 	async def _send_message_( self, type, data, code=SUCCES_STATUS_CODE ): 
+		# await self.send(text_data=json.dumps({ 'type': type, 'data': data, 'code': code, 'author': self.username }))
 		await self.send(text_data=json.dumps({ 'type': type, 'data': data, 'code': code }))
 	async def send_error( self, error_message, code ): 
 		await self._send_message_( 'error', error_message, code=code )

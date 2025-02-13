@@ -7,6 +7,7 @@ import Engine from '../utils/engine.js'
 import appCanva from "./canvaManager.js"
 import Components from '../utils/components.js'
 import visualsManager from './visualManager.js'
+import { isItOuOfGame } from './globalManager.js'
 
 
 export default class Local{
@@ -89,9 +90,11 @@ export default class Local{
 		}
 		else{
 			this.update(  )
-			if (  this.isGameover(   )  ){
+			console.log(  isItOuOfGame )
+			if (  this.isGameover(   ) || isItOuOfGame == true  ){
 				this.physics.score.p1 > this.physics.score.p2 ? this.winner = this.players[0] : this.winner = this.players[1]
 				cancelAnimationFrame( id )
+				isItOuOfGame = false
 				resolve( this.winner )
 			}
 		}

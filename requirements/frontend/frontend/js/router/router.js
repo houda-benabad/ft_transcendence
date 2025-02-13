@@ -1,4 +1,4 @@
-import { onlineStatusService, tokenService } from "../managers/globalManager.js"
+import { isItOuOfGame, onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 import { write , delay} from "../utils/utils.js"
 import { ROUTES } from '../constants/routes.js'
@@ -78,7 +78,12 @@ export class Router
         const query = window.location.search
 
         if (this._route === '/game' && path === '/')
+        {
+            console.log('isout  : ', isItOuOfGame)
+            isItOuOfGame = true
+            console.log('isout  : ', isItOuOfGame)
             await this.initBasicRoutes()
+        }
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
             this.removeWelcomeText()
         if (query)

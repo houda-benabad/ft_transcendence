@@ -65,7 +65,6 @@ class appCanva{
         switch (element) {
             case 'score':
                 if (data.name) {
-
                     document.getElementById('user1').innerHTML = data.name.p2
                     document.getElementById('user2').innerHTML = data.name.p1
                 }

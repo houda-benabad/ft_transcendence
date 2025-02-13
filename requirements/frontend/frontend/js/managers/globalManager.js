@@ -11,7 +11,7 @@ import { FormService } from '../services/formService.js'
 const eventListeners = new EventService()
 const onlineStatusService = new OnlineStatusService()
 const tokenService = new TokenService()
-
+// let isItOuOfGame = false
 
 export class GlobalManager
 {
@@ -29,4 +29,5 @@ export class GlobalManager
 
 const globalManager = new GlobalManager()
 
+export let isItOuOfGame = false;
 export { eventListeners, globalManager, tokenService, onlineStatusService}

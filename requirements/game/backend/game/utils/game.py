@@ -55,6 +55,10 @@ class GameServer(  ):
 				'score' :{
 					'p1' : self.game.players[0].score,
 					'p2' : self.game.players[1].score,
+				},
+				'ids':{
+					'p1' : self.consumers[0].playerModel.userId,
+					'p2' : self.consumers[1].playerModel.userId,
 				}
 			}
 		elif self.mode == MULTI_PLAYERS :
