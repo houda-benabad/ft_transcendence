@@ -1,4 +1,4 @@
-import { isItOuOfGame, onlineStatusService, tokenService } from "../managers/globalManager.js"
+import {getIsItOutOfGame, setIsItOutOfGame, onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 import { write , delay} from "../utils/utils.js"
 import { ROUTES } from '../constants/routes.js'
@@ -79,9 +79,9 @@ export class Router
 
         if (this._route === '/game' && path === '/')
         {
-            console.log('isout  : ', isItOuOfGame)
-            isItOuOfGame = true
-            console.log('isout  : ', isItOuOfGame)
+            console.log('isout  : ',  getIsItOutOfGame())
+            setIsItOutOfGame(true)
+            console.log('isout  : ',  getIsItOutOfGame())
             await this.initBasicRoutes()
         }
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
@@ -101,6 +101,7 @@ export class Router
     {
         let options = null
 
+        console.log('im in hereeee')
         history.pushState(null, null, path) // we ll see about that
 
         if (path.includes('/profile'))
@@ -132,7 +133,7 @@ export class Router
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
             document.querySelector(`[data-action="router"][href="${path}"]`).classList.add('selected')
         }
-        else
+        else if (route.template)
         {
             const templateLitteral = route.template
             const template = document.createElement('template')
