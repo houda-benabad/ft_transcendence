@@ -33,7 +33,6 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 			player = Player.objects.get( userId=userId )
 			return player
 		except Exception as e:
-			print("error", e)
 			return None
 
 class NewPlayerView( APIView ):

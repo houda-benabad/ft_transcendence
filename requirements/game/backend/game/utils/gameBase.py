@@ -62,39 +62,44 @@ class Game():
 	def end_game_results(self, consumers, gameModel):
 		if self.mode == TWO_PLAYERS:
 			base = ['won', 'lost']
-			for consumer in consumers:
-				print("keycode ---> ", consumer.keycode)
-			if (consumers[1].keycode == -1 or self.players[0].score > self.players[1].score):
-
-				self.players[1].score = 0
-				for consumer, state in zip( consumers, base ):
+			if consumers[1].keycode == -1 or consumers[0].keycode == -1:
+				loser_index = 0 if consumers[0].keycode == -1 else 1
+				winner_index = 1 - loser_index
+    
+				self.players[loser_index].score = 0
+				for consumer, state in zip(consumers, base if loser_index == 1 else reversed(base)):
 					consumer.game_result = state
-				gameModel.winner = consumers[0].playerModel
+				
+				gameModel.winner = consumers[winner_index].playerModel
 			else:
-				self.players[1].score = 0
-				for consumer, state in zip( consumers, reversed(base) ):
+				winner_index = 0 if self.players[0].score > self.players[1].score else 1
+				for consumer, state in zip(consumers, base if winner_index == 0 else reversed(base)):
 					consumer.game_result = state
-				gameModel.winner = consumers[1].playerModel
+				gameModel.winner = consumers[winner_index].playerModel
+
 
 			gameModel.winner.level =  round(math.sqrt( consumers[1].playerModel.total_points ) * .9, 2)
 
 		elif self.mode == MULTI_PLAYERS:
 			base = ['won', 'won', 'lost', 'lost']
-			if ( consumers[2].keycode == -1 or consumers[3].keycode == -1 or self.players[0].score > self.players[2].score):
-				self.players[2].score = 0
-				self.players[3].score = 0
-
-				for consumer, state in zip( consumers, base ):
-					consumer.game_result = state
-				gameModel.winner1 = consumers[0].playerModel
-				gameModel.winner2 = consumers[1].playerModel
+   
+			if any( consumer.keycode == -1 for consumer in consumers ):
+				loser_index = [0,1] if consumers[0].keycode == -1 or consumers[1].keycode == -1 else [2, 3]
 			else:
-				self.players[0].score = 0
-				self.players[1].score = 0
-				for consumer, state in zip( consumers, reversed(base) ):
-					consumer.game_result = state
-				gameModel.winner1 = consumers[2].playerModel
-				gameModel.winner2 = consumers[3].playerModel
+				loser_index = [0,1] if self.players[0].score < self.players[2].score else [2, 3]
+			winner_index = [i for i in range(4) if i not in loser_index]
+				
+			for i in loser_index:
+					self.players[i].score = 0
 
-			gameModel.winner1.level = round( math.sqrt( consumers[2].playerModel.total_points ) * .7, 2)
-			gameModel.winner2.level = round( math.sqrt( consumers[3].playerModel.total_points ) * .7, 2)
+
+			for consumer, state in zip(consumers, base if loser_index == [2,3] else reversed(base)):
+				consumer.game_result = state
+
+
+			gameModel.winner1 = consumers[winner_index[0]].playerModel if consumers[winner_index[0]] else None
+			gameModel.winner2 = consumers[winner_index[1]].playerModel if consumers[winner_index[1]] else None
+
+			if gameModel.winner1 and gameModel.winner2:
+				gameModel.winner1.level = round(math.sqrt(gameModel.winner1.total_points) * .7, 2)
+				gameModel.winner2.level = round(math.sqrt(gameModel.winner2.total_points) * .7, 2)
