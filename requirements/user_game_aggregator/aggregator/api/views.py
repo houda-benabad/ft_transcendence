@@ -4,11 +4,8 @@ import httpx
 from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
-import logging
 from django.urls import resolve
 from urllib.parse import urlparse, urlunparse
-logging.basicConfig(level=logging.DEBUG)  
-logger = logging.getLogger("accounts.views")
 
 class   Error(Exception):
     
@@ -80,7 +77,7 @@ class	ProfileWithGameHistoryView(APIView):
             response = await client.post(
                 settings.VALIDATE_TOKEN_URL,
                 json={"token": token},
-                headers={"Host": "localhost"}
+                headers={"Host": self.request.get_host()}
             )
             if response.status_code != status.HTTP_200_OK:
                 raise Error("Token is invalid or expired", status_code=response.status_code)

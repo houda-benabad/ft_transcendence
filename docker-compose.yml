@@ -7,6 +7,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      game:
+        condition: service_started
     build:
       context: ./requirements/user_management/
       dockerfile: Dockerfile
@@ -21,8 +23,7 @@ services:
     networks:
       - transcendence
     volumes:
-        - ./requirements/user_management/user_management:/usr/src/user_management
-        # - authvolume:/usr/src/user_management
+      - ./requirements/user_management/user_management:/usr/src/user_management
 
   UserManagementPostgres:
     image: postgres:15.8
@@ -34,7 +35,7 @@ services:
       - POSTGRES_DB=${USER_MANAGEMENT_DB_NAME}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-U", "$$POSTGRES_USER", "-d", "$$POSTGRES_DB"]
-      interval: 10s #test to see if we can minimize it
+      interval: 10s
       timeout: 30s
       retries: 5
       start_period: 60s
@@ -44,9 +45,9 @@ services:
   game:
     container_name: game
     depends_on:
-      user_management:
-          condition: service_started
       GamePostgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     build:
       context: ./requirements/game/
@@ -59,11 +60,6 @@ services:
       - DB_HOST=${GAME_DB_HOST}
     networks:
       - transcendence
-    ports:
-      - 8001:8000
-    volumes:
-      -  ./requirements/game/backend:/usr/src/game
-      # -  gamevolume:/usr/src/game
     
   GamePostgres:
     image: postgres:15.8
@@ -94,7 +90,6 @@ services:
       - transcendence
     volumes:
       - ./requirements/frontend:/var/www 
-      # - frontVolume:/var/www 
   
   nginx:
     build:
@@ -119,16 +114,11 @@ services:
     build:
       context: ./requirements/user_game_aggregator/
       dockerfile: Dockerfile
-    ports:
-      - 8002:8000
     env_file:
       - .env
     restart: on-failure
     networks:
       - transcendence
-    volumes:
-      - ./requirements/user_game_aggregator/aggregator:/usr/src/aggregator
-      # - aggrvolume:/usr/src/aggregator
     depends_on:
       - user_management
       - game
@@ -150,40 +140,4 @@ services:
 networks:
   transcendence:
     driver: bridge
-
-volumes:
-  authvolume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./requirements/user_management/user_management
-
-  gamevolume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./requirements/game/backend
-
-  # dbvolume:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     o: bind
-  #     device: ./data/
-
-  frontVolume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./requirements/frontend/frontend/
-    
-  aggrvolume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./requirements/user_game_aggregator/aggregator
 

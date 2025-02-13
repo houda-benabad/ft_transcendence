@@ -32,13 +32,6 @@ class ProfileDetailAPIView(generics.RetrieveAPIView):
 
 profile_detail_view = ProfileDetailAPIView.as_view()
 
-class ProfileListAPIView(generics.ListAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = UserProfileSerializer
-
-Profile_list_view = ProfileListAPIView.as_view()
-
-
 class OtherUserDetailAPIView(generics.RetrieveAPIView):
     queryset = Profile.objects.select_related('user').all()
     serializer_class = DetailedotherUserProfileSerializer
