@@ -101,7 +101,11 @@ export default class Remote{
 
 	updateStart( data ){
 		console.log( "data = ", data  )
-		this.canva.setup( "score", data )
+		if (this.mode == MODE.REMOTE)
+			this.canva.setup(  data, MODE.REMOTE, data.author )
+		else
+			this.canva.setup( data, MODE.MULTIPLAYER, data.author )
+
 		this.canva.add( "score" )
 		this.canva.remove( "waiting" )
 	}

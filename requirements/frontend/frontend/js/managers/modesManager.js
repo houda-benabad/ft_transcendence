@@ -48,10 +48,12 @@ export class GameManager
         await this.#denit( )
     }
     async remote( ){
+        await globalManager._router.navigateTo( '/game' )
         let result = await remote( )
         await this.#denit( `You ${result.state}` )
     }
     async multiplayer( ){
+        await globalManager._router.navigateTo( '/game' )
         let result = await multiplayer( )
         await this.#denit( `You ${result.state}` )
     }

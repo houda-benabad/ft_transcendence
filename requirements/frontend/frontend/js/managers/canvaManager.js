@@ -1,3 +1,5 @@
+import { MODE } from "../constants/engine.js";
+
 class appCanva{
     constructor( players ){
         let canva = document.getElementById("app");
@@ -31,26 +33,40 @@ class appCanva{
         this.endGame = this._createElement( 'div', 'endGame-pop glass' )
         this.elementsId = null
     }
-    setup( element, data ){
-        switch (element) {
-            case 'score':
-                if ( data.author == data.ids.p1)
-                    data.name.p1 = 'me'
-                else
-                    data.name.p2 = 'me'
-                this.score.innerHTML = `<div class="user glass">
-                        <h3 id="user${data.ids.p2}">${data.name.p2}</h3>
-                    </div>
-                    <div class="score-num glass">
-                        <h1 id="score">0 : 0</h1>
-                    </div>
-                    <div class="user glass">
-                        <h3 id="user${data.ids.p1}">${data.name.p1}</h3>
-                    </div>
-                `
-                break;
-            default:
-                break;
+    setup( data, mode, author ){
+        
+        if( mode == MODE.REMOTE){
+            if ( author == data.ids.p1)
+                data.name.p1 = 'me'
+            else 
+                data.name.p2 = 'me'
+            this.score.innerHTML = `<div class="user glass">
+                    <h3 id="user1">${data.name.p2}</h3>
+                </div>
+                <div class="score-num glass">
+                    <h1 id="score">0 : 0</h1>
+                </div>
+                <div class="user glass">
+                    <h3 id="user2">${data.name.p1}</h3>
+                </div>
+            `
+        }
+        else{
+            let player1 = "Other Team"; let player2 ="Other Team"
+            if ( author == data.ids.p1 || author  == data.ids.p2)
+                player1 = 'Your Team'
+            else 
+                player2 = 'Your Team'
+            this.score.innerHTML = `<div class="user glass">
+                <h3 id="user1">${player2}</h3>
+                </div>
+                <div class="score-num glass">
+                    <h1 id="score">0 : 0</h1>
+                </div>
+                <div class="user glass">
+                    <h3 id="user2">${player1}</h3>
+                </div>
+            `
         }
     }
     _createElement( tag,  className, html=" " ){

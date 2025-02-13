@@ -7,7 +7,7 @@ import Engine from '../utils/engine.js'
 import appCanva from "./canvaManager.js"
 import Components from '../utils/components.js'
 import visualsManager from './visualManager.js'
-import { isItOuOfGame } from './globalManager.js'
+import { setIsItOutOfGame, getIsItOutOfGame } from './globalManager.js'
 
 
 export default class Local{
@@ -79,24 +79,22 @@ export default class Local{
 	}
 
 	animate(  resolve  ){
-
 		let id = requestAnimationFrame( (  )=>this.animate( resolve ) )
 		this.engine.world.step( WORLD.TIMESTAMP )
-		
-		if (this.animationProgress < 1)
+		if (  this.isGameover(   ) || getIsItOutOfGame() == true  ){
+			console.log("im out")
+			this.physics.score.p1 > this.physics.score.p2 ? this.winner = this.players[0] : this.winner = this.players[1]
+			cancelAnimationFrame( id )
+			setIsItOutOfGame(false)
+			resolve( this.winner )
+		}
+		else if (this.animationProgress < 1 && getIsItOutOfGame() == false  )
 			this.initialAnimation(  )
-		else if (this.animationProgress == 1){
+		else if (this.animationProgress == 1  && getIsItOutOfGame() == false  ){
 			this.state.setup()
 		}
 		else{
 			this.update(  )
-			console.log(  isItOuOfGame )
-			if (  this.isGameover(   ) || isItOuOfGame == true  ){
-				this.physics.score.p1 > this.physics.score.p2 ? this.winner = this.players[0] : this.winner = this.players[1]
-				cancelAnimationFrame( id )
-				// isItOuOfGame = false
-				resolve( this.winner )
-			}
 		}
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
 

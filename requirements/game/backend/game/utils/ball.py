@@ -28,11 +28,9 @@ class Ball(GameObject):
 		return max(-1, min(1, hit_position))
 
 	#GENERIC
-	def __adjust_z_velocity(self, paddle):
+	def __adjust_z_velocity(self):
     
 		self.velocity.z *= -1
-  
-		self.velocity.z += self.calculate_hit_position( paddle ) * 0.01 
   
 		if 0 > self.velocity.z > -self.MIN_VELOCITY:
 			self.velocity.z -= .01
@@ -57,10 +55,10 @@ class Ball(GameObject):
 	def __handle_player_collision_remote( self, players ):
 
 		if (self.back >= players[0].front and self.right >= players[0].left and self.left <= players[0].right):
-				self.__adjust_z_velocity( players[0])
+				self.__adjust_z_velocity( )
 
 		elif (self.front <= players[1].back and self.right >= players[1].left and self.left <= players[1].right):
-				self.__adjust_z_velocity( players[1])
+				self.__adjust_z_velocity( )
 
 	# NON GENERIC BUT GOOD
 	def __handle_out_of_bounds_multi( self, plane, players ):
@@ -82,8 +80,9 @@ class Ball(GameObject):
    
 	# NON GENERIC BUT GOOD
 	def __handle_player_collision_multi( self, players ):
-			if self.__single_team1_collision( players[0] ) or self.__single_team1_collision( players[1] ):
-				self.__adjust_z_velocity(  )
+			if self.__single_team1_collision( players[0]) or self.__single_team1_collision( players[1] ):
+				self.__adjust_z_velocity()
+				
 			if self.__single_team2_collision( players[2] ) or self.__single_team2_collision( players[3] ):
 				self.__adjust_z_velocity(  )
 

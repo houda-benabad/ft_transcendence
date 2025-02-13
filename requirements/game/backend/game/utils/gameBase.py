@@ -78,7 +78,7 @@ class Game():
 					consumer.game_result = state
 				gameModel.winner = consumers[1].playerModel
 
-			gameModel.winner.level =  round(math.sqrt( consumers[1].playerModel.total_points ) * .7, 2)
+			gameModel.winner.level =  round(math.sqrt( consumers[1].playerModel.total_points ) * .9, 2)
 
 		elif self.mode == MULTI_PLAYERS:
 			base = ['won', 'won', 'lost', 'lost']
@@ -93,5 +93,5 @@ class Game():
 				gameModel.winner1 = consumers[2].playerModel
 				gameModel.winner2 = consumers[3].playerModel
 
-			gameModel.winner1.level = round( math.sqrt( consumers[2].playerModel.total_points ) * .5, 2)
-			gameModel.winner2.level = round( math.sqrt( consumers[3].playerModel.total_points ) * .5, 2)
+			gameModel.winner1.level = round( math.sqrt( consumers[2].playerModel.total_points ) * .7, 2)
+			gameModel.winner2.level = round( math.sqrt( consumers[3].playerModel.total_points ) * .7, 2)
