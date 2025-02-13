@@ -6,15 +6,19 @@ export default class visualsManager {
 
 		// for remote
 		updateCoordinates( data ) {
-			const { ball } = this.components.bodies;
-			ball.position.x = data.ball.position[0];
-			ball.position.z = data.ball.position[2];
-	
 			const { bodies } = this.components;
+			const { objects } = this.components;
+
+
+			bodies.ball.position.x = data.ball.position[0];
+			bodies.ball.position.z = data.ball.position[2];
+			objects.ball.position.copy( bodies.ball.position );
+	
 
 			const playerNumber = Object.keys( data ).length - 1
 			for (  let i =0; i< playerNumber; i++  ){
 				bodies[ `player${i+1}` ].position.x = data[ `p${i+1}` ].position[0]
+				objects[ `player${i+1}` ].position.copy( bodies[ `player${i+1}` ].position );
 			}
 
 		}
@@ -27,8 +31,8 @@ export default class visualsManager {
 				objects[ `player${i+1}` ].position.copy( bodies[ `player${i+1}` ].position );
 				objects[ `player${i+1}` ].quaternion.copy( bodies[ `player${i+1}` ].quaternion );
 			}
-
-			for ( let i =0; i< playerNumber; i++ ){
+			const bannerNumber = 2
+			for ( let i =0; i< bannerNumber; i++ ){
 				objects[ `banner${i+1}` ].position.copy( bodies[ `banner${i+1}` ].position );
 				objects[ `banner${i+1}` ].quaternion.copy( bodies[ `banner${i+1}` ].quaternion );
 			}

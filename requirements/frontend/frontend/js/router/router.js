@@ -1,4 +1,4 @@
-import { onlineStatusService, tokenService } from "../managers/globalManager.js"
+import {getIsItOutOfGame, setIsItOutOfGame, onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 import { write , delay} from "../utils/utils.js"
 import { ROUTES } from '../constants/routes.js'
@@ -18,6 +18,8 @@ export class Router
         this._apiService = global._apiService
         this._reset = global._reset
         this._routes = ROUTES(this._apiService)
+
+        this._route = null
         this.init()
     }
    
@@ -25,16 +27,10 @@ export class Router
     {
         if (tokenService.isAuthenticated())
         {
-            await this._reset()
             onlineStatusService.init()
-            document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
-            
-            const element = document.querySelector(`[href="${window.location.pathname}"]`)
-            
-            if (element)
-                element.classList.add('selected')
+            await this.initBasicRoutes()
         }
-        window.addEventListener('popstate', () => this.handleRoute())
+        window.addEventListener('popstate', () => this.handleRoute(null))
         this.handleRoute()
     }
     async removeWelcomeText()
@@ -64,11 +60,30 @@ export class Router
             resolve()
         })
     }
+    initBasicRoutes()
+    {
+        return new Promise (async resolve  => {
+            await this._reset()
+            document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
+            
+            const element = document.querySelector(`[href="${window.location.pathname}"]`) 
+            if (element)
+                element.classList.add('selected')
+            resolve()
+        })
+    }
     async handleRoute(newPath=null)
     {
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = window.location.search
 
+        if (this._route === '/game' && path === '/')
+        {
+            console.log('isout  : ',  getIsItOutOfGame())
+            setIsItOutOfGame(true)
+            console.log('isout  : ',  getIsItOutOfGame())
+            await this.initBasicRoutes()
+        }
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
             this.removeWelcomeText()
         if (query)
@@ -86,7 +101,7 @@ export class Router
     {
         let options = null
 
-        history.pushState(null, null, path)
+        history.pushState(null, null, path) // we ll see about that
 
         if (path.includes('/profile'))
         {
@@ -99,12 +114,14 @@ export class Router
             else 
                 path = '/404'
         }
+        this._route = path
         this.updateContent(path, options)
     }
     async updateContent(path, options)
     {
         let fragment = document.createDocumentFragment()
         const route = this._routes[path] || this._routes['/404']
+
         if (route.customElement)
         {
             fragment = document.createElement(route.customElement)
@@ -115,7 +132,7 @@ export class Router
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
             document.querySelector(`[data-action="router"][href="${path}"]`).classList.add('selected')
         }
-        else
+        else if (route.template)
         {
             const templateLitteral = route.template
             const template = document.createElement('template')

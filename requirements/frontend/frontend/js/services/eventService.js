@@ -33,7 +33,8 @@ export class EventService
     }
     #getUniqueKey(element, eventType)
     {
-        const key = element.id || `${element.innerHTML}:${eventType}` // to change not very smart
+        const key = element.id ? `${element.id}:${eventType}` : `${element.name}:${eventType}`
+
         return key
     }
 }

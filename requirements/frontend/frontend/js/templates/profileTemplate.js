@@ -35,12 +35,12 @@ export const profileTemplate  =
             </div>
             <div id="profile-box1-bottom">
                 <div>
-                    <p class="profile-box1-box-text">total Points</p>
+                    <p class="profile-box1-box-text">Total Remote Points</p>
                     <p class="profile-box1-bottom-data">${escapeHtml(db.totalPoints)}</p>
                 </div>
                 <div class="vertical-dividers"></div>
                 <div>
-                    <p class="profile-box1-box-text">total Games</p>
+                    <p class="profile-box1-box-text">Total Remote Games</p>
                     <p class="profile-box1-bottom-data">${escapeHtml(db.totalGames)}</p>
                 </div>
                 <div class="vertical-dividers"></div>
@@ -74,7 +74,7 @@ export const profileTemplate  =
         });
 
         return `
-        <h3>Game History</h3>
+        <h3>Remote Game History</h3>
         <div id="table">
             <div class="custom-table-head">
                 <p>game type</p>

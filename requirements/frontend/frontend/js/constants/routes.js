@@ -6,46 +6,43 @@ export const ROUTES = (apiService) => ({
     '/signin' :
     {
         template : signTemplate('signin'),
-        protected : false,
         allScreen : true
     },
     '/signup' :
     {
         template : signTemplate('signup'),
-        protected : false,
         allScreen : true
     },
     '/' :
     {
         customElement : 'home-view',
-        protected: true,
         allScreen : false,
         api : () => apiService.home.getLeaderboardData(),
+    },
+    '/game' :
+    {
+        allScreen : true,
     },
     '/profile' :
     {
         customElement : 'profile-view',
-        protected: true,
         allScreen : false,
         api : (userId) => apiService.user.getProfileInfos(userId)
     },
     '/game-settings' :
     {
         customElement : 'game-settings-view',
-        protected: true,
         allScreen : false
     },
     '/settings' :
     {
         customElement : 'settings-view',
-        protected: true,
         allScreen : false,
         api : () => apiService.settings.getBasicData()
     },
     '/404' :
     {
         template : errorTemplate(),
-        protected: false,
         allScreen : true
     },
 })

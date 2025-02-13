@@ -186,7 +186,7 @@ export class Friends extends HTMLDivElement
         }
         db.forEach((e, index) => {
             const friendBoxItem = document.createElement('div')
-            const value = this._friendsList === true ? 'status' : 'time'
+            const value = this._friendsList === true ? 'status' : 'time-request'
             friendBoxItem.classList.add('friends-box-item')
             friendBoxItem.setAttribute('index', index)
             friendBoxItem.setAttribute('userId', e.id)
@@ -195,7 +195,7 @@ export class Friends extends HTMLDivElement
                 <img src='${escapeHtml(e.profilePic)}'>
                 <div class="user-infos">
                     <p class="username">${escapeHtml(e.username)}</p>
-                    <p class="${value}" id=${e.other}>${escapeHtml(e.other)}</p>
+                    <p class="${value}" id="${e.other}">${escapeHtml(e.other)}</p>
                 </div>
             `
             const icons = document.createElement('div', {is : 'custom-icons'})

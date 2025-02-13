@@ -1,5 +1,5 @@
 import { eventListeners } from '../managers/globalManager.js'
-import { removeModalHandler } from '../utils/utils.js'
+
 export class FormService
 {
     constructor()
@@ -10,7 +10,7 @@ export class FormService
         const modalBackground = document.getElementById('modal-background')
 
         modalBackground.remove()
-        eventListeners.off(modalBackground, 'click', removeModalHandler) // leak
+        eventListeners.off(modalBackground, 'click')
     }
     #eventHandlerTournamentForm(event, resolve)
     {
@@ -22,11 +22,11 @@ export class FormService
         let data = new FormData( form );
         let playersObject = Object.fromEntries( data )
         let players = Object.values( playersObject )
+        eventListeners.off(form, 'submit')
         resolve( players )
     }
     #eventHandlerGameForm( event, resolve )
     {
-        console.log('im i hereee')
         const form = document.querySelector( 'form' )
         
         event.preventDefault()
@@ -34,6 +34,7 @@ export class FormService
     
         let data = new FormData( form );
         let gameSettings = Object.fromEntries( data )
+        eventListeners.off(form, 'submit')
         resolve( gameSettings )
     }
     #eventHandlerPasswordForm (event, resolve)
@@ -45,6 +46,7 @@ export class FormService
 
         let data = new FormData( form );
         let gameSettings = Object.fromEntries( data )
+        eventListeners.off(form, 'submit')
         resolve( gameSettings )
     }
     handleTournament()

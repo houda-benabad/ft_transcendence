@@ -55,6 +55,10 @@ class GameServer(  ):
 				'score' :{
 					'p1' : self.game.players[0].score,
 					'p2' : self.game.players[1].score,
+				},
+				'ids':{
+					'p1' : self.consumers[0].playerModel.userId,
+					'p2' : self.consumers[1].playerModel.userId,
 				}
 			}
 		elif self.mode == MULTI_PLAYERS :
@@ -62,11 +66,17 @@ class GameServer(  ):
 				'score' :{
 					'p1' : self.game.players[0].score,
 					'p2' : self.game.players[2].score,
+				},
+				'ids':{
+					'p1' : self.consumers[0].playerModel.userId,
+					'p2' : self.consumers[1].playerModel.userId,
+					'p3' : self.consumers[2].playerModel.userId,
+					'p4' : self.consumers[3].playerModel.userId,
 				}
 			}
  		
 	async def run( self ):
-		await self.__send_group_msg_( 'start', 'game is starting' )
+		await self.__send_group_msg_( 'start', self.get_score( ) )
 
 		while True:
 			self.game.update( )

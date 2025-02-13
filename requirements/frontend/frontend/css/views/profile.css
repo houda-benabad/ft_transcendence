@@ -121,7 +121,7 @@ profile-view
                     justify-self: left;
                     gap: 0.7vh;
 
-                    .status,.time
+                    .status,.time-request
                     {
                         color: var(--text2)
                     }

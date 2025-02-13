@@ -8,10 +8,19 @@ import { OnlineStatusService } from '../services/onlineStatusService.js'
 import { FormService } from '../services/formService.js'
 
 
-const eventListeners = new EventService() // just for the moment i wont be in need of it later on
+const eventListeners = new EventService()
 const onlineStatusService = new OnlineStatusService()
 const tokenService = new TokenService()
+let isItOutOfGame = false
 
+export function setIsItOutOfGame(value)
+{
+    isItOutOfGame = value
+}
+export function getIsItOutOfGame()
+{
+    return isItOutOfGame
+}
 
 export class GlobalManager
 {
