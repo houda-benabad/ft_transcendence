@@ -8,14 +8,12 @@ from .constants import *
 
 
 class GameServer(  ):
-    # GENERIC
 	def __init__( self, consumers, mode ):
 		self.mode = mode
 		self.channel_layer = get_channel_layer(  )
 		self.consumers = consumers
 		self.game = Game( self.mode )
 
-	# GENERIC
 	async def __send_group_msg_( self, type, data ):
 		await self.channel_layer.group_send( self.group_name,
 			{
@@ -24,7 +22,6 @@ class GameServer(  ):
 			}
 		)
 
-	# GENERIC
 	async def setup( self ):
 		if self.mode == TWO_PLAYERS :
 			self.gameModel = await sync_to_async( models.RemoteGame.objects.create )( 
@@ -44,7 +41,6 @@ class GameServer(  ):
 			consumer.game_group_name = self.group_name
 			await self.channel_layer.group_add( self.group_name, consumer.channel_name )
 
-	# GENERIC
 	def get_score(  self ):
 		if self.mode == TWO_PLAYERS :
 			return {
@@ -97,7 +93,6 @@ class GameServer(  ):
 			await asyncio.sleep( GAME_TICK_RATE )
 			
    
-	# GENERIC
 	@database_sync_to_async
 	def saving_to_database( self ):
 		if self.mode == TWO_PLAYERS:
@@ -115,7 +110,6 @@ class GameServer(  ):
 
 		self.gameModel.save()
 
-	# GENERIC
 	async def send_results( self ):
 		self.game.end_game_results(self.consumers, self.gameModel)
 		for consumer in self.consumers:
@@ -123,9 +117,7 @@ class GameServer(  ):
 
 
 
-# GENERIC
 async def startRemoteGame( consumers, mode):
-	print("=========GAME STARTING=============")
 	server = GameServer( consumers, mode )
 
 	await server.setup(  )

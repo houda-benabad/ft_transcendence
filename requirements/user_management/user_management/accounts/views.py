@@ -36,7 +36,6 @@ class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
     
     def perform_update(self, serializer):
         instance = serializer.save()
-        # logger.debug(f"---------this is the host {self.request.get_host()}--------------")
         try :
             response = requests.post(f"{settings.UPDATE_PLAYER_URL}/{instance.id}", data={"username": instance.username}, headers={"Host":"localhost"})
             response.raise_for_status()

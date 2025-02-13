@@ -23,8 +23,6 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 				response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'Authorization': token })
 				user_info = response.json(  )
 				userId = user_info.get('id')
-				# player.username = user_info.get('username')
-				# player.save( )
 	
 			if response.status_code != 200:
 				raise ValueError( "Player not found")
@@ -57,7 +55,6 @@ class UpdatePlayerView( APIView ):
 		except:
 			return Response( {'detail' : 'No player with credential was found'}, status=404 )
 
-# working fine
 class leaderBoardView( generics.ListAPIView ):
 	queryset = Player.objects.order_by( "-total_points" )
 	serializer_class =  RankSerializer

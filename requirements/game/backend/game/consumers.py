@@ -23,7 +23,6 @@ class GameConsumer( AsyncWebsocketConsumer ):
 		await self.accept()
 		self.playerModel= await self._get_player_( )
 		if self._is_already_playing(  ):
-			print('alrerady playing')
 			await self.send_error( 'Connection Error', GAME_ERROR_STATUS_CODE )
 			return False
 		await self._update_players(  )
@@ -37,7 +36,6 @@ class GameConsumer( AsyncWebsocketConsumer ):
 				return True
 		return False
 
-	# Message handlers
 	async def _send_message_( self, type, data, code=SUCCES_STATUS_CODE ): 
 		if type == 'start':
 			data['author'] = self.playerModel.userId
@@ -49,7 +47,6 @@ class GameConsumer( AsyncWebsocketConsumer ):
 	async def api(self, event): await self._send_message_( 'api', event['data'] )
 	async def score(self, event):await self._send_message_( 'score', event['data'] )
 	
-	# Receiving messages
 	async def receive(self, text_data):
 		dataJson = json.loads(text_data)
 		dataType = dataJson['type']
@@ -57,7 +54,6 @@ class GameConsumer( AsyncWebsocketConsumer ):
 		if (dataType == 'keycode'):
 			self.keycode = dataJson['data']
 
-	# Player handle
 	@database_sync_to_async
 	def _get_player_( self ):
 		self.id = self.scope.get('user_id') 
@@ -78,7 +74,6 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			players_set = [remote_players.pop(0) for num in range(TWO_PLAYERS)]
 			asyncio.create_task(game.startRemoteGame( players_set, TWO_PLAYERS ))
 		except Exception as e:
-			print( "e ---->", e)
 			self.send_error( e, GAME_ERROR_STATUS_CODE )
 			
 
@@ -102,7 +97,6 @@ class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			players_set = [multi_players.pop(0) for num in range(MULTI_PLAYERS)]
 			asyncio.create_task(game.startRemoteGame( players_set , MULTI_PLAYERS))
 		except Exception as e:
-			print( "e ---->", e)
 			self.send_error( e, GAME_ERROR_STATUS_CODE )
 
 	async def disconnect(self, close_code):

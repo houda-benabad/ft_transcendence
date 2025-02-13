@@ -4,7 +4,6 @@ from django.db.models import Q
 from itertools import chain
 
 
-# PLAYER INFO 
 
 class GameSerializer( serializers.ModelSerializer ):
 	date_time = serializers.SerializerMethodField( )
@@ -77,7 +76,7 @@ class PlayerSerializer( serializers.ModelSerializer ):
 			serializedGameHistory.append( serializer )
 		return serializedGameHistory
 
-# LEADERBORAD
+
 class RankSerializer( serializers.ModelSerializer ):
 	rank = serializers.SerializerMethodField( )
 	class Meta:
