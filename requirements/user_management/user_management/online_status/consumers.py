@@ -6,12 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 import redis
 from django.conf import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
-import logging
 
-
-logging.basicConfig(level=logging.DEBUG)  
-
-logger = logging.getLogger("consumers") 
 
 REDIS_ONLINE_USERS = "online_users"
 class OnlineStatusConsumer(WebsocketConsumer):

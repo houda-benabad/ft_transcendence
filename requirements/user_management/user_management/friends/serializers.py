@@ -2,31 +2,40 @@ from rest_framework import serializers
 from Profiles.serializers import UserProfileSerializer
 from friendship.models import Friend, FriendshipRequest
 from django.urls import reverse
+from django.utils import timezone
 
 class FriendshipRequestSerializer(serializers.ModelSerializer):
     
     from_user = UserProfileSerializer(source='from_user.profile', read_only=True)
-    accept_request = serializers.SerializerMethodField(read_only=True)
-    reject_request = serializers.SerializerMethodField(read_only=True)
+    time_received = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = FriendshipRequest
         fields = [
-            "id",
             "from_user",
-            "accept_request",
-            "reject_request"
+            "time_received"
         ]
-    
-    def get_accept_request(self, obj):
-        request = self.context.get('request')
-        accept_request_url = request.build_absolute_uri(reverse('accept-request', kwargs={'from_user_id': obj.from_user.id}))
-        return accept_request_url
-    
-    def get_reject_request(self, obj):
-        request = self.context.get('request')
-        reject_request_url = request.build_absolute_uri(reverse('reject-request', kwargs={'from_user_id': obj.from_user.id}))
-        return reject_request_url
+
+    def get_time_received(self, obj):
+        now = timezone.now()
+        time_passed = now - obj.created
+        total_seconds = time_passed.total_seconds()
+        years = int(total_seconds // (3600 * 24 * 365.25))
+        if years >= 1:
+            return (f"{years} year ago" if years == 1 else f"{years} years ago")
+        days = time_passed.days
+        months = days // 30.417
+        if months >= 1:
+            return (f"{months} month ago" if months == 1 else f"{months} months ago")
+        if days >= 1:
+            return (f"{days} day ago" if days == 1 else f"{days} days ago")
+        hours = int(total_seconds // 3600)
+        if hours >= 1:
+            return (f"{hours} hour ago" if hours == 1 else f"{hours} hours ago")
+        minutes = int(total_seconds // 60)
+        if minutes >= 1:
+            return (f"{minutes} min ago" if minutes == 1 else f"{minutes} mins ago")
+        return (f"{int(total_seconds)} second ago" if total_seconds == 1 else f"{int(total_seconds)} seconds ago")
 
 class FriendSerializer(serializers.Serializer):
     

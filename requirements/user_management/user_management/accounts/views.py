@@ -9,14 +9,10 @@ from rest_framework import status, exceptions
 from django.conf import settings
 from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
-import logging
 import json
 from djoser.serializers import UsernameSerializer
 from rest_framework import generics
 
-logging.basicConfig(level=logging.DEBUG)  
-
-logger = logging.getLogger("accounts.views") 
 User = get_user_model()
 
 class   Error(exceptions.APIException):
@@ -36,12 +32,10 @@ class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
     
     def perform_update(self, serializer):
         instance = serializer.save()
-        # logger.debug(f"---------this is the host {self.request.get_host()}--------------")
         try :
-            response = requests.post(f"{settings.UPDATE_PLAYER_URL}/{instance.id}", data={"username": instance.username}, headers={"Host":"localhost"})
+            response = requests.post(f"{settings.UPDATE_PLAYER_URL}/{instance.id}", data={"username": instance.username}, headers={"Host":self.request.get_host()})
             response.raise_for_status()
         except requests.exceptions.HTTPError as http_err:
-            logger.debug("---------------entered here--------------")
             raise Error(detail="error in the new_player response", status_code=http_err.response.status_code)
         except requests.RequestException as e:
             raise Error(detail=str(e), code=status.HTTP_503_SERVICE_UNAVAILABLE)
@@ -55,7 +49,7 @@ class   CustomUserViewSet(UserViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
         try :
-            response = requests.post(settings.NEW_PLAYER_URL, data={"userId": instance.id, "username": instance.username}, headers={"Host":"localhost"})
+            response = requests.post(settings.NEW_PLAYER_URL, data={"userId": instance.id, "username": instance.username}, headers={"Host":self.request.get_host()})
             response.raise_for_status()
         except requests.exceptions.HTTPError as http_err:
             raise Error(detail="error in the new_player response", status_code=http_err.response.status_code)
@@ -106,7 +100,7 @@ class   IntraCallback(APIView):
                 if not created:
                     return Response({'detail': f"A user with the username '{intra_user.username}' already exists and does not use OAuth."}, status=status.HTTP_400_BAD_REQUEST)
                 user_profile = Profile.objects.create(user=intra_user, image_url = user_data.get("image_url"), is_oauth2=True, oauth2_id=user_data.get("id"))
-                response = requests.post(settings.NEW_PLAYER_URL, data = {"userId": intra_user.id, "username": intra_user.username}, headers={"Host":"localhost"})
+                response = requests.post(settings.NEW_PLAYER_URL, data = {"userId": intra_user.id, "username": intra_user.username}, headers={"Host":self.request.get_host()})
                 if response.status_code != status.HTTP_200_OK:
                     return Response({'detail':"error in the new_player response"}, status=response.status_code)
             refresh = RefreshToken.for_user(intra_user)

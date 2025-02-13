@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile#, Friendship
+from .models import Profile
 from friendship.models import Friend
 from django.core.validators import validate_image_file_extension
 import logging

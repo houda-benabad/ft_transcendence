@@ -148,8 +148,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# AUTH_USER_MODEL = 'accounts.User'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
@@ -168,11 +166,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
-
-# JWT_SIGNING_KEY = os.getenv('JWT_SIGNING_KEY')
-
-# if not JWT_SIGNING_KEY:
-#     raise ValueError("JWT_SIGNING_KEY is not set in the environment variables.")
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ['Bearer'],
@@ -193,7 +186,7 @@ DJOSER = {
 }
 
 CORS_URLS_REGEX = r'^/auth/.*'
-CORS_ALLOWED_ORIGINS = ["http://user_game_aggregator:8002"]#, "https://api.intra.42.fr"]
+CORS_ALLOWED_ORIGINS = ["http://user_game_aggregator:8002"]
     
 APPEND_SLASH = True
 
@@ -214,27 +207,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'channels': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#     },
-# }
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#     }
-# }
 
 NEW_PLAYER_URL = os.environ.get('NEW_PLAYER_URL')
 UPDATE_PLAYER_URL = os.environ.get('UPDATE_PLAYER_URL')
