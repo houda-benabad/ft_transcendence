@@ -132,7 +132,11 @@ class ApiService
         const [key, value] = entries[0]
 
         if (showModal)
+        {
+            if (key === 'new_username')
+               return await modalService.show(`${value}`)
             await modalService.show(`${key} : ${value}`)
+        }
     }
 }
 

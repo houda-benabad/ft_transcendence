@@ -5,7 +5,7 @@ import { CAMERA, WORLD, LIGHT } from "../constants/engine.js";
 import { MODE } from '../constants/engine.js';
 // import { _tokenService } from '../utils/
 import { globalManager } from '../managers/globalManager.js';
-
+import { eventListeners } from '../managers/globalManager.js';
 export default class Engine {
 
 	constructor( mode ) {
@@ -99,8 +99,7 @@ export default class Engine {
 		this.cleanScene(  )
 		this.cleanWorld(  )
 		this.cleanRenderer(  )
-		eventListeners.off(document, 'keydown')
-		eventListeners.off(document, 'keyup')
+		eventListeners.removeAll()
 	}
 
 }

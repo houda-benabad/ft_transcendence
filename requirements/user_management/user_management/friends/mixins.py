@@ -35,7 +35,7 @@ class	CancelFriendshipRequestMixin:
         except (User.DoesNotExist, FriendshipRequest.DoesNotExist) as e:
             return Response({"detail": str(e)},status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"message": "Friendship request was canceled successfully."}, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class	AcceptRequestMixin:

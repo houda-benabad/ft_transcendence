@@ -41,16 +41,7 @@ export class ProfileView extends HTMLElement
     }
     disconnectedCallback()
     {
-        eventListeners.off(window, 'resize')
-
-        if (this._userId === 'me')
-        {
-            document.querySelectorAll('.choice-item').forEach(e => {
-                eventListeners.off(e, 'mouseover')
-                eventListeners.off(e, 'mouseout')
-                eventListeners.off(e, 'click')
-            })
-        }
+        eventListeners.removeAll()
     }
     addProfile()
     {
