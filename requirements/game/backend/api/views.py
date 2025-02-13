@@ -14,14 +14,16 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 
 	def get_object( self ):
 		try: 
-			print( "request = ". self.request)
+			host =  self.request.get_host()
+			if not host:
+				raise ValueError('Host not foumd')
 			url_name = self.request.resolver_match.url_name
 			if url_name == "PlayerInfo":
 				userId = self.kwargs.get( 'userId' )
-				response = requests.get( settings.USER_INFO_URL + str( userId ), headers={"Host": "localhost"})
+				response = requests.get( settings.USER_INFO_URL + str( userId ), headers={"Host": host})
 			elif url_name == "MeInfo":
 				token = self.request.headers.get( 'Authorization' )
-				response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": "localhost", 'Authorization': token })
+				response = requests.get( settings.USER_INFO_URL + 'me', headers={"Host": host, 'Authorization': token })
 				user_info = response.json(  )
 				userId = user_info.get('id')
 	
@@ -31,6 +33,7 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 			player = Player.objects.get( userId=userId )
 			return player
 		except Exception as e:
+			print("error", e)
 			return None
 
 class NewPlayerView( APIView ):
