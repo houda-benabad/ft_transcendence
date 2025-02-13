@@ -23,6 +23,7 @@ export class GameManager
     }
 
     async #denit( message='Game over' ){
+        console.log("BYE BYE")
         await modalService.show(  message )
         await reset(  )
         globalManager._router.navigateTo( '/' )
@@ -31,8 +32,8 @@ export class GameManager
     async local()
     {
         await this.#init()
-        await local( this.gameSettings , ["player1", "player2"])
-        await this.#denit()
+        let result = await local( this.gameSettings , ["player1", "player2"])
+        await this.#denit( `${result} won`)
     }
     async tournament( ){
         await modalService.show(  '', false,'tournament' ) // the alias names for the players 
@@ -50,11 +51,19 @@ export class GameManager
     async remote( ){
         await globalManager._router.navigateTo( '/game' )
         let result = await remote( )
-        await this.#denit( `You ${result.state}` )
+        console.log("SALINAAA")
+        if(result )
+            await this.#denit( `You ${result.state}` )
+        else{
+            await this.#denit(  )
+        }
     }
     async multiplayer( ){
         await globalManager._router.navigateTo( '/game' )
         let result = await multiplayer( )
-        await this.#denit( `You ${result.state}` )
+        if(result )
+            await this.#denit( `You ${result.state}` )
+        else
+            await this.#denit(  )
     }
 }
