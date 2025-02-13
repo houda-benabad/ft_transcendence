@@ -78,6 +78,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			
 
 	async def disconnect(self, close_code):
+		print("disconnect")
 		self.keycode =  -1
 		if self in remote_players :
 			remote_players.remove( self )

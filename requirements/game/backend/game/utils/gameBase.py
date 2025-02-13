@@ -62,6 +62,8 @@ class Game():
 	def end_game_results(self, consumers, gameModel):
 		if self.mode == TWO_PLAYERS:
 			base = ['won', 'lost']
+			for consumer in consumers:
+				print("keycode ---> ", consumer.keycode)
 			if (consumers[1].keycode == -1 or self.players[0].score > self.players[1].score):
 
 				self.players[1].score = 0

@@ -32,8 +32,12 @@ export class GameManager
     async local()
     {
         await this.#init()
-        let result = await local( this.gameSettings , ["player1", "player2"])
-        await this.#denit( `${result} won`)
+        let result = await local( this.gameSettings , ["player", "player"])
+        if(result )
+            await this.#denit( `You ${result.state}`, false )
+        else{
+            await this.#denit(  )
+        }
     }
     async tournament( ){
         await modalService.show(  '', false,'tournament' )

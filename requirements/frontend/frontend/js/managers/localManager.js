@@ -91,12 +91,10 @@ export default class Local{
 		}
 		else if (this.animationProgress < 1 && getIsItOutOfGame() == false  )
 			this.initialAnimation(  )
-		else if (this.animationProgress == 1  && getIsItOutOfGame() == false  ){
+		else if (this.animationProgress == 1  && getIsItOutOfGame() == false  )
 			this.state.setup()
-		}
-		else{
+		else
 			this.update(  )
-		}
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
 
 	}

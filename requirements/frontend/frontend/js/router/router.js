@@ -9,7 +9,6 @@ import '../views/homeView.js'
 import '../views/profileView.js'
 import '../views/gameSettingsView.js'
 import '../views/settingsView.js'
-import '../views/gameView.js'
 
 export class Router 
 {

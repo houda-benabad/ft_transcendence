@@ -18,15 +18,16 @@ class appCanva{
 				<button id="cancel-btn">Cancel</button>
 			</div>
 	    `)
+        console.log("updated")
         this.score = this._createElement( 'div', 'score',  `
             <div class="user glass">
-                <h3 id="user2">${players[0]}</h3>
+                <h3 id="user1">${players[1]}</h3>
             </div>
             <div class="score-num glass">
                 <h1 id="score">0 : 0</h1>
             </div>
             <div class="user glass">
-                <h3 id="user1">${players[1]}</h3>
+                <h3 id="user2">${players[0]}</h3>
             </div>
 	    `)
         this.time = this._createElement( 'div','time glass',  `<h1 id="time">0</h1>`)
@@ -51,7 +52,7 @@ class appCanva{
                 </div>
             `
         }
-        else{
+        else if (mode == MODE.MULTIPLAYER){
             let player1 = "Other Team"; let player2 ="Other Team"
             if ( author == data.ids.p1 || author  == data.ids.p2)
                 player1 = 'Your Team'
