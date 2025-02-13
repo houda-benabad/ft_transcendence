@@ -70,10 +70,13 @@ class Game():
 		if self.mode == TWO_PLAYERS:
 			base = ['won', 'lost']
 			if (consumers[1].keycode == -1 or self.players[0].score > self.players[1].score):
+
+				self.players[1].score = 0
 				for consumer, state in zip( consumers, base ):
 					consumer.game_result = state
 				gameModel.winner = consumers[0].playerModel
 			else:
+				self.players[1].score = 0
 				for consumer, state in zip( consumers, reversed(base) ):
 					consumer.game_result = state
 				gameModel.winner = consumers[1].playerModel
@@ -83,11 +86,16 @@ class Game():
 		elif self.mode == MULTI_PLAYERS:
 			base = ['won', 'won', 'lost', 'lost']
 			if ( consumers[2].keycode == -1 or consumers[3].keycode == -1 or self.players[0].score > self.players[2].score):
+				self.players[2].score = 0
+				self.players[3].score = 0
+
 				for consumer, state in zip( consumers, base ):
 					consumer.game_result = state
 				gameModel.winner1 = consumers[0].playerModel
 				gameModel.winner2 = consumers[1].playerModel
 			else:
+				self.players[0].score = 0
+				self.players[1].score = 0
 				for consumer, state in zip( consumers, reversed(base) ):
 					consumer.game_result = state
 				gameModel.winner1 = consumers[2].playerModel

@@ -14,6 +14,7 @@ class PlayerDetailView( generics.RetrieveAPIView ):
 
 	def get_object( self ):
 		try: 
+			print( "request = ". self.request)
 			url_name = self.request.resolver_match.url_name
 			if url_name == "PlayerInfo":
 				userId = self.kwargs.get( 'userId' )
