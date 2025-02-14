@@ -23,7 +23,6 @@ export class GameManager
     }
 
     async #denit( message='Game over', automatisation=true ){
-        console.log("BYE BYE")
         await modalService.show(  message , automatisation)
         await reset(  )
         globalManager._router.navigateTo( '/' )
