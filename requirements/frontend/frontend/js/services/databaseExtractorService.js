@@ -128,7 +128,7 @@ export class databaseExtractorService
         const onlineFriendsList = onlineStatusService._onlineFriendsList
         const relationshipStatus = relationship ?  relationship.status : 'me'
 
-        // console.log('onlineList : ', onlineFriendsList)
+        console.log('the one i get when getting profle view onlineList : ', onlineFriendsList)
         // console.log('status : ', relationshipStatus)
         // console.log('userId  :', userId )
         if ((relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === true ) || relationshipStatus === 'me')

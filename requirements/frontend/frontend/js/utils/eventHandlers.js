@@ -82,10 +82,9 @@ export const eventHandlersForEventManager = (eventManager) =>
     {
         handleAnchorEvents(event, target)
         {
-            console.log('target : ', target)
             event.preventDefault()
             
-            const realTarget = target.matches('a') ? target : target.querySelector('a')
+            const realTarget = target.classList.contains('anchor-box') ? target.querySelector('a') : target
             const link = realTarget.getAttribute('data-link')
             const action = realTarget.getAttribute("data-action")
 
@@ -150,6 +149,9 @@ export const eventHandlersForEventManager = (eventManager) =>
             else if (action === 'remove_friend' || action === 'cancel_request' || action === 'reject_request')
             {
                 await eventManager._apiService.friendship.deleteFriendship(action, id)
+                console.log('action == ', action)
+                if (action === 'remove_friend')
+                    onlineStatusService.removeFriend = id
                 mainElement.relationshipStatus = 'stranger'
             }
             else 
@@ -172,9 +174,9 @@ export const eventHandlersForEventManager = (eventManager) =>
             friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
             
             if (action === 'accept_request')
-            {
                 onlineStatusService.newFriend = id
-            }
+            else 
+                onlineStatusService.removeFriend = id
         }
     },
     button :
