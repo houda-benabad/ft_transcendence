@@ -5,6 +5,7 @@ import { local } from "../mods/local.js"
 import { remote } from "../mods/remote.js"
 import{ multiplayer} from "../mods/multiplayer.js"
 import { tournament } from "../mods/tournament.js"
+import { MODE } from "../constants/engine.js"
 export class GameManager 
 
 {
@@ -14,11 +15,12 @@ export class GameManager
         this.app = document.getElementById( 'app' )
     }
 
-    async #init( ){
+    async #init( mode ){
         await globalManager._router.navigateTo( '/game-settings')
         this.gameSettings = await globalManager._formService.handleGame(  )
         await globalManager._router.navigateTo( '/game' )
-        await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
+        if (mode == MODE.LOCAL || mode == MODE.TOURNAMENT)
+            await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
 
     }
 
