@@ -6,6 +6,7 @@ from rest_framework import serializers
 import requests
 from django.conf import settings
 from django.core.validators import validate_image_file_extension
+from djoser.serializers import UsernameSerializer as BaseUsernameSerializer
 
 
 User = get_user_model()
@@ -39,3 +40,11 @@ class UserSerializer(BaseUserSerializer):
             "id",
             "username",
         ]
+
+class UsernameSerializer(BaseUsernameSerializer):
+    
+    def validate(self, data):
+        username = data.get('username')
+        if len(username) < 3 or len(username) > 30:
+            raise serializers.ValidationError("Username must be between 3 and 30 characters.")
+        return data

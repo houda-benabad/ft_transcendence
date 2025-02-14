@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-1a2w^3#t04l!!bx(hg)60&-h45g15g2a-ns)3vogg5uki@i8-^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #'user_management:8000'
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -45,7 +45,6 @@ PACKAGES = [
     'rest_framework',
     'rest_framework_simplejwt',
     'djoser',
-    'corsheaders',
     'friendship',
     'drf_yasg'
 ]
@@ -62,7 +61,6 @@ INSTALLED_APPS = DJANGO_APPS + PACKAGES + APPS_ADDED
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -184,9 +182,6 @@ DJOSER = {
         'current_user': 'accounts.serializers.UserSerializer'
     },
 }
-
-CORS_URLS_REGEX = r'^/auth/.*'
-CORS_ALLOWED_ORIGINS = ["http://user_game_aggregator:8002"]
     
 APPEND_SLASH = True
 

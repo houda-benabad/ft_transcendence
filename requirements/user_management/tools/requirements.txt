@@ -1,7 +1,6 @@
 Django==5.1.1
 sqlparse==0.5.1
 psycopg2-binary==2.9.9
-django-cors-headers
 djangorestframework
 djangorestframework-simplejwt
 djoser
@@ -13,7 +12,3 @@ drf-yasg
 channels
 daphne
 channels-redis
-
-# pyyaml
-# drf_social_oauth2==3.1.0
-# django-oauth-toolkit

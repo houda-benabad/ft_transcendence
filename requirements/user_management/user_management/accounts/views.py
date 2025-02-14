@@ -10,7 +10,7 @@ from django.conf import settings
 from .permissions import IsNotAuthenticated
 from djoser.views import UserViewSet
 import json
-from djoser.serializers import UsernameSerializer
+from .serializers import UsernameSerializer
 from rest_framework import generics
 
 User = get_user_model()
