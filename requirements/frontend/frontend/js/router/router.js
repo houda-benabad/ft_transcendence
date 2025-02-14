@@ -29,8 +29,52 @@ export class Router
             onlineStatusService.init()
             await this.initBasicRoutes()
         }
-        window.addEventListener('popstate', () => this.handleRoute(null))
+        window.addEventListener('popstate', (event) => this.handleRoute(event.state ? event.state.path : null, false))
         this.handleRoute()
+    }
+    async handleRoute(newPath=null, addToHistory = true)
+    {
+        const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
+        const query = window.location.search
+
+        if (this._route === '/game' && path === '/profile')
+        {
+            console.log('im in here - -')
+            setIsItOutOfGame(true)
+            await this.initBasicRoutes()
+        }
+        if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
+            this.removeWelcomeText()
+        if (query)
+            await this.handleIntraRoute(query)
+        if (!tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
+            this.navigateTo('/signin', addToHistory)
+        else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
+            this.navigateTo('/', addToHistory)
+        else if (path === '/game')
+            this.navigateTo('/', addToHistory)
+        else
+            this.navigateTo(path, addToHistory)
+    }
+    navigateTo(path, addToHistory)
+    {
+        let options = null
+
+        if (addToHistory === true)
+            history.pushState({path}, '', path)
+        if (path.includes('/profile'))
+        {
+            if (path === '/profile' || path.includes('/profile/'))
+            {
+                const str = path.split('/')
+                options = str[str.length - 1] === 'profile' ? 'me' : str[str.length - 1]
+                path = '/profile'
+            }
+            else 
+                path = '/404'
+        }
+        this._route = path
+        this.updateContent(path, options)
     }
     async removeWelcomeText()
     {
@@ -70,51 +114,6 @@ export class Router
                 element.classList.add('selected')
             resolve()
         })
-    }
-    async handleRoute(newPath=null)
-    {
-        const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
-        const query = window.location.search
-
-        if (this._route === '/game' && path === '/')
-        {
-            console.log('isout  : ',  getIsItOutOfGame())
-            setIsItOutOfGame(true)
-            console.log('isout  : ',  getIsItOutOfGame())
-            await this.initBasicRoutes()
-        }
-        if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
-            this.removeWelcomeText()
-        if (query)
-            await this.handleIntraRoute(query)
-        if (!tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
-            this.navigateTo('/signin')
-        else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
-            this.navigateTo('/')
-        else if (path === '/game')
-            this.navigateTo('/')
-        else
-            this.navigateTo(path)
-    }
-    navigateTo(path)
-    {
-        let options = null
-
-        history.pushState(null, null, path)
-
-        if (path.includes('/profile'))
-        {
-            if (path === '/profile' || path.includes('/profile/'))
-            {
-                const str = path.split('/')
-                options = str[str.length - 1] === 'profile' ? 'me' : str[str.length - 1]
-                path = '/profile'
-            }
-            else 
-                path = '/404'
-        }
-        this._route = path
-        this.updateContent(path, options)
     }
     async updateContent(path, options)
     {
