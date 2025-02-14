@@ -24,17 +24,17 @@ export class OnlineStatusService
         this._debounced = debounce(this.updateContent, 500)
 
         this._socket.onopen = () => { 
-            // console.log('websocket was opened successfully !!!')
+            console.log('websocket was opened successfully !!!')
         }
         
         this._socket.onclose = (e) => {
-            // console.log('websocket was closed because ', e.reason , ' with code ', e.code)
+            console.log('websocket was closed because ', e.reason , ' with code ', e.code)
             if (e.code === 1006)
                 tokenExpired(this.init.bind(this))
         }
         this._socket.onmessage = (e) => {
             const response = JSON.parse(e.data)
-            // console.log('websocket got a message the response is  : ', response)
+            console.log('websocket got a message the response is  : ', response)
             const {type, online_friends, friend_id, status} = response
 
             if (type === 'online_friends_list')

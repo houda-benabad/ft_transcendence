@@ -26,7 +26,7 @@ export class EventManager
         const target = event.target
 		let targetParent
 
-		if (target.matches('a'))
+		if (target.matches('a') || target.querySelector('a'))
             this._eventHandlers.anchor.handleAnchorEvents(event, target)
         else if (target.matches('button'))
             this._eventHandlers.button.handleButtonEvents(target)

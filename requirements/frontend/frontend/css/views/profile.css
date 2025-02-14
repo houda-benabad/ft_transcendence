@@ -188,6 +188,8 @@ profile-view
                         width: max(11vh, 9vw);
                         height: max(11vh, 9vw);
                         border-radius: 50%;
+                        object-fit: cover;
+                        flex-shrink: 0;
                     }
                     #profile-box1-top-id
                     {
