@@ -13,7 +13,7 @@ class appCanva{
     initElemnts( players ){
         this.waiting = this._createElement('div', 'waiting-holder', `
             <div class="waiting-pop glass">
-				<h1>Waiting for other player...</h1>
+				<h1 id="waiting_msg">Waiting for other player...</h1>
 				<div id="loader"></div>
 				<button id="cancel-btn">Cancel</button>
 			</div>
@@ -102,19 +102,26 @@ class appCanva{
         }
     }
     update(element, data){
-        if ( !this.elementsId )
+        if ( this.elementsId == null )
             this.elementsId = {
                 p1: document.getElementById('user1'),
                 p2: document.getElementById('user2'),
                 score: document.getElementById( 'score' ),
-                time: document.getElementById( 'time' )
+                time: document.getElementById( 'time' ),
+                waiting: document.getElementById( 'waiting_msg' )
             }
         switch (element) {
             case 'score':
-                this.elementsId.score.innerHTML = `${data.score.p2} : ${data.score.p1}`
+                if ( this.elementsId.score)
+                    this.elementsId.score.innerHTML = `${data.score.p2} : ${data.score.p1}`
                 break;
             case 'time':
-                this.elementsId.time.innerHTML = data
+                if ( this.elementsId.time)
+                    this.elementsId.time.innerHTML = data
+                break;
+            case 'waiting':
+                if ( this.elementsId.waiting )
+                        this.elementsId.waiting.innerHTML += `<br> A player joined`
                 break;
             default:
                 break;

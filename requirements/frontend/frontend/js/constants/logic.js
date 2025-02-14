@@ -14,7 +14,8 @@ export const ACTIONS  = {
     'score' : 'updateScore',
     'start' : 'updateStart',
     'endGame' : 'updateState',
-    'error' : 'handleError'
+    'error' : 'handleError',
+    'matchmaking' : 'handleMatchmaking'
 }
 
 export const PLAYERS =  ['PLAYER1', 'PLAYER2', 'PLAYER3', 'PLAYER4']

@@ -41,6 +41,7 @@ class GameServer(  ):
 			consumer.game_group_name = self.group_name
 			await self.channel_layer.group_add( self.group_name, consumer.channel_name )
 
+
 	def get_score(  self ):
 		if self.mode == TWO_PLAYERS :
 			return {

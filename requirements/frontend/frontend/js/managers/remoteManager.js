@@ -79,6 +79,7 @@ export default class Remote{
 
 	updateData( e,  resolve ){
 		const { type, data, author } = JSON.parse( e.data )
+
 		this[ACTIONS[type]]( data,  resolve, author)
 	}
 
@@ -91,6 +92,10 @@ export default class Remote{
 
 	updateScore( data, author ){
 		this.canva.update( 'score', data, author )
+	}
+
+	handleMatchmaking( data ){
+		this.canva.update( "waiting", data)
 	}
 
 	updateStart( data ){

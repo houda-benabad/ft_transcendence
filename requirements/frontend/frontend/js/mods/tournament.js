@@ -7,7 +7,6 @@ export async function tournament( options, players ) {
         const winners = []
         const losers = []
 
-        console.log( players )
         for ( let i=0; i < players.length; i+= 2){
             await modalService.show(  `This round ${players[i]} vs ${players[i+1]}` , false)
             let winner = await local( options, [players[i], players[i+1]])

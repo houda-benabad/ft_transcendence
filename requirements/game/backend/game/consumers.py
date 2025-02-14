@@ -64,8 +64,9 @@ class GameConsumer( AsyncWebsocketConsumer ):
 
 class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 	async def _update_players( self ):
+		for player in remote_players:
+			await player._send_message_( 'matchmaking', {} )
 		remote_players.append(self)
-
 		if len(remote_players) >= TWO_PLAYERS:
 			await self.start_game()
 
@@ -87,7 +88,8 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
 	async def _update_players( self ):
-     
+		for player in remote_players:
+			await player._send_message_( 'matchmaking', {} )
 		multi_players.append(self)
 		if len(multi_players) >= MULTI_PLAYERS:
 			await self.start_game()
