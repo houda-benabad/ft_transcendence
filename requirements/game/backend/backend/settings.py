@@ -12,9 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--e7(y!n9@b-9@@mdw!lf80=zl3%(u%f+_v*yiygvc(z2*4rk!t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+HOST_IP = os.environ.get("HOST_IP")
+HOST_SERVER_NAME = os.environ.get('HOST_SERVER_NAME')
+
+ALLOWED_HOSTS = [HOST_IP, HOST_SERVER_NAME]
 
 
 # Application definition
@@ -82,8 +85,6 @@ CHANNEL_LAYERS = {
 }
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 DATABASES = {
     'default': {

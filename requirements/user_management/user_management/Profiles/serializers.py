@@ -2,8 +2,6 @@ from rest_framework import serializers
 from .models import Profile
 from friendship.models import Friend
 from django.core.validators import validate_image_file_extension
-import logging
-logging.basicConfig(level=logging.DEBUG)
 import os  
 from django.conf import settings
         
