@@ -77,8 +77,7 @@ class Game():
 					consumer.game_result = state
 				gameModel.winner = consumers[winner_index].playerModel
 
-
-			gameModel.winner.level =  round(math.sqrt( consumers[1].playerModel.total_points ) * .9, 2)
+			gameModel.winner.level =  round(math.sqrt( gameModel.winner.total_points ) * .9, 2)
 
 		elif self.mode == MULTI_PLAYERS:
 			base = ['won', 'won', 'lost', 'lost']
