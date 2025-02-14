@@ -87,7 +87,7 @@ export class databaseExtractorService
             id : request.from_user.user_id,
             username : request.from_user.username,
             profilePic : request.from_user.profile_pic_url,
-            other :  '2 min ago',
+            other :  request.time_received,
             type : 'request'
         }))
     }

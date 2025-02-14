@@ -82,12 +82,14 @@ export const eventHandlersForEventManager = (eventManager) =>
     {
         handleAnchorEvents(event, target)
         {
+            console.log('target : ', target)
             event.preventDefault()
+            
+            const realTarget = target.matches('a') ? target : target.querySelector('a')
+            const link = realTarget.getAttribute('data-link')
+            const action = realTarget.getAttribute("data-action")
 
-            const link = target.getAttribute('data-link')
-            const action = target.getAttribute("data-action")
-
-            if (target.getAttribute('href') === '/game-settings' && action === 'router')
+            if (realTarget.getAttribute('href') === '/game-settings' && action === 'router')
                 return ;
             if (link)
                 return eventManager._router.handleRoute(link)
@@ -102,7 +104,7 @@ export const eventHandlersForEventManager = (eventManager) =>
     
                 }
                 const runAction = actionType[action]
-                runAction(target)
+                runAction(realTarget)
             }
         },
         async handleIntraCall(target)
