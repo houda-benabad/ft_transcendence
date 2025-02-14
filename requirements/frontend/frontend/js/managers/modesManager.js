@@ -18,7 +18,7 @@ export class GameManager
         await globalManager._router.navigateTo( '/game-settings' )
         this.gameSettings = await globalManager._formService.handleGame(  )
         await globalManager._router.navigateTo( '/game' )
-        await modalService.show("🎮 Controls:<br>🟦 Player 1: W / S<br>🟥 Player 2: ⬆ / ⬇", false);
+        await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
 
     }
 
@@ -42,8 +42,8 @@ export class GameManager
         await this.#denit( )
     }
     async remote( ){
-        await globalManager._router.navigateTo( '/game' )
-        let result = await remote( )
+        await this.#init( )
+        let result = await remote( this.gameSettings )
         if(result )
             await this.#denit( `You ${result.state}`, false )
         else{
@@ -51,7 +51,7 @@ export class GameManager
         }
     }
     async multiplayer( ){
-        await globalManager._router.navigateTo( '/game' )
+        await this.#init()
         let result = await multiplayer( )
         if(result )
             await this.#denit( `You ${result.state}`, false )

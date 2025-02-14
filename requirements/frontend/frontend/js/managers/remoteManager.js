@@ -15,12 +15,13 @@ import { getIsItOutOfGame, setIsItOutOfGame } from "./globalManager.js"
 
 
 export default class Remote{
-	constructor( mode ){
+	constructor( mode, options ){
 		this.mode = mode
 		this.animationProgress = 0
+		this.options = options
 
 		this.engine = new Engine( this.mode )
-		this.components = new Components(this.engine, this.mode)
+		this.components = new Components(this.engine, this.mode, this.options)
 		this.visual = new visualsManager(this.components, this.mode)
 		this.input = new inputManager( this.components, this.mode )
 		if( this.mode == MODE.REMOTE )

@@ -28,3 +28,42 @@
     gap: 12px;
   }
 }
+
+.rank{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 4em;
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.firstPlace{
+  grid-row: 2/-1;
+  background-color: #9E23A4;
+  border-radius: 10px;
+}
+.secondPlace{
+  grid-row: 3/-1;
+  background-color: #8056DE;
+  border-radius: 10px;
+
+}
+.thirdPlace{
+  grid-row: 4/-1;
+  background-color: #3E4565;
+  border-radius: 10px;
+
+}
+
+
+.firstPlace_title{
+  grid-row: 1/2;
+  grid-column: 2/3;
+}
+.secondPlace_title{
+  grid-row: 2/3;
+  grid-column: 1/2;
+}
+.thirdPlace_title{
+  grid-row: 3/4;
+  grid-column: 3/4;
+}
