@@ -1,25 +1,17 @@
-export function gameTemplate()
+export const gameSettingsTemplate = 
 {
-    return (`
-         <form id='game-settings' data-action="game-settings">
+
+    gameSettings()
+    {
+        return (
+            ` <form id='game-settings' data-action="game-settings">
                 <h2>Game Settings</h2>
-                <div class="settings-row">
-                    <p  class="settings-label">modes</p>
-                    <div class="settings-choice">
-                        <input type="radio" name="mode" data-action="mode" value="time" id="time" checked>
-                        <label for="time">time</label>
-                        <input type="radio" name="mode" data-action="mode" value="score" id="score">
-                        <label for="score">score</label>
-                    </div>
-                </div>
-                    <div class="settings-slider">
-                        <div id="slider-infos">
-                            <p id="slider-mode">seconds</p>
-                            <p id="slider-number">10</p>
-                        </div>
-                        <input type="range" min="10" max="180" name='range' value="10" id="slider-input" data-action="sliderInput">
-                    </div>
-                <div class="settings-row">
+            </form>`
+        ) 
+    },
+    addBackgroundTexture()
+    {
+        return (` <div class="settings-row">
                     <p class="settings-label">texture</p>
                     <div class="settings-choice image" id="settings-texture">
                         <input type="radio" name="texture" value="default" id="default-texture" checked>
@@ -43,7 +35,25 @@ export function gameTemplate()
                 </div>
                 <div id="button">
                     <button class="button-type4" type='submit'>start</button>
+                </div>`)
+    },
+    addModes()
+    {
+        return (`<div class="settings-row">
+                <p  class="settings-label">modes</p>
+                <div class="settings-choice">
+                    <input type="radio" name="mode" data-action="mode" value="time" id="time" checked>
+                    <label for="time">time</label>
+                    <input type="radio" name="mode" data-action="mode" value="score" id="score">
+                    <label for="score">score</label>
                 </div>
-            </form>
-        `)
+            </div>
+                <div class="settings-slider">
+                    <div id="slider-infos">
+                        <p id="slider-mode">seconds</p>
+                        <p id="slider-number">10</p>
+                    </div>
+                    <input type="range" min="10" max="180" name='range' value="10" id="slider-input" data-action="sliderInput">
+                </div>`)
+    }
 }

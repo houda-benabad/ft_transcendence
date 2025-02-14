@@ -1,4 +1,5 @@
 import { escapeHtml } from "../utils/security.js"
+import { determineUserStatus } from "../utils/utils.js"
 import { createParagraph } from "./componants.js"
 
 export class Icons extends HTMLDivElement
@@ -135,7 +136,7 @@ export class Friends extends HTMLDivElement
                 relationship = {status  : 'friend' },
             } = this._friendsRequestsDb[index]
             if (action === 'accept_request')
-                this._friendsListDb.push({id, username, profilePic, relationship, other : 'online', type : 'friend'})
+                this._friendsListDb.push({id, username, profilePic, relationship, other : determineUserStatus(id, relationship), type : 'friend'})
             this._friendsRequestsDb.splice(index, 1)
         }
         this.removeChildUi(index)
@@ -184,6 +185,7 @@ export class Friends extends HTMLDivElement
 
             fragment.appendChild(createParagraph(value, `there is no ${value} at the moment`))
         }
+        console.log(' ->>>> the db im working with is  : ', db)
         db.forEach((e, index) => {
             const friendBoxItem = document.createElement('div')
             const value = this._friendsList === true ? 'status' : 'time-request'

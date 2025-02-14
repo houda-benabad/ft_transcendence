@@ -4,6 +4,7 @@ import { globalManager } from '../managers/globalManager.js'
 import { ENDPOINTS } from '../constants/endpoints.js'
 import { eventListeners } from "../managers/globalManager.js"
 import { modalService } from '../services/modalService.js'
+import { onlineStatusService } from '../managers/globalManager.js'
 
 export function removeModalHandler( event, resolve , type)
 {
@@ -16,6 +17,21 @@ export function removeModalHandler( event, resolve , type)
         if (type === null)
             resolve(  ) 
     }
+}
+export function determineUserStatus(userId, relationship)
+{
+    const onlineFriendsList = onlineStatusService._onlineFriendsList
+    const relationshipStatus = relationship ?  relationship.status : 'me'
+
+    // console.log('liost : ', onlineFriendsList)
+    // console.log('userid : ', userId)
+    // console.log('relation : ', relationshipStatus)
+    if ((relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === true ) || relationshipStatus === 'me')
+        return ('online')
+    else if (relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === false)
+        return ('offline')
+    else
+        return ('unknown')
 }
 export function  delay(ms)
 {

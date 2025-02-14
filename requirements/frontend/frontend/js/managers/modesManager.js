@@ -1,4 +1,4 @@
-import { globalManager } from "./globalManager.js"
+import { globalManager, setisAllOptionsForGameSettings } from "./globalManager.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 import { local } from "../mods/local.js"
@@ -15,10 +15,10 @@ export class GameManager
     }
 
     async #init( ){
-        await globalManager._router.navigateTo( '/game-settings' )
+        await globalManager._router.navigateTo( '/game-settings')
         this.gameSettings = await globalManager._formService.handleGame(  )
         await globalManager._router.navigateTo( '/game' )
-        await modalService.show("🎮 Controls:<br>🟦 Player 1: W / S<br>🟥 Player 2: ⬆ / ⬇", false);
+        await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
 
     }
 
@@ -30,6 +30,7 @@ export class GameManager
     }
     async local()
     {
+        setisAllOptionsForGameSettings(true)
         await this.#init()
         let result = await local( this.gameSettings , ["player2", "player1"])
         await this.#denit(  )
@@ -37,13 +38,15 @@ export class GameManager
     async tournament( ){
         await modalService.show(  '', false,'tournament' )
         const players = await globalManager._formService.handleTournament()
+        setisAllOptionsForGameSettings(true)
         await this.#init( )
         await tournament(this.gameSettings, players  )
         await this.#denit( )
     }
     async remote( ){
-        await globalManager._router.navigateTo( '/game' )
-        let result = await remote( )
+        setisAllOptionsForGameSettings(false)
+        await this.#init( )
+        let result = await remote( this.gameSettings )
         if(result )
             await this.#denit( `You ${result.state}`, false )
         else{
@@ -51,7 +54,8 @@ export class GameManager
         }
     }
     async multiplayer( ){
-        await globalManager._router.navigateTo( '/game' )
+        setisAllOptionsForGameSettings(false)
+        await this.#init()
         let result = await multiplayer( )
         if(result )
             await this.#denit( `You ${result.state}`, false )
