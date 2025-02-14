@@ -24,9 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6jmvf48efhl)@uysh4a$_&4o)1f&-6lkjt6p*l(3*-tjnwj4t&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+HOST_IP = os.environ.get("HOST_IP")
+HOST_SERVER_NAME = os.environ.get('HOST_SERVER_NAME')
+
+ALLOWED_HOSTS = [HOST_IP, HOST_SERVER_NAME]
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 
@@ -131,7 +135,3 @@ USER_PROFILE_URL=os.environ.get("USER_PROFILE_URL")
 GAME_HISTORY_URL=os.environ.get("GAME_HISTORY_URL")
 VALIDATE_TOKEN_URL=os.environ.get("VALIDATE_TOKEN_URL")
 
-SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ['Bearer'],
-    "SIGNING_KEY": os.environ.get("JWT_SIGNING_KEY")
-}

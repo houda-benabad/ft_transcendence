@@ -12,8 +12,6 @@ services:
     build:
       context: ./requirements/user_management/
       dockerfile: Dockerfile
-    ports:
-      - 8000:8000
     restart: on-failure
     env_file:
       - .env
@@ -22,8 +20,6 @@ services:
       - DB_HOST=${USER_MANAGEMENT_DB_HOST}
     networks:
       - transcendence
-    volumes:
-      - ./requirements/user_management/user_management:/usr/src/user_management
 
   UserManagementPostgres:
     image: postgres:15.8
@@ -60,8 +56,6 @@ services:
       - DB_HOST=${GAME_DB_HOST}
     networks:
       - transcendence
-    volumes:
-      -  ./requirements/game/backend:/usr/src/game
     
   GamePostgres:
     image: postgres:15.8
