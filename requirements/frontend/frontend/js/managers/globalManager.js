@@ -12,6 +12,7 @@ const eventListeners = new EventService()
 const onlineStatusService = new OnlineStatusService()
 const tokenService = new TokenService()
 let isItOutOfGame = false
+let isAllOptionsForGameSettings = true
 
 export function setIsItOutOfGame(value)
 {
@@ -20,6 +21,15 @@ export function setIsItOutOfGame(value)
 export function getIsItOutOfGame()
 {
     return isItOutOfGame
+}
+
+export function setisAllOptionsForGameSettings(value)
+{
+    isAllOptionsForGameSettings = value
+}
+export function getisAllOptionsForGameSettings()
+{
+    return isAllOptionsForGameSettings
 }
 
 export class GlobalManager

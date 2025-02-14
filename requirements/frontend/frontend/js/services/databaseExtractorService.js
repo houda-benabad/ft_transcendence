@@ -1,4 +1,5 @@
 import { onlineStatusService } from "../managers/globalManager.js"
+import { determineUserStatus } from "../utils/utils.js"
 
 export class databaseExtractorService
 {
@@ -44,7 +45,7 @@ export class databaseExtractorService
             userId : user_id,
             username,
             profilePic : profile_pic_url,
-            status  : this.determineUserStatus(user_id, relationship),
+            status  : determineUserStatus(user_id, relationship),
             friendsCount : friends_count,
             totalGames : total_games,
             totalPoints : total_points,
@@ -75,7 +76,7 @@ export class databaseExtractorService
             username : friend.relationship ? friend.user_details.username : 'Me',
             profilePic : friend.user_details.profile_pic_url,
             relationship : friend.relationship,
-            other : this.determineUserStatus(friend.user_details.user_id, friend.relationship),
+            other : determineUserStatus(friend.user_details.user_id, friend.relationship),
             type : 'friend'
         }))
     }
@@ -121,22 +122,6 @@ export class databaseExtractorService
             'requests' : ['cancel_request','accept_request']
         }
         return (ActionType[type])
-    }
-
-    determineUserStatus(userId, relationship)
-    {
-        const onlineFriendsList = onlineStatusService._onlineFriendsList
-        const relationshipStatus = relationship ?  relationship.status : 'me'
-
-        console.log('the one i get when getting profle view onlineList : ', onlineFriendsList)
-        // console.log('status : ', relationshipStatus)
-        // console.log('userId  :', userId )
-        if ((relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === true ) || relationshipStatus === 'me')
-            return ('online')
-        else if (relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === false)
-            return ('offline')
-        else
-            return ('unknown')
     }
     extractDataForNotifications()
     {
