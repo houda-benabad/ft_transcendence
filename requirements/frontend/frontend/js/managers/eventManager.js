@@ -26,7 +26,9 @@ export class EventManager
         const target = event.target
 		let targetParent
 
-		if (target.matches('a') || target.querySelector('a'))
+		// console.log('target : ', target)
+		// console.log('test : ', target.classList.contains('anchor-box'))
+		if (target.matches('a') || target.classList.contains('anchor-box'))
             this._eventHandlers.anchor.handleAnchorEvents(event, target)
         else if (target.matches('button'))
             this._eventHandlers.button.handleButtonEvents(target)

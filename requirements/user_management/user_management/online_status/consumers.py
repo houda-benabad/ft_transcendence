@@ -6,7 +6,9 @@ from django.contrib.auth.models import AnonymousUser
 import redis
 from django.conf import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 REDIS_ONLINE_USERS = "online_users"
 class OnlineStatusConsumer(WebsocketConsumer):
@@ -39,6 +41,23 @@ class OnlineStatusConsumer(WebsocketConsumer):
                     raise ValueError("missing friend id")
                 if self.redis_client.sismember(REDIS_ONLINE_USERS, friend_id) == 1:
                     self.send(text_data=json.dumps({"type": "friend_online_status", "friend_id": friend_id, "status": "online"}))
+                    friend = User.objects.filter(id=friend_id).first()
+                    async_to_sync(self.channel_layer.group_send)(f"{friend.username}_group", {
+                        "type": "friend_status",
+                        "friend_id": self.user.id,
+                        "status": "online",
+                        })
+            
+            elif message_type == "removed_friend":
+                friend_id = json_data.get('friend_id', '')
+                if not friend_id:
+                    raise ValueError("missing friend id")
+                friend = User.objects.filter(id=friend_id).first()
+                async_to_sync(self.channel_layer.group_send)(f"{friend.username}_group", {
+                    "type": "friend_removed",
+                    "friend_id": self.user.id,
+                    })
+                    
 
         except json.JSONDecodeError:
             self.send(text_data=json.dumps({"error": 'Invalid JSON format'}))
@@ -90,4 +109,10 @@ class OnlineStatusConsumer(WebsocketConsumer):
         friend_id = event.get("friend_id")
 
         self.send(text_data=json.dumps({"type": "friend_online_status", "friend_id": friend_id, "status": status}))
+
+
+    def friend_removed(self, event):
+        friend_id = event.get("friend_id")
+
+        self.send(text_data=json.dumps({"type": "friend_removed", "friend_id": friend_id}))
         

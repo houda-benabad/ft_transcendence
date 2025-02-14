@@ -12,7 +12,16 @@ export class OnlineStatusService
 
     set newFriend(newValue)
     {
+        console.log('added a new friends!!')
         this._socket.send(JSON.stringify({type: 'new_friend', friend_id: newValue}))
+    }
+    set removeFriend(newValue)
+    {
+        console.log('removed friends!!')
+
+        this._socket.send(JSON.stringify({type: 'removed_friend', friend_id: newValue}))
+        this.updateFriend()
+        
     }
     get onlineFriendsList()
     {
@@ -41,7 +50,21 @@ export class OnlineStatusService
                 this._onlineFriendsList = Object.values(online_friends)
             else if (type === 'friend_online_status')
                 this._debounced({friend_id, status})
+            else if (type === 'friend_removed')
+            {
+                this.updateFriend(friend_id)
+                console.log('final list : ', this._onlineFriendsList)
+            }
         }
+    }
+    updateFriend(friend_id)
+    {
+        this._onlineFriendsList = this._onlineFriendsList.filter((num) => num !== friend_id);
+        
+        console.log('when removing ------ ', this._onlineFriendsList)
+        const profileView = document.querySelector('profile-view')
+        if (profileView)
+            profileView.updateStatus = {friend_id, status : 'unknown'}
     }
     updateContent({friend_id, status})
     {        
