@@ -88,7 +88,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 
 class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
 	async def _update_players( self ):
-		for player in remote_players:
+		for player in multi_players:
 			await player._send_message_( 'matchmaking', {} )
 		multi_players.append(self)
 		if len(multi_players) >= MULTI_PLAYERS:
