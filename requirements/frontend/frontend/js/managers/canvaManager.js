@@ -120,6 +120,7 @@ class appCanva{
                     this.elementsId.time.innerHTML = data
                 break;
             case 'waiting':
+                console.log("data = ", data)
                 if ( this.elementsId.waiting )
                         this.elementsId.waiting.innerHTML += `<br> A player joined`
                 break;
