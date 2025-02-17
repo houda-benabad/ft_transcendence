@@ -27,6 +27,9 @@ class UserCreateSerializer(BaseUserCreateSerializer):
     
     def validate_username(self, value):
         
+        another_user = User.objects.filter(lower_username=value.lower()).first()
+        if another_user:
+            raise serializers.ValidationError("a user with that username already exists.")
         if len(value) < 3 or len(value) > 30:
             raise serializers.ValidationError("Username must be between 3 and 30 characters.")
         return value
@@ -45,6 +48,9 @@ class UsernameSerializer(BaseUsernameSerializer):
     
     def validate(self, data):
         username = data.get('username')
+        another_user = User.objects.filter(lower_username=username.lower()).first()
+        if another_user and (self.instance is None or self.instance != another_user):
+            raise serializers.ValidationError("a user with that username already exists.")
         if len(username) < 3 or len(username) > 30:
             raise serializers.ValidationError("Username must be between 3 and 30 characters.")
         return data

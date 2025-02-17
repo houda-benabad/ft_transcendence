@@ -31,7 +31,8 @@ class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
         return self.request.user
     
     def perform_update(self, serializer):
-        instance = serializer.save()
+        username = serializer.validated_data.get("username")
+        instance = serializer.save(lower_username=username.lower())
         try :
             response = requests.post(f"{settings.UPDATE_PLAYER_URL}/{instance.id}", data={"username": instance.username}, headers={"Host":self.request.get_host()})
             response.raise_for_status()
@@ -46,8 +47,10 @@ class   UserUsrnameUpdateApiView(generics.UpdateAPIView):
 set_username_api_view = UserUsrnameUpdateApiView.as_view()
 
 class   CustomUserViewSet(UserViewSet):
+    
     def perform_create(self, serializer):
-        instance = serializer.save()
+        username = serializer.validated_data.get("username")
+        instance = serializer.save(lower_username=username.lower())
         try :
             response = requests.post(settings.NEW_PLAYER_URL, data={"userId": instance.id, "username": instance.username}, headers={"Host":self.request.get_host()})
             response.raise_for_status()
@@ -96,7 +99,8 @@ class   IntraCallback(APIView):
             if user_profile:
                 intra_user = User.objects.filter(profile=user_profile).first()
             if not user_profile:
-                intra_user, created = User.objects.get_or_create(username=user_data.get("username"))
+                username = user_data.get("username")
+                intra_user, created = User.objects.get_or_create(username=username, lower_username=username.lower())
                 if not created:
                     return Response({'detail': f"A user with the username '{intra_user.username}' already exists and does not use OAuth."}, status=status.HTTP_400_BAD_REQUEST)
                 user_profile = Profile.objects.create(user=intra_user, image_url = user_data.get("image_url"), is_oauth2=True, oauth2_id=user_data.get("id"))
