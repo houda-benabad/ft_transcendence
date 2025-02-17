@@ -12,16 +12,12 @@ export class OnlineStatusService
 
     set newFriend(newValue)
     {
-        // console.log('added a new friends!!')
         this._socket.send(JSON.stringify({type: 'new_friend', friend_id: newValue}))
     }
     set removeFriend(newValue)
     {
-        // console.log('removed friends!!')
-
         this._socket.send(JSON.stringify({type: 'removed_friend', friend_id: newValue}))
         this.updateFriend()
-        
     }
     get onlineFriendsList()
     {
@@ -33,7 +29,7 @@ export class OnlineStatusService
         this._debounced = debounce(this.updateContent, 500)
 
         this._socket.onopen = () => { 
-            // console.log('websocket was opened successfully !!!')
+            console.log('websocket was opened successfully !!!')
         }
         
         this._socket.onclose = (e) => {
@@ -63,7 +59,6 @@ export class OnlineStatusService
     }
     updateContent({friend_id, status})
     {        
-        console.log('updating content = ', typeof friend_id)
         if (status === 'offline')
             this._onlineFriendsList = this._onlineFriendsList.filter((num) => num !== friend_id);
         else

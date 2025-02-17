@@ -69,11 +69,11 @@ export class ProfileView extends HTMLElement
         const friendsBox = document.querySelector('.friends-box')
         friendsBox.innerHTML = profileTemplate.friendsBox(this._userId, this._username)
 
-        console.log('userid : ', this._userId)
         const friends = document.createElement('div', {is : 'custom-friends'})
 
         friends.friendsListDb = this._database.extractData('friendsList')
         friends.friendsRequestsDb = this._database.extractData('friendsRequests')
+        friends.type = this._userId === 'me' ? 'mine' : 'other'
         
         friendsBox.appendChild(friends)
     }

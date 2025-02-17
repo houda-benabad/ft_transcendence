@@ -23,11 +23,6 @@ export function determineUserStatus(userId, relationship)
     const onlineFriendsList = onlineStatusService._onlineFriendsList
     const relationshipStatus = relationship ?  relationship.status : 'me'
 
-    // console.log('liost : ', onlineFriendsList)
-    // console.log('userid : ',  userId)
-    // console.log('type of : ', typeof userId)
-    // console.log('userid included  : ', onlineFriendsList.includes(Number(userId)))
-    // console.log('relation : ', relationshipStatus)
     if ((relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === true ) || relationshipStatus === 'me')
         return ('online')
     else if (relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === false)
@@ -91,7 +86,7 @@ export function debounce(func, delay)
 }
 export async function tokenExpired(func = null)
 {
-    console.log('->>>>>>> access token was expired')
+    console.log('access token was expired')
     const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
         method : 'POST',
         headers : {
@@ -101,7 +96,7 @@ export async function tokenExpired(func = null)
     })
     if (response.status === 401)
     {
-        console.log('->>>>>> refresh token was expired')
+        console.log('refresh token was expired')
         tokenService.clear()
         await modalService.show('the user is no more authenticated !!!', true)
         document.getElementById('app').classList.remove('active')

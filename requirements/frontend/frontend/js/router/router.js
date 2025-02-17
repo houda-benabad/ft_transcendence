@@ -24,6 +24,7 @@ export class Router
    
     async init()
     {
+        await tokenService.init()
         if (tokenService.isAuthenticated())
         {
             onlineStatusService.init()
@@ -34,11 +35,10 @@ export class Router
     }
     async handleRoute(newPath=null, addToHistory = true)
     {
-        const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
-        const query = window.location.search
 
-        // console.log('route : ', this._route)
-        // console.log('path : ', path)
+        const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
+        const query = path === '/' ? window.location.search :  null
+        
         if (this._route === '/game' && path === '/game-settings')
             return setIsItOutOfGame(true)
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
@@ -56,8 +56,6 @@ export class Router
     }
     navigateTo(path, addToHistory)
     {
-        // console.log('im in navigate with path : ', path)
-        // console.log('addhistory is : ', addToHistory)
         let options = null
 
         if (addToHistory === true)
@@ -120,7 +118,6 @@ export class Router
         let fragment = document.createDocumentFragment()
         const route = this._routes[path] || this._routes['/404']
 
-        // console.log('im in update content - -')
         if (route.customElement)
         {
             fragment = document.createElement(route.customElement)
