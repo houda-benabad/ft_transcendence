@@ -79,7 +79,6 @@ export default class Remote{
 
 	updateData( e,  resolve ){
 		const { type, data, author } = JSON.parse( e.data )
-
 		this[ACTIONS[type]]( data,  resolve, author)
 	}
 
