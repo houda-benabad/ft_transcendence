@@ -21,6 +21,8 @@ export class GameManager
         await globalManager._router.navigateTo( '/game', true)
         if (mode == MODE.LOCAL || mode == MODE.TOURNAMENT)
             await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
+        else
+            await modalService.show("🎮 Controls:<br>🟦  keys: ⬆ / ⬇", false);
 
     }
 
