@@ -76,7 +76,7 @@ class GameServer(  ):
 		await self.__send_group_msg_( 'start', self.get_score( ) )
 
 		while True:
-			self.game.update( )
+			await self.game.update( )
 
 			if ( any( consumer.keycode == -1 for consumer in self.consumers )):
 				break
@@ -117,6 +117,7 @@ class GameServer(  ):
 
 
 async def startRemoteGame( consumers, mode):
+	print("============sartinggg=========")
 	server = GameServer( consumers, mode )
 
 	await server.setup(  )

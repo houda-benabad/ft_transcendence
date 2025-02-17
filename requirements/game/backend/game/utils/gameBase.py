@@ -35,10 +35,10 @@ class Game():
 							 Player( Vector3( 1.5, 0, -(self.plane.dimension.z )/2 ), Vector3( 0,-.1,.05 ), Vector3( 1,.3,.1 ) ) ]
 
 
-	def update(self):
+	async def update(self):
 		for player in self.players:
 			player.update()
-		self.ball.update(self.plane, self.players, self.mode )
+		await self.ball.update(self.plane, self.players, self.mode )
 
 	async def is_over(self):
 		return any( player.score == WINNING_SCORE for player in self.players )
