@@ -106,6 +106,7 @@ export class Friends extends HTMLDivElement
         this._friendsList = true
         this._friendsListDb = null
         this._friendsRequesstDb = null
+        this._type = null
     }
     set friendsList(value)
     {
@@ -122,9 +123,12 @@ export class Friends extends HTMLDivElement
         if (this._friendsRequesstDb === null)
             this._friendsRequestsDb = value
     }
+    set type(value)
+    {
+        this._type = value
+    }
     set updateDb({index, action})
     {
-        console.log('im in heree - -')
         if (this._friendsList === true)
             this._friendsListDb.splice(index, 1)
         else
@@ -158,6 +162,7 @@ export class Friends extends HTMLDivElement
     async connectedCallback() 
     {
         this.id = 'friends-box-container'
+        this.setAttribute('box-type', this._type)
         this.updateContent()
     }
     removeChildUi(index)

@@ -1,5 +1,5 @@
 import { eventListeners } from '../managers/globalManager.js'
-
+import { modalService } from './modalService.js'
 export class FormService
 {
     constructor()
@@ -23,6 +23,9 @@ export class FormService
         let playersObject = Object.fromEntries( data )
         let players = Object.values( playersObject )
         eventListeners.off(form, 'submit')
+        
+        if (players.length !== new Set(players).size)
+            return modalService.show('make sure all entries are unique')
         resolve( players )
     }
     #eventHandlerGameForm( event, resolve )
@@ -35,6 +38,7 @@ export class FormService
         let data = new FormData( form );
         let gameSettings = Object.fromEntries( data )
         eventListeners.off(form, 'submit')
+
         resolve( gameSettings )
     }
     #eventHandlerPasswordForm (event, resolve)

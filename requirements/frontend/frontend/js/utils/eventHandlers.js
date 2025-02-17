@@ -133,29 +133,22 @@ export const eventHandlersForEventManager = (eventManager) =>
         {
             const action = target.getAttribute('action-type')
             const id = target.getAttribute('id')
-            const mainElement = target.closest(['[class="icons"]'])
     
             if (action === 'send_request' || action === 'accept_request')
             {
                 await eventManager._apiService.friendship.postFriendship(action, id)
-                if (action === 'send_request')
-                    mainElement.relationshipStatus = 'requested'
-                else
-                {
+                if (action === 'accept_request')
                     onlineStatusService.newFriend = id
-                    mainElement.relationshipStatus = 'friend'
-                }
             }
             else if (action === 'remove_friend' || action === 'cancel_request' || action === 'reject_request')
             {
                 await eventManager._apiService.friendship.deleteFriendship(action, id)
-                console.log('action == ', action)
                 if (action === 'remove_friend')
                     onlineStatusService.removeFriend = id
-                mainElement.relationshipStatus = 'stranger'
             }
             else 
                 eventManager._router.handleRoute('/settings')
+            this.modifyIconsValue(target, action)
         },
         async handleFriendsIcons(target)
         {
@@ -171,12 +164,26 @@ export const eventHandlersForEventManager = (eventManager) =>
 
             const friendsBoxItemId = target.closest('.friends-box-item').getAttribute('index')
             const friendsBoxContainer = document.getElementById('friends-box-container')
-            friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
-            
+
+            if (friendsBoxContainer.getAttribute('box-type') === 'mine')
+                friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
             if (action === 'accept_request')
                 onlineStatusService.newFriend = id
             else 
                 onlineStatusService.removeFriend = id
+            this.modifyIconsValue(target, action)
+        },
+        modifyIconsValue(target, action)
+        {
+            const mainElement = target.closest(['[class="icons"]'])
+
+            if (action === 'send_request')
+                mainElement.relationshipStatus = 'requested'
+            else if (action === 'accept_request')
+                mainElement.relationshipStatus = 'friend'
+            else if (action === 'remove_friend' || action === 'cancel_request' || action === 'reject_request')
+                mainElement.relationshipStatus = 'stranger'
+
         }
     },
     button :
@@ -253,7 +260,6 @@ export const eventHandlersForEventManager = (eventManager) =>
         {
             const userId = target.getAttribute('userid')
 
-            console.log('userid is : ', userId)
             eventManager._router.handleRoute(`/profile/${userId}`)
         }
     },

@@ -1,7 +1,7 @@
 import { ENDPOINTS } from '../constants/endpoints.js'
 import { modalService } from './modalService.js' // this one too need to find a solution for it
 import { globalManager, tokenService } from '../managers/globalManager.js'
-import { tokenExpired } from '../utils/utils.js'
+import { tokenExpired , loader} from '../utils/utils.js'
 
 class RequestConfiguration
 {
@@ -65,8 +65,6 @@ class ApiService
     set requestConfig(newValue)
     {
         this._requestConfig =  newValue
-
-        // console.log('im setting the value of new config : ', this._requestConfig)
     }
     set resolve(newValue)
     {
@@ -74,7 +72,6 @@ class ApiService
     }
     async request()
     {
-        //  console.log('before : ', this._requestConfig)
         let {
             endpoint,
             method,
@@ -127,7 +124,7 @@ class ApiService
     }
     async handleMessaageErrors(responseBody)
     {
-        const {showModal} = this._requestConfig
+        const {showModal, endpoint} = this._requestConfig
         const entries = Object.entries(responseBody)
         const [key, value] = entries[0]
 
@@ -137,6 +134,13 @@ class ApiService
                return await modalService.show(`${value}`)
             await modalService.show(`${key} : ${value}`)
         }
+        if (endpoint === ENDPOINTS.INTRA_CALLBACK)
+            this.handleCasesForIntra()
+    }   
+    async handleCasesForIntra()
+    {
+        await loader(1500)
+        globalManager._router.handleRoute('/signup')
     }
 }
 
@@ -249,7 +253,6 @@ export const apiService =
         postFriendship : (action, id) => new Promise (resolve => 
         {
             const messageIdentifier = action.replace('_',' the ')
-            // console.log('here : ', messageIdentifier)
             generatedHttpRequests.createPostRequest(`${ENDPOINTS.FRIENDSHIP}${action}/${id}`, {needsAuth : true, modalMessage: `you did ${messageIdentifier} successfully`})(null, resolve)
         }),
         deleteFriendship : (action, id) => new Promise (resolve => 
