@@ -43,13 +43,12 @@ export class OnlineStatusService
         }
         this._socket.onmessage = (e) => {
             const response = JSON.parse(e.data)
-            // console.log('websocket got a message the response is  : ', response)
             const {type, online_friends, friend_id, status} = response
-
+         
             if (type === 'online_friends_list')
                 this._onlineFriendsList = Object.values(online_friends)
             else if (type === 'friend_online_status')
-                this._debounced({friend_id, status})
+                this._debounced({friend_id : Number(friend_id), status}) // in here sends me friend_id as a string
             else if (type === 'friend_removed')
                 this.updateFriend(friend_id)
         }
@@ -58,13 +57,13 @@ export class OnlineStatusService
     {
         this._onlineFriendsList = this._onlineFriendsList.filter((num) => num !== friend_id);
         
-        console.log('when removing ------ ', this._onlineFriendsList)
         const profileView = document.querySelector('profile-view')
         if (profileView)
             profileView.updateStatus = {friend_id, status : 'unknown'}
     }
     updateContent({friend_id, status})
     {        
+        console.log('updating content = ', typeof friend_id)
         if (status === 'offline')
             this._onlineFriendsList = this._onlineFriendsList.filter((num) => num !== friend_id);
         else

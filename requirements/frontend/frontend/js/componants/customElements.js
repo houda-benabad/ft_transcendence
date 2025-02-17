@@ -1,5 +1,5 @@
 import { escapeHtml } from "../utils/security.js"
-import { determineUserStatus } from "../utils/utils.js"
+import { delay, determineUserStatus } from "../utils/utils.js"
 import { createParagraph } from "./componants.js"
 
 export class Icons extends HTMLDivElement
@@ -124,22 +124,25 @@ export class Friends extends HTMLDivElement
     }
     set updateDb({index, action})
     {
+        console.log('im in heree - -')
         if (this._friendsList === true)
             this._friendsListDb.splice(index, 1)
         else
-        {
-           
-            const{
-                id,
-                username,
-                profilePic,
-                relationship = {status  : 'friend' },
-            } = this._friendsRequestsDb[index]
-            if (action === 'accept_request')
-                this._friendsListDb.push({id, username, profilePic, relationship, other : determineUserStatus(id, relationship), type : 'friend'})
-            this._friendsRequestsDb.splice(index, 1)
-        }
+            this.updateFriendsListDb(index, action)
         this.removeChildUi(index)
+    }
+    async  updateFriendsListDb(index, action)
+    {
+        await delay(700)
+        const{
+            id,
+            username,
+            profilePic,
+            relationship = {status  : 'friend' },
+        } = this._friendsRequestsDb[index]
+        if (action === 'accept_request')
+            this._friendsListDb.push({id, username, profilePic, relationship, other : determineUserStatus(id, relationship), type : 'friend'})
+        this._friendsRequestsDb.splice(index, 1)
     }
     set updateStatus({friend_id, status})
     {
@@ -185,7 +188,6 @@ export class Friends extends HTMLDivElement
 
             fragment.appendChild(createParagraph(value, `there is no ${value} at the moment`))
         }
-        console.log(' ->>>> the db im working with is  : ', db)
         db.forEach((e, index) => {
             const friendBoxItem = document.createElement('div')
             const value = this._friendsList === true ? 'status' : 'time-request'

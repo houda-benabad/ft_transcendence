@@ -37,12 +37,10 @@ export class Router
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = window.location.search
 
-        if (this._route === '/game' && path === '/profile')
-        {
-            console.log('im in here - -')
-            setIsItOutOfGame(true)
-            await this.initBasicRoutes()
-        }
+        // console.log('route : ', this._route)
+        // console.log('path : ', path)
+        if (this._route === '/game' && path === '/game-settings')
+            return setIsItOutOfGame(true)
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
             this.removeWelcomeText()
         if (query)
@@ -58,6 +56,8 @@ export class Router
     }
     navigateTo(path, addToHistory)
     {
+        // console.log('im in navigate with path : ', path)
+        // console.log('addhistory is : ', addToHistory)
         let options = null
 
         if (addToHistory === true)
@@ -120,6 +120,7 @@ export class Router
         let fragment = document.createDocumentFragment()
         const route = this._routes[path] || this._routes['/404']
 
+        // console.log('im in update content - -')
         if (route.customElement)
         {
             fragment = document.createElement(route.customElement)

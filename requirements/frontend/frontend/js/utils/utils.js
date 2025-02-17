@@ -24,7 +24,9 @@ export function determineUserStatus(userId, relationship)
     const relationshipStatus = relationship ?  relationship.status : 'me'
 
     // console.log('liost : ', onlineFriendsList)
-    // console.log('userid : ', userId)
+    // console.log('userid : ',  userId)
+    // console.log('type of : ', typeof userId)
+    // console.log('userid included  : ', onlineFriendsList.includes(Number(userId)))
     // console.log('relation : ', relationshipStatus)
     if ((relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === true ) || relationshipStatus === 'me')
         return ('online')

@@ -1,4 +1,4 @@
-import { globalManager, setisAllOptionsForGameSettings } from "./globalManager.js"
+import { globalManager, setisAllOptionsForGameSettings, getIsItOutOfGame} from "./globalManager.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 import { local } from "../mods/local.js"
@@ -16,9 +16,9 @@ export class GameManager
     }
 
     async #init( mode ){
-        await globalManager._router.navigateTo( '/game-settings')
+        await globalManager._router.navigateTo( '/game-settings', true)
         this.gameSettings = await globalManager._formService.handleGame(  )
-        await globalManager._router.navigateTo( '/game' )
+        await globalManager._router.navigateTo( '/game', true)
         if (mode == MODE.LOCAL || mode == MODE.TOURNAMENT)
             await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
 
@@ -26,8 +26,11 @@ export class GameManager
 
     async #denit( message='Game over', automatisation=true ){
         await modalService.show(  message , automatisation)
-        await reset(  )
-        globalManager._router.navigateTo( '/' )
+        if (getIsItOutOfGame() === false)
+        {
+            await reset(  )
+            globalManager._router.navigateTo( '/' )
+        }
         
     }
     async local()
