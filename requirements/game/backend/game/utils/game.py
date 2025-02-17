@@ -117,7 +117,6 @@ class GameServer(  ):
 
 
 async def startRemoteGame( consumers, mode):
-	print("============sartinggg=========")
 	server = GameServer( consumers, mode )
 
 	await server.setup(  )

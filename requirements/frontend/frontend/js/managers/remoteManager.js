@@ -123,7 +123,6 @@ export default class Remote{
 		this.id = requestAnimationFrame( (  ) => this.animate(  ) )
 		this.engine.world.step( WORLD.TIMESTAMP) 
 		if (getIsItOutOfGame( ) == true && this.socket.OPEN ){
-			console.log("im out")
 			this.socket.close(4000);
 			cancelAnimationFrame( this.id )
 			setIsItOutOfGame( false )
