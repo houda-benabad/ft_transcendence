@@ -23,7 +23,7 @@ export class Router
    
     async init()
     {
-        await tokenService.init()
+        // await tokenService.init()
         if (tokenService.isAuthenticated())
         {
             onlineStatusService.init()
@@ -34,13 +34,10 @@ export class Router
     }
     async handleRoute(newPath=null, addToHistory = true)
     {
-
-        // console.log('history : ', addToHistory)
-        // console.log('path : ', newPath)
-        // console.log('route : ', this._route)
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
         
+        console.log('im in here - -', path)
         if (this._route === '/game' && path === '/game-settings')
             return setIsItOutOfGame(true)
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
@@ -58,9 +55,10 @@ export class Router
     }
     navigateTo(path, addToHistory)
     {
-        // console.log('im in here - - ', path ,  ' history . ' , addToHistory)
         let options = null
 
+        // console.log('path si : ', path)
+        // console.log('route : ', this._route)
         if (addToHistory === true)
             history.pushState({path}, '', path)
         if (path.includes('/profile'))
@@ -74,6 +72,8 @@ export class Router
             else 
                 path = '/404'
         }
+        if (this._route === '/signin' && path === '/')
+            history.replaceState({}, '', '/')
         this._route = path
         this.updateContent(path, options)
     }
