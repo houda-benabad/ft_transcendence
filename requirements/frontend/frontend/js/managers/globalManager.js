@@ -16,6 +16,7 @@ let isAllOptionsForGameSettings = true
 
 export function setIsItOutOfGame(value)
 {
+    console.log('im in here - - , i set value to  : ', value)
     isItOutOfGame = value
 }
 export function getIsItOutOfGame()

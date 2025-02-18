@@ -220,7 +220,7 @@ export const eventHandlersForEventManager = (eventManager) =>
         async handleNewUsername(target)
         {
             const input = document.getElementById('username-to-save')
-            const inputValue = input.value	
+            const inputValue = input.value.toLowerCase()
 
             if (!inputValue || inputValue.includes(' '))
                 modalService.show('enter a valid username')
@@ -228,7 +228,6 @@ export const eventHandlersForEventManager = (eventManager) =>
                 modalService.show('you already have the same username  - -')
             else
                 await eventManager._apiService.settings.updateUsername({new_username : inputValue})
-        
             input.value = ''
             input.placeholder = inputValue
         },
@@ -305,7 +304,11 @@ export const eventHandlersForEventManager = (eventManager) =>
             if (action === 'signin' || action === 'signup')
             {
                 const formObject = {}
-                formData.forEach((value, key) => { formObject[key] = value})
+                formData.forEach((value, key) => { 
+                    if (key === 'username')
+                        value = value.toLowerCase()
+                    formObject[key] = value
+                })
                 const response = await eventManager._apiService.auth[action](formObject)
 
                 if (action  === 'signup')

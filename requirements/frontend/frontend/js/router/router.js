@@ -2,8 +2,7 @@ import {getIsItOutOfGame, setIsItOutOfGame, onlineStatusService, tokenService } 
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
 import { write , delay} from "../utils/utils.js"
 import { ROUTES } from '../constants/routes.js'
-import { modalService } from "../services/modalService.js"
-import { loader } from "../utils/utils.js"
+import { eventListeners } from "../managers/globalManager.js"
 
 import '../views/homeView.js'
 import '../views/profileView.js'
@@ -31,11 +30,14 @@ export class Router
             await this.initBasicRoutes()
         }
         window.addEventListener('popstate', (event) => this.handleRoute(event.state ? event.state.path : null, false))
-        this.handleRoute()
+        this.handleRoute(null, false)
     }
     async handleRoute(newPath=null, addToHistory = true)
     {
 
+        // console.log('history : ', addToHistory)
+        // console.log('path : ', newPath)
+        // console.log('route : ', this._route)
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
         
@@ -56,6 +58,7 @@ export class Router
     }
     navigateTo(path, addToHistory)
     {
+        // console.log('im in here - - ', path ,  ' history . ' , addToHistory)
         let options = null
 
         if (addToHistory === true)
@@ -142,6 +145,17 @@ export class Router
         const container = route.allScreen ? app : main
 
         container.replaceChildren(fragment)
+        this.doSomeChecks(app)
+    }
+    doSomeChecks(app)
+    {
+        const modalBackground = app.querySelector('#modal-background')
+
+        if (modalBackground)
+        {
+            modalBackground.remove()
+            eventListeners.off(modalBackground, 'click')
+        }
     }
     async fetchDataForCtmEl(options, api)
     {
