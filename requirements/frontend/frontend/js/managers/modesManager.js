@@ -16,18 +16,19 @@ export class GameManager
     }
 
     async #init( mode ){
+        console.log("mode = ", mode)
         await globalManager._router.navigateTo( '/game-settings', true)
         this.gameSettings = await globalManager._formService.handleGame(  )
         await globalManager._router.navigateTo( '/game', true)
         if (mode == MODE.LOCAL || mode == MODE.TOURNAMENT)
-            await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
+            await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", true);
         else
-            await modalService.show("🎮 Controls:<br>🟦  keys: ⬆ / ⬇", false);
+            await modalService.show("🎮 Controls:<br>🟦  keys: ⬆ / ⬇ <br> Score 10 to win", true);
 
     }
 
     async #denit( message='Game over', automatisation=true ){
-        await modalService.show(  message , automatisation)
+        await modalService.show(  message , true)
         if (getIsItOutOfGame() === false)
         {
             await reset(  )
@@ -38,35 +39,35 @@ export class GameManager
     async local()
     {
         setisAllOptionsForGameSettings(true)
-        await this.#init()
+        await this.#init( MODE.LOCAL )
         let result = await local( this.gameSettings , ["player2", "player1"])
-        await this.#denit(  )
+        await this.#denit()
     }
     async tournament( ){
         await modalService.show(  '', false,'tournament' )
         const players = await globalManager._formService.handleTournament()
         setisAllOptionsForGameSettings(true)
-        await this.#init( )
+        await this.#init( MODE.TOURNAMENT )
         await tournament(this.gameSettings, players  )
-        await this.#denit( )
+        await this.#denit(  )
     }
     async remote( ){
         setisAllOptionsForGameSettings(false)
-        await this.#init( )
+        await this.#init( MODE.REMOTE )
         let result = await remote( this.gameSettings )
         if(result )
             await this.#denit( `You ${result.state}`, false )
         else{
-            await this.#denit(  )
+            await this.#denit( )
         }
     }
     async multiplayer( ){
         setisAllOptionsForGameSettings(false)
-        await this.#init()
+        await this.#init( MODE.MULTIPLAYER )
         let result = await multiplayer( )
         if(result )
             await this.#denit( `You ${result.state}`, false )
         else
-            await this.#denit(  )
+            await this.#denit()
     }
 }
