@@ -21,9 +21,9 @@ export async function tournament( options, players ) {
         await modalService.show(  `This round winner is ${third_place}` , false)
 
 
-
         await modalService.show(  `final round ${winners[0]} vs ${winners[1]}` , false)
         const first_place = await local( options, winners)
+        console.log( "the winner is ", first_place )
         if (!first_place) return false;
         const second_place = winners[0] == first_place ? winners[1] : winners[0]
 

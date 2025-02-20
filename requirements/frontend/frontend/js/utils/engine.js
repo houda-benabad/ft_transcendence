@@ -32,6 +32,9 @@ export default class Engine {
 		this.setupWorld(  )
 		this.setupResizeEvent(  )
 		this.onWindowResize( )
+
+		const axesHelper = new THREE.AxesHelper( 5 );
+		this.scene.add( axesHelper );
 	}
 
 	setupCamera(  ){

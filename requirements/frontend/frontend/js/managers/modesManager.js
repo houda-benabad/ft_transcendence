@@ -1,4 +1,4 @@
-import { globalManager, setisAllOptionsForGameSettings, getIsItOutOfGame} from "./globalManager.js"
+import { globalManager, setisAllOptionsForGameSettings, getIsItOutOfGame, setIsItOutOfGame} from "./globalManager.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 import { local } from "../mods/local.js"
@@ -6,17 +6,13 @@ import { remote } from "../mods/remote.js"
 import{ multiplayer} from "../mods/multiplayer.js"
 import { tournament } from "../mods/tournament.js"
 import { MODE } from "../constants/engine.js"
-export class GameManager 
 
-{
-    constructor()
-    {
-        this.gameSettings = null
-        this.app = document.getElementById( 'app' )
-    }
+const GameManager = {
+    gameSettings : null,
 
-    async #init( mode ){
-        console.log("mode = ", mode)
+    async init( mode ){
+        if (mode == MODE.LOCAL || mode == MODE.TOURNAMENT) setisAllOptionsForGameSettings(true)
+        else setisAllOptionsForGameSettings(false)
         await globalManager._router.navigateTo( '/game-settings', true)
         this.gameSettings = await globalManager._formService.handleGame(  )
         await globalManager._router.navigateTo( '/game', true)
@@ -25,49 +21,44 @@ export class GameManager
         else
             await modalService.show("🎮 Controls:<br>🟦  keys: ⬆ / ⬇ <br> Score 10 to win", true);
 
-    }
-
-    async #denit( message='Game over', automatisation=true ){
-        await modalService.show(  message , true)
+    },
+    async denit( message='game over' ){
         if (getIsItOutOfGame() === false)
-        {
-            await reset(  )
-            globalManager._router.navigateTo( '/' )
-        }
+            await modalService.show( message, true)
+        else
+            setIsItOutOfGame( false)
+        await reset(  )
+        globalManager._router.navigateTo( '/' )
         
-    }
-    async local()
-    {
-        setisAllOptionsForGameSettings(true)
-        await this.#init( MODE.LOCAL )
-        let result = await local( this.gameSettings , ["player2", "player1"])
-        await this.#denit()
-    }
-    async tournament( ){
+    },
+    async tournament_form( ){
         await modalService.show(  '', false,'tournament' )
         const players = await globalManager._formService.handleTournament()
-        setisAllOptionsForGameSettings(true)
-        await this.#init( MODE.TOURNAMENT )
+        return players
+    },
+    async local()
+    {
+        await this.init( MODE.LOCAL )
+        let result = await local( this.gameSettings , ["Player1", "Player2"])
+        await this.denit( `${result} won` )
+    },
+    async tournament( ){
+        const players = await this.tournament_form( )
+        await this.init( MODE.TOURNAMENT )
         await tournament(this.gameSettings, players  )
-        await this.#denit(  )
-    }
+        await this.denit(  )
+    },
     async remote( ){
-        setisAllOptionsForGameSettings(false)
-        await this.#init( MODE.REMOTE )
+        await this.init( MODE.REMOTE )
         let result = await remote( this.gameSettings )
-        if(result )
-            await this.#denit( `You ${result.state}`, false )
-        else{
-            await this.#denit( )
-        }
-    }
+        result ? await this.denit( `You ${result.state}` ) : await this.denit(  )
+    },
     async multiplayer( ){
-        setisAllOptionsForGameSettings(false)
-        await this.#init( MODE.MULTIPLAYER )
+        await this.init( MODE.MULTIPLAYER )
         let result = await multiplayer( )
-        if(result )
-            await this.#denit( `You ${result.state}`, false )
-        else
-            await this.#denit()
+        result ? await this.denit( `You ${result.state}` ) : await this.denit(  )
+
     }
 }
+
+export default GameManager
