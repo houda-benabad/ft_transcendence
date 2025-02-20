@@ -1,4 +1,4 @@
-import { globalManager, setisAllOptionsForGameSettings, getIsItOutOfGame, setIsItOutOfGame} from "./globalManager.js"
+import { globalManager, setisAllOptionsForGameSettings, getIsItOutOfGame, setIsItOutOfGame, getclickedCancelBtn, setclickedCancelBtn} from "./globalManager.js"
 import { modalService } from "../services/modalService.js"
 import { reset } from "../utils/utils.js"
 import { local } from "../mods/local.js"
@@ -17,18 +17,20 @@ const GameManager = {
         this.gameSettings = await globalManager._formService.handleGame(  )
         await globalManager._router.navigateTo( '/game', true)
         if (mode == MODE.LOCAL || mode == MODE.TOURNAMENT)
-            await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", true);
+            await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
         else
-            await modalService.show("🎮 Controls:<br>🟦  keys: ⬆ / ⬇ <br> Score 10 to win", true);
+            await modalService.show("🎮 Controls:<br>🟦  keys: ⬆ / ⬇ <br> Score 10 to win", false);
 
     },
     async denit( message='game over' ){
-        if (getIsItOutOfGame() === false)
-            await modalService.show( message, true)
-        else
-            setIsItOutOfGame( false)
-        await reset(  )
-        globalManager._router.navigateTo( '/' )
+        console.log("in deit")
+        if (getIsItOutOfGame() === false  || getclickedCancelBtn( ) == true){
+            if ( getclickedCancelBtn( ) == false )
+                await modalService.show( message, true)
+            setclickedCancelBtn( false )
+            await reset(  )
+            globalManager._router.navigateTo( '/' )
+        }
         
     },
     async tournament_form( ){
@@ -51,6 +53,7 @@ const GameManager = {
     async remote( ){
         await this.init( MODE.REMOTE )
         let result = await remote( this.gameSettings )
+        console.log("out of game")
         result ? await this.denit( `You ${result.state}` ) : await this.denit(  )
     },
     async multiplayer( ){

@@ -13,15 +13,24 @@ const onlineStatusService = new OnlineStatusService()
 const tokenService = new TokenService()
 let isItOutOfGame = false
 let isAllOptionsForGameSettings = true
+let clickedCancelBtn = false
 
 export function setIsItOutOfGame(value)
 {
-    console.log('im in here - - , i set value to  : ', value)
     isItOutOfGame = value
 }
 export function getIsItOutOfGame()
 {
     return isItOutOfGame
+}
+
+export function setclickedCancelBtn(value)
+{
+    clickedCancelBtn = value
+}
+export function getclickedCancelBtn()
+{
+    return clickedCancelBtn
 }
 
 export function setisAllOptionsForGameSettings(value)
@@ -49,4 +58,4 @@ export class GlobalManager
 
 const globalManager = new GlobalManager()
 
-export { eventListeners, globalManager, tokenService, onlineStatusService}
+export { eventListeners, globalManager, tokenService, onlineStatusService }

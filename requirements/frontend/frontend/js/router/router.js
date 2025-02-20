@@ -37,8 +37,13 @@ export class Router
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
         
+        console.log( `new path =  ${path}, this path = ${this._route}`)
         if (this._route === '/game' && path === '/game-settings')
-            return setIsItOutOfGame(true)
+        {
+            setIsItOutOfGame(true)
+            await this.initBasicRoutes()
+            setIsItOutOfGame(false)
+        }
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
             this.removeWelcomeText()
         if (query)
@@ -53,8 +58,11 @@ export class Router
             history.replaceState({}, '', '/')
             this.navigateTo('/', addToHistory)
         }
-        else if (path === '/game')
+        else if (path === '/game' || (this._route === '/game' && path === '/game-settings'))
+        {
+            history.replaceState({}, '', '/')
             this.navigateTo('/', addToHistory)
+        }
         else
             this.navigateTo(path, addToHistory)
     }

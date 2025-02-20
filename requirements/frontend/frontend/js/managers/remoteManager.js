@@ -7,7 +7,7 @@ import appCanva from "./canvaManager.js"
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.167.0/three.module.js'
 import { MODE, WORLD } from "../constants/engine.js"
 import { reset, tokenExpired } from '../utils/utils.js'
-import { tokenService } from "./globalManager.js"
+import { getclickedCancelBtn, setclickedCancelBtn, tokenService } from "./globalManager.js"
 import { modalService } from "../services/modalService.js"
 import { globalManager } from "./globalManager.js"
 import { getIsItOutOfGame, setIsItOutOfGame } from "./globalManager.js"
@@ -57,11 +57,13 @@ export default class Remote{
 
 	async _handle_cancel_btn( ){
 		document.getElementById( "cancel-btn" ).removeEventListener( 'click',  this._handle_cancel_btn)
-		setIsItOutOfGame(true)
+
+		setclickedCancelBtn(true)
 	}
 
 	_setupSocket(  ) {
 		const token = tokenService.accessToken 
+		console.log(` get out og game = ${getIsItOutOfGame( )}, getclickedCancelBtn ${getclickedCancelBtn( )} `)
 		let url = `wss://${window.location.host}/wss/${this.mode}?token=${token}`
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{
@@ -123,7 +125,8 @@ export default class Remote{
 	animate(  ) {
 		this.id = requestAnimationFrame( (  ) => this.animate(  ) )
 		this.engine.world.step( WORLD.TIMESTAMP) 
-		if (getIsItOutOfGame( ) == true && this.socket.OPEN ){
+		if ((getIsItOutOfGame( ) == true && this.socket.OPEN) || (getclickedCancelBtn( ) == true && this.socket.OPEN )){
+			console.log("wiwiwiwiwiwiwi")
 			this.socket.close(4000);
 			cancelAnimationFrame( this.id )
 			return this.resolve( )

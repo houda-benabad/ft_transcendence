@@ -93,8 +93,11 @@ export default class Local{
 			this.initialAnimation(  )
 		else if (this.animationProgress == 1  && getIsItOutOfGame() == false  )
 			this.state.setup()
-		else
+		else{
+
+			console.log('game still runnin !!!')
 			this.update(  )
+		}
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
 
 	}
