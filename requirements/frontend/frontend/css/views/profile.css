@@ -21,7 +21,7 @@ profile-view
     > div
     {
         border : solid 1px var(--border-type2);
-        border-radius: 35px;
+        border-radius: 3vw;
         color: white;
     } 
     .friends-box
@@ -165,7 +165,7 @@ profile-view
         #box 
         {
             background-color: var(--profile-box);
-            border-radius: 35px;
+            border-radius: 3vw;
             width: 99.5%;
             height: 99%;
         

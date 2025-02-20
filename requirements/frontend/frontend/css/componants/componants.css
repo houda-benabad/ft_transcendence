@@ -1,15 +1,10 @@
-/* h1
-{
-    font-size: 2.7rem;
-    font-weight: bold;
-} */
 h2
 {
   font-size: max(2vw, 2vh)
 }
 p,label
 {
-    font-size: max(0.8vw, 0.9vh);
+    font-size: max(0.6vw, 0.7vh);
 }
 .iconify
 {
@@ -69,8 +64,8 @@ p,label
 
 .button-type2
 {
-  width: max(40%, 10vw);
-  height: max(31%, 8vh);
+  width: max(40%, 13vw);
+  height: max(20%, 8vh);
   border-radius: min(1vw, 1vh);
   background-color: var(--highlight);
   color: white;

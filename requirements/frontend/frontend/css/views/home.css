@@ -44,13 +44,14 @@ home-view
         {
             padding : 3%;
             display: flex;
-            width : 55%;
+            width : 57%;
             height: 100%;
             flex-direction: column;
             justify-content: space-between;
             box-sizing: border-box;
             p{
-                width: 85%;
+                width: 95%;
+                font-size: max(0.8vw, 0.9vh);
             }
             div 
             {
@@ -135,8 +136,7 @@ home-view
 .home-mini-box
 {
     display: flex;
-    flex-direction: column;
-    justify-content: end;
+    align-items: flex-end;
     background-size: cover; 
     
     div
@@ -145,21 +145,21 @@ home-view
         display: flex;
         flex-direction: column;
         gap: 5%;
-        height: 40%;
+        height: 30%;
+        max-height: 170px;
         h3
         {
             color: var(--highlight);
         }
         p {
-            font-size: max(0.7vw, 0.8vh);
+            font-size: max(0.5vw, 0.6vh);
         }
         button
         {
             width: max(30%, 6vw);
             height: max(21%, 4vh);
             text-transform: uppercase;
-            font-size: max(0.7vw, 0.8vh);
-            /* margin-top: auto; */
+            font-size: max(0.5vw, 0.6vh);
         }
     }
 
