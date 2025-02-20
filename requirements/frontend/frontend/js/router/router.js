@@ -30,24 +30,29 @@ export class Router
             await this.initBasicRoutes()
         }
         window.addEventListener('popstate', (event) => this.handleRoute(event.state ? event.state.path : null, false))
-        this.handleRoute(null, false)
+        this.handleRoute(null)
     }
     async handleRoute(newPath=null, addToHistory = true)
     {
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
         
-        console.log('im in here - -', path)
         if (this._route === '/game' && path === '/game-settings')
             return setIsItOutOfGame(true)
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
             this.removeWelcomeText()
         if (query)
             await this.handleIntraRoute(query)
-        if (!tokenService.isAuthenticated() && (path !== '/signup' || path !== '/signup'))
+        if (!tokenService.isAuthenticated() && (path !== '/signin' && path !== '/signup'))
+        {
+            history.replaceState({}, '', '/signin')
             this.navigateTo('/signin', addToHistory)
+        }
         else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
+        {
+            history.replaceState({}, '', '/')
             this.navigateTo('/', addToHistory)
+        }
         else if (path === '/game')
             this.navigateTo('/', addToHistory)
         else
@@ -58,7 +63,7 @@ export class Router
         let options = null
 
         // console.log('path si : ', path)
-        // console.log('route : ', this._route)
+        // console.log('path to be addeDtOHISTORY : ', addToHistory)
         if (addToHistory === true)
             history.pushState({path}, '', path)
         if (path.includes('/profile'))

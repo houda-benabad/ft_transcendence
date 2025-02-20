@@ -315,7 +315,6 @@ export const eventHandlersForEventManager = (eventManager) =>
                     setTimeout(() => eventManager._router.handleRoute('/signin'), 150)
                 else
                 {
-                    
                     tokenService.tokens = response
                     const userInfos = await eventManager._apiService.user.getBasicDataOfUser()
                     
@@ -329,7 +328,7 @@ export const eventHandlersForEventManager = (eventManager) =>
                     write(text, 100, welcomeText)
                 }
             }
-        }
+        },
     },
     input :
     {
