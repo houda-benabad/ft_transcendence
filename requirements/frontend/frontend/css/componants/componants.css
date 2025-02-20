@@ -1,6 +1,6 @@
 h2
 {
-  font-size: max(2vw, 2vh)
+  font-size: max(1.5vw, 2vh)
 }
 p,label
 {
@@ -227,6 +227,7 @@ p,label
       #table-no-results
       {
         text-align: center;
+        font-size: max(1vw, 1vh);
       }
     }
   }
