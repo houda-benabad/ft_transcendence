@@ -114,8 +114,9 @@ export default class Remote{
 	}
 
 	initialAnimation(){
+		this.engine.camera.position.x -= this.animationProgress * .2
+		this.engine.camera.position.y += this.animationProgress * .1
 		this.animationProgress += 0.005;
-		this.engine.camera.position.lerpVectors( this.cameraInitial,  this.cameraTarget,  this.animationProgress )
 		this.engine.camera.lookAt( this.engine.scene.position )
 	}
 
@@ -125,13 +126,12 @@ export default class Remote{
 		if (getIsItOutOfGame( ) == true && this.socket.OPEN ){
 			this.socket.close(4000);
 			cancelAnimationFrame( this.id )
-			setIsItOutOfGame( false )
 			return this.resolve( )
 		}
 		if ( this.animationProgress < 1 )
 			this.initialAnimation(  )
 		else
-			this.update( this.id )
+			this.update( )
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
 	
 	}

@@ -14,9 +14,9 @@ class Player(GameObject):
 	def move(self, consumer, plane,  mode, player=None):
 		if mode == TWO_PLAYERS:
 			target = 0
-			if consumer.keycode == 40 and self.position.x > -plane.dimension.x / 2 + self.dimension.x / 2 :
+			if consumer.keycode == 38 and self.position.x > -plane.dimension.x / 2 + self.dimension.x / 2 :
 				target = -0.2
-			elif (consumer.keycode == 38 and self.position.x < plane.dimension.x / 2 - self.dimension.x / 2 ):
+			elif (consumer.keycode == 40 and self.position.x < plane.dimension.x / 2 - self.dimension.x / 2 ):
 				target = 0.2
 			self.position.x += target
 		if mode == MULTI_PLAYERS:

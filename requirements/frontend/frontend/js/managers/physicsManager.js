@@ -52,10 +52,12 @@ export default class physicsManager{
 		if ( ball.position.z > DIMENSION.PLANE.z/2 ) {
 			this.resetBall(  )
 			this.score.p2 += 1
+			console.log("player right = ", this.score.p1, " vs ", this.score.p2 )
 		}
 		if (  ball.position.z < -DIMENSION.PLANE.z/2 ) {
 			this.resetBall(  )
 			this.score.p1 += 1
+			console.log("player left = ", this.score.p1, " vs ", this.score.p2 )
 		}
 	}
 

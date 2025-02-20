@@ -1,6 +1,6 @@
 import { modalService } from '../services/modalService.js'
 import { searchService } from '../services/searchService.js'
-import { GameManager } from "../managers/modesManager.js"
+import  GameManager  from "../managers/modesManager.js"
 import { ENDPOINTS } from "../constants/endpoints.js"
 import { onlineStatusService } from "../managers/globalManager.js"
 import { tokenService } from "../managers/globalManager.js"
@@ -234,8 +234,7 @@ export const eventHandlersForEventManager = (eventManager) =>
         async handleGame(target)
         {
             const gameMode = target.getAttribute("data-game-mode")
-            const gameManager = new GameManager( )
-            await gameManager[gameMode]()
+            await GameManager[gameMode]()
         },
         handleImgUpdate(target)
         {
