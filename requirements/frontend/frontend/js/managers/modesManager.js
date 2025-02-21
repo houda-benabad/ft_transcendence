@@ -23,10 +23,9 @@ const GameManager = {
 
     },
     async denit( message='game over' ){
-        console.log("in deit")
         if (getIsItOutOfGame() === false  || getclickedCancelBtn( ) == true){
             if ( getclickedCancelBtn( ) == false )
-                await modalService.show( message, true)
+                await modalService.show( message, false)
             setclickedCancelBtn( false )
             await reset(  )
             globalManager._router.navigateTo( '/' )
@@ -54,12 +53,12 @@ const GameManager = {
         await this.init( MODE.REMOTE )
         let result = await remote( this.gameSettings )
         console.log("out of game")
-        result ? await this.denit( `You ${result.state}` ) : await this.denit(  )
+        result ? await this.denit( `${result.state}` ) : await this.denit(  )
     },
     async multiplayer( ){
         await this.init( MODE.MULTIPLAYER )
         let result = await multiplayer( )
-        result ? await this.denit( `You ${result.state}` ) : await this.denit(  )
+        result ? await this.denit( `${result.state}` ) : await this.denit(  )
 
     }
 }

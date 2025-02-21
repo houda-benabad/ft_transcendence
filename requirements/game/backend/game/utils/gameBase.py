@@ -61,8 +61,8 @@ class Game():
 
 	def end_game_results(self, consumers, gameModel):
 		if self.mode == TWO_PLAYERS:
-			base = ['won', 'lost']
 			if consumers[1].keycode == -1 or consumers[0].keycode == -1:
+				base = ['Other player discarded', 'You lost']
 				loser_index = 0 if consumers[0].keycode == -1 else 1
 				winner_index = 1 - loser_index
     
@@ -72,6 +72,7 @@ class Game():
 				
 				gameModel.winner = consumers[winner_index].playerModel
 			else:
+				base = ['You won', 'You lost']
 				winner_index = 0 if self.players[0].score > self.players[1].score else 1
 				for consumer, state in zip(consumers, base if winner_index == 0 else reversed(base)):
 					consumer.game_result = state
@@ -80,7 +81,7 @@ class Game():
 			gameModel.winner.level =  round(math.sqrt( gameModel.winner.total_points ) * .9, 2)
 
 		elif self.mode == MULTI_PLAYERS:
-			base = ['won', 'won', 'lost', 'lost']
+			base = ['You won', 'You won', 'You lost', 'You lost']
    
 			if any( consumer.keycode == -1 for consumer in consumers ):
 				loser_index = [0,1] if consumers[0].keycode == -1 or consumers[1].keycode == -1 else [2, 3]

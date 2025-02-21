@@ -74,6 +74,7 @@ class GameServer(  ):
  		
 	async def run( self ):
 		await self.__send_group_msg_( 'start', self.get_score( ) )
+		await asyncio.sleep( GAME_START_DELAY )
 
 		while True:
 			await self.game.update( )
@@ -121,7 +122,6 @@ async def startRemoteGame( consumers, mode):
 
 	await server.setup(  )
 
-	await asyncio.sleep( GAME_START_DELAY )
 
 	await server.run(  )
 	await server.send_results(  )

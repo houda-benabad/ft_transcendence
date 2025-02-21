@@ -43,7 +43,9 @@ class GameConsumer( AsyncWebsocketConsumer ):
 	async def send_error( self, error_message, code ): 
 		await self._send_message_( 'error', error_message, code=code )
 		await self.close( code=code )
-	async def start(self, event): await self._send_message_( 'start', event['data'] )
+	async def start(self, event):
+		print("startiiiing")
+		await self._send_message_( 'start', event['data'] )
 	async def api(self, event): await self._send_message_( 'api', event['data'] )
 	async def score(self, event):await self._send_message_( 'score', event['data'] )
 	

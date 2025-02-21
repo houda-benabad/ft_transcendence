@@ -105,8 +105,8 @@ export default class Remote{
 		else
 			this.canva.setup( data, MODE.MULTIPLAYER, data.author )
 
-		this.canva.add( "score" )
 		this.canva.remove( "waiting" )
+		this.canva.add( "score" )
 	}
 
 	updateState( data, resolve ){
