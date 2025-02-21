@@ -64,7 +64,7 @@
             color: white;
         }
     }
-    form {
+    #sign {
         display: flex;
         flex-direction: column;
         gap: 10px;

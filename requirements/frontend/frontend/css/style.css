@@ -80,8 +80,8 @@ html
       }
       #main
       {
-        margin-bottom: max(3vw, 2vh);
-        margin-right: max(3vw, 2vh);
+        margin-bottom: max(2vw, 2vh);
+        margin-right: max(2vw, 2vh);
       }
       @media (max-width : 820px)
       {

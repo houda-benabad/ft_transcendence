@@ -5,7 +5,11 @@ game-settings-view
     background-color: var(--secondary2);
     border-radius: 3vw;
     color: white;
-
+ 
+    p
+    {
+        font-size: max(0.7vw, 0.8vh);
+    }
     #game-settings
     {
         padding: 3vw;
@@ -15,7 +19,6 @@ game-settings-view
         .settings-slider
         {
             margin-left: 20%;
-            box-sizing: border-box;
             #slider-infos
             {
                 display: flex;
@@ -62,7 +65,7 @@ game-settings-view
                 }
                 label
                 {
-                    padding: max(13%, 3vh);
+                    padding: max(10%, 3vh);
                     text-align: center;
                     font-weight: 700;
                     font-size: max(1vw, 1.1vh);
