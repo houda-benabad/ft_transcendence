@@ -91,7 +91,6 @@ class ApiService
                 },
                 body : body ? JSON.stringify(body) : null
             })
-            // console.log('test response  , ', response)
             if (needsAuth && response.status === 401)
                 tokenExpired(this.request.bind(this))
             if (response.status === 500)
@@ -106,14 +105,14 @@ class ApiService
             if (!response.ok)
                 this.handleMessaageErrors(responseBody)
             else 
-                return await this.finishingUp(responseBody)
+                return await this.finishingUp(responseBody, url)
         }
         catch(error)
         {
             console.log('the error ', error)
         }
     }
-    async finishingUp(response =  null)
+    async finishingUp(response =  null, url = '')
     {
         const {showModal , modalMessage} = this._requestConfig
 
@@ -144,6 +143,7 @@ class ApiService
     }
 }
 
+const api = new ApiService()
 
 const generateHttpRequests = (api) =>
 ({
@@ -213,9 +213,8 @@ const generateHttpRequests = (api) =>
         }
     }
 })
-const api = new ApiService()
-const generatedHttpRequests = generateHttpRequests(api)
 
+const generatedHttpRequests = generateHttpRequests(api)
 export const apiService = 
 {
     auth :

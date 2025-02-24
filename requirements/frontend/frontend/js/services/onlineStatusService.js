@@ -35,7 +35,7 @@ export class OnlineStatusService
         this._debounced = debounce(this.updateContent, 500)
 
         this._socket.onopen = () => { 
-            console.log('websocket was opened successfully !!!')
+            // console.log('websocket was opened successfully !!!')
         }
         
         this._socket.onclose = (e) => {
@@ -44,7 +44,6 @@ export class OnlineStatusService
                 tokenExpired(this.createSocket.bind(this, resolve))
         }
         this._socket.onmessage = (e) => {
-            console.log('im in here - -')
             const response = JSON.parse(e.data)
             const {type, online_friends, friend_id, status} = response
          

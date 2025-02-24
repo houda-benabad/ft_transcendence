@@ -110,7 +110,23 @@ export const eventHandlersForEventManager = (eventManager) =>
         {
             const response = await eventManager._apiService.auth.intraAuthorize()
 
-            window.location.href = response.intra_auth_url
+            window.open(response.intra_auth_url, 'continue with intra', 'width=800,height=600,left=100,top=100');
+            window.addEventListener('message', async (event) => {
+
+                tokenService.tokens = event.data
+                await onlineStatusService.init()
+                await eventManager._reset()
+
+                const userInfos = await eventManager._apiService.user.getBasicDataOfUser()
+                
+                const text = `hello , ${userInfos.username}`
+                const welcomeText = document.getElementById('welcome-text')
+                
+                write(text, 100, welcomeText)
+                
+                eventManager._router.handleRoute('/')
+            })
+
         },
         handleNavigation(target)
         {

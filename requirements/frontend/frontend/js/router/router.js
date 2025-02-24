@@ -23,7 +23,6 @@ export class Router
    
     async init()
     {
-        // await tokenService.init()
         if (tokenService.isAuthenticated())
         {
             await onlineStatusService.init()
@@ -37,7 +36,7 @@ export class Router
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
         
-        console.log( `new path =  ${path}, this path = ${this._route}`)
+        // console.log( `new path =  ${path}, this path = ${this._route}`)
         if (this._route === '/game' && path === '/game-settings')
         {
             setIsItOutOfGame(true)
@@ -47,7 +46,7 @@ export class Router
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
             this.removeWelcomeText()
         if (query)
-            await this.handleIntraRoute(query)
+            return this.handleIntraRoute(query)
         if (!tokenService.isAuthenticated() && (path !== '/signin' && path !== '/signup'))
         {
             history.replaceState({}, '', '/signin')
@@ -68,10 +67,9 @@ export class Router
     }
     navigateTo(path, addToHistory)
     {
+        // console.log('im navigating to : ', path)
         let options = null
 
-        // console.log('path si : ', path)
-        // console.log('path to be addeDtOHISTORY : ', addToHistory)
         if (addToHistory === true)
             history.pushState({path}, '', path)
         if (path.includes('/profile'))
@@ -97,25 +95,18 @@ export class Router
         await delay(3000)
         welcomeText.replaceChildren()
     }
-    handleIntraRoute(query)
+    async handleIntraRoute(query)
     {
-        return new Promise (async resolve  => {
-            const params = new URLSearchParams(query)
-            const code = params.get('code')
-    
-            const response = await this._apiService.auth.intraCallback({code : code})
-            tokenService.tokens = response
-            await onlineStatusService.init()
-            await this._reset()
+        const params = new URLSearchParams(query)
+        const code = params.get('code')
 
-            const userInfos = await this._apiService.user.getBasicDataOfUser()
+        const response = await this._apiService.auth.intraCallback({code : code})
 
-            const text = `hello , ${userInfos.username}`
-            const welcomeText = document.getElementById('welcome-text')
-
-            write(text, 100, welcomeText)
-            resolve()
-        })
+        if (window.opener)
+        {
+            window.opener.postMessage({ refresh: response.refresh, access : response.access}, '*');
+            window.close();  
+        }
     }
     initBasicRoutes()
     {
@@ -134,11 +125,17 @@ export class Router
         let fragment = document.createDocumentFragment()
         const route = this._routes[path] || this._routes['/404']
 
+        // console.log('route : ', route)
         if (route.customElement)
         {
+            // console.log('im in here - -')
             fragment = document.createElement(route.customElement)
             if (route.api)
+            {
+                // console.log('im houda')
                 fragment.database = await this.fetchDataForCtmEl(options, route.api)
+                // console.log('im hind')
+            }
             if (options)
                 fragment.userId = options
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
@@ -157,6 +154,7 @@ export class Router
         const main = document.getElementById('main')
         const container = route.allScreen ? app : main
 
+        // console.log('fragment : ', fragment)
         container.replaceChildren(fragment)
         this.doSomeChecks(app)
     }
@@ -173,7 +171,7 @@ export class Router
     async fetchDataForCtmEl(options, api)
     {
         const response = await api(options)
-
+        
         if (response === 'not found')
             return this.handleRoute('/404')
         return new databaseExtractorService(response, this)
