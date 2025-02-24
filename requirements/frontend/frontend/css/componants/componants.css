@@ -118,6 +118,32 @@ p,label
       background-color: var(--secondary-hover);
     }
 }
+#alias,#add-password {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  input{
+      background-color: var(--input-field);
+      color: white;
+      width: 100%;
+      height: 50px;
+      border-radius: 12px;
+      border: solid var(--border) 1px;
+
+      padding: 0 3%;
+      box-sizing: border-box;
+      font-size: 1.1rem;
+  }
+  button
+  {
+      align-self: self-end;
+      border-radius: min(1vh, 1vw);
+      width: max(6vw, 6vh);
+      height: max(3vw, 3vh);
+      font-size: max(1vw, 1vh);
+  }
+}
 .anchor-box
 {
   height: max(4vw, 5vh);

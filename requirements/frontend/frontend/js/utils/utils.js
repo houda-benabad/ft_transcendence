@@ -54,6 +54,22 @@ export function write(text, speed, target)
     typing()
 
 }
+export function unwrite(speed, target)
+{
+    let i = 0
+    let text = target.innerHTML
+
+    const intervalId = setInterval(async () => {
+        if (text.length)
+        {
+            text = text.slice(0, -1)
+            target.innerHTML = text
+        }
+        else
+            clearInterval(intervalId)
+    }, speed)
+
+}
 export function loader(delay)
 {
     const app = document.getElementById('app')

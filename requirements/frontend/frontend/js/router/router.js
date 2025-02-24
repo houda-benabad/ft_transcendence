@@ -1,6 +1,6 @@
 import {getIsItOutOfGame, setIsItOutOfGame, onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
-import { write , delay} from "../utils/utils.js"
+import { write , delay, unwrite} from "../utils/utils.js"
 import { ROUTES } from '../constants/routes.js'
 import { eventListeners } from "../managers/globalManager.js"
 
@@ -33,7 +33,6 @@ export class Router
     }
     async handleRoute(newPath=null, addToHistory = true)
     {
-        console.log('im in handle route ', addToHistory)
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
 
@@ -93,7 +92,7 @@ export class Router
         const welcomeText = document.getElementById('welcome-text')
 
         await delay(3000)
-        welcomeText.replaceChildren()
+        unwrite(100, welcomeText)
     }
     async handleIntraRoute(query)
     {
