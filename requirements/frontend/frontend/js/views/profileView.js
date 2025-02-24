@@ -54,6 +54,7 @@ export class ProfileView extends HTMLElement
         const icons = document.createElement('div', {is : 'custom-icons'})
         const profileBoxTop = profileBox.querySelector('#profile-box1-top')
 
+        // console.log('on profileview : ', profileDb.relationship)
         icons.data = {id : profileDb.userId, relationship : profileDb.relationship, iconId: 'profile'}
         profileBoxTop.appendChild(icons)
     }

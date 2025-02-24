@@ -162,10 +162,12 @@ export class Router
     }
     async fetchDataForCtmEl(options, api)
     {
-        const response = await api(options)
+        return new Promise (async resolve  => {
+            const response = await api(options)
         
-        if (response === 'not found')
-            return this.handleRoute('/404')
-        return new databaseExtractorService(response, this)
+            if (response === 'not found')
+                return this.handleRoute('/404')
+            resolve(new databaseExtractorService(response, this))
+        })
     }
 }

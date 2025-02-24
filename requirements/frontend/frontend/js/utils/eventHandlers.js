@@ -181,12 +181,12 @@ export const eventHandlersForEventManager = (eventManager) =>
             const friendsBoxItemId = target.closest('.friends-box-item').getAttribute('index')
             const friendsBoxContainer = document.getElementById('friends-box-container')
 
-            if (friendsBoxContainer.getAttribute('box-type') === 'mine')
-                friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
             if (action === 'accept_request')
                 onlineStatusService.newFriend = id
             else 
                 onlineStatusService.removeFriend = id
+            if (friendsBoxContainer.getAttribute('box-type') === 'mine')
+                friendsBoxContainer.updateDb = {index : friendsBoxItemId, action}
             this.modifyIconsValue(target, action)
         },
         modifyIconsValue(target, action)

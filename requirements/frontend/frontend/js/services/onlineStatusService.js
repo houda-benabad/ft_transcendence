@@ -35,7 +35,7 @@ export class OnlineStatusService
         this._debounced = debounce(this.updateContent, 500)
 
         this._socket.onopen = () => { 
-            // console.log('websocket was opened successfully !!!')
+            console.log('websocket was opened successfully !!!')
         }
         
         this._socket.onclose = (e) => {
@@ -47,6 +47,7 @@ export class OnlineStatusService
             const response = JSON.parse(e.data)
             const {type, online_friends, friend_id, status} = response
          
+            // console.log(' - >>>>>>>>> >>> got a new message type : ', response)
             if (type === 'online_friends_list')
             {
                 this._onlineFriendsList = Object.values(online_friends)
@@ -55,16 +56,23 @@ export class OnlineStatusService
             else if (type === 'friend_online_status')
                 this._debounced({friend_id : Number(friend_id), status}) // in here sends me friend_id as a string
             else if (type === 'friend_removed')
-                this.updateFriend(friend_id)
+                this.updateFriend(friend_id, true)
         }
     }
-    updateFriend(friend_id)
+    updateFriend(friend_id, onMessage = false)
     {
+        console.log('on message  : ', onMessage)
         this._onlineFriendsList = this._onlineFriendsList.filter((num) => num !== friend_id);
         
         const profileView = document.querySelector('profile-view')
         if (profileView)
-            profileView.updateStatus = {friend_id, status : 'unknown'}
+        {
+            const friendsBoxContainer = document.getElementById('friends-box-container')
+
+            profileView.updateStatus = {friend_id, status : ''}
+            if (onMessage === true)
+                friendsBoxContainer.updateFriendsDb = friend_id
+        }
     }
     updateContent({friend_id, status})
     {        

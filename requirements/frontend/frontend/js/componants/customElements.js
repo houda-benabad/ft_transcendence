@@ -77,7 +77,7 @@ export class Icons extends HTMLDivElement
         if (iconId === 'profile')
             type = relationship ? relationship.status : 'me'
         else if (iconId === 'friend')
-            type =  relationship ? relationship.status  : 'me-friends'
+            type =  relationship.status ? relationship.status : 'me-friends'
         else 
             type = 'request'
 
@@ -105,6 +105,7 @@ export class Friends extends HTMLDivElement
 
         this._friendsList = true
         this._friendsListDb = null
+        this._updateFriendsDb = null
         this._friendsRequesstDb = null
         this._type = null
     }
@@ -112,6 +113,9 @@ export class Friends extends HTMLDivElement
     {
         this._friendsList = value
         this.updateContent()
+        
+        if (this._updateFriendsDb !== null)
+            this.updateFriendsDb = this._updateFriendsDb
     }
     set friendsListDb(value)
     {
@@ -126,6 +130,20 @@ export class Friends extends HTMLDivElement
     set type(value)
     {
         this._type = value
+    }
+    set updateFriendsDb(friend_id)
+    {
+        if (this._friendsList === false)
+            this._updateFriendsDb = friend_id
+        else
+        {
+            const element = this.querySelector(`[userid='${friend_id}']`)
+            const elementIndex = element.getAttribute('index')
+
+            this._friendsListDb.splice(elementIndex, 1)
+            this.removeChildUi(elementIndex)
+            this._updateFriendsDb = null
+        }
     }
     set updateDb({index, action})
     {
@@ -194,27 +212,31 @@ export class Friends extends HTMLDivElement
             fragment.appendChild(createParagraph(value, `there is no ${value} at the moment`))
         }
         db.forEach((e, index) => {
-            const friendBoxItem = document.createElement('div')
-            const value = this._friendsList === true ? 'status' : 'time-request'
-            friendBoxItem.classList.add('friends-box-item')
-            friendBoxItem.setAttribute('index', index)
-            friendBoxItem.setAttribute('userId', e.id)
-            friendBoxItem.innerHTML =
-            `
-                <img src='${escapeHtml(e.profilePic)}'>
-                <div class="user-infos">
-                    <p class="username">${escapeHtml(e.username)}</p>
-                    <p class="${value}" id="${e.other}">${escapeHtml(e.other)}</p>
-                </div>
-            `
-            const icons = document.createElement('div', {is : 'custom-icons'})
-            icons.className = 'icons'
-            icons.data = {id : e.id, relationship : e.relationship || null , iconId : e.type}
-            friendBoxItem.appendChild(icons)
-
+            const friendBoxItem = this.addFriendBoxItem(e, index)
             fragment.appendChild(friendBoxItem)
         })
         this.replaceChildren(fragment)
+    }
+    addFriendBoxItem(db, index)
+    {
+        const friendBoxItem = document.createElement('div')
+        const value = this._friendsList === true ? 'status' : 'time-request'
+        friendBoxItem.classList.add('friends-box-item')
+        friendBoxItem.setAttribute('index', index)
+        friendBoxItem.setAttribute('userId', db.id)
+        friendBoxItem.innerHTML =
+        `
+            <img src='${escapeHtml(db.profilePic)}'>
+            <div class="user-infos">
+                <p class="username">${escapeHtml(db.username)}</p>
+                <p class="${value}" id="${db.other}">${escapeHtml(db.other)}</p>
+            </div>
+        `
+        const icons = document.createElement('div', {is : 'custom-icons'})
+        icons.className = 'icons'
+        icons.data = {id : db.id, relationship : db.relationship || { status : null } , iconId : db.type}
+        friendBoxItem.appendChild(icons)
+        return friendBoxItem
     }
 }
 customElements.define('custom-friends', Friends, { extends: 'div' }) 
