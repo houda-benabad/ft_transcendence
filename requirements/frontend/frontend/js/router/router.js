@@ -26,7 +26,7 @@ export class Router
         // await tokenService.init()
         if (tokenService.isAuthenticated())
         {
-            onlineStatusService.init()
+            await onlineStatusService.init()
             await this.initBasicRoutes()
         }
         window.addEventListener('popstate', (event) => this.handleRoute(event.state ? event.state.path : null, false))
@@ -105,8 +105,8 @@ export class Router
     
             const response = await this._apiService.auth.intraCallback({code : code})
             tokenService.tokens = response
+            await onlineStatusService.init()
             await this._reset()
-            onlineStatusService.init()
 
             const userInfos = await this._apiService.user.getBasicDataOfUser()
 
