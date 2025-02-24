@@ -37,10 +37,6 @@ p,label
 {
     background-color: var(--offline);
 }
-#unknown::after
-{
-    background-color: var(--unknown);
-}
 #button-type1
 {
     border-radius: 35px; 

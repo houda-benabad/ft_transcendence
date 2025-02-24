@@ -33,17 +33,18 @@ export class Router
     }
     async handleRoute(newPath=null, addToHistory = true)
     {
+        console.log('im in handle route ', addToHistory)
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
-        
-        // console.log( `new path =  ${path}, this path = ${this._route}`)
+
         if (this._route === '/game' && path === '/game-settings')
         {
             setIsItOutOfGame(true)
             await this.initBasicRoutes()
             setIsItOutOfGame(false)
         }
-        if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length)
+        if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length
+            && (path !== '/' && this._route !== '/signin' && this._route !== '/signup'))
             this.removeWelcomeText()
         if (query)
             return this.handleIntraRoute(query)
@@ -67,7 +68,6 @@ export class Router
     }
     navigateTo(path, addToHistory)
     {
-        // console.log('im navigating to : ', path)
         let options = null
 
         if (addToHistory === true)
@@ -125,17 +125,11 @@ export class Router
         let fragment = document.createDocumentFragment()
         const route = this._routes[path] || this._routes['/404']
 
-        // console.log('route : ', route)
         if (route.customElement)
         {
-            // console.log('im in here - -')
             fragment = document.createElement(route.customElement)
             if (route.api)
-            {
-                // console.log('im houda')
                 fragment.database = await this.fetchDataForCtmEl(options, route.api)
-                // console.log('im hind')
-            }
             if (options)
                 fragment.userId = options
             document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ))
@@ -154,7 +148,6 @@ export class Router
         const main = document.getElementById('main')
         const container = route.allScreen ? app : main
 
-        // console.log('fragment : ', fragment)
         container.replaceChildren(fragment)
         this.doSomeChecks(app)
     }

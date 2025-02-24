@@ -28,7 +28,7 @@ export function determineUserStatus(userId, relationship)
     else if (relationshipStatus === 'friend' && onlineFriendsList.includes(Number(userId)) === false)
         return ('offline')
     else
-        return ('unknown')
+        return ('')
 }
 export function  delay(ms)
 {
