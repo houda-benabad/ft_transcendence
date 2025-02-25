@@ -95,7 +95,6 @@ export class databaseExtractorService
     {
         return this._database.map(row => (
         {
-            userId : row.user_id,
             username : row.username,
             rank : row.rank,
             totalPoints : row.total_points

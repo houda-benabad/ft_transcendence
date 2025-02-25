@@ -81,6 +81,7 @@ html
       {
         margin-bottom: max(2vw, 2vh);
         margin-right: max(2vw, 2vh);
+        overflow: hidden;
       }
       @media (max-width : 1024px) and (min-height : 650px)
       {

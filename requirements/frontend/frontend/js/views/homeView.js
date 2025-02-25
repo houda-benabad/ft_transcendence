@@ -23,12 +23,118 @@ export class homeView extends HTMLElement
         })
 
         this.addLeaderBoard()
+
+        const main = document.getElementById('main')
+        main.style.overflow = 'visible'
+    }
+    disconnectedCallback()
+    {
+        const main = document.getElementById('main')
+        main.style.overflow = 'hidden' 
     }
     addLeaderBoard()
     {
-        const leaderboardDb = this._database.extractData('leaderboard')
+        let leaderboardDb = this._database.extractData('leaderboard')
         const tournament = document.querySelector('.custom-table')
 
+        leaderboardDb = [
+            {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            },
+            {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            }, {
+                username : 'houda',
+                rank : 1,
+                totalPoints : 1000
+            },
+       
+       
+        ]
         tournament.innerHTML = homeTemplate.leaderboard(leaderboardDb)
     }
 }
