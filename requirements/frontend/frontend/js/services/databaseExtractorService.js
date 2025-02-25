@@ -16,7 +16,6 @@ export class databaseExtractorService
             'friendsList' : this.extractDataForFriendsList.bind(this),
             'friendsRequests' : this.extractDataForFriendsRequests.bind(this),
             'leaderboard' : this.extractDataForLeaderboard.bind(this),
-            'notifications' : this.extractDataForNotifications.bind(this),
             'settings' : this.extractDataforSettings.bind(this)
         }
 
@@ -120,17 +119,5 @@ export class databaseExtractorService
             'requests' : ['cancel_request','accept_request']
         }
         return (ActionType[type])
-    }
-    extractDataForNotifications()
-    {
-        return this._database.map(obj => (
-        {
-            sender : obj.sender,
-            content : obj.content,
-            profilePic : obj.profile_pic,
-            time : obj.time,
-            seen : obj.seen
-        })
-        )
     }
 }

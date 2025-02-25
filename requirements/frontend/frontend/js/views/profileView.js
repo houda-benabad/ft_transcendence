@@ -61,7 +61,7 @@ export class ProfileView extends HTMLElement
     gameHistory()
     {
         const gameHistory = document.querySelector('.custom-table')
-        let gameHistoryDb = this._database.extractData('gameHistory')
+        const gameHistoryDb = this._database.extractData('gameHistory')
         
         gameHistory.innerHTML = profileTemplate.gameHistory(gameHistoryDb)
     }
