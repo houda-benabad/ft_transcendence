@@ -190,7 +190,7 @@ p,label
 }  
 .custom-table
 {
-  padding: max(3%, 1vh);
+  padding: max(1.5vw, 1vh);
   box-sizing: border-box;
   max-height: 100%;
   height: 100%;
