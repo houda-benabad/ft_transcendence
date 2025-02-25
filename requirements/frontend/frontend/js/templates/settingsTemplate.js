@@ -19,7 +19,7 @@ export const settingsTemplate =
                 <div id='user-username'>
                     <p class="settings-label">Username</p>
                     <div>
-                        <input type='text' placeholder='${escapeHtml(db.username)}' id="username-to-save">
+                        <input type='text' placeholder='${escapeHtml(db.username)}' id="username-to-save" autocomplete="off">
                         <button class="anchor-tmp button-type4" data-action="save_username">Save</button>
                     </div>
                 </div>

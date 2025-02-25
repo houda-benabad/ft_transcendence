@@ -70,6 +70,11 @@ settings-view
                 height : min(7vh, 9vw);
                 border-radius: min(1.5vw, 3vh);
                 width: 100%;
+
+                &:focus 
+                {
+                    outline: 1px solid var(--secondary);
+                }
             }
             button 
             {

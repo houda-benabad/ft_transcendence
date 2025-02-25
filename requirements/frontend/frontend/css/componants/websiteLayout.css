@@ -7,7 +7,6 @@
     box-sizing: border-box;
     h2
     {
-        /* color: var(--secondary); */
         background: var(--level-progress);
         -webkit-background-clip: text;
         color: transparent;
@@ -33,10 +32,11 @@
             box-sizing: border-box;
             font-size: max(1.5vw, 1.5vh);
             border: none;
-        }
-        input:focus
-        {
-            border: solid 3px var(--secondary);
+            &:focus
+            {
+                outline : solid 1px var(--secondary);
+            }
+
         }
         .iconify
         {
@@ -97,6 +97,11 @@
             position: relative;
             left: 0;
             transform: none;
+
+            .iconify
+            {
+                display: none;
+            }
         }
     }
 }
@@ -157,6 +162,7 @@
     }
     @media (max-width : 820px)
     {
+        padding-bottom: 0;
         nav
         {
             background-color: var(--secondary2);

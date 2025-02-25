@@ -80,6 +80,11 @@
             padding: 0 3%;
             box-sizing: border-box;
             font-size: 1.1rem;
+
+            &:focus 
+            {
+                outline: 0.1vh solid white;
+            }
         }
     }
 }
