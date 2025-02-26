@@ -48,11 +48,10 @@
         }
         .iconify
         {
-            position: absolute;
-            top: 50%;
-            right: -43%;
-            transform: translateY(-50%);
-            font-size: max(1.5vw, 1.5vh);
+             position: absolute;
+            width: auto;
+            right: 5%;
+            font-size: max(1.5vw, 2vh);
         }
         #search-results
         {
@@ -105,11 +104,6 @@
             position: relative;
             left: 0;
             transform: none;
-
-            .iconify
-            {
-                display: none;
-            }
         }
     }
 }
