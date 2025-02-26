@@ -63,7 +63,6 @@ export default class Remote{
 
 	_setupSocket(  ) {
 		const token = tokenService.accessToken 
-		console.log(` get out og game = ${getIsItOutOfGame( )}, getclickedCancelBtn ${getclickedCancelBtn( )} `)
 		let url = `wss://${window.location.host}/wss/${this.mode}?token=${token}`
 		let socket = new WebSocket( url )
 		socket.onopen = ( ) =>{
@@ -126,7 +125,6 @@ export default class Remote{
 		this.id = requestAnimationFrame( (  ) => this.animate(  ) )
 		this.engine.world.step( WORLD.TIMESTAMP) 
 		if ((getIsItOutOfGame( ) == true && this.socket.OPEN) || (getclickedCancelBtn( ) == true && this.socket.OPEN )){
-			console.log("wiwiwiwiwiwiwi")
 			this.socket.close(4000);
 			cancelAnimationFrame( this.id )
 			return this.resolve( )

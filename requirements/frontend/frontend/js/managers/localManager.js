@@ -91,19 +91,18 @@ export default class Local{
 		}
 		else if (this.animationProgress < 1 && getIsItOutOfGame() == false  )
 			this.initialAnimation(  )
-		else if (this.animationProgress == 1  && getIsItOutOfGame() == false  )
-			this.state.setup()
-		else{
-
-			console.log('game still runnin !!!')
-			this.update(  )
+		else if (this.animationProgress >= 1  && this.animationProgress < 5  && getIsItOutOfGame() == false  ){
+			this.engine.setupControls()
+			this.animationProgress = 10
 		}
+		else
+			this.update(  )
 		this.engine.renderer.render(  this.engine.scene, this.engine.camera  );
 
 	}
 
 	initialAnimation(){
-		this.engine.camera.position.x -= this.animationProgress * .2
+		this.engine.camera.position.x -= this.animationProgress * .1
 		this.engine.camera.position.y += this.animationProgress * .1
 		this.animationProgress += 0.005;
 		this.engine.camera.lookAt( this.engine.scene.position )
