@@ -30,7 +30,8 @@ export class homeView extends HTMLElement
     disconnectedCallback()
     {
         const main = document.getElementById('main')
-        main.style.overflow = 'hidden' 
+        if (main)
+            main.style.overflow = 'hidden' 
     }
     addLeaderBoard()
     {

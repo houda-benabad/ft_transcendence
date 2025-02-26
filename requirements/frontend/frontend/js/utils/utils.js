@@ -34,16 +34,19 @@ export function  delay(ms)
 {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-export function write(text, speed, target)
+export function write(text, speed)
 {
     let i = 0
+    const headerHighlight = document.getElementById('header-highlight')
+    const h2 = document.createElement('h2')
+    h2.id = "welcome-text"
+    headerHighlight.replaceChildren(h2)
 
-    
     async function typing()
     {
         if (i < text.length)
         {
-            target.innerHTML += text[i]
+            h2.innerHTML += text[i]
             i++
 
             await delay(speed)
@@ -66,7 +69,12 @@ export function unwrite(speed, target)
             target.innerHTML = text
         }
         else
+        {
             clearInterval(intervalId)
+            setTimeout(() => {
+                document.getElementById('header-highlight').innerHTML = '<img src="../../assets/componants/logo.png">'
+            }, 3000)
+        }
     }, speed)
 
 }

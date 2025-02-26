@@ -1,6 +1,6 @@
 import {getIsItOutOfGame, setIsItOutOfGame, onlineStatusService, tokenService } from "../managers/globalManager.js"
 import { databaseExtractorService } from "../services/databaseExtractorService.js"
-import { write , delay, unwrite} from "../utils/utils.js"
+import {delay, unwrite} from "../utils/utils.js"
 import { ROUTES } from '../constants/routes.js'
 import { eventListeners } from "../managers/globalManager.js"
 
@@ -27,6 +27,7 @@ export class Router
         {
             await onlineStatusService.init()
             await this.initBasicRoutes()
+            document.getElementById('header-highlight').innerHTML = '<img src="../../assets/componants/logo.png">'
         }
         window.addEventListener('popstate', (event) => this.handleRoute(event.state ? event.state.path : null, false))
         this.handleRoute(null)

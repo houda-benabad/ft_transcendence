@@ -94,7 +94,7 @@ html
         }
         #main
         {
-          margin: 15px;
+          margin: max(1.5vh, 1.5vw);
           grid-row : 2 / 3;
         }
         #nav-bar

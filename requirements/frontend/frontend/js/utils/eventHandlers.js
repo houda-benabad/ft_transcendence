@@ -117,12 +117,10 @@ export const eventHandlersForEventManager = (eventManager) =>
                 await onlineStatusService.init()
                 await eventManager._reset()
 
-                const userInfos = await eventManager._apiService.user.getBasicDataOfUser()
-                
+                const userInfos = await eventManager._apiService.user.getBasicDataOfUser() 
                 const text = `hello , ${userInfos.username}`
-                const welcomeText = document.getElementById('welcome-text')
                 
-                write(text, 100, welcomeText)
+                write(text, 100)
                 
                 eventManager._router.handleRoute('/')
             })
@@ -338,9 +336,8 @@ export const eventHandlersForEventManager = (eventManager) =>
                     onlineStatusService.init()
                     
                     const text = `hello , ${userInfos.username}`
-                    const welcomeText = document.getElementById('welcome-text')
 
-                    write(text, 100, welcomeText)
+                    write(text, 100)
                 }
             }
         },
