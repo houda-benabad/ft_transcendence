@@ -115,7 +115,7 @@ export default class Remote{
 	}
 
 	initialAnimation(){
-		this.engine.camera.position.x -= this.animationProgress * .2
+		this.engine.camera.position.x -= this.animationProgress * .1
 		this.engine.camera.position.y += this.animationProgress * .1
 		this.animationProgress += 0.005;
 		this.engine.camera.lookAt( this.engine.scene.position )
@@ -129,7 +129,11 @@ export default class Remote{
 			cancelAnimationFrame( this.id )
 			return this.resolve( )
 		}
-		if ( this.animationProgress < 1 )
+		else if (this.animationProgress >= 1  && this.animationProgress < 5  && getIsItOutOfGame() == false  ){
+			this.engine.setupControls()
+			this.animationProgress = 10
+		}
+		else if ( this.animationProgress < 1 )
 			this.initialAnimation(  )
 		else
 			this.update( )
