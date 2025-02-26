@@ -40,9 +40,10 @@ profile-view
             {
                 position: relative;
                 display: flex;
+                margin: 0 10%;
                 a {
                     padding: 3% 0%;
-                    font-size: max(1.6vw, 1.5vh);
+                    font-size: max(0.9vw, 1vh);
                     text-decoration: none;
                     color: var( --secondary3);
                     width: 100%;
@@ -82,7 +83,7 @@ profile-view
 
             > p {
                 text-align: center;
-                font-size: max(1vw, 1vh);
+                font-size: max(0.7vw, 0.8vh);
                 padding-top: 1vh;
             }
             &::-webkit-scrollbar
@@ -186,8 +187,8 @@ profile-view
 
                     img
                     {
-                        width: max(11vh, 9vw);
-                        height: max(11vh, 9vw);
+                        width: max(11vh, 8vw);
+                        height: max(11vh, 8vw);
                         border-radius: 50%;
                         object-fit: cover;
                         flex-shrink: 0;
@@ -206,7 +207,7 @@ profile-view
                         }
                         .profile-box1-box-text
                         {
-                            font-size: max(1vw, 1vh);
+                            font-size: max(0.7vw, 0.8vh);
                         }
                     }
                 }
@@ -236,11 +237,13 @@ profile-view
                 .profile-box1-bottom-data
                 {
                     font-weight: 900;
+                    font-size: max(0.7vw, 0.8vh);
                 }
                 .profile-box1-box-text
                 {
                     color: var(--text2);
                     font-weight: 500;
+                    font-size: max(0.7vw, 0.8vh);
                 }
                 > div
                 {

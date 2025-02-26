@@ -33,12 +33,12 @@
             background-color: var(--secondary2);
             color: white;
             width: max(32vw, 25vh);
-            height: 85%;
+            height: 60%;
             border-radius: max(3vw, 3vh);
             padding-left: 5%;
             padding-right: 10%;
             box-sizing: border-box;
-            font-size: max(1.5vw, 1.5vh);
+            font-size: max(1vw, 1vh);
             border: none;
             &:focus
             {

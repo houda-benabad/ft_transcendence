@@ -70,7 +70,7 @@ html
       color: white;
       display: grid;
       grid-template-columns: 12% auto;
-      grid-template-rows: 14% auto;
+      grid-template-rows: 12% auto;
       height: 100vh;
       
       #header
