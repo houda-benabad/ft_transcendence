@@ -147,8 +147,8 @@ profile-view
                 }
                 .status::after
                 {
-                    height: max(0.6vw, 0.7vh);
-                    width: max(0.6vw, 0.7vh);
+                    height: max(0.3vw,0.7vh);
+                    width: max(0.3vw,0.7vh);
                 }
             }
         }

@@ -34,12 +34,7 @@ export class OnlineStatusService
         this._socket = new WebSocket(`wss://${window.location.host}/wss/online_status?token=${tokenService.accessToken}`)
         this._debounced = debounce(this.updateContent, 500)
 
-        this._socket.onopen = () => { 
-            console.log('websocket was opened successfully !!!')
-        }
-        
         this._socket.onclose = (e) => {
-            console.log('websocket was closed because ', e.reason , ' with code ', e.code)
             if (e.code === 1006)
                 tokenExpired(this.createSocket.bind(this, resolve))
         }
@@ -53,7 +48,7 @@ export class OnlineStatusService
                 resolve()
             }
             else if (type === 'friend_online_status')
-                this._debounced({friend_id : Number(friend_id), status}) // in here sends me friend_id as a string
+                this._debounced({friend_id : Number(friend_id), status})
             else if (type === 'friend_removed')
                 this.updateFriend(friend_id, true)
         }

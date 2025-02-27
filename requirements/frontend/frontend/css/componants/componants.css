@@ -20,8 +20,8 @@ p,label
   &::after
   {
     content: "";
-    height: max(0.7vw, 1vh);
-    width: max(0.7vw, 1vh);
+    height: max(0.5vw,0.7vh);
+    width: max(0.5vw, 0.7vh);
     border-radius: 50%;
     
     position: absolute;

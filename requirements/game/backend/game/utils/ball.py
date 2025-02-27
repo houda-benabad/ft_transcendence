@@ -19,7 +19,7 @@ class Ball(GameObject):
 	async def __reset(self):
 		self.position = Vector3( 0, 0, 0)
 		self.velocity.z *= random.choice([-1, 1])
-		self.velocity.x *= random.choice([-1.03, 1.03]) 
+		self.velocity.x *= random.choice([-1, 1]) 
 
 	def calculate_hit_position(self,  paddle):
 		paddle_center_x = paddle.position.x + paddle.dimension.x / 2

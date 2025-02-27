@@ -12,7 +12,7 @@ export class FormService
         modalBackground.remove()
         eventListeners.off(modalBackground, 'click')
     }
-    #eventHandlerTournamentForm(event, resolve)
+    #eventHandlerTournamentForm(event, resolve, reject)
     {
         const form = document.querySelector( 'form' )
         
@@ -25,8 +25,20 @@ export class FormService
         eventListeners.off(form, 'submit')
         
         if (players.length !== new Set(players).size)
-            return modalService.show('make sure all entries are unique')
-        resolve( players )
+            return modalService.show('Entries should be unique')
+        try
+        {
+            players.forEach((e, index) => {
+                if (e.length > 10)
+                    throw new Error("exit loop")
+            })
+            resolve(players)
+        }
+        catch(e)
+        {
+            modalService.show('Entries should be less than 10 characters')
+        }
+       
     }
     #eventHandlerGameForm( event, resolve )
     {
@@ -55,7 +67,7 @@ export class FormService
     }
     handleTournament()
     {
-        return new Promise (resolve => {
+        return new Promise ((resolve, reject) => {
             const form = document.querySelector('form')
             
             eventListeners.on(form, 'submit', (event) => this.#eventHandlerTournamentForm(event, resolve)) // remove this one
