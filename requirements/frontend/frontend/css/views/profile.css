@@ -48,7 +48,7 @@ profile-view
                     width: 100%;
                     text-align: center;
                 }
-                .selected-choice,.hoovered
+                .selected-choice.active,.hoovered
                 {
                     color: var(--highlight);
                     transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);

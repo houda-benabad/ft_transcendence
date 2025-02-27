@@ -27,10 +27,21 @@ export class Router
         {
             await onlineStatusService.init()
             await this.initBasicRoutes()
-            document.getElementById('header-highlight').innerHTML = '<img src="../../assets/componants/logo.png">'
         }
         window.addEventListener('popstate', (event) => this.handleRoute(event.state ? event.state.path : null, false))
         this.handleRoute(null)
+    }
+    initBasicRoutes()
+    {
+        return new Promise (async resolve  => {
+            await this._reset()
+            document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
+            
+            const element = document.querySelector(`[href="${window.location.pathname}"]`) 
+            if (element)
+                element.classList.add('selected')
+            resolve()
+        })
     }
     async handleRoute(newPath=null, addToHistory = true)
     {
@@ -38,55 +49,45 @@ export class Router
         const query = path === '/' ? window.location.search :  null
 
         if (this._route === '/game' && path === '/game-settings')
-        {
-            setIsItOutOfGame(true)
-            await this.initBasicRoutes()
-            setIsItOutOfGame(false)
-        }
+            this.handlePopstateGame()
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length
             && (path !== '/' && this._route !== '/signin' && this._route !== '/signup'))
             this.removeWelcomeText()
         if (query)
             return this.handleIntraRoute(query)
         if (!tokenService.isAuthenticated() && (path !== '/signin' && path !== '/signup'))
-        {
-            history.replaceState({}, '', '/signin')
-            this.navigateTo('/signin', addToHistory)
-        }
+            this.navigateTo('/signin', addToHistory, '/signin') // check this one
         else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
-        {
-            history.replaceState({}, '', '/')
-            this.navigateTo('/', addToHistory)
-        }
+            this.navigateTo('/', addToHistory, '/')
         else if (path === '/game' || (this._route === '/game' && path === '/game-settings'))
-        {
-            history.replaceState({}, '', '/')
-            this.navigateTo('/', addToHistory)
-        }
+            this.navigateTo('/', addToHistory, '/')
         else
             this.navigateTo(path, addToHistory)
     }
-    navigateTo(path, addToHistory)
+    navigateTo(path, addToHistory, toReplaceHistory = null)
     {
         let options = null
-
+        
         if (addToHistory === true)
             history.pushState({path}, '', path)
         if (path.includes('/profile'))
         {
-            if (path === '/profile' || path.includes('/profile/'))
-            {
-                const str = path.split('/')
-                options = str[str.length - 1] === 'profile' ? 'me' : str[str.length - 1]
-                path = '/profile'
-            }
-            else 
-                path = '/404'
+            options = this.parseProfile(path)
+            path = options !== null ? '/profile' : '/404'
         }
         if (this._route === '/signin' && path === '/')
-            history.replaceState({}, '', '/')
+            toReplaceHistory = '/'
+        if (toReplaceHistory !== null)
+            history.replaceState({}, '', toReplaceHistory)
         this._route = path
         this.updateContent(path, options)
+    }
+    parseProfile(path)
+    {
+        const str = path.split('/')
+        if (str.includes("profile"))
+            return (str[str.length - 1] === 'profile' ? 'me' : str[str.length - 1])
+        return null
     }
     async removeWelcomeText()
     {
@@ -94,6 +95,12 @@ export class Router
 
         await delay(3000)
         unwrite(100, welcomeText)
+    }
+    async handlePopstateGame()
+    {
+        setIsItOutOfGame(true)
+        await this.initBasicRoutes()
+        setIsItOutOfGame(false)
     }
     async handleIntraRoute(query)
     {
@@ -108,22 +115,14 @@ export class Router
             window.close();  
         }
     }
-    initBasicRoutes()
-    {
-        return new Promise (async resolve  => {
-            await this._reset()
-            document.querySelectorAll( '[data-action="router"]' ).forEach( ( item ) => item.classList.remove( 'selected' ) )
-            
-            const element = document.querySelector(`[href="${window.location.pathname}"]`) 
-            if (element)
-                element.classList.add('selected')
-            resolve()
-        })
-    }
     async updateContent(path, options)
-    {
+    {        
         let fragment = document.createDocumentFragment()
+        const app = document.getElementById('app')
+        const main = document.getElementById('main')
+        
         const route = this._routes[path] || this._routes['/404']
+        const container = route.allScreen ? app : main
 
         if (route.customElement)
         {
@@ -143,10 +142,6 @@ export class Router
             template.innerHTML = templateLitteral
             fragment.appendChild(template.content)
         }
-
-        const app = document.getElementById('app')
-        const main = document.getElementById('main')
-        const container = route.allScreen ? app : main
 
         container.replaceChildren(fragment)
         this.doSomeChecks(app)

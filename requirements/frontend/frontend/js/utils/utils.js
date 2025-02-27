@@ -94,6 +94,7 @@ export async function reset()
     await loader(1500)
     app.innerHTML = layoutTemplate()
     app.classList.add('active')
+    document.getElementById('header-highlight').innerHTML = '<img src="../../assets/componants/logo.png">'
 }
 export function debounce(func, delay)
 {

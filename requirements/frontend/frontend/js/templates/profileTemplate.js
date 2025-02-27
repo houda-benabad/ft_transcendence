@@ -96,7 +96,7 @@ export const profileTemplate  =
             dynamicPart = 
             `  <div id="choices-container">
                 <div id="choices">
-                    <a class="selected-choice choice-item" href="#" id="friends">friends</a>
+                    <a class="selected-choice active choice-item" href="#" id="friends">friends</a>
                     <a href="#" id="requests" class="choice-item">requests</a>
                     <div id="sliding-line"></div>
                 </div>

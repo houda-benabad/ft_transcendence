@@ -26,47 +26,35 @@ export class Icons extends HTMLDivElement
     }
     updateContent(iconId)
     {
-        if (iconId === 'profile')
-        {
-            const iconAction = this.determineActionAndIcon()
-            const fragement = document.createDocumentFragment()
-    
-            iconAction.forEach(e => {
-                const div = document.createElement('div')
-                const a = document.createElement('a')
-    
-                a.href = "#"
-                a.id = this._data.id
-                a.setAttribute('data-action', this._data.iconId)
-                a.setAttribute('action-type', e.action)
-                a.innerHTML = `<i class="iconify" data-icon="${e.icon}" data-inline="false"></i>`
-                    
-                div.className = 'anchor-box square'
-                div.appendChild(a)
-                fragement.appendChild(div)
-            });
-            this.replaceChildren(fragement)
-        }
-        else
-        {
-            const iconAction = this.determineActionAndIcon()
-            const fragement = document.createDocumentFragment()
+        const iconAction = this.determineActionAndIcon()
+        const fragement = document.createDocumentFragment()
 
-            iconAction.forEach((e, index) => {
-                const div = document.createElement('div')
-                const a = document.createElement('a')
-    
-                a.href = "#"
-                const id = index === 0 ? 'first' : 'second'
-                a.setAttribute('data-action', 'friends')
-                a.setAttribute('action-type', e.action)
-                a.setAttribute('id', this._data.id)
-                a.innerHTML = `<i class="iconify ${id}" data-icon="${e.icon}" data-inline="false"></i>`
-                    
-                fragement.appendChild(a)
-            });
-            this.replaceChildren(fragement)
-        }
+        iconAction.forEach((e, index) => {
+            const id = iconId !== 'profile'  ? (index === 0 ? 'first' : 'second') : ''
+            const dataAction = iconId === 'profile' ? this._data.iconId : 'friends'
+            const a = document.createElement('a')
+            
+            a.href = "#"
+            a.setAttribute('action-type', e.action)
+            a.setAttribute('data-action', dataAction)
+            a.innerHTML = `<i class="iconify ${id}" data-icon="${e.icon}" data-inline="false"></i>`
+            
+            let element
+            if (iconId === 'profile')
+            {
+                element = document.createElement('div')
+                a.id = this._data.id
+                element.className = 'anchor-box square'
+                element.appendChild(a)
+            }
+            else
+            {
+                a.setAttribute('id', this._data.id)     
+                element = a           
+            }
+            fragement.appendChild(element)
+        })
+        this.replaceChildren(fragement)
     }
     determineActionAndIcon()
     {

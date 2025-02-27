@@ -46,6 +46,7 @@ export const eventHandlersForProfile =
             slidingLine.style.width = `${target.offsetWidth}px`
             slidingLine.style.transform = `translateX(${target.offsetLeft}px)`
             target.classList.add('hoovered')
+            selectedChoice.classList.remove('active')
         },
         mouseOutSelectedChoice(target)
         {
@@ -55,6 +56,7 @@ export const eventHandlersForProfile =
             slidingLine.style.width = `${selectedChoice.offsetWidth}px`
             slidingLine.style.transform = `translateX(${selectedChoice.offsetLeft}px)`
             target.classList.remove('hoovered')
+            selectedChoice.classList.add('active')
         }
     },
     click : 
@@ -66,8 +68,8 @@ export const eventHandlersForProfile =
 
             slidingLine.style.width = `${target.offsetWidth}px`
             slidingLine.style.transform = `translateX(${target.offsetLeft}px)`
-            selectedChoice.classList.remove('selected-choice')
-            target.classList.add('selected-choice')
+            selectedChoice.classList.remove('selected-choice', 'active')
+            target.classList.add('selected-choice', 'active')
 
             const friendsBoxContainer = document.getElementById('friends-box-container')
             friendsBoxContainer.friendsList = target.id === 'friends' ? true : false
