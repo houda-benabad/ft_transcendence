@@ -67,6 +67,7 @@ home-view
                 h2
                 {
                     font-size: max(2.5vw, 2.5vh);
+                    text-transform: capitalize;
                 }
             }
         }
@@ -166,6 +167,7 @@ home-view
             height: max(21%, 4vh);
             text-transform: uppercase;
             font-size: max(0.5vw, 0.6vh);
+            letter-spacing: 2px;
         }
     }
 

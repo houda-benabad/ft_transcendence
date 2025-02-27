@@ -52,7 +52,6 @@ const GameManager = {
     async remote( ){
         await this.init( MODE.REMOTE )
         let result = await remote( this.gameSettings )
-        console.log("out of game")
         result ? await this.denit( `${result.state}` ) : await this.denit(  )
     },
     async multiplayer( ){

@@ -14,8 +14,8 @@ settings-view
     {
         display: flex;
         flex-direction: column;
-        gap: max(5vw, 3vh);
-        width: 80%;
+        gap: max(3vw, 3vh);
+        width: 50vw;
         > div 
         {
             display: flex;
@@ -23,15 +23,15 @@ settings-view
         }
         .settings-label
         {
-            width: 30%;
-            font-size: max(1.2vw, 1.2vh);;
+            width: 20vw;
+            font-size: max(0.8vw, 0.9vh);
         }
         #user-picture 
         {
             img 
             {
-                height: max(8vw, 10vh);
-                width: max(8vw, 10vh);
+                height: max(6vw, 8vh);
+                width: max(6vw, 8vh);
                 border-radius: 50%;
                 margin-right: max(2vw, 1vh);
                 object-fit: cover;
@@ -67,7 +67,7 @@ settings-view
                 color: white;
                 box-sizing: border-box;
                 padding: 0 1vw;
-                height : min(7vh, 9vw);
+                height : min(5vh, 6vw);
                 border-radius: min(1.5vw, 3vh);
                 width: 100%;
 
@@ -79,7 +79,7 @@ settings-view
             button 
             {
                 position: absolute;
-                height : min(7vh, 9vw);
+                height : min(5vh, 6vw);
                 width: 20%;
                 border-radius: min(1.5vw, 3vh);
                 border-bottom-left-radius: 0;
