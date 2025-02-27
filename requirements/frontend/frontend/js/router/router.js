@@ -48,27 +48,18 @@ export class Router
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
 
-        console.log('addtohistiry : ', addToHistory)
-        console.log('route : ', this._route)
-        console.log('path : ', path)
         if (this._route === '/game' && path === '/game-settings')
-        {
-            // setIsItOutOfGame(true)
-            // await this.initBasicRoutes()
-            // setIsItOutOfGame(false)
             await this.handlePopstateGame()
-            console.log('im out - - - - -')
-        }
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length
             && (path !== '/' && this._route !== '/signin' && this._route !== '/signup'))
             this.removeWelcomeText()
         if (query)
             return this.handleIntraRoute(query)
         if (!tokenService.isAuthenticated() && (path !== '/signin' && path !== '/signup'))
-            this.navigateTo('/signin', addToHistory, '/signin') // check this one
+            this.navigateTo('/signin', addToHistory, '/signin')
         else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
             this.navigateTo('/', addToHistory, '/')
-        else if (path === '/game' || (this._route === '/game' && path === '/game-settings'))
+        else if (path === '/game' || (this._route === '/game' && path === '/game-settings') || (path === '/game-settings' && this._route === '/'))
             this.navigateTo('/', addToHistory, '/')
         else
             this.navigateTo(path, addToHistory)
@@ -76,7 +67,7 @@ export class Router
     navigateTo(path, addToHistory, toReplaceHistory = null)
     {
         let options = null
-        
+
         if (addToHistory === true)
             history.pushState({path}, '', path)
         if (path.includes('/profile'))
