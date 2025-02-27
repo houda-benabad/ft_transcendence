@@ -49,17 +49,17 @@ export class Router
         const query = path === '/' ? window.location.search :  null
 
         if (this._route === '/game' && path === '/game-settings')
-            this.handlePopstateGame()
+            await this.handlePopstateGame()
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length
             && (path !== '/' && this._route !== '/signin' && this._route !== '/signup'))
             this.removeWelcomeText()
         if (query)
             return this.handleIntraRoute(query)
         if (!tokenService.isAuthenticated() && (path !== '/signin' && path !== '/signup'))
-            this.navigateTo('/signin', addToHistory, '/signin') // check this one
+            this.navigateTo('/signin', addToHistory, '/signin')
         else if (tokenService.isAuthenticated() && (path === '/signin' || path === '/signup'))
             this.navigateTo('/', addToHistory, '/')
-        else if (path === '/game' || (this._route === '/game' && path === '/game-settings'))
+        else if (path === '/game' || (this._route === '/game' && path === '/game-settings') || (path === '/game-settings' && this._route === '/'))
             this.navigateTo('/', addToHistory, '/')
         else
             this.navigateTo(path, addToHistory)
@@ -67,7 +67,7 @@ export class Router
     navigateTo(path, addToHistory, toReplaceHistory = null)
     {
         let options = null
-        
+
         if (addToHistory === true)
             history.pushState({path}, '', path)
         if (path.includes('/profile'))
@@ -98,9 +98,12 @@ export class Router
     }
     async handlePopstateGame()
     {
-        setIsItOutOfGame(true)
-        await this.initBasicRoutes()
-        setIsItOutOfGame(false)
+        return new Promise(async resolve => {
+            setIsItOutOfGame(true)
+            await this.initBasicRoutes()
+            setIsItOutOfGame(false)
+            resolve()
+        })
     }
     async handleIntraRoute(query)
     {
