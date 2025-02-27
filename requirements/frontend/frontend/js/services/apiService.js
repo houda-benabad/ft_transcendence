@@ -80,7 +80,6 @@ class ApiService
             params
         } = this._requestConfig
 
-        // console.log('here in apiService  : ', this._requestConfig)
         const url = params ? `${endpoint}?${params.key}=${encodeURIComponent(params.value)}` : endpoint
         try{
             const response = await fetch(url , {
@@ -109,7 +108,7 @@ class ApiService
         }
         catch(error)
         {
-            console.log('the error ', error)
+            console.error('the error ', error)
         }
     }
     async finishingUp(response =  null, url = '')
@@ -118,7 +117,7 @@ class ApiService
 
         if (showModal)
             await modalService.show(modalMessage, true)
-
+        
         this._resolve(response)
     }
     async handleMessaageErrors(responseBody)

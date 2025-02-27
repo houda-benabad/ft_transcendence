@@ -10,7 +10,6 @@ export const modalService =
             const app = document.getElementById('app')
             const modalHtml = this.createModalHtml(type, message)
     
-            // console.log(" modal htmp = ",modalHtml )
             app.insertAdjacentHTML('beforeend', modalHtml)
             const modalBackground = document.getElementById('modal-background')
             const modal = document.getElementById('modal')

@@ -38,7 +38,6 @@ export default class Engine {
 	}
 
 	setupControls( ){
-		console.log("controls are setuped ")
 		this.controls  = new OrbitControls( this.camera, this.renderer.domElement )
 		this.controls.minDistance = 2
 		this.controls.maxDistance = 20

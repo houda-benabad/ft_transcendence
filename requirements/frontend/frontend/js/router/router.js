@@ -108,7 +108,6 @@ export class Router
         const code = params.get('code')
 
         const response = await this._apiService.auth.intraCallback({code : code})
-
         if (window.opener)
         {
             window.opener.postMessage({ refresh: response.refresh, access : response.access}, '*');

@@ -4,7 +4,7 @@ import  GameManager  from "../managers/modesManager.js"
 import { ENDPOINTS } from "../constants/endpoints.js"
 import { onlineStatusService } from "../managers/globalManager.js"
 import { tokenService } from "../managers/globalManager.js"
-import { loader, write } from './utils.js'
+import { loader, write , debounce} from './utils.js'
 
 export const eventHandlersForProfile = 
 {
@@ -108,23 +108,29 @@ export const eventHandlersForEventManager = (eventManager) =>
                 runAction(realTarget)
             }
         },
+        async updateContentForIntra(event)
+        {
+            eventManager._router.handleRoute('/')
+            tokenService.tokens = event.data
+            await onlineStatusService.init()
+            await eventManager._reset()
+
+            const userInfos = await eventManager._apiService.user.getBasicDataOfUser() 
+            const text = `hello , ${userInfos.username}`
+            
+            write(text, 100)
+            
+            eventManager._router.handleRoute('/')
+        },
         async handleIntraCall(target)
         {
             const response = await eventManager._apiService.auth.intraAuthorize()
+            this._debounced = debounce(this.updateContentForIntra, 500)
 
             window.open(response.intra_auth_url, 'continue with intra', 'width=800,height=600,left=100,top=100');
-            window.addEventListener('message', async (event) => {
+            window.addEventListener('message', (event) => {
 
-                tokenService.tokens = event.data
-                await onlineStatusService.init()
-                await eventManager._reset()
-
-                const userInfos = await eventManager._apiService.user.getBasicDataOfUser() 
-                const text = `hello , ${userInfos.username}`
-                
-                write(text, 100)
-                
-                eventManager._router.handleRoute('/')
+                this._debounced(event)
             })
 
         },

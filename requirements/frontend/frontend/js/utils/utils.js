@@ -111,7 +111,6 @@ export function debounce(func, delay)
 }
 export async function tokenExpired(func = null)
 {
-    console.log('access token was expired')
     const response = await fetch(ENDPOINTS.REFRESH_TOKEN , {
         method : 'POST',
         headers : {
@@ -121,7 +120,6 @@ export async function tokenExpired(func = null)
     })
     if (response.status === 401)
     {
-        console.log('refresh token was expired')
         tokenService.clear()
         await modalService.show('the user is no more authenticated !!!', true)
         document.getElementById('app').classList.remove('active')
