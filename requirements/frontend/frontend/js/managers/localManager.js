@@ -39,9 +39,6 @@ export default class Local{
 			this.canva.add( 'time' )
 
 		this.physics.setupBallCollisionEvent(  )
-		this.cameraTarget = new THREE.Vector3( 0, 5, 0 );
-		this.cameraInitial = new THREE.Vector3().copy(this.engine.camera.position);
-	
 	}
 
 	getScore(  ){
@@ -79,7 +76,7 @@ export default class Local{
 		this.engine.clean(  )
 	}
 
-	animate(  resolve  ){
+	animate( resolve  ){
 		let id = requestAnimationFrame( (  )=>this.animate( resolve ) )
 		this.engine.world.step( WORLD.TIMESTAMP )
 		if (  this.isGameover(   ) || getIsItOutOfGame() == true  ){
@@ -91,9 +88,9 @@ export default class Local{
 		}
 		else if (this.animationProgress < 1 && getIsItOutOfGame() == false  )
 			this.initialAnimation(  )
-		else if (this.animationProgress >= 1  && this.animationProgress < 5  && getIsItOutOfGame() == false  ){
+		else if (this.animationProgress > 1  && this.animationProgress < 5  && getIsItOutOfGame() == false  ){
 			this.engine.setupControls()
-			this.animationProgress = 10
+			this.animationProgress = 5
 		}
 		else
 			this.update(  )
@@ -102,8 +99,8 @@ export default class Local{
 	}
 
 	initialAnimation(){
-		this.engine.camera.position.x -= this.animationProgress * .1
-		this.engine.camera.position.y += this.animationProgress * .1
+		this.engine.camera.position.x -= this.animationProgress * .05
+		this.engine.camera.position.y += this.animationProgress * .05
 		this.animationProgress += 0.005;
 		this.engine.camera.lookAt( this.engine.scene.position )
 	}

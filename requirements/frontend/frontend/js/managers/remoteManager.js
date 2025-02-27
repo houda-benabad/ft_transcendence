@@ -115,8 +115,8 @@ export default class Remote{
 	}
 
 	initialAnimation(){
-		this.engine.camera.position.x -= this.animationProgress * .1
-		this.engine.camera.position.y += this.animationProgress * .1
+		this.engine.camera.position.x -= this.animationProgress * .05
+		this.engine.camera.position.y += this.animationProgress * .05
 		this.animationProgress += 0.005;
 		this.engine.camera.lookAt( this.engine.scene.position )
 	}

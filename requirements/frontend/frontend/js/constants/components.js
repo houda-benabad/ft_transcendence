@@ -89,9 +89,9 @@ export const MULTIPLAYERPOSITION = {
 
 export const BACKGROUND = {
     DIMENSION :{
-        x:8,
-        y:128,
-        z:128
+        x:900,
+        y:100,
+        z:100
     },
     SCALE: {
         x:-1,

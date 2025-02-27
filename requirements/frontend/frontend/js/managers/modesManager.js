@@ -5,7 +5,7 @@ import { local } from "../mods/local.js"
 import { remote } from "../mods/remote.js"
 import{ multiplayer} from "../mods/multiplayer.js"
 import { tournament } from "../mods/tournament.js"
-import { MODE } from "../constants/engine.js"
+import { KEYBOARD, MODE, MOUSE, SCORE } from "../constants/engine.js"
 
 const GameManager = {
     gameSettings : null,
@@ -16,10 +16,48 @@ const GameManager = {
         await globalManager._router.navigateTo( '/game-settings', true)
         this.gameSettings = await globalManager._formService.handleGame(  )
         await globalManager._router.navigateTo( '/game', true)
+        await modalService.show( this.get_manual( mode ), false);
+    },
+    get_manual( mode ){
+        let manual = ``
         if (mode == MODE.LOCAL || mode == MODE.TOURNAMENT)
-            await modalService.show("🎮 Controls:<br>🟦 Left side keys : W / S<br>🟥 Right side keys: ⬆ / ⬇", false);
+            manual = `
+                <div class='manual'>
+                    <div class='controls'>
+                        <div>
+                            Left side keys : <img height=50px src=${KEYBOARD.W}>  <img height=50px src=${KEYBOARD.S}>
+                        </div> 
+                        <div>
+                            Right side keys: <img height=50px src=${KEYBOARD.UP}>  <img height=50px src=${KEYBOARD.DOWN}>
+                        </div>
+                    </div>
+                `
         else
-            await modalService.show("🎮 Controls:<br>🟦  keys: ⬆ / ⬇ <br> Score 10 to win", false);
+            manual = `
+                <div class='manual'>
+                    <div class='controls'>
+                        <div>
+                            Controls : <img height=50px src=${KEYBOARD.UP}>  <img height=50px src=${KEYBOARD.DOWN}>
+                        </div> 
+                        <div>
+                            Win score: <img height=50px src=${SCORE}> 
+                        </div>
+                    </div>
+                `
+        manual += ` 
+                <div class='mouse_instructions'>
+                    <div>
+                        Rotation: <img height=50px src=${MOUSE.LEFT}>
+                    </div>
+                    <div>
+                        Translation: <img height=50px src=${MOUSE.RIGHT}>
+                    </div>
+                    <div>
+                        Zoom: <img height=50px src=${MOUSE.SCROL}>
+                    </div>
+                </div>
+            </div>`
+        return manual
 
     },
     async denit( message='game over' ){

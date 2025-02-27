@@ -10,7 +10,7 @@ export const CAMERA = {
 	NEAR : .1,
 	ASPECTRATIO : window.innerWidth / window.innerHeight,
 	INITIALPOSITION : {
-		x:20,
+		x:10,
 		y:0,
 		z:0
 	}
@@ -32,3 +32,18 @@ export const MODE = {
 	MULTIPLAYER : 'multiplayer',
 	TOURNAMENT : 'tournament'
 }
+
+export const MOUSE = {
+	LEFT : '../assets/componants/left_btn.png',
+	RIGHT : '../assets/componants/right_btn.png',
+	SCROL : '../assets/componants/scroll.png',
+}
+
+export const KEYBOARD = {
+	W : '../assets/componants/wkey.png',
+	S : '../assets/componants/skey.png',
+	UP : '../assets/componants/upArrow.png',
+	DOWN : '../assets/componants/downArrow.png',
+}
+
+export const SCORE = '../assets/componants/10.png'

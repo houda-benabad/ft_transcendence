@@ -67,3 +67,37 @@
   grid-row: 3/4;
   grid-column: 3/4;
 }
+
+
+.mouse_instructions{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.mouse_instructions > *, .controls > *{
+  display: flex;
+  flex-direction: center;
+  align-items: center;
+}
+
+
+.controls{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 30px;
+
+}
+
+.manual { 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10svh;
+  padding: 5em;
+}
+
