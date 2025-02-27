@@ -48,8 +48,17 @@ export class Router
         const path = newPath || (window.location.pathname !== '/game-settings' ? window.location.pathname : '/')
         const query = path === '/' ? window.location.search :  null
 
+        console.log('addtohistiry : ', addToHistory)
+        console.log('route : ', this._route)
+        console.log('path : ', path)
         if (this._route === '/game' && path === '/game-settings')
-            this.handlePopstateGame()
+        {
+            // setIsItOutOfGame(true)
+            // await this.initBasicRoutes()
+            // setIsItOutOfGame(false)
+            await this.handlePopstateGame()
+            console.log('im out - - - - -')
+        }
         if (document.getElementById('welcome-text') && document.getElementById('welcome-text').innerHTML.length
             && (path !== '/' && this._route !== '/signin' && this._route !== '/signup'))
             this.removeWelcomeText()
@@ -98,9 +107,12 @@ export class Router
     }
     async handlePopstateGame()
     {
-        setIsItOutOfGame(true)
-        await this.initBasicRoutes()
-        setIsItOutOfGame(false)
+        return new Promise(async resolve => {
+            setIsItOutOfGame(true)
+            await this.initBasicRoutes()
+            setIsItOutOfGame(false)
+            resolve()
+        })
     }
     async handleIntraRoute(query)
     {
