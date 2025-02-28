@@ -44,7 +44,7 @@ canvas{
 }
 
 .waiting-pop h1{
-    font-size: (3vw, 3vh)
+    font-size: max(2vw, 1.4vh)
 }
 
 #loader {
@@ -78,7 +78,8 @@ canvas{
 }
 
 #cancel-btn{
-    width: min(30vw, 100%);
+    width: 30vw;
+    max-width: 150px;
     height: 65px;
     border: none;
     border-radius: 10px;

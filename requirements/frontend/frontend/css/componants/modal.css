@@ -13,12 +13,12 @@
   
   #modal
   {
-    padding: 20px 25px;
+    padding: max(3vw, 2vh) max(2vw, 1vh);
     background-color: #190b399c;
     color : white;
     border: solid 0.1px var(--secondary);
   
-    border-radius: 7px;
+    border-radius: max(1vw, 1vh);
     backdrop-filter: blur(1px);
   }
   .modal-special
@@ -80,6 +80,7 @@
   display: flex;
   flex-direction: center;
   align-items: center;
+  font-size: max(1vw, 1.1vh);
 }
 
 
@@ -97,7 +98,15 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 10svh;
-  padding: 5em;
+  gap: 10vh;
+  width: min(90vw, 55vh);
+  max-width: 450px;
+
+  img
+  {
+    width: 12vw;
+    max-width: 50px;
+    height: auto;
+  }
 }
 
