@@ -13,7 +13,7 @@
   
   #modal
   {
-    padding: max(3vw, 2vh) max(2vw, 1vh);
+    padding: max(2vw, 2vh) max(2vw, 1vh);
     background-color: #190b399c;
     color : white;
     border: solid 0.1px var(--secondary);
