@@ -98,17 +98,24 @@ class GameServer(  ):
 		if self.mode == TWO_PLAYERS:
 			self.gameModel.player1_points = self.game.players[0].score
 			self.gameModel.player2_points = self.game.players[1].score
+			for i, consumer in enumerate( self.consumers ):
+				consumer.playerModel.total_games += 1
+				consumer.playerModel.total_points += self.game.players[i].score
 		elif self.mode == MULTI_PLAYERS:
 			self.gameModel.team1_points = self.game.players[0].score
 			self.gameModel.team2_points = self.game.players[2].score
+			for i, consumer in enumerate( self.consumers ):
+				consumer.playerModel.total_games += 1
+				if i > 1:
+					consumer.playerModel.total_points += self.game.players[2].score
+				else:
+					consumer.playerModel.total_points += self.game.players[0].score
+     
+		self.gameModel.save()
 	
-		for i, consumer in enumerate( self.consumers ):
-			consumer.playerModel.total_games += 1
-			consumer.playerModel.total_points += self.game.players[i].score
 		for consumer in self.consumers :
 			consumer.playerModel.save()
 
-		self.gameModel.save()
 
 	async def send_results( self ):
 		self.game.end_game_results(self.consumers, self.gameModel)

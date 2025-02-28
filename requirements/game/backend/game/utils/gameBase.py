@@ -66,7 +66,6 @@ class Game():
 				loser_index = 0 if consumers[0].keycode == -1 else 1
 				winner_index = 1 - loser_index
     
-				self.players[loser_index].score = 0
 				for consumer, state in zip(consumers, base if loser_index == 1 else reversed(base)):
 					consumer.game_result = state
 				
@@ -88,10 +87,6 @@ class Game():
 			else:
 				loser_index = [0,1] if self.players[0].score < self.players[2].score else [2, 3]
 			winner_index = [i for i in range(4) if i not in loser_index]
-				
-			for i in loser_index:
-					self.players[i].score = 0
-
 
 			for consumer, state in zip(consumers, base if loser_index == [2,3] else reversed(base)):
 				consumer.game_result = state
