@@ -24,6 +24,7 @@ class GameConsumer( AsyncWebsocketConsumer ):
 		self.playerModel= await self._get_player_( )
 		if self._is_already_playing(  ):
 			await self.send_error( 'Connection Error', GAME_ERROR_STATUS_CODE )
+			self.close( )
 			return False
 		await self._update_players(  )
 
@@ -63,7 +64,7 @@ class GameConsumer( AsyncWebsocketConsumer ):
 			raise ValueError( "No player was found")
 		return player
 
-class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
+class RemoteConsumer( GameConsumer ):
 	async def _update_players( self ):
 		for player in remote_players:
 			await player._send_message_( 'matchmaking', len(remote_players) )
@@ -80,6 +81,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			
 
 	async def disconnect(self, close_code):
+		print("GETTING OUT")
 		self.keycode =  -1
 		if self in remote_players :
 			remote_players.remove( self )
@@ -87,7 +89,7 @@ class RemoteConsumer( GameConsumer, AsyncWebsocketConsumer ):
 			await self.channel_layer.group_discard(self.game_group_name, self.channel_name)
 
 
-class MultiplayerConsumer( GameConsumer, AsyncWebsocketConsumer ):
+class MultiplayerConsumer( GameConsumer):
 	async def _update_players( self ):
 		multi_players.append(self)
 		if len(multi_players) >= MULTI_PLAYERS:

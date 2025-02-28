@@ -14,7 +14,7 @@ export const ACTIONS  = {
     'score' : 'updateScore',
     'start' : 'updateStart',
     'endGame' : 'updateState',
-    'error' : 'handleError',
+    'error' : '_handle_socket_error',
     'matchmaking' : 'handleMatchmaking'
 }
 

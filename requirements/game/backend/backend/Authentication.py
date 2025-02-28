@@ -41,7 +41,7 @@ class AuthMiddleware( BaseMiddleware ):
 				return 
 			if not token:
 				await send( {
-					'type' : 'Error',
+					'type' : 'error',
 					'data' : 'Connection Erropr',
 					'code' : 4001
 				})

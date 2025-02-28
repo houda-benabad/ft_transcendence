@@ -125,6 +125,7 @@ class GameServer(  ):
 
 
 async def startRemoteGame( consumers, mode):
+	print("startinnnnnng")
 	server = GameServer( consumers, mode )
 
 	await server.setup(  )
