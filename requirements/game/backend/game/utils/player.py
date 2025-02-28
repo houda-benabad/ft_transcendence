@@ -21,9 +21,9 @@ class Player(GameObject):
 			self.position.x += target
 		if mode == MULTI_PLAYERS:
 			target = self.position.x
-			if consumer.keycode == 40 and self.position.x > -plane.dimension.x / 2 + self.dimension.x / 2 :
+			if consumer.keycode == 38 and self.position.x > -plane.dimension.x / 2 + self.dimension.x / 2 :
 				target -= 0.2
-			elif (consumer.keycode == 38 and self.position.x < plane.dimension.x / 2 - self.dimension.x / 2 ):
+			elif (consumer.keycode == 40 and self.position.x < plane.dimension.x / 2 - self.dimension.x / 2 ):
 				target += 0.2
 			new_pos = self.position.x + (target - self.position.x )
 			if abs( new_pos - player.position.x ) >= self.dimension.x:
