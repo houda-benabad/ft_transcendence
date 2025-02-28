@@ -56,8 +56,6 @@ services:
       - DB_HOST=${GAME_DB_HOST}
     networks:
       - transcendence
-    volumes:
-      -  ./requirements/game/backend:/usr/src/game
     
   GamePostgres:
     image: postgres:15.8
@@ -86,8 +84,6 @@ services:
       - .env
     networks:
       - transcendence
-    volumes:
-      - ./requirements/frontend:/var/www 
   
   nginx:
     build:

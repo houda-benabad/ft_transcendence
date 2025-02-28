@@ -27,6 +27,3 @@ export function layoutTemplate()
         <div id="main"></div>
     `)
 }
-
-// to add h2 with username injected to itp
-{/* <h2 id="welcome-text"></h2> */}

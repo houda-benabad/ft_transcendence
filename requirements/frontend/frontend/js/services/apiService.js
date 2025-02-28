@@ -138,7 +138,11 @@ class ApiService
     async handleCasesForIntra()
     {
         await loader(1500)
-        globalManager._router.handleRoute('/signup')
+        if (window.opener)
+        {
+            window.opener.postMessage({ error : 'user was not able to continue with intra'}, '*');
+            window.close();  
+        }
     }
 }
 

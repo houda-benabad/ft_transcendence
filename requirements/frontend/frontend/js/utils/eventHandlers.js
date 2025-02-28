@@ -130,7 +130,8 @@ export const eventHandlersForEventManager = (eventManager) =>
             window.open(response.intra_auth_url, 'continue with intra', 'width=800,height=600,left=100,top=100');
             window.addEventListener('message', (event) => {
 
-                this._debounced(event)
+                if (!event.data.error)
+                    this._debounced(event)
             })
 
         },
